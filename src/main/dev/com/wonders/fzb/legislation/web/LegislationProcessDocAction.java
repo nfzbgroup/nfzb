@@ -66,7 +66,9 @@ public class LegislationProcessDocAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "legislationProcessDoc_form", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcess_form.jsp")})
+	@Action(value = "legislationProcessDoc_form", results = {@Result(name = "add", location = "/legislation/legislationProcessManager_add.jsp"),
+			@Result(name = "edit", location = "/legislation/legislationProcessManager_edit.jsp"),
+			@Result(name = "info", location = "/legislation/legislationProcessManager_info.jsp")})
 	public String legislationProcessDoc_form() throws FzbDaoException {
 		String stDocId=request.getParameter("stDocId");
 		String type=request.getParameter("type");
@@ -74,7 +76,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		request.setAttribute("nodeId",stNodeId);
 		request.setAttribute("stDocId",stDocId);
 		request.setAttribute("type",type);
-		return SUCCESS;
+		return type;
 	}
 
 	@RequestMapping("legislationProcessDoc_save")
