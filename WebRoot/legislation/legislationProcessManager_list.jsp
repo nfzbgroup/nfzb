@@ -160,7 +160,7 @@
 	});
 	function addLegislationProcess() {
         $("#legislationProcessForm").modal({
-            remote: "${basePath}/legislationProcessDoc/legislationProcessDoc_form.do?stNodeId=${nodeId}&type=add"
+            remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method=openAddPage"
         });
     }
 	</script>

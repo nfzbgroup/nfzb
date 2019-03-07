@@ -63,24 +63,19 @@ public class LegislationProcessTaskAction extends BaseAction {
         @Action(value = "draft_fzbrecv_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_create_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
     })
-    public String listMethodManager() throws FzbDaoException {
+    public String listMethodManager() throws Exception {
         String methodStr = request.getParameter("method");
         if (StringUtil.isEmpty(methodStr)) {
             String stNodeId = request.getParameter("stNodeId");
             request.setAttribute("requestUrl", request.getRequestURI());
             request.setAttribute("nodeId", stNodeId);
             request.setAttribute("stTodoNameList", queryButtonInfo(stNodeId));
+            return SUCCESS;
         } else {
-            try {
-                java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
-                Object object = method.invoke(this);
-                return object == null ? null : object.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
+            Object object = method.invoke(this);
+            return object == null ? null : object.toString();
         }
-
-        return SUCCESS;
     }
 
     /**

@@ -7,8 +7,8 @@ import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
-import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+import dm.jdbc.util.StringUtil;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -18,12 +18,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-//import com.wonders.fzb.zfry.module.platform.beans.TeamInfo;
-//import com.wonders.fzb.zfry.module.platform.beans.UserInfo;
 
 /**
  * LegislationProcessDoc action接口
@@ -51,32 +50,39 @@ public class LegislationProcessDocAction extends BaseAction {
 	private WegovSimpleNodeService wegovSimpleNodeService;
 	
 	
-	private int pageNo = 1;
-	private int pageSize = 10;
-
-
-	//LegislationProcessDoc的测试
-	@Action(value = "legislationProcessDoc_add", results = {@Result(name = SUCCESS, location = "/LegislationProcessDoc.jsp"), @Result(name = "List", location = "/legislationProcessDoc_list.jsp")})
-	public String legislationProcessDoc_add() throws FzbDaoException {
-//		System.out.println("Begin....");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		List<LegislationProcessDoc> legislationProcessDocList = new ArrayList<LegislationProcessDoc>();
-		LegislationProcessDoc legislationProcessDoc = new LegislationProcessDoc();
-		legislationProcessDocService.add(legislationProcessDoc);
-		return SUCCESS;
+	@Action(value = "draft_doc_info", results = {@Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"),
+			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_edit.jsp"),
+			@Result(name = "openInfoPage", location = "/legislation/legislationProcessManager_info.jsp")})
+	public String legislationProcessDoc_form() throws Exception {
+		String methodStr = request.getParameter("method");
+		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
+		Object object = method.invoke(this);
+		return object == null ? null : object.toString();
+	}
+	private String openAddPage(){
+		return pageController();
+	}
+	private String openEditPage(){
+		return pageController();
+	}
+	private String openInfoPage(){
+		return pageController();
 	}
 
-	@Action(value = "legislationProcessDoc_form", results = {@Result(name = "add", location = "/legislation/legislationProcessManager_add.jsp"),
-			@Result(name = "edit", location = "/legislation/legislationProcessManager_edit.jsp"),
-			@Result(name = "info", location = "/legislation/legislationProcessManager_info.jsp")})
-	public String legislationProcessDoc_form() throws FzbDaoException {
+	/**
+	 * 页面控制
+	 * @return
+	 */
+	private String pageController(){
 		String stDocId=request.getParameter("stDocId");
-		String type=request.getParameter("type");
+
+		String methodStr = request.getParameter("method");
+
 		String stNodeId = request.getParameter("stNodeId");
 		request.setAttribute("nodeId",stNodeId);
 		request.setAttribute("stDocId",stDocId);
-		request.setAttribute("type",type);
-		return type;
+		request.setAttribute("requestUrl", request.getRequestURI());
+		return methodStr;
 	}
 
 	@RequestMapping("legislationProcessDoc_save")
@@ -88,69 +94,60 @@ public class LegislationProcessDocAction extends BaseAction {
 		return map;
 	}
 
-	//LegislationProcessDoc的处理
-	@Action(value = "draft_create_info", results = {
-			@Result(name = SUCCESS, location = "/LegislationProcessDoc.jsp"), 
-			@Result(name = "LIST", location = "/legislationProcessDoc_list.jsp")})
-	public String draft_create_info() throws FzbDaoException {
-//		System.out.println("Begin....");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String action = request.getParameter("action");
-		String taskId = request.getParameter("taskId");
+	private String editLegislationProcessDoc() throws FzbDaoException {
 		String docId = request.getParameter("docId");
 		String docName = request.getParameter("docName");
-		String stComent = request.getParameter("stComent");
-		String stNodeId=request.getParameter("stNodeId");
-		String stNodeName=request.getParameter("stNodeName");
-		LegislationProcessDoc legislationProcessDoc = new LegislationProcessDoc();
-		legislationProcessDoc.setStDocName(docName);
-		legislationProcessDoc.setStComent(stComent);
-		legislationProcessDoc.setStNodeId(stNodeId);
-		legislationProcessDoc.setStNodeName(stNodeName);
-		legislationProcessDoc.setDtCreateDate(new Date());
-		if("add".equals(action)){
+		String stComment = request.getParameter("stComent");
+
+		HttpSession session = request.getSession();
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
+		String unitId = currentPerson.getTeamInfos().get(0).getId();
+		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
+
+		if(StringUtil.isEmpty(docId)){
+			LegislationProcessDoc legislationProcessDoc = new LegislationProcessDoc();
+			legislationProcessDoc.setStDocName(docName);
+			legislationProcessDoc.setStUnitId(unitId);
+			legislationProcessDoc.setStUnitName(unitName);
+			legislationProcessDoc.setStUserId(userId);
+			legislationProcessDoc.setStUserName(userName);
+			legislationProcessDoc.setStComent(stComment);
+			legislationProcessDoc.setStNodeId("NOD_0000000101");
+			legislationProcessDoc.setStNodeName("草案起草");
+			legislationProcessDoc.setDtCreateDate(new Date());
+
 			String stDocId=legislationProcessDocService.addObj(legislationProcessDoc);
+			legislationProcessDoc.setStDocNo(stDocId);
+			legislationProcessDocService.update(legislationProcessDoc);
+
 			LegislationProcessTask newTask= new LegislationProcessTask();
 			newTask.setStDocId(stDocId);
 			newTask.setStFlowId(docName);
-			newTask.setStNodeId(stNodeId);
-			newTask.setStNodeName(stNodeName);
+			newTask.setStNodeId(legislationProcessDoc.getStNodeId());
+			newTask.setStNodeName(legislationProcessDoc.getStNodeName());
 			newTask.setStTaskStatus("TODO");
 			newTask.setDtOpenDate(new Date());
-			UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-			newTask.setStUserId(currentPerson.getUserId());
-			newTask.setStUserName(currentPerson.getName());
+			newTask.setStUserId(legislationProcessDoc.getStUserId());
+			newTask.setStUserName(legislationProcessDoc.getStUserName());
 			newTask.setStRoleId(session.getAttribute("userRole").toString());
 			newTask.setStRoleName(session.getAttribute("userRole").toString());
 			newTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
 			newTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
 			legislationProcessTaskService.add(newTask);
+//		}
+//		else if("edit".equals(action)){
+//			legislationProcessDoc.setStDocId(docId);
+//			legislationProcessDoc.setStDocName(docName);
+//			legislationProcessDoc.setStComent(stComent);
+//			legislationProcessDocService.update(legislationProcessDoc);
+//		}
+//		else if("info".equals(action)){
+//			legislationProcessDoc=legislationProcessDocService.findById(docId);
+//			request.setAttribute("docInfo", legislationProcessDoc);
 		}
-		else if("edit".equals(action)){
-			legislationProcessDoc.setStDocId(docId);
-			legislationProcessDoc.setStDocName(docName);
-			legislationProcessDoc.setStComent(stComent);
-			legislationProcessDocService.update(legislationProcessDoc);
-		}
-		else if("info".equals(action)){
-			legislationProcessDoc=legislationProcessDocService.findById(docId);
-			request.setAttribute("docInfo", legislationProcessDoc);
-		}
-		else if("submit".equals(action)){
-			legislationProcessDoc=legislationProcessDocService.findById(docId);
-			LegislationProcessTask legislationProcessTask = legislationProcessTaskService.findById(taskId);
-			legislationProcessTask.setStTaskStatus("DONE");
-			WegovSimpleNode node = wegovSimpleNodeService.findById(legislationProcessTask.getStNodeId());
-			WegovSimpleNode nextNode = wegovSimpleNodeService.findById(node.getStNextNode());
-			LegislationProcessTask newTask= new LegislationProcessTask();
-			newTask.setStDocId(docId);
-			newTask.setStRoleId(nextNode.getStSubmitRole());
-			newTask.setStNodeId(nextNode.getStNodeId());
-			newTask.setStNodeName(nextNode.getStNodeName());
-			legislationProcessTaskService.add(newTask);
-			request.setAttribute("actionResult", "submit_ok");
-		}
-		return SUCCESS;
+		return null;
 	}
 
 }

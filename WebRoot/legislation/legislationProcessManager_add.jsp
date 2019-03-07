@@ -135,14 +135,9 @@
         }else if(param.stComent==null||param.stComent==""){
             Duang.error("提示","请输入备注");
         }else {
-            $.post('${basePath}/legislationProcessDoc/legislationProcessDoc_save.do?stNodeId=${stNodeId}',function(data){
-                if(data.success){
-                    $('#legislationProcessForm').modal('hide');
-                    submitForm(1);
-                    Duang.success("提示",data.message);
-                }else{
-                    Duang.error("提示","操作失败");
-                }
+                $.post("../${requestUrl}?stNodeId=${nodeId}&method=editLegislationProcessDoc",param,function(data){
+                $('#legislationProcessForm').modal('hide');
+                submitForm(1);
             });
         }
     };

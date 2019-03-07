@@ -76,7 +76,7 @@
     }
 
     function nextProcess(stDocId,stNodeId,method) {
-        layer.confirm('确认要上报吗？',function(index){
+        layer.confirm('请确认操作！',function(index){
             layer.close(layer.index);
 			$.post("../"+$('#requestUrl').val()+"?stDocId="+stDocId+"&stNodeId="+stNodeId+"&method="+method);
             submitForm(1);
