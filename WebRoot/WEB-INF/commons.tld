@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.2</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>ZSW Common Taglib</short-name>
+
+	<uri>/wonders/common</uri>
+
+	<display-name>ZSW Common Taglib</display-name>
+	<description><![CDATA[ZSW JSP Taglib]]></description>
+
+	<tag>
+		<name>autocomplate</name>
+		<tag-class>com.wondersgroup.wegov.platform.taglibs.AutocomplateTag</tag-class>
+		<body-content>empty</body-content>
+		<description>
+      	<![CDATA[
+      	使用此标签之前必须先依赖与init标签，详情请见init标签说明。			autocomplate自动补全标签参数说明:
+      		element 为补全的文本框的ID和NAME属性、			hidden  隐藏域（一般是存放ID）的ID和NAME属性、			other   为补全文本框添加其他参数例如：class="myClass" size="50" 、			url		补全数据源			val     显示域的默认值			hidval  隐藏域的默认值			name    指定文本域的NAME属性，可空，默认=element的值			hidname 指定隐藏域的NAME属性，可空，默认=hidden的值
+			multiMode  true/false 多行模式 默认关闭
+			rows  多行模式下行数 multiMode = false 时不生效 默认是10
+			cols   多行模式下列数 multiMode = false 时不生效 默认是80
+			
+			multiMode  true/false 多行模式 默认关闭
+			rows  多行模式下行数 multiMode = false 时不生效 默认是10
+			cols   多行模式下列数 multiMode = false 时不生效 默认是80
+      	]]>
+		</description>
+
+		<attribute>
+			<name>element</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[为补全的文本框的ID和NAME属性]]></description>
+		</attribute>
+		<attribute>
+			<name>hidden</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[隐藏域（一般是存放ID）的ID和NAME属性]]></description>
+		</attribute>
+		<attribute>
+			<name>other</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[为补全文本框添加其他参数例如：class="myClass" size="50"]]></description>
+		</attribute>
+		<attribute>
+			<name>url</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[补全数据源]]></description>
+		</attribute>
+		<attribute>
+			<name>val</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[显示域的默认值]]></description>
+		</attribute>
+		<attribute>
+			<name>hidval</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[隐藏域的默认值]]></description>
+		</attribute>
+		<attribute>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[指定文本域的NAME属性，可空，默认=element的值]]></description>
+		</attribute>
+		<attribute>
+			<name>hidname</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[指定隐藏域的NAME属性，可空，默认=hidden的值]]></description>
+		</attribute>
+		<attribute>
+			<name>checkUrl</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[校验是否是标准的controller]]></description>
+		</attribute>
+		<attribute>
+			<name>multiMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[true/false 多行模式 默认关闭]]></description>
+		</attribute>
+		<attribute>
+			<name>cols</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[多行模式下列数 multiMode = false 时不生效 默认是80]]></description>
+		</attribute>
+		<attribute>
+			<name>rows</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[多行模式下行数 multiMode = false 时不生效 默认是10]]></description>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>init</name>
+		<tag-class>com.wondersgroup.wegov.platform.taglibs.AutocomplateInitTag</tag-class>
+		<body-content>empty</body-content>
+		<description>
+      	<![CDATA[
+      		init标签使用说明：
+      			本标签为autocomplate前置使用条件，init标签请放在<head></head>标签中间。
+      			参数说明:
+      				height  自动补全弹出框的高度设置，使用时请带单位，例如:px em
+      				importUrl    引用必要的JS和CSS等文件的相对路径
+      	]]>
+		</description>
+		<attribute>
+			<name>height</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[自动补全弹出框的高度设置，使用时请带单位，例如:px em]]></description>
+		</attribute>
+		<attribute>
+			<name>importUrl</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+			<description><![CDATA[引用必要的JS和CSS等文件的相对路径]]></description>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>longText</name>
+		<tag-class>com.wondersgroup.wegov.platform.taglibs.LongTextTag</tag-class>
+		<body-content>empty</body-content>
+		<description>
+      	<![CDATA[
+      		longText标签使用说明：
+				用于长文本显示隐藏，依赖general/js/util.js
+      			参数说明:
+					ctx 显示的主体内容
+				    length 显示内容的长度
+					symbol 填充符号
+      	]]>
+		</description>
+		<attribute>
+			<name>ctx</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[显示的主体内容]]></description>
+		</attribute>
+		<attribute>
+			<name>length</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[显示内容的长度]]></description>
+		</attribute>
+		<attribute>
+			<name>symbol</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<description><![CDATA[填充符号]]></description>
+		</attribute>
+	</tag>
+</taglib>

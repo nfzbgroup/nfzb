@@ -1,0 +1,99 @@
+.objBut {
+	border: 1px #153856 solid
+	height:21px;
+	padding-top: 2px;
+	padding-left: 2px;
+	padding-right: 2px;
+	letter-spacing: 2px;
+	color: #000000;
+	cursor: hand;
+	font-size: 12px;
+	background-image: url(image/button_bg.jpg);
+}
+
+.objText {
+	background-color: #FFFFFF;
+	border: 1px #5680A2 solid;
+}
+
+.objText_underline {
+	background-color: #FFFFFF;
+	border-top: none;
+	border-left:none;
+	border-right:none;
+	border-bottom: 1.5px #000000 solid;
+	width:40px;
+}
+.objText_underline1 {
+	background-color: #FFFFFF;
+	border-top: none;
+	border-left:none;
+	border-right:none;
+	border-bottom: 1.5px #000000 solid;
+	width:250;
+}
+.objText_underline2 {
+	background-color: #FFFFFF;
+	border-top: none;
+	border-left:none;
+	border-right:none;
+	border-bottom: 1.5px #000000 solid;
+	width:160;
+}
+.objText_underline3 {
+	background-color: #FFFFFF;
+	border-top: none;
+	border-left:none;
+	border-right:none;
+	border-bottom: 1.5px #000000 solid;
+	width:500;
+}
+.objText_underline4{
+	background-color: #FFFFFF;
+	border-top: none;
+	border-left:none;
+	border-right:none;
+	border-bottom:none;
+	width:600;
+}
+.objText_underline5 {
+	background-color: #FFFFFF;
+	border-top: none;
+	border-left:none;
+	border-right:none;
+	border-bottom: 1.5px #000000 solid;
+	width:100;
+}
+
+.objText_readonly {
+	background-color: #FFFDFF;
+	border: 1px #CECBCE solid;
+	font-color:#999999;
+	color: #000000;
+	display: inline;
+}
+
+.objText_lineonly {
+	background:transparent;
+	border-top: 1px none #666666;
+	border-right: 1px none #666666;
+	border-bottom: 1px solid #666666;
+	border-left: 1px none #666666;
+}
+
+.objTextarea {
+	Overflow:auto;
+	width:98%;
+	background-color: #FFFFFF;
+	border: 1px #5680A2 solid;
+}
+
+.objTextarea_readonly {
+	Overflow:auto;
+	width:98%;
+	background-color: #FFFDFF;
+	border: 1px #CECBCE solid;
+	font-color:#999999;
+	color: #000000;
+	display: inline;
+}

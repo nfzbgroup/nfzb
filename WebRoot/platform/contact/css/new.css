@@ -1,0 +1,93 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	background-color: #f2f9cf;
+	font-size:12px;
+	font-size:12px; font:Arial, Helvetica, sans-serif, "宋体";
+}
+
+img { border:none;}
+
+.left-tt{ font-size:12px; color:#9f4f00; font-weight:bold;text-indent:15px; height:14px; line-height:14px; padding-top:2px;}
+.left-tt2{ font-size:12px; color:#333333; text-indent:15px; height:16px; line-height:16px; }
+
+.tt{ font-size:12px; color:#709e00;}
+.tt2{ font-size:14px; color:#9f4f00; font-weight:bold;text-indent:4px;}
+.tab_top{ background:#3C72C4; font-size:12px; color:#FFF; font-weight:bold; height:26px; line-height:26px;  padding:2px 2px;}
+.tab_txt{ height:50px;  font-size:12px;height:30px; line-height:16px; padding:8px 2px; }
+
+.line { background:url(../images/line.jpg) repeat-x center #FFFFFF ; height:6px;}
+.more { font-size:12px; color:#333333;}
+.input1 { height:24px; border:1px #3C72C4 solid; font-size:12px; line-height:20px; color:#585858;text-indent:4px;}
+
+.menu_br { height:22px; background:url(../images/sc_menu_b.jpg) left top no-repeat; font-size:12px; font-family:"宋体"; font-weight:bold; color:#000000; text-indent:60px; line-height:22px;}
+.menu_br_txt { height:22px; font-size:12px; color:#33880b; line-height:22px; font-family:Arial, Helvetica, sans-serif, "宋体"; text-indent:10px;}
+a:link {
+	color: #263d00; text-decoration:none;
+}
+a:visited {
+	color: #33880b;
+}
+a:hover {
+	color: #33880b; text-decoration:underline;
+}
+a:active {
+	color: #33880b;
+}
+.menu-txt {height:16px; float:left; color:#263d00; font-size:12px; text-align:center; line-height:16px; cursor:pointer; background: url(../images/br-02.jpg) repeat-x top; border:1px #98e122 solid; padding-left:3px; padding-right:3px;}
+.menu-txt.current {height:16px;float:left; background:url(../images/br-02.jpg) repeat-x top; color: #9f4f00; font-size:12px;border:1px #98e122 solid; }
+.menu-txt.current2 {height:16px;float:left; background:url(../images/br-01.jpg) repeat-x top; color:#263d00; font-size:12px;border:1px #98e122 solid; border-bottom:1px #FFFFFF solid; }
+.menu-2 { font-size:12px; width:219px;  border-bottom:1px #98e122 solid; border-left:1px #98e122 solid; border-right:1px #98e122 solid; margin:0 auto;}
+
+.in_top_tt {font-size:14px; font-weight:bold; color:#007811; height:26px; line-height:26px;}
+.in_top_txt {font-size:14px; font-weight:bold; color:#212121; height:26px; line-height:26px;}
+.in_txt {font-size:14px; color:#212121; line-height:20px; padding-top:10px; padding-bottom:10px;}
+
+.br_g { width:73px; height:20px; background:url(../images/br-g.gif) top center no-repeat; font-size:12px; color:#000000; margin:auto auto; text-align:center; line-height:20px;}
+
+/*日历*/
+TABLE.addTable {
+	WIDTH: auto; LINE-HEIGHT: 1.5; BACKGROUND-COLOR: #eff2f8
+}
+.listTable {
+	WIDTH: auto; LINE-HEIGHT: 1.5; BACKGROUND-COLOR: #eff2f8
+}
+.listHead {
+	COLOR: #003399; BACKGROUND-COLOR: #a9c4de
+}
+TABLE.office_inspect {
+	WIDTH: 95%; BACKGROUND-COLOR: #e7e1ec
+}
+TR.office_inspect {
+	COLOR: white; BACKGROUND-COLOR: #a696bc
+}
+TABLE.office_doc {
+	WIDTH: 95%; BACKGROUND-COLOR: #d8dce9
+}
+TR.office_doc {
+	COLOR: white; BACKGROUND-COLOR: #6f86b0
+}
+.bgcbk {
+	BACKGROUND-COLOR: #000000
+}
+.bgcw {
+	BACKGROUND-COLOR: #ffffff
+}
+.cbgc0 {
+	BACKGROUND-COLOR: #94b5f2
+}
+.f12c1 {
+	FONT-SIZE: 12px; COLOR: #339933; FONT-FAMILY: 宋体
+}
+
+.demoOver {
+	background:#fff;
+}
+.demoBg {
+	background:#ecffc6;
+}
+

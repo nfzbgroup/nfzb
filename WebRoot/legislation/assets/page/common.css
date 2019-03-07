@@ -1,0 +1,22 @@
+/*分页*/
+.list-page{height:25px;font-size: 12px; margin-top:10px; margin-bottom: 10px;}
+.list-page .page-one-left,.list-page .page-one-right{width:50px;height:25px;line-height: 25px;background: #fff;border-radius:5px;background-image: url(../images/icons.png);background-repeat: no-repeat;cursor: pointer;}
+.list-page .page-one-left{margin-right: 15px;background-position: -170px 3px;}
+.list-page .page-one-left:hover{background-position: -170px -58px;background-color: blue;}
+.list-page .page-one-mid{height:25px;}
+.list-page .page-one-mid span.page-ellipse{display: inline-block;width:32px;height:25px;line-height:18px;text-align:center;float:left;color:#666;margin: 0 3px;}
+.list-page .page-one-mid a{display: inline-block;width:32px;height:25px;line-height:25px;text-align:center;float:left;color:#666;margin: 0 3px;}
+.list-page .page-one-mid a.current{background-color:blue;border-radius:5px;color:#fff}
+.list-page .page-one-mid a.current:hover{background-color:blue;border-radius:5px !important;color:#fff}
+.list-page .page-one-mid a:hover{color:blue}
+.list-page .page-one-right{margin-left: 15px;background-position: -169px -27px;}
+.list-page .page-one-right:hover{background-position: -170px -90px;background-color: blue;}
+.list-page .page-two input[type=text]{padding:0px;width:32px;height:20px;border: 0 none;border-radius: 5px;text-align: center;margin-left: 10px;}
+.list-page .page-two input[type=button]{width:50px;height:25px;background: blue;border: 0 none;color:#fff;border-radius: 5px;font-size: 12px;cursor:pointer;}
+.fl {float: left;}
+.fr {float: right;}
+.ml10{margin-left: 10px;}
+.mr10{margin-right: 10px;}
+i {
+    font-style: normal;
+}

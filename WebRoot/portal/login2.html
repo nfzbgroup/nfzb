@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>上海市法制办统一平台门户</title>
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+
+<div class="login2Box-container">
+    <div class="wrap">
+        <div class="loginText">
+            <img src="./img/bg-header-text2.png" alt="">
+        </div>
+        <div class="loginBox">
+            <div class="loginBox-title">
+                <h2>欢迎登陆</h2>
+            </div>
+            <div class="login-form">
+                <form action="">
+                    <div class="login-form-control">
+                        <input type="text" placeholder="请输入用户名">
+                    </div>
+                    <div class="login-form-control">
+                        <input type="text" placeholder="请输入密码">
+                    </div>
+                    <div class="login-form-control vCode">
+                        <input type="text" placeholder="请输入验证码">
+                        <img src="./img/img-login2-code.png" alt="">
+                    </div>
+                    <div class="login-form-btnGroup">
+                        <a class="btn-login">确&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;定</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./js/jquery-1.12.0.min.js"></script>
+<script>
+    $(function () {//垂直居中
+    	//垂直居中
+        var _wh=$(window).height();
+        $(".login2Box-container .wrap").css({'margin':(_wh-550)/2+"px auto"});
+        // 登陆表单toggle
+        $(".login2Box-container").on("click",".loginBox-title h2",function () {
+            $(".login-form").slideToggle();
+        })
+    })
+</script>
+</body>
+</html>

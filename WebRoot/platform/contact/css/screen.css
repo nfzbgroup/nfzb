@@ -1,0 +1,630 @@
+﻿@charset "utf-8";
+
+@
+namespace  "http: //www.w3.org /1999/xhtml";
+ @author: Yuan Gao
+
+html {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	background: #fff;
+	padding: 0;
+	margin: 0;
+	font-family: Microsoft YaHei, 黑体, 宋体;
+	overflow-y: scroll;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	padding: 0;
+	margin: 0;
+}
+
+ul,ol,dd,dt {
+	padding: 0;
+	margin: 0;
+}
+
+p,blockquote {
+	padding: 0;
+	margin: 0;
+}
+
+div,table,form {
+	padding: 0;
+	margin: 0;
+}
+
+textarea,input {
+	padding: 0;
+	margin: 0;
+}
+
+a:link {
+	
+}
+
+a:visited {
+	
+}
+
+a:hover {
+	
+}
+
+a:focus {
+	
+}
+
+a:active {
+	
+}
+
+img {
+	border: none;
+	vertical-align: middle;
+	padding: 0 5px;
+}
+
+ul,ol {
+	list-style-type: none;
+}
+
+textarea {
+	resize: none;
+}
+
+select {
+	font-size: 18px;
+	vertical-align: middle;
+}
+
+input[type=text] {
+	font-size: 18px;
+} /*for ie9+ only*/
+input[type=submit] {
+	cursor: pointer;
+	font-family: Microsoft YaHei, 黑体, 宋体;
+} /*for ie9+ only*/
+.bn {
+	border: none;
+}
+
+.textLeft {
+	text-align: left;
+}
+
+.textRight {
+	text-align: right;
+}
+
+.textCenter {
+	text-align: center;
+}
+
+#wrapper {
+	padding: 0;
+	margin: 0 auto;
+	font-family: Microsoft YaHei, 黑体, 宋体;
+	min-width: 1024px;
+} /*page's out-ring which control the whole page*/
+
+#header {
+	height: 53px;
+	width: 100%;
+	clear: both;
+} /*head*/
+#mainContent {
+	
+}
+
+.sidebar {
+	float: left;
+	width: 200px;
+	position: absolute;
+}
+
+.contentFrame {
+	float: center;
+	width: 87%;
+	background-color:#FFF /*#e5f7ff*/;
+	height: auto;
+	position: absolute;
+	left: 160px;
+	min-width: 1040px;
+	min-height: 800px;
+	overflow-x: hidden;
+}
+
+.content {
+	float: center;
+	width: 99%;
+	background-color: #e5f7ff;
+	height: 610px;
+	position: absolute;
+	left: 0px;
+	min-width: 1000px;
+}
+
+/*单行的查询条件*/
+.searchAndAdd {
+	float: right;
+	margin-top: -35px;
+	border-collapse: collapse;
+	/*margin-right:2%;*/
+}
+/* .searchAndAdd input {border:none; border-bottom:1px solid #0075b2;}
+	.searchAndAdd2 input {border:none; border-bottom:1px solid #0075b2;} */
+.searchAndAdd td {
+	vertical-align: middle;
+	font-size: 18px;
+}
+
+.searchAndAdd select {
+	font-family: 黑体, 宋体;
+	font-size:17px;
+}
+
+/*多行的查询条件*/
+.searchAndAdd2 {
+	float: right;
+	margin-top: 5px;
+	border-collapse: collapse;
+	/*margin-right:2%;*/
+}
+
+.searchAndAdd2 td {
+	vertical-align: middle;
+	padding: 5px 5px 5px 5px;
+}
+
+.searchAndAdd2 .solid {
+	border: none;
+	border-bottom: 1px solid #0075b2;
+	background: none;
+}
+
+.searchAndAdd .solid {
+	border: none;
+	border-bottom: 1px solid #0075b2;
+	background: none;
+	font-size: 20px;
+	width: 115px;
+}
+
+.searchPart { /*
+		border:1px solid #a9dcf6;
+		height:30px;
+		background-color:#fff; */
+	padding-right: 10px;
+	vertical-align: middle;
+}
+
+.searchPart input {
+	height: 18px;
+	margin-top: 1px;
+}
+
+.searchPart select {
+	margin-top: -1px;
+}
+
+.inputIn {
+	border: none;
+	color: #999;
+	font-size: 14px;
+	height: 30px;
+	line-height: 30px;
+	outline: none;
+	font-family: Microsoft YaHei, 黑体, 宋体;
+	text-indent: 10px;
+	width: 200px;
+}
+
+.ie8 .inputIn {
+	height: 30px;
+	line-height: 30px;
+	margin-top: 0px;
+}
+
+.searchBtn {
+	background: url(images/iconSearch.png) no-repeat;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	border: none;
+}
+
+.add {
+	background: url(images/iconAdd.png) center left no-repeat;
+	text-align: right;
+	height: 30px;
+	cursor: pointer;
+	border: 1px solid #a9dcf6;
+	background-color: #cdeeff;
+	color: #0075b2;
+	font-size: 16px;
+	padding: 5px 10px;
+}
+
+.blue_button {
+	text-align: center;
+	height: 30px;
+	cursor: pointer;
+	border: 1px solid #a9dcf6;
+	background-color: #cdeeff;
+	color: #0075b2;
+	font-size: 16px;
+	padding: 0px 10px;
+}
+
+.majorTit {
+	border-bottom: 1px solid #0075b2;
+	font-weight: bold;
+	color: #0075b2;
+	text-align: left;
+	width: 100%;
+	padding: 10px 10px 10px 10px;
+}
+
+.majorTit_blue {
+	border-bottom: 1px solid #0075b2;
+	font-size: 24px;
+	font-weight: bold;
+	color: #0075b2;
+	text-align: left;
+	width: 100%;
+	padding: 10px 10px 10px 10px;
+}
+
+.openPageTitle {
+	border-bottom: 1px solid #0075b2;
+	font-size: 24px;
+	font-weight: normal;
+	color: #0075b2;
+}
+
+.nothing {
+	cursor: default;
+	color: #00b4ff;
+	border-bottom: none;
+	background: url(images/iconLine.png) bottom center no-repeat;
+	height: 39px;
+	line-height: 38px;
+	font-size: 17px;
+}
+
+.treeTit {
+	float: left;
+	background-color: #fff;
+}
+
+.treeMenu {
+	float: left;
+	position: absolute;
+	left: 0px;
+}
+
+.treeCon {
+	width: 80%;
+	float: left;
+	position: absolute;
+}
+
+.lists .f-Kaiti {
+	font-family: STKaiti, KaiTi_GB2312;
+}
+
+.lists {
+	width: 98%;
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+.lists_nocollapse {
+	width: 98%;
+	margin: 0 auto;
+}
+
+.lists tbody {
+	border-bottom: 2px solid #0075b2;
+}
+
+.emptyBanner {
+	height: 40px;
+	background-color: #00b4ff;
+}
+
+.lists th {
+	background-color: #838383;
+	color: #fff;
+	margin: 0;
+	height: 38px;
+	line-height: 38px;
+	font-weight: normal;
+	font-size: 20px;
+}
+.lists th a {
+	color: #fff;
+	/*text-decoration:none;*/
+}
+.lists td { /*	height:40px;*/
+	padding: 10px 0px;
+	line-height: 22px;
+	color: #222;
+	border-bottom: 1px dashed #a0a9ad;
+	margin-left: 3%;
+	font-size: 20px;
+	/*vertical-align:top;*/
+}
+
+.lists td img {
+	vertical-align: middle;
+	padding: 0 0px;
+	
+	width:28px;
+	height:28px;
+}
+
+.lists tr:hover {
+	background: #abe6ff;
+}
+
+.lists td a {
+	color: #06c;
+	/*text-decoration:none;*/
+}
+
+.lists caption a.levelTit {
+	font-size: 20px;
+	color: #06c;
+	font-weight: normal;
+	text-align: center;
+	line-height: 40px;
+}
+
+.lists td a img {
+	vertical-align: middle;
+	padding: 0 0px;
+}
+
+.lists td a:hover {
+	background: none;
+	border: none;
+}
+
+.lists td p {
+	line-height: 25px;
+}
+
+.lists2 {
+	width: 98%;
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+.lists_nocollapse {
+	width: 98%;
+	margin: 0 auto;
+}
+
+.lists2 tbody {
+	
+}
+
+.emptyBanner {
+	height: 40px;
+	background-color: #00b4ff;
+}
+
+.lists2 th {
+	background-color: #00b4ff;
+	color: #fff;
+	margin: 0;
+	height: 38px;
+	line-height: 38px;
+	font-weight: normal;
+	font-size: 17px;
+}
+
+.lists2 td {
+	height: 40px;
+	line-height: 40px;
+	color: #222;
+	margin-left: 3%;
+	/*vertical-align:top;*/
+}
+
+.lists2 td a {
+	color: #06c;
+	/*text-decoration:none;*/
+}
+
+.lists2 caption a.levelTit {
+	font-size: 20px;
+	color: #06c;
+	font-weight: normal;
+	text-align: center;
+	line-height: 40px;
+}
+
+.lists2 td a img {
+	vertical-align: middle;
+}
+
+.lists2 td a:hover {
+	background: none;
+	border: none;
+}
+
+.lists2 td p {
+	line-height: 25px;
+}
+
+.statList {
+	width: 98%;
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+.statList tbody {
+	border: 2px solid #0075b2;
+}
+
+.statList th {
+	background-color: #00b4ff;
+	color: #fff;
+	margin: 0;
+	height: 38px;
+	line-height: 38px;
+	font-weight: normal;
+	font-size: 17px;
+	border: 1px solid #0075b2;
+}
+
+.statList td {
+	height: 40px;
+	line-height: 40px;
+	color: #222;
+	border: 1px solid #0075b2;
+	margin-left: 3%;
+	/*vertical-align:top;*/
+}
+
+.page {
+	width: 100%;
+	margin: 0 auto;
+	margin-top: 15px;
+	color: #00a2ff;
+	font-size: 20px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+.ie8 .page {
+	margin-top: 10px;
+}
+
+.page a {
+	background-color: #fff;
+	color: #00a2ff;
+	font-size: 20px;
+	padding: 3px 7px;
+	border: 1px solid #00a2ff;
+	margin: 0 5px;
+	text-decoration: none;
+}
+
+.page a.pageCurrent,.page a:hover {
+	background-color: #00a2ff;
+	border: 1px solid #00a2ff;
+	color: #fff;
+}
+
+.jump {
+	width: 30px;
+	border: 1px solid #00a2ff;
+	height: 25px;
+	margin: 0 5px;
+	line-height: 25px;
+}
+
+.selectStyle { /*line-height:34px;*/
+	border: 1px solid #70c5e7; /*height:34px;*/
+}
+
+.nobottom tbody {
+	border: none;
+}
+
+#footer {
+	
+}
+
+.quoteSet {
+	width: 680px;
+	margin: 0 auto;
+	border-spacing: 10px;
+	empty-cells: hide;
+	font-family: 微软雅黑, 黑体, 宋体;
+}
+
+.quoteSet td {
+	width: 160px;
+	height: 160px;
+	background-color: #fff;
+	vertical-align: middle;
+	text-align: center;
+	overflow: hidden;
+}
+
+.quoteSet td a {
+	text-decoration: none;
+	font-size: 20px;
+	color: #0075b2;
+	font-weight: normal;
+	display: block;
+	text-align: center;
+	width: 160px;
+	height: 160px;
+}
+
+.quoteSet td.lock {
+	background-color: #ccc;
+	color: #0075b2;
+}
+
+.quoteSet td a:hover {
+	background-color: #a9e2ff;
+}
+
+.quoteSet td.jia {
+	background-color: #f5fcff;
+}
+
+.quoteSet td.jia a:hover {
+	background: none;
+}
+
+.gy_tab_hover {
+	width: 160px;
+	height: 40px;
+	line-height: 40px;
+	background-color: #00b4ff;
+	text-align: center;
+	color: #fff;
+	cursor: pointer;
+}
+
+.gy_tab_hover a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.gy_tab {
+	width: 160px;
+	height: 40px;
+	line-height: 40px;
+	background-color: #888;
+	text-align: center;
+	color: #fff;
+	cursor: pointer;
+}
+
+.gy_tab a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.nibandan{padding:0 .2em;color:#000;font-size:1.1em;font-family:SimSun;}
+.nibandan .span_font{font-family:STKaiti,KaiTi_GB2312;}
+.con_one_1 {overflow-x:scroll;}
+
+.addborder {padding:0 .2em;color:#000;font-size:1.1em;font-family:SimSun;margin:auto;border-collapse:collapse}
+.addborder th{color:#0086ee;padding:.7em 0;font-size:18px;font-family:SimSun; border:2px solid #00b4ff; vertical-align:middle;text-align:center;}
+.addborder td{padding:.7em .5em;font-size:18px; border:2px solid #00b4ff; text-align:center; vertical-align:middle;white-space:nowrap;}
+.addborder .noborder {border:none;}
+.sal_info {overflow-x:scroll;min-height:0;}
+.sal_info .lists th,.sal_info .lists td{white-space:nowrap;}

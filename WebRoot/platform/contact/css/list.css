@@ -1,0 +1,45 @@
+.table_list_outtable {
+	width: 96%;
+	background-color:#444444;
+	text-align:center;
+}
+
+.tr_list_heada {
+	height: 25px;
+	background-color:#FFFFFF;
+	color: #000000;
+	text-align:center;
+	vertical-align:middle;
+	letter-spacing:1pt;
+}
+
+.tr_list_heada1 {
+	height: 40px;
+	background-color:#FFFFFF;
+	color: #E60011;
+	text-align:center;
+	vertical-align:middle;
+	letter-spacing:1pt;
+}
+
+.tr_list_body {
+	height: 20px;
+	padding-top:2px;
+	padding-left:2px;
+	padding-right:2px;
+	background-color:#FFFFFF;
+	color: #000000;
+	text-align:center;
+	vertical-align:middle;
+}
+
+.tr_list_body1 {
+	height: 40px;
+	padding-top:2px;
+	padding-left:2px;
+	padding-right:2px;
+	background-color:#FFFFFF;
+	color: #5E88F4;
+	text-align:center;
+	vertical-align:middle;
+}

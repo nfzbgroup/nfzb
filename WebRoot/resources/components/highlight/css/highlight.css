@@ -1,0 +1,26 @@
+/* zsw 2016-06-28 */
+.highlight {
+	outline: 1px solid #ccc;
+	padding: 5px;
+	margin: 5px;
+}
+
+.highlight  .string {
+	color: green;
+}
+
+.highlight  .number {
+	color: darkorange;
+}
+
+.highlight .boolean {
+	color: blue;
+}
+
+.highlight  .null {
+	color: magenta;
+}
+
+.highlight  .key {
+	color: red;
+}

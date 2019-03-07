@@ -1,0 +1,52 @@
+.td_tab_left {
+	width: 5px;
+	height: 22px;
+	background-image: url(image/tab_leftbg.gif);
+	background-repeat: no-repeat;
+	background-position:bottom;
+	
+}
+
+.td_tab_right {
+	width: 5px;
+	height: 22px;
+	background-image: url(image/tab_rightbg.gif);
+	background-repeat: no-repeat;
+	background-position:bottom;
+}
+
+.td_tab_light {
+	height: 22px;	
+	background-image: url(image/tab_middlebg.gif);
+	background-repeat: repeat-x;
+	text-align:center;
+	vertical-align:bottom;
+	color:#0750E3;
+	cursor:hand;
+	letter-spacing:2px;
+	padding:2px;	
+	font-size:12px;
+	background-position:bottom;
+	color : expression(onmouseover=function() {this.style.color="#15428B";},onmouseout=function(){this.style.color="#0750E3"});
+}
+
+.td_tab_dark {
+	height: 22px;	
+	background-image: url(image/tab_middlebg.gif);
+	background-repeat: repeat-x;
+	text-align:center;
+	vertical-align:bottom;
+	color:#808080;
+	cursor:hand;
+	letter-spacing:2px;
+	padding:2px;	
+	font-size:12px;
+	background-position:bottom;
+	color : expression(onmouseover=function() {this.style.color="#15428B";},onmouseout=function(){this.style.color="#808080"});
+}
+.table_tab_tabList {
+	width: 96%;
+}
+.table_input_taglist{
+	width: 96%;
+}

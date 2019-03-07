@@ -1,0 +1,130 @@
+body {
+	font-size: 9pt;font-family: "宋体";
+	Scrollbar-Face-Color:#FFFDFF;
+	Scrollbar-Highlight-Color:#CECBCE;
+	Scrollbar-Shadow-Color:#CECBCE;
+	Scrollbar-3Dlight-Color:#DFEBFD;
+	Scrollbar-Darkshadow-Color:#DFEBFD;
+	Scrollbar-Arrow-Color:#183094;
+	Scrollbar-Track-Color:#ffffff;
+	margin: 0px;
+	overflow:auto;
+}
+
+.body_bg{
+	background-image:url(image/bg12.jpg); 
+	background-position:bottom; 
+	background-repeat:no-repeat
+}
+
+a:link {color: #000000;font-style: normal;text-decoration: none;font-size: 9pt;}
+a:visited {color: #000000;font-style: normal;text-decoration: none;font-size: 9pt;}
+a:active {color: #000000;font-style: normal;text-decoration: none;font-size: 9pt;}
+a:hover {color: #999999;font-style: normal;text-decoration: none;font-size: 9pt;}
+
+img {border-width: 0;}
+
+table {font-size: 9pt;}
+
+.td_top_bg {
+	background-color: #AB0312;
+	border: 1px #653900 solid;
+}
+
+.td_textbg {
+	height:30px;
+	background-color:#FFCC00;
+	border: 1px #653900 solid;
+}
+
+.table_mainbg {
+	width: 96%;
+	background-color:#D2E0F1;
+}
+
+.table_mainbg1 {
+	width: 96%;
+	height: 30px;
+	text-align:center;
+	background-color:#EEEEEE;
+}
+
+.table_mainbg2 {
+	width: 96%;
+	background-color:#D2E0F1;
+}
+
+.table_mainbg_height {
+	width: 96%;
+	height:30px;
+	text-align:center;
+	background-color:#C0C0C0;
+}
+
+.table_otherbg {
+	width: 96%;
+	background-color:#FFFFFF;
+	font-size: 14px;
+	color: #666666;
+	border: 1px #999999 solid;
+	background-image: url(image/other_bg.jpg);
+	background-repeat: repeat-x;
+	background-position: bottom;
+}
+
+.tr_text_bg {
+	height:30px;
+	background-color:#A0410A;
+	color: #FFFFFF;
+	font-size: 13px;
+}
+
+.td_redfont {
+	font-weight: bolder;
+	color: #B82323;
+}
+
+.td_topbottombg {
+	width: 800px;
+	height:26px;
+	background-color:#AB040C;
+	background-image: url(image/newshanghai_r3_c1a2.jpg);
+	background-repeat: no-repeat;
+	background-position: top;
+}
+
+.td_text_font {
+	color: #FFFFFF;
+	font-size: 11pt;
+	font-weight:bold;
+	letter-spacing:4pt;
+}
+
+/**列表大标题样式*/
+.td_list_subTitle{	
+	font-size: 16px;
+	height:40px;
+	text-align:center;
+	font-style: normal;
+	line-height: 30px;
+	font-weight: bold;	
+	color:#0F4FA8;
+	letter-spacing: 5px;	
+	FILTER:DropShadow(Color=#ffffff,OffX=1,OffY=1,Positive=1)Shadow(Color=#c3c3c3,Direction=120);
+}
+
+/**列表小标题样式*/
+.td_list_subTitle2{	
+	font-size: 14px;
+	height:30px;
+	text-align:center;
+	font-style: normal;
+	line-height: 30px;	
+	color:#000000;
+	letter-spacing: 4px;	
+}
+
+/**红色字体*/
+.font_red {
+  color: red;
+}

@@ -1,0 +1,45 @@
+.table_input_outtable {
+	width: 95%;
+}
+
+.table_input_middletable {
+	width: 98%;
+	background-color: #EEEEEE;
+	text-align:center;
+}
+
+.td_input_header {
+	height:30px;
+	text-align:center;
+	background-color: #FFFFFF;
+	color: #000000;
+	letter-spacing:2px;
+}
+
+.td_input_headerNotBlank {
+	height:30px;
+	text-align:center;
+	background-color: #FFFFFF;
+	color: #E60011;
+	letter-spacing:2px;
+}
+
+.td_input_headerLight {
+	height:30px;
+	text-align:center;
+	background-color: #FFF45C;
+	color: #000000;
+	letter-spacing:2px;
+}
+
+.td_input_body {
+	text-align:left;
+	background-color: #FFFFFF;
+	text-indent: 2pt;
+}
+
+.td_input_buttonlist {
+	height:40px;
+	text-align:center;
+	vertical-align:middel;
+}
