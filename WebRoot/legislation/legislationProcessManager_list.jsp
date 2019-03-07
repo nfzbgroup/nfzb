@@ -74,7 +74,7 @@
 								</div>
 								<c:if test="${nodeId=='NOD_0000000101'}">
 									<div class="pull-right">
-											<label class="btn btn-w-m btn-success" id="add" onclick="addLegislationProcess()">草案发起</label>
+											<label class="btn btn-w-m btn-success" id="add" onclick="openPage('openAddPage',null)">草案发起</label>
 									</div>
 								</c:if>
 							</form>
@@ -158,9 +158,9 @@
             $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
         });
 	});
-	function addLegislationProcess() {
+	function openPage(method,stDocId) {
         $("#legislationProcessForm").modal({
-            remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method=openAddPage"
+            remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId
         });
     }
 	</script>

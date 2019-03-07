@@ -8,26 +8,52 @@
 	<h4 class="modal-title">查看草案</h4>
 </div>
 <div class="modal-body">
-	<form  class="form-horizontal" novalidate="novalidate">
-		<div class="form-body">
-            <div class="col-md-8 padding0 order-btn">
-                    <label class="btn btn-w-m btn-success">草案信息列表</label>
-            </div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">法规规章草案：</label>
-                <label class="col-sm-9 control-label">接口未绑定</label>
+	<div class="ibox float-e-margins">
+		<div class="ibox-title">
+			<div class="row">
+				<div class="col-md-12 padding0 order-btn">
+					<label class="btn btn-w-m btn-success">草案信息列表</label>
+				</div>
 			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">备注：</label>
-                <textarea class="col-sm-9 form-control">草案备注</textarea>
-			</div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">相关材料：</label>
-                <textarea class="col-sm-9 form-control">草案备注</textarea>
-            </div>
 		</div>
-	</form>
-
+		<div class="ibox-content">
+			<table class="table table-border table-bordered">
+				<tr>
+					<td class="text-right">
+						<label style="white-space: nowrap">法规规章草案:</label>
+					</td>
+					<td class="text-center">
+						<label>接口未绑定</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="text-right">
+						<label style="white-space: nowrap">备注:</label>
+					</td>
+					<td class="text-center">
+						<label >草案备注</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="text-right">
+						<label style="white-space: nowrap">相关材料:</label>
+					</td>
+					<td class="text-center">
+						<label class="control-label col-md-12 text-center">相关材料</label>
+						<label class="control-label col-md-12 text-center">相关材料</label>
+						<label class="control-label col-md-12 text-center">相关材料</label>
+						<label class="control-label col-md-12 text-center">相关材料</label>
+						<label class="control-label col-md-12 text-center">相关材料</label>
+						<label class="control-label col-md-12 text-center">相关材料</label>
+						<label class="control-label col-md-12 text-center">相关材料</label>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="form-group text-center">
+		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
+	</div>
 </div>
 <script>
 

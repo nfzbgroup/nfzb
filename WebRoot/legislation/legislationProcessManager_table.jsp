@@ -32,7 +32,7 @@
 						<c:when test="${nodeId=='NOD_0000000101'}">
 							<c:choose>
 								<c:when test="${buttonStatus=='DONE'}">
-									<td ><a href="javaScript:void(0)" data-title="查看" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
+									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
 								</c:when>
 								<c:otherwise>
 									<td ><a href="javaScript:void(0)" data-title="修改" class="layer_full_link">修改</a><br/><a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextProcess')" class="layer_full_link">上报</a></td>
@@ -43,13 +43,13 @@
 						<c:otherwise>
 							<c:choose>
 								<c:when test="${buttonStatus=='TODO'}">
-									<td ><a href="javaScript:void(0)" data-title="查看" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">接收</a></td>
+									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">接收</a></td>
 								</c:when>
 								<c:when test="${buttonStatus=='DOING'}">
-									<td ><a href="javaScript:void(0)" data-title="查看" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" class="layer_full_link">分办</a></td>
+									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" class="layer_full_link">分办</a></td>
 								</c:when>
 								<c:otherwise>
-									<td ><a href="javaScript:void(0)" data-title="查看" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
+									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
 								</c:otherwise>
 							</c:choose>
 						</c:otherwise>
@@ -80,6 +80,12 @@
             layer.close(layer.index);
 			$.post("../"+$('#requestUrl').val()+"?stDocId="+stDocId+"&stNodeId="+stNodeId+"&method="+method);
             submitForm(1);
+        });
+    }
+
+    function draftHistory(stDocId) {
+        $("#legislationProcessForm").modal({
+            remote: "${basePath}/legislationProcessDoc/legislationProcessDoc_form.do?stNodeId=${nodeId}&type=draftHistory&stDocId="+stDocId
         });
     }
 </script>

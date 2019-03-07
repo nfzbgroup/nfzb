@@ -52,7 +52,8 @@ public class LegislationProcessDocAction extends BaseAction {
 	
 	@Action(value = "draft_doc_info", results = {@Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_edit.jsp"),
-			@Result(name = "openInfoPage", location = "/legislation/legislationProcessManager_info.jsp")})
+			@Result(name = "openInfoPage", location = "/legislation/legislationProcessManager_info.jsp"),
+			@Result(name = "openDraftHistoryPage",location = "/legislation/legislationProcessManager_draftHistory.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -66,6 +67,9 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 	private String openInfoPage(){
+		return pageController();
+	}
+	private String openDraftHistoryPage(){
 		return pageController();
 	}
 
@@ -83,15 +87,6 @@ public class LegislationProcessDocAction extends BaseAction {
 		request.setAttribute("stDocId",stDocId);
 		request.setAttribute("requestUrl", request.getRequestURI());
 		return methodStr;
-	}
-
-	@RequestMapping("legislationProcessDoc_save")
-	@ResponseBody
-	public Map legislationProcessDoc_save(){
-		Map map=new HashMap();
-		map.put("success",true);
-		map.put("message","发布草案成功");
-		return map;
 	}
 
 	private String editLegislationProcessDoc() throws FzbDaoException {
