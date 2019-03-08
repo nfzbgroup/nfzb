@@ -3,8 +3,11 @@ package com.wonders.fzb.legislation.web;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.legislation.beans.LegislationExample;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.services.LegislationExampleService;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
@@ -17,7 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import java.util.Date;
+import java.util.*;
 
 
 /**
@@ -40,11 +43,18 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationProcessTaskService")
 	private LegislationProcessTaskService legislationProcessTaskService;
-	
+	@Autowired
+	@Qualifier("legislationExampleService")
+	private LegislationExampleService legislationExampleService;
+
 	@Autowired
 	@Qualifier("wegovSimpleNodeService")
 	private WegovSimpleNodeService wegovSimpleNodeService;
-	
+
+	@Autowired
+	@Qualifier("legislationFilesService")
+	private LegislationFilesService legislationFilesService;
+
 	
 	@Action(value = "draft_doc_info", results = {@Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_edit.jsp"),
@@ -58,6 +68,13 @@ public class LegislationProcessDocAction extends BaseAction {
 		return object == null ? null : object.toString();
 	}
 	private String openAddPage(){
+		String stNodeId = request.getParameter("stNodeId");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stNode", stNodeId);
+		sortMap.put("stExampleId", "ASC");
+		List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
+		request.setAttribute("LegislationExampleList",legislationExampleList);
 		return pageController();
 	}
 	private String openEditPage(){
@@ -130,11 +147,20 @@ public class LegislationProcessDocAction extends BaseAction {
 			newTask.setDtOpenDate(new Date());
 			newTask.setStUserId(legislationProcessDoc.getStUserId());
 			newTask.setStUserName(legislationProcessDoc.getStUserName());
-			newTask.setStRoleId(session.getAttribute("userRole").toString());
+			newTask.setStRoleId(session.getAttribute("userRoleId").toString());
 			newTask.setStRoleName(session.getAttribute("userRole").toString());
 			newTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
 			newTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
 			legislationProcessTaskService.add(newTask);
+
+			Enumeration keys=request.getParameterNames();
+			while(keys.hasMoreElements()){
+				String key=(String)keys.nextElement();
+				String value=request.getParameter(key);
+				if(value.startsWith("FIL_")){
+					legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stDocId+"' where s.stFileId='"+value+"'");
+				}
+			}
 //		}
 //		else if("edit".equals(action)){
 //			legislationProcessDoc.setStDocId(docId);

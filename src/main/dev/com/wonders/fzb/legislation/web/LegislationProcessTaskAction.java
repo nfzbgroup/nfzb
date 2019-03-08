@@ -3,6 +3,7 @@ package com.wonders.fzb.legislation.web;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
@@ -180,12 +181,13 @@ public class LegislationProcessTaskAction extends BaseAction {
      * @throws FzbDaoException
      */
     private String nextChildProcess() throws FzbDaoException {
-//        UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-//        String userId = currentPerson.getUserId();
-//        String userName = currentPerson.getName();
-//        String unitId = currentPerson.getTeamInfos().get(0).getId();
-//        String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
-//        String unitName = currentPerson.getTeamInfos().get(0).
+        UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+        String userId = currentPerson.getUserId();
+        String userName = currentPerson.getName();
+        String unitId = currentPerson.getTeamInfos().get(0).getId();
+        String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
+        String userRoleId =session.getAttribute("userRoleId").toString();
+        String userRole =session.getAttribute("userRole").toString();
 
         String stDocId = request.getParameter("stDocId");
         String stNodeId = request.getParameter("stNodeId");
@@ -200,6 +202,12 @@ public class LegislationProcessTaskAction extends BaseAction {
                     break;
                 }
             }
+            legislationProcessTask.setStUserId(userId);
+            legislationProcessTask.setStUserName(userName);
+            legislationProcessTask.setStRoleId(userRoleId);
+            legislationProcessTask.setStRoleName(userRole);
+            legislationProcessTask.setStTeamId(unitId);
+            legislationProcessTask.setStTeamName(unitName);
             legislationProcessTaskService.update(legislationProcessTask);
         }
         return null;

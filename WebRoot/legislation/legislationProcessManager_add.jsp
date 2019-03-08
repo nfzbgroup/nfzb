@@ -51,54 +51,21 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr class="text-center">
-                            <td class="text-left">草案文本<span style="color: red">(必须上传)</span><span style="color: dodgerblue">(范本)</span></td>
-                            <td ><span style="color: red">暂未上传</span></td>
-                            <td >
-                                <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
-                                <input id="1" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1)">
-                            </td>
-                        </tr>
-                        <tr class="text-center">
-                            <td class="text-left">报请审核规章草案的函<span style="color: red">(必须上传)</span><span style="color: dodgerblue">(范本)</span></td>
-                            <td ><span style="color: red">暂未上传</span></td>
-                            <td >
-                                <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
-                                <input id="2" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1)">
-                            </td>
-                        </tr>
-                        <tr class="text-center">
-                            <td class="text-left">起草说明<span style="color: red">(必须上传)</span><span style="color: dodgerblue">(范本)</span></td>
-                            <td ><span style="color: red">暂未上传</span></td>
-                            <td >
-                                <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
-                                <input id="3" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1)">
-                            </td>
-                        </tr>
-                        <tr class="text-center">
-                            <td class="text-left">拟定规章所依据的法律、法规目录<span style="color: red">(必须上传)</span><span style="color: dodgerblue">(范本)</span></td>
-                            <td ><span style="color: red">暂未上传</span></td>
-                            <td >
-                                <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
-                                <input id="4" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1)">
-                            </td>
-                        </tr>
-                        <tr class="text-center">
-                            <td class="text-left">征求各方面意见的情况和材料<span style="color: red">(必须上传)</span><span style="color: dodgerblue">(范本)</span></td>
-                            <td ><span style="color: red">暂未上传</span></td>
-                            <td >
-                                <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
-                                <input id="5" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1)">
-                            </td>
-                        </tr>
-                        <tr class="text-center">
-                            <td class="text-left">参与起草工作的专家对规章草案的意见<span style="color: red">(必须上传)</span><span style="color: dodgerblue">(范本)</span></td>
-                            <td ><span style="color: red">暂未上传</span></td>
-                            <td >
-                                <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
-                                <input id="6"  name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1)">
-                            </td>
-                        </tr>
+                        <s:iterator value="#request.LegislationExampleList" var="example">
+                            <tr class="text-center">
+                                <td class="text-left">${example.stExampleName}
+                                    <c:if test="${example.stNeed=='NEED'}">
+                                        <span style="color: red">(必须上传)</span>
+                                    </c:if>
+                                    <span style="color: dodgerblue">(范本)</span>
+                                </td>
+                                <td ><span style="color: red">暂未上传</span></td>
+                                <td >
+                                    <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
+                                    <input id="1" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1,'${example.stExampleId}')">
+                                </td>
+                            </tr>
+                        </s:iterator>
                     </tbody>
                 </table>
             </div>
@@ -107,7 +74,7 @@
                 </label>
                 <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                 </label>
-                <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2)">
+                <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
             </div>
             <div class="form-group">
                 <table class="table table-striped table-hover"
@@ -148,9 +115,9 @@
     function toUploadFile(obj) {
         $(obj).next().click();
     }
-    function uploadFile(id,type) {
+    function uploadFile(id,type,stSampleId) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do',
+            url: '${basePath}/file/upload.do?stNodeId=NOD_0000000101&stSampleId='+stSampleId,
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,
@@ -161,7 +128,8 @@
                 if (file.success) {
                     if(type==1){
                         var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
-                            +'<label  style="color: red" onclick="deleteAttach(this,1,'+id+')" >删除</label>';
+                            +'<label  style="color: red" onclick="deleteAttach(this,1,'+id+')" >删除</label>'
+                            +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>';
                         $("#"+id).parent().prev().html('<span>'+file.name+'</span>');
                         $("#"+id).parent().html(html);
                     }else{
@@ -170,6 +138,7 @@
                             +'<td>'+file.name+'</td>'
                             +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
                             +'<label  style="color: red" onclick="deleteAttach(this,2,'+id+')" >删除</label>'
+                            +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                             +'</td></tr>';
                         $('#otherMaterial').append(html);
                     }

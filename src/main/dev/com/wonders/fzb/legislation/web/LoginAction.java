@@ -107,12 +107,17 @@ public class LoginAction extends BaseAction {
 					}
 					//当前人的角色
 					String userRole="";
-					List<OUR> ourList=platformDao.findOurListByUserId("MODULE_LEGISLATE", currentPerson.getUserId());
-					if(ourList.size()>0) userRole=ourList.get(0).getType();
+					String userRoleId="";
 
+					List<OUR> ourList=platformDao.findOurListByUserId("MODULE_LEGISLATE", currentPerson.getUserId());
+					if(ourList.size()>0) {
+						userRole = ourList.get(0).getType();
+						userRoleId = ourList.get(0).getId();
+					}
 					System.out.println(unitName+"-"+unitCode+"-"+userRole);
 					session.setAttribute("unitCode", unitCode);//
 					session.setAttribute("unitName", unitName);//
+					session.setAttribute("userRoleId", userRoleId);//
 					session.setAttribute("userRole", userRole);//
 
 					//---当前人的菜单列表--

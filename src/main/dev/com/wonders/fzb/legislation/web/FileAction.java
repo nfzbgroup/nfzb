@@ -3,15 +3,17 @@ package com.wonders.fzb.legislation.web;
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.legislation.beans.LegislationFiles;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.io.*;
 import java.util.Date;
 import java.util.Random;
@@ -23,6 +25,10 @@ import java.util.Random;
 @Controller
 @Scope("prototype")
 public class FileAction extends BaseAction {
+
+    @Autowired
+    @Qualifier("legislationFilesService")
+    private LegislationFilesService legislationFilesService;
 
     private File upload;
 
@@ -63,9 +69,29 @@ public class FileAction extends BaseAction {
         String fileName=getCode()+"."+uploadFileName.substring(uploadFileName.lastIndexOf(".") + 1);
         File file = new File(path, fileName);
         FileUtils.copyFile(upload, file);
+
+
+
+        UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+        String userId = currentPerson.getUserId();
+        String userName = currentPerson.getName();
+
+        LegislationFiles legislationFiles = new LegislationFiles();
+        legislationFiles.setStFileUrl(path+"/"+fileName);
+        legislationFiles.setStFormat(uploadFileName.substring(uploadFileName.lastIndexOf(".") + 1));
+        legislationFiles.setStOwnerId(userId);
+        legislationFiles.setStOwnerName(userName);
+        legislationFiles.setDtPubDate(new Date());
+        legislationFiles.setStTitle(uploadFileName);
+        legislationFiles.setStNodeId(request.getParameter("stNodeId"));
+        legislationFiles.setStSampleId(request.getParameter("stSampleId"));
+
+        String fileId = legislationFilesService.addObj(legislationFiles);
+
         jsonObject.put("url",path+"/"+fileName);
         jsonObject.put("name",uploadFileName);
         jsonObject.put("fileName",fileName);
+        jsonObject.put("fileId",fileId);
         jsonObject.put("success",true);
         response.setContentType("application/json; charset=UTF-8");
         response.getWriter().print(jsonObject);
