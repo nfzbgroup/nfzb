@@ -61,7 +61,8 @@ public class LegislationProcessTaskAction extends BaseAction {
 
     @Actions({
         @Action(value = "draft_fzbrecv_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
-        @Action(value = "draft_create_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
+        @Action(value = "draft_create_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
+        @Action(value = "draft_deal_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
     })
     public String listMethodManager() throws Exception {
         String methodStr = request.getParameter("method");
@@ -179,6 +180,13 @@ public class LegislationProcessTaskAction extends BaseAction {
      * @throws FzbDaoException
      */
     private String nextChildProcess() throws FzbDaoException {
+//        UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+//        String userId = currentPerson.getUserId();
+//        String userName = currentPerson.getName();
+//        String unitId = currentPerson.getTeamInfos().get(0).getId();
+//        String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
+//        String unitName = currentPerson.getTeamInfos().get(0).
+
         String stDocId = request.getParameter("stDocId");
         String stNodeId = request.getParameter("stNodeId");
         List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "'");

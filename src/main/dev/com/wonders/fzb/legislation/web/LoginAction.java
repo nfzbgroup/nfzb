@@ -98,6 +98,8 @@ public class LoginAction extends BaseAction {
 						isZhc = true;
 					}
 					session.setAttribute("isLfc", isLfc);// 是否立法处
+					request.setAttribute("isLfc", isLfc);
+
 					session.setAttribute("isZhc", isZhc);/// 是否综合处
 					session.setAttribute("isFzb", OrgUtils.isFzb(teamInfoService, unitCode));/// 是法制办
 					if ("a".equals(password)) {

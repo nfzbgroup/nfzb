@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 
@@ -96,7 +95,6 @@ public class LegislationProcessDocAction extends BaseAction {
 		String docName = request.getParameter("docName");
 		String stComment = request.getParameter("stComent");
 
-		HttpSession session = request.getSession();
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String userId = currentPerson.getUserId();
 		String userName = currentPerson.getName();

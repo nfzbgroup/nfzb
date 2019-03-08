@@ -74,9 +74,13 @@
 								<c:choose>
 									<c:when test="${task.stNodeId=='NOD_0000000102'}">
 										<li><a class="J_menuItem" href="../legislationProcessTask/${task.stInfoUrl}?stNodeId=${task.stNodeId}">规章草案分办列表</a></li>
+										<c:if test="${isLfc}">
+											<li><a class="J_menuItem" href="../legislationProcessTask/draft_deal_info.do?stNodeId=NOD_0000000103">规章草案办理列表</a></li>
+										</c:if>
 									</c:when>
 									<c:when test="${task.stNodeId=='NOD_0000000101'}">
 										<li><a class="J_menuItem" href="../legislationProcessTask/${task.stInfoUrl}?stNodeId=${task.stNodeId}">规章草案起草列表</a></li>
+										<li><a class="J_menuItem" href="../legislationProcessTask/draft_deal_info.do?stNodeId=NOD_0000000103">规章草案办理列表</a></li>
 									</c:when>
 									<c:otherwise>
 										<li><a class="J_menuItem" href="../legislationProcessTask/legislationProcessTask_list.do?stNodeId=${task.stNodeId}">1</a></li>
