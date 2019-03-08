@@ -49,7 +49,8 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Action(value = "draft_doc_info", results = {@Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_edit.jsp"),
 			@Result(name = "openInfoPage", location = "/legislation/legislationProcessManager_info.jsp"),
-			@Result(name = "openDraftHistoryPage",location = "/legislation/legislationProcessManager_draftHistory.jsp")})
+			@Result(name = "openDraftHistoryPage",location = "/legislation/legislationProcessManager_draftHistory.jsp"),
+			@Result(name = "openSeparatePage",location = "/legislation/legislationProcessManager_separate.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -66,6 +67,9 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 	private String openDraftHistoryPage(){
+		return pageController();
+	}
+	private String openSeparatePage(){
 		return pageController();
 	}
 

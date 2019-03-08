@@ -17,6 +17,7 @@
 <link href="${basePath}/legislation/assets/css/style.min.css?v=4.0.0" rel="stylesheet">
 <link href="${basePath}/legislation/assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
 <link href="${basePath}/legislation/assets/plugin/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="${basePath}/legislation/assets/css/myUtil.css" rel="stylesheet">
 </head>
 
 <body class="gray-bg">
@@ -109,7 +110,7 @@
 	<script src="${basePath}/legislation/assets/util/util.js" type="text/javascript"></script>
 	<script src="${basePath}/legislation/assets/js/plugins/layer/layer.min.js?v=2.0"></script>
 	<script src="${basePath}/legislation/assets/util/ajaxfileupload.js" type="text/javascript"></script>
-
+	<link href="${basePath}/legislation/assets/css/plugins/layout/css/layout.min.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript">
 	$(function () {
         $.ajaxSetup({

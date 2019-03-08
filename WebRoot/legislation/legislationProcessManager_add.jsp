@@ -3,22 +3,26 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	<h4 class="modal-title">发布草案</h4>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <span >规章草案发起 </span>
+        </li>
+    </ul>
+    <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
 	<form id="legislationProcessDocForm" class="form-horizontal"
 		  novalidate="novalidate">
 		<div class="form-body">
 			<div class="form-group">
-				<label class="col-sm-3 control-label">法规规章草案：</label>
+				<label class="col-sm-3 control-label text-left">法规规章草案：</label>
 				<div class="col-sm-9">
 					<input type="text" id="docName" name="docName" class="form-control">
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label">备注：</label>
+				<label class="col-sm-3 control-label text-left">备注：</label>
 				<div class="col-sm-9">
 					<textarea id="stComent" name="stComent" class="form-control"
 					></textarea>

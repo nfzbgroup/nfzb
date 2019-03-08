@@ -46,7 +46,7 @@
 									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">接收</a></td>
 								</c:when>
 								<c:when test="${buttonStatus=='DOING'}">
-									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" class="layer_full_link">分办</a></td>
+									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openSeparatePage','${task.stDocId}')" class="layer_full_link">分办</a></td>
 								</c:when>
 								<c:otherwise>
 									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
@@ -80,12 +80,6 @@
             layer.close(layer.index);
 			$.post("../"+$('#requestUrl').val()+"?stDocId="+stDocId+"&stNodeId="+stNodeId+"&method="+method);
             submitForm(1);
-        });
-    }
-
-    function draftHistory(stDocId) {
-        $("#legislationProcessForm").modal({
-            remote: "${basePath}/legislationProcessDoc/legislationProcessDoc_form.do?stNodeId=${nodeId}&type=draftHistory&stDocId="+stDocId
         });
     }
 </script>
