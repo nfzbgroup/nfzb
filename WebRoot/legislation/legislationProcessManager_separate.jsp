@@ -58,8 +58,8 @@
 		</div>
 	</form>
 	<div class="form-group text-center">
-		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="确认分办">
-		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="编辑分办单">
+		<input type="button" class="btn btn-w-m btn-success"  value="确认分办">
+		<input type="button" class="btn btn-w-m btn-success"  value="编辑分办单">
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 	</div>
 </div>
