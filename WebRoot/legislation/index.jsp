@@ -62,33 +62,36 @@
 					<ul class="nav" id="side-menu">
 					
 						<!--示例导航开始-->
-						<s:iterator value="#request.nodeList" var="task">
 						<!-- li标签里添加class="active" 会打开菜单 -->
-				          <li  cat="default">
+				          <li  cat="default" >
 							<a href="/">
 								<i class="fa fa-database"></i>
-								<span class="nav-label"><s:property value="#task.stNodeName"/></span>
+								<span class="nav-label">立法计划管理</span>
+								<span class="fa arrow"></span>
+							</a>
+							
+						</li> 
+						<li  cat="default" >
+							<a href="/">
+								<i class="fa fa-database"></i>
+								<span class="nav-label">范本库</span>
+								<span class="fa arrow"></span>
+							</a>
+							
+						</li> 
+						
+				          <li  cat="default" class="active">
+							<a href="/">
+								<i class="fa fa-database"></i>
+								<span class="nav-label">规章草案处理</span>
 								<span class="fa arrow"></span>
 							</a>
 							<ul class="nav nav-second-level">
-								<c:choose>
-									<c:when test="${task.stNodeId=='NOD_0000000102'}">
-										<li><a class="J_menuItem" href="../legislationProcessTask/${task.stInfoUrl}?stNodeId=${task.stNodeId}">规章草案分办列表</a></li>
-										<c:if test="${isLfc}">
-											<li><a class="J_menuItem" href="../legislationProcessTask/draft_deal_info.do?stNodeId=NOD_0000000103">规章草案办理列表</a></li>
-										</c:if>
-									</c:when>
-									<c:when test="${task.stNodeId=='NOD_0000000101'}">
-										<li><a class="J_menuItem" href="../legislationProcessTask/${task.stInfoUrl}?stNodeId=${task.stNodeId}">规章草案起草列表</a></li>
-										<li><a class="J_menuItem" href="../legislationProcessTask/draft_deal_info.do?stNodeId=NOD_0000000103">规章草案办理列表</a></li>
-									</c:when>
-									<c:otherwise>
-										<li><a class="J_menuItem" href="../legislationProcessTask/legislationProcessTask_list.do?stNodeId=${task.stNodeId}">1</a></li>
-									</c:otherwise>
-								</c:choose>
+								<s:iterator value="#request.nodeList" var="task">
+									<li><a class="J_menuItem" href="../legislationProcessTask/${task.stInfoUrl}?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+								</s:iterator>
 							</ul>
 						</li> 
-						</s:iterator>
 				</ul>
 				</div>
 			</nav>

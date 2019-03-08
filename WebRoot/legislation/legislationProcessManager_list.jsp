@@ -148,7 +148,7 @@
                 }
             }
         });
-        $.post("../${requestUrl}?stNodeId=${nodeId}&method=queryTable",function(data){
+        $.post("${requestUrl}?stNodeId=${nodeId}&method=queryTable",function(data){
             $('#legislationProcessTaskTable').html(data);
         });
         $('body').on('hidden.bs.modal', '.modal', function () {
