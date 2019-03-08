@@ -16,12 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpSession;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -88,7 +85,12 @@ public class LegislationProcessDocAction extends BaseAction {
 		request.setAttribute("requestUrl", request.getRequestURI());
 		return methodStr;
 	}
-
+	private String queryDocInfo(){
+		String stDocId=request.getParameter("stDocId");
+		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+		request.setAttribute("legislationProcessDoc",legislationProcessDoc);
+		return "openInfoPage";
+	}
 	private String editLegislationProcessDoc() throws FzbDaoException {
 		String docId = request.getParameter("docId");
 		String docName = request.getParameter("docName");

@@ -23,7 +23,7 @@
 						<label style="white-space: nowrap">法规规章草案:</label>
 					</td>
 					<td class="text-center">
-						<label>接口未绑定</label>
+						<label>${legislationProcessDoc.stDocName}</label>
 					</td>
 				</tr>
 				<tr>
@@ -31,7 +31,7 @@
 						<label style="white-space: nowrap">备注:</label>
 					</td>
 					<td class="text-center">
-						<label >草案备注</label>
+						<label >${legislationProcessDoc.stComent}</label>
 					</td>
 				</tr>
 				<tr>
