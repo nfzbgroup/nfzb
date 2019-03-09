@@ -4,13 +4,13 @@ import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationExample;
+import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.services.LegislationExampleService;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
-import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import dm.jdbc.util.StringUtil;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -46,10 +46,6 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationExampleService")
 	private LegislationExampleService legislationExampleService;
-
-	@Autowired
-	@Qualifier("wegovSimpleNodeService")
-	private WegovSimpleNodeService wegovSimpleNodeService;
 
 	@Autowired
 	@Qualifier("legislationFilesService")
@@ -108,7 +104,14 @@ public class LegislationProcessDocAction extends BaseAction {
 	private String queryDocInfo(){
 		String stDocId=request.getParameter("stDocId");
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+
+		List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stSampleId!=null order by t.stSampleId ");
+		List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stSampleId='null' order by t.stFileId ");
+		for(LegislationFiles legislationFiles:otherDocList){
+			docList.add(legislationFiles);
+		}
 		request.setAttribute("legislationProcessDoc",legislationProcessDoc);
+		request.setAttribute("docList",docList);
 		return "openInfoPage";
 	}
 	private String editLegislationProcessDoc() throws FzbDaoException {

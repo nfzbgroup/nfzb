@@ -97,6 +97,14 @@ public class FileAction extends BaseAction {
         response.getWriter().print(jsonObject);
     }
 
+    @Action(value = "deleteAttach")
+    public void deleteAttach() throws Exception {
+        String fileId = request.getParameter("fileId");
+        LegislationFiles legislationFiles = new LegislationFiles();
+        legislationFiles.setStFileId(fileId);
+        legislationFilesService.delete(legislationFiles);
+    }
+
     @Action(value = "downloadAttach")
     public void downloadAttach() throws Exception{
         String name=request.getParameter("name");

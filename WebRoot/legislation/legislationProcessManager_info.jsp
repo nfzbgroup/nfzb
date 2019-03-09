@@ -42,13 +42,9 @@
 				<label style="white-space: nowrap">相关材料:</label>
 			</td>
 			<td class="text-center">
-				<label class="control-label col-md-12 text-center">相关材料</label>
-				<label class="control-label col-md-12 text-center">相关材料</label>
-				<label class="control-label col-md-12 text-center">相关材料</label>
-				<label class="control-label col-md-12 text-center">相关材料</label>
-				<label class="control-label col-md-12 text-center">相关材料</label>
-				<label class="control-label col-md-12 text-center">相关材料</label>
-				<label class="control-label col-md-12 text-center">相关材料</label>
+				<s:iterator value="#request.docList" var="doc">
+					<label class="control-label col-md-12 text-center">${doc.stTitle}</label>
+				</s:iterator>
 			</td>
 		</tr>
 	</table>
