@@ -3,6 +3,7 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
@@ -14,18 +15,19 @@
 <div class="modal-body">
 	<form id="legislationProcessDocForm" class="form-horizontal"
 		  novalidate="novalidate">
+        <input hidden name="docId" value="${stDocId}">
 		<div class="form-body">
 			<div class="form-group">
 				<label class="col-sm-3 control-label text-left">法规规章草案：</label>
 				<div class="col-sm-9">
-					<input type="text" id="docName" name="docName" class="form-control">
+                    <input type="text" id="docName" name="docName" class="form-control" <c:if test="${legislationProcessDoc.stDocName !=null}">value="${legislationProcessDoc.stDocName}" </c:if>>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label text-left">备注：</label>
 				<div class="col-sm-9">
 					<textarea id="stComent" name="stComent" class="form-control"
-					></textarea>
+					><c:if test="${legislationProcessDoc.stComent !=null}">${legislationProcessDoc.stComent}</c:if></textarea>
 				</div>
 			</div>
 			<div class="form-group text-center">
@@ -59,10 +61,28 @@
                                     </c:if>
                                     <span style="color: dodgerblue">(范本)</span>
                                 </td>
-                                <td ><span style="color: red">暂未上传</span></td>
                                 <td >
-                                    <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
-                                    <input id="1" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1,'${example.stExampleId}')">
+                                    <c:choose>
+                                        <c:when test="${example.fileId !=null}">
+                                            <span >${example.fileName}</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="color: red">暂未上传</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td >
+                                    <c:choose>
+                                        <c:when test="${example.fileId !=null}">
+                                            <a target="_blank" href="${basePath}/file/downloadAttach.do?name=${example.fileName}&url=${example.fileUrl}">下载</a>&nbsp;&nbsp;
+                                            <input type="hidden" id="${example.fileId}"  name="${example.fileId}" value="${example.fileId}">
+                                            <label style="color: red" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')" >删除</label>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
+                                            <input id="${example.stExampleId}" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1,'${example.stExampleId}')">
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                             </tr>
                         </s:iterator>
@@ -90,7 +110,21 @@
                     </tr>
                     </thead>
                     <tbody id="otherMaterial">
-
+                        <c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
+                            <c:forEach var="file" items="${legislationFilesList}">
+                                <c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
+                                    <tr class="text-center">'
+                                        <td class="text-left">需要报送的其他材料</td>
+                                        <td>${file.stTitle}</td>
+                                        <td>
+                                            <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>&nbsp;&nbsp;
+                                            <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
+                                            <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">
+                                        </td>
+                                    </tr>
+                                </c:if>
+                            </c:forEach>
+                        </c:if>
                     </tbody>
                 </table>
             </div>
@@ -129,7 +163,7 @@
                     if(type==1){
                         var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
-                        +'<label  style="color: red" onclick="deleteAttach(this,1,'+id+',\''+file.fileId+'\')" >删除</label>';
+                        +'<label  style="color: red" onclick="deleteAttach(this,1,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')" >删除</label>';
                         $("#"+id).parent().prev().html('<span>'+file.name+'</span>');
                         $("#"+id).parent().html(html);
                     }else{
@@ -137,7 +171,7 @@
                             +'<td class="text-left">需要报送的其他材料</td>'
                             +'<td>'+file.name+'</td>'
                             +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
-                            +'<label  style="color: red" onclick="deleteAttach(this,2,'+id+',\''+file.fileId+'\')">删除</label>'
+                            +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                             +'</td></tr>';
                         $('#otherMaterial').append(html);
@@ -152,14 +186,14 @@
             }
         });
     }
-    function deleteAttach(attachObj,type,id,fileId) {
+    function deleteAttach(attachObj,type,id,fileId,stSampleId) {
         $.post('${basePath}/file/deleteAttach.do?fileId='+fileId);
 
         var obj=$(attachObj);
         if(type==1){
             obj.parent().prev().html('<span style="color: red">暂未上传</span>');
             var html= '<label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>'
-                     +'<input id="'+id+'" type="file" style="display:none"  onchange="uploadFile('+id+',1)">';
+                     +'<input id="'+id+'" type="file" style="display:none"  onchange="uploadFile(\''+id+'\',1,\''+stSampleId+'\')">';
             obj.parent().html(html);
         }else{
             obj.parent().parent().remove();

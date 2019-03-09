@@ -17,7 +17,8 @@
 <div class="modal-body">
 	<div class="row" style="margin-bottom: 20px;">
 		<div class="col-md-12">
-			<label class="btn btn-w-m btn-success">草案信息列表</label>
+			<label class="btn btn-w-m btn-success" id="1" onclick="changeInfoTab(this)">草案信息列表</label>
+			<label class="btn btn-w-m btn-default" id="2" onclick="changeInfoTab(this)">分办单</label>
 		</div>
 	</div>
 	<table class="table table-border table-bordered">
@@ -55,5 +56,9 @@
 	</div>
 </div>
 <script>
-
+	function changeInfoTab(obj){
+	    var $obj=$(obj);
+        $obj.parent().children().attr("class","btn btn-w-m btn-default");
+        $obj.attr("class","btn btn-w-m btn-success");
+    }
 </script>

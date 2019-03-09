@@ -52,7 +52,7 @@ public class LegislationProcessDocAction extends BaseAction {
 
 	
 	@Action(value = "draft_doc_info", results = {@Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"),
-			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_edit.jsp"),
+			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openInfoPage", location = "/legislation/legislationProcessManager_info.jsp"),
 			@Result(name = "openDraftHistoryPage",location = "/legislation/legislationProcessManager_draftHistory.jsp"),
 			@Result(name = "openSeparatePage",location = "/legislation/legislationProcessManager_separate.jsp")})
@@ -73,6 +73,38 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 	private String openEditPage(){
+        String stNodeId = request.getParameter("stNodeId");
+        Map<String, Object> condMap = new HashMap<>();
+        Map<String, String> sortMap = new HashMap<>();
+        condMap.put("stNode", stNodeId);
+        sortMap.put("stExampleId", "ASC");
+        List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
+        String stDocId=request.getParameter("stDocId");
+        condMap.clear();
+        condMap.put("stParentId",stDocId);
+        sortMap.clear();
+        sortMap.put("dtPubDate","ASC");
+        List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+        List<Map> legislationExampleFilesList=new ArrayList<>();
+        legislationExampleList.forEach((LegislationExample legislationExample)->{
+            Map map=new HashMap();
+            map.put("stExampleId",legislationExample.getStExampleId());
+            map.put("stExampleName",legislationExample.getStExampleName());
+            map.put("stNeed",legislationExample.getStNeed());
+            legislationFilesList.forEach((LegislationFiles legislationFiles)->{
+                if(null!=legislationFiles.getStSampleId()&&
+                        legislationExample.getStExampleId().equals(legislationFiles.getStSampleId())){
+                    map.put("fileId",legislationFiles.getStFileId());
+                    map.put("fileName",legislationFiles.getStTitle());
+                    map.put("fileUrl",legislationFiles.getStFileUrl());
+                }
+            });
+            legislationExampleFilesList.add(map);
+        });
+        LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+        request.setAttribute("LegislationExampleList",legislationExampleFilesList);
+        request.setAttribute("legislationFilesList",legislationFilesList);
+        request.setAttribute("legislationProcessDoc",legislationProcessDoc);
 		return pageController();
 	}
 	private String openInfoPage(){
@@ -163,7 +195,20 @@ public class LegislationProcessDocAction extends BaseAction {
 					legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stDocId+"' where s.stFileId='"+value+"'");
 				}
 			}
-//		}
+		}else {
+            LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(docId);
+            legislationProcessDoc.setStDocName(docName);
+            legislationProcessDoc.setStComent(stComment);
+            legislationProcessDocService.update(legislationProcessDoc);
+            Enumeration keys=request.getParameterNames();
+            while(keys.hasMoreElements()){
+                String key=(String)keys.nextElement();
+                String value=request.getParameter(key);
+                if(value.startsWith("FIL_")){
+                    legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+docId+"' where s.stFileId='"+value+"'");
+                }
+            }
+        }
 //		else if("edit".equals(action)){
 //			legislationProcessDoc.setStDocId(docId);
 //			legislationProcessDoc.setStDocName(docName);
@@ -173,7 +218,7 @@ public class LegislationProcessDocAction extends BaseAction {
 //		else if("info".equals(action)){
 //			legislationProcessDoc=legislationProcessDocService.findById(docId);
 //			request.setAttribute("docInfo", legislationProcessDoc);
-		}
+//		}
 		return null;
 	}
 
