@@ -35,7 +35,7 @@
 									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
 								</c:when>
 								<c:otherwise>
-									<td ><a href="javaScript:void(0)" data-title="修改" class="layer_full_link">修改</a><br/><a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextProcess')" class="layer_full_link">上报</a></td>
+									<td ><a href="javaScript:void(0)" data-title="修改" class="layer_full_link">修改</a><br/><a href="javascript:void(0);" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">上报</a></td>
 								</c:otherwise>
 							</c:choose>
 
@@ -73,6 +73,20 @@
         $('#'+type).attr("class","btn btn-w-m btn-success");
         $('#taskStatus').val(type);
         submitForm(1);
+    }
+    
+    function uploadReport(stDocId,stNodeId) {
+        $.post("../legislationProcessTask/uploadReport.do?stDocId="+stDocId+"&stNode="+stNodeId,
+            function (data) {
+            if(data.success) {
+                nextProcess(stDocId,stNodeId,"nextProcess");
+            }else{
+                Duang.error("提示", "请补全必填材料！");
+			}
+
+        },
+        "json")
+		
     }
 
     function nextProcess(stDocId,stNodeId,method) {

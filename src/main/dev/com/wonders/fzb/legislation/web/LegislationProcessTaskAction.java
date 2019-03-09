@@ -1,11 +1,16 @@
 package com.wonders.fzb.legislation.web;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.legislation.beans.LegislationExample;
+import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.services.LegislationExampleService;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
@@ -20,10 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -50,6 +52,12 @@ public class LegislationProcessTaskAction extends BaseAction {
     @Autowired
     @Qualifier("legislationProcessDocService")
     private LegislationProcessDocService legislationProcessDocService;
+    @Autowired
+    @Qualifier("legislationExampleService")
+    private LegislationExampleService legislationExampleService;
+    @Autowired
+    @Qualifier("legislationFilesService")
+    private LegislationFilesService legislationFilesService;
 
     Page<LegislationProcessDoc> infoPage;
 
@@ -253,6 +261,25 @@ public class LegislationProcessTaskAction extends BaseAction {
         }
         return buttonNameList;
     }
+    @Action(value = "uploadReport")
+    public void uploadReport() throws Exception {
+        JSONObject jsonObject=new JSONObject();
+        String stDocId = request.getParameter("stDocId");
+        String stNode = request.getParameter("stNode");
 
+        Map<String, Object> condMap = new HashMap<>();
+        condMap.put("stNode", stNode);
+        condMap.put("stNeed", "NEED");
+        List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, null);
+        List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"'");
+        if(docList.size()<legislationExampleList.size()){
+            jsonObject.put("success",false);
+
+        }else{
+            jsonObject.put("success",true);
+        }
+        response.setContentType("application/json; charset=UTF-8");
+        response.getWriter().print(jsonObject);
+    }
 
 }

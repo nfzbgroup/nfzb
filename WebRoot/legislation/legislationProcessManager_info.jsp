@@ -43,7 +43,9 @@
 			</td>
 			<td class="text-center">
 				<s:iterator value="#request.docList" var="doc">
-					<label class="control-label col-md-12 text-center">${doc.stTitle}</label>
+					<label class="control-label col-md-12 text-center"><a target="_blank" href="${basePath}/file/downloadAttach.do?name=${doc.stTitle}&url=${doc.stFileUrl}">${doc.stTitle}</a></label>
+
+
 				</s:iterator>
 			</td>
 		</tr>

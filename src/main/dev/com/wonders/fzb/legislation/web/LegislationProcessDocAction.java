@@ -1,7 +1,6 @@
 package com.wonders.fzb.legislation.web;
 
 import com.wonders.fzb.base.actions.BaseAction;
-import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationExample;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
@@ -114,7 +113,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		request.setAttribute("docList",docList);
 		return "openInfoPage";
 	}
-	private String editLegislationProcessDoc() throws FzbDaoException {
+	private String editLegislationProcessDoc() {
 		String docId = request.getParameter("docId");
 		String docName = request.getParameter("docName");
 		String stComment = request.getParameter("stComent");
