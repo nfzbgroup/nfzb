@@ -193,7 +193,7 @@
         if(type==1){
             obj.parent().prev().html('<span style="color: red">暂未上传</span>');
             var html= '<label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>'
-                     +'<input id="'+id+'" type="file" style="display:none"  onchange="uploadFile(\''+id+'\',1,\''+stSampleId+'\')">';
+                     +'<input id="'+id+'" name="upload" type="file" style="display:none"  onchange="uploadFile(\''+id+'\',1,\''+stSampleId+'\')">';
             obj.parent().html(html);
         }else{
             obj.parent().parent().remove();

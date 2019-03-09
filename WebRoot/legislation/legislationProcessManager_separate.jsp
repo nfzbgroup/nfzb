@@ -16,7 +16,7 @@
 				<label class="control-label col-md-3">来文单位：
 				</label>
 				<div class="col-md-4">
-					<input class="control-label underline" readonly>
+					<input class="control-label underline" style="text-align:left" readonly value="<c:if test="${request.legislationProcessDoc.stUnitName!=null}">${request.legislationProcessDoc.stUnitName}</c:if>">
 				</div>
 				<label class="control-label col-md-5">收文日期：<span id="receiveYear" class="underline">2019</span>年&nbsp;<span id="receiveMonth" class="underline">03</span>月&nbsp;<span id="receiveDay" class="underline">08</span>日
 				</label>
@@ -25,14 +25,14 @@
 				<label class="control-label col-md-3">草案名称：
 				</label>
 				<div class="col-md-4">
-					<input class="control-label underline" readonly value="<c:if test="${stDocName!=null}">${stDocName}</c:if>">
+					<input class="control-label underline" style="text-align:left" readonly value="<c:if test="${request.legislationProcessDoc.stDocName!=null}">${request.legislationProcessDoc.stDocName}</c:if>">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-md-3">分办：
 				</label>
 				<div class="col-md-6">
-					<textarea  class="form-control" cols="30" rows="4"></textarea>
+					<textarea  class="form-control" cols="30" rows="4" id="distComment1" name="distComment1" value="<c:if test="${request.legislationProcessTask.stComment1!=null}">${request.legislationProcessTask.stComment1}</c:if>"></textarea>
 				</div>
 			</div>
 			<div style="width: 100%;height: 2px;background-color: #E4243D;margin-bottom: 20px"></div>
@@ -51,18 +51,39 @@
 				</div>
 				<div class="col-md-5">
 					<label class="control-label pull-right">办理时限：
-						<input style="width: 40px" type="text" name="year" class="underline">年<input style="width: 40px" type="text" name="month" class="underline">月<input style="width: 40px" type="text" name="day" class="underline">日
+						<input style="width: 40px" type="text" id="year" name="year" class="underline">年<input style="width: 40px" type="text" id="month" name="month" class="underline">月<input style="width: 40px" type="text" id="day" name="day" class="underline">日
 					</label>
 				</div>
 			</div>
 		</div>
 	</form>
 	<div class="form-group text-center">
-		<input type="button" class="btn btn-w-m btn-success"  value="确认分办">
-		<input type="button" class="btn btn-w-m btn-success"  value="编辑分办单">
+		<input type="button" class="btn btn-w-m btn-success"  value="确认分办" onclick="distSubmit('submit')">
+		<input type="button" class="btn btn-w-m btn-success"  value="保存分办单" onclick="distSubmit('save')">
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 	</div>
 </div>
-<script>
 
+<script>
+$(function () {
+	document.getElementById('distComment1').value="${request.legislationProcessTask.stComment1}";
+	var date="${request.legislationProcessTask.dtDeadDate}";
+	var dateymd=(date.split(" "))[0];
+	document.getElementById('year').value=(dateymd.split("-"))[0];
+	document.getElementById('month').value=(dateymd.split("-"))[1];
+	document.getElementById('day').value=(dateymd.split("-"))[2];
+});
+	function distSubmit(action){
+		var param=$('#user_form').formToJson();
+		var distComment = $('#distComment1').val();
+		var year= $('#year').val();
+		var month=$('#month').val();
+		var day=$('#day').val();
+		var transactDate=year+"年"+month+"月"+day+"日";
+		alert(distComment+":"+transactDate);
+		$.post("${basePath}/legislationProcessDoc/draft_dist_info.do?stDocId=${request.legislationProcessDoc.stDocId}&stComment1="+distComment+"&transactDate="+transactDate+"&action="+action,param,function(data){
+            $('#legislationProcessForm').modal('hide');
+            submitForm(1);
+        });
+	}
 </script>
