@@ -64,6 +64,7 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Action(value = "draft_doc_info", results = {@Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openInfoPage", location = "/legislation/legislationProcessManager_info.jsp"),
+			@Result(name = "openDealPage", location = "/legislation/legislationProcessManager_info.jsp"),
 			@Result(name = "openDraftHistoryPage",location = "/legislation/legislationProcessManager_draftHistory.jsp"),
 			@Result(name = "openSeparatePage",location = "/legislation/legislationProcessManager_separate.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
@@ -134,10 +135,15 @@ public class LegislationProcessDocAction extends BaseAction {
 	private String openDraftHistoryPage(){
 		return pageController();
 	}
+
+	private String openDealPage(){
+		return pageController();
+	}
+
 	private String openSeparatePage(){
 		String stDocId=request.getParameter("stDocId");
 		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
-		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + legislationProcessDoc.getStDocId() + "' and t.stNodeId='" + legislationProcessDoc.getStNodeId() + "'");
+		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + legislationProcessDoc.getStDocId() + "' and t.stNodeId='NOD_0000000102' and t.stEnable is null");
 		for (LegislationProcessTask legislationProcessTask : list) {
 			request.setAttribute("legislationProcessTask", legislationProcessTask);
 		}
@@ -259,14 +265,13 @@ public class LegislationProcessDocAction extends BaseAction {
 	public String draft_dist_info() throws Exception {
 		 String action=request.getParameter("action");
 		 String stDocId=request.getParameter("stDocId");
-		 String stNodeId=request.getParameter("stNodeId");
 		 String stComment1=request.getParameter("stComment1");//分办意见
 		 String transactDate=request.getParameter("transactDate");//办理时限
 		 
 		 LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
 		 
 		//修改当前task状态，并生成下一个节点的task
-		 List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + legislationProcessDoc.getStDocId() + "' and t.stNodeId='" + legislationProcessDoc.getStNodeId() + "'");
+		 List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + legislationProcessDoc.getStDocId() + "' and t.stNodeId='NOD_0000000102' and t.stEnable is null ");
 	        for (LegislationProcessTask legislationProcessTask : list) {//修改当前task状态
 	        	SimpleDateFormat formatter = new SimpleDateFormat( "yyyy年MM月dd日");
 	        	legislationProcessTask.setStComment1(stComment1);
@@ -293,7 +298,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		            nextLegislationProcessTask.setDtOpenDate(new Date());
 		            
 		            legislationProcessTaskService.add(nextLegislationProcessTask);
-		            legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeId='" + nextLegislationProcessTask.getStNodeId() + "',s.stNodeName='" + nextLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + nextLegislationProcessTask.getStDocId() + "'");
+		            legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeName='" + nextLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + nextLegislationProcessTask.getStDocId() + "'");
 		      
 	        	}else {//保存的话，就保存修改
 	        		legislationProcessTaskService.update(legislationProcessTask);

@@ -140,7 +140,7 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 		baseSql += " INNER JOIN LEGISLATION_PROCESS_TASK t ";
 		baseSql += " ON d.st_doc_id = t.st_doc_id ";
 		baseSql += wheresql;
-		String propView = "SELECT d.st_doc_id,d.st_doc_name,d.st_node_name,d.st_node_id,d.DT_CREATE_DATE,d.ST_USER_NAME,d.ST_DOC_NO";
+		String propView = "SELECT d.st_doc_id,d.st_doc_name,d.st_node_name,t.st_node_id,d.DT_CREATE_DATE,d.ST_USER_NAME,d.ST_DOC_NO";
 		String totalView = "SELECT COUNT(1) ";
 
 		List<LegislationProcessDoc> users = packageDocInfoBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));

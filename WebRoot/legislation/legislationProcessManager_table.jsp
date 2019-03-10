@@ -40,6 +40,23 @@
 							</c:choose>
 
 						</c:when>
+						<c:when test="${nodeId=='NOD_0000000103'}">
+							<c:choose>
+								<c:when test="${buttonStatus=='TODO'}">
+									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+										<a href="javascript:void(0);" onclick="returnProcess('${task.stDocId}','${task.stNodeId}','returnProcess')" class="layer_full_link">退回</a>
+										<a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">确认认领</a></td>
+								</c:when>
+								<c:when test="${buttonStatus=='DOING'}">
+									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+										<a href="javascript:void(0);" onclick="openPage('openDealPage','${task.stDocId}')" class="layer_full_link">办理</a></td>
+								</c:when>
+								<c:otherwise>
+									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
+								</c:otherwise>
+							</c:choose>
+
+						</c:when>
 						<c:otherwise>
 							<c:choose>
 								<c:when test="${buttonStatus=='TODO'}">
@@ -93,6 +110,14 @@
         layer.confirm('请确认操作！',function(index){
             layer.close(layer.index);
 			$.post("../"+$('#requestUrl').val()+"?stDocId="+stDocId+"&stNodeId="+stNodeId+"&method="+method);
+            submitForm(1);
+        });
+    }
+
+    function returnProcess(stDocId,stNodeId,method) {
+        layer.confirm('请确认操作！',function(index){
+            layer.close(layer.index);
+            $.post("../"+$('#requestUrl').val()+"?stDocId="+stDocId+"&stNodeId="+stNodeId+"&method="+method);
             submitForm(1);
         });
     }
