@@ -2,8 +2,10 @@ package com.wonders.fzb.legislation.services;
 
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -77,4 +79,19 @@ public interface LegislationProcessDocService{
 
 	public void executeSqlUpdate(String sql);
 
+	/****************************************************************************************************/
+
+
+	/**
+	 * 新增修改草案
+	 * @param request
+	 * @param currentPerson
+	 */
+    void editLegislationProcessDoc(HttpServletRequest request, UserInfo currentPerson,String userRoleId,String userRole);
+
+	/**
+	 * 提交分办
+	 * @param request
+	 */
+	void draft_dist_info(HttpServletRequest request);
 }

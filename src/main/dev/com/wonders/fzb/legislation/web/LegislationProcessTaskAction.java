@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
 import java.util.*;
 
 
@@ -80,7 +79,7 @@ public class LegislationProcessTaskAction extends BaseAction {
             String stNodeId = request.getParameter("stNodeId");
             request.setAttribute("requestUrl", request.getRequestURI());
             request.setAttribute("nodeId", stNodeId);
-            request.setAttribute("stTodoNameList", queryButtonInfo(stNodeId));
+            request.setAttribute("stTodoNameList", wegovSimpleNodeService.queryButtonInfo(stNodeId));
             return SUCCESS;
         } else {
             java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -162,7 +161,7 @@ public class LegislationProcessTaskAction extends BaseAction {
 
 
     /**
-     * 主节点流转
+     * 主节点流转（共用）
      *
      * @return
      * @throws FzbDaoException
@@ -170,110 +169,42 @@ public class LegislationProcessTaskAction extends BaseAction {
     private String nextProcess() throws FzbDaoException {
         String stDocId = request.getParameter("stDocId");
         String stNodeId = request.getParameter("stNodeId");
-        List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
-        for (LegislationProcessTask legislationProcessTask : list) {
-            legislationProcessTask.setStTaskStatus("DONE");
-            legislationProcessTaskService.update(legislationProcessTask);
+        legislationProcessTaskService.nextProcess(stDocId,stNodeId);
 
-            LegislationProcessTask nextLegislationProcessTask = new LegislationProcessTask();
-            nextLegislationProcessTask.setStDocId(legislationProcessTask.getStDocId());
-            nextLegislationProcessTask.setStFlowId(legislationProcessTask.getStFlowId());
-            List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'");
-            nextLegislationProcessTask.setStNodeId(nodeList.get(0).getStNextNode());
-            nextLegislationProcessTask.setStNodeName(wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + nodeList.get(0).getStNextNode() + "'").get(0).getStNodeName());
-            nextLegislationProcessTask.setStTaskStatus("TODO");
-            nextLegislationProcessTask.setDtOpenDate(new Date());
-            legislationProcessTaskService.add(nextLegislationProcessTask);
-            //legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeId='" + nextLegislationProcessTask.getStNodeId() + "',s.stNodeName='" + nextLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + nextLegislationProcessTask.getStDocId() + "'");
-            legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeName='" + nextLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + nextLegislationProcessTask.getStDocId() + "'");
-        }
         return null;
     }
 
+    /**
+     * 退回（共用）
+     * @return
+     * @throws FzbDaoException
+     */
     private String returnProcess() throws FzbDaoException {
         UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-        String userId = currentPerson.getUserId();
-        String userName = currentPerson.getName();
-        String unitId = currentPerson.getTeamInfos().get(0).getId();
-        String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
         String userRoleId =session.getAttribute("userRoleId").toString();
         String userRole =session.getAttribute("userRole").toString();
 
         String stDocId = request.getParameter("stDocId");
         String stNodeId = request.getParameter("stNodeId");
-        List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
-        for (LegislationProcessTask legislationProcessTask : list) {
-            legislationProcessTask.setStUserId(userId);
-            legislationProcessTask.setStUserName(userName);
-            legislationProcessTask.setStRoleId(userRoleId);
-            legislationProcessTask.setStRoleName(userRole);
-            legislationProcessTask.setStTeamId(unitId);
-            legislationProcessTask.setStTeamName(unitName);
-            legislationProcessTask.setStEnable("UNABLE");
-            legislationProcessTaskService.update(legislationProcessTask);
+        legislationProcessTaskService.returnProcess(stDocId,stNodeId,userRoleId,userRole,currentPerson);
 
-            List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNextNode ='" + stNodeId + "'");
-            String nodeId = nodeList.get(0).getStNodeId();
-
-            LegislationProcessTask lastLegislationProcessTask = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + nodeId + "' and t.stEnable is null").get(0);
-            lastLegislationProcessTask.setStEnable("UNABLE");
-            legislationProcessTaskService.update(lastLegislationProcessTask);
-
-            LegislationProcessTask newLegislationProcessTask = new LegislationProcessTask();
-            newLegislationProcessTask.setStDocId(lastLegislationProcessTask.getStDocId());
-            newLegislationProcessTask.setStFlowId(lastLegislationProcessTask.getStFlowId());
-            newLegislationProcessTask.setStNodeId(lastLegislationProcessTask.getStNodeId());
-            newLegislationProcessTask.setStNodeName(lastLegislationProcessTask.getStNodeName());
-            newLegislationProcessTask.setStTaskStatus("DOING");
-            newLegislationProcessTask.setDtOpenDate(lastLegislationProcessTask.getDtOpenDate());
-            newLegislationProcessTask.setStUserId(lastLegislationProcessTask.getStUserId());
-            newLegislationProcessTask.setStUserName(lastLegislationProcessTask.getStUserName());
-            newLegislationProcessTask.setStRoleId(lastLegislationProcessTask.getStRoleId());
-            newLegislationProcessTask.setStRoleName(lastLegislationProcessTask.getStRoleName());
-            newLegislationProcessTask.setStTeamId(lastLegislationProcessTask.getStTeamId());
-            newLegislationProcessTask.setStTeamName(lastLegislationProcessTask.getStTeamName());
-
-            legislationProcessTaskService.add(newLegislationProcessTask);
-            legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeName='" + lastLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + lastLegislationProcessTask.getStDocId() + "'");
-        }
         return null;
     }
     /**
-     * 次节点流转
+     * 次节点流转（公共）
      *
      * @return
      * @throws FzbDaoException
      */
     private String nextChildProcess() throws FzbDaoException {
         UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-        String userId = currentPerson.getUserId();
-        String userName = currentPerson.getName();
-        String unitId = currentPerson.getTeamInfos().get(0).getId();
-        String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
         String userRoleId =session.getAttribute("userRoleId").toString();
         String userRole =session.getAttribute("userRole").toString();
-
         String stDocId = request.getParameter("stDocId");
         String stNodeId = request.getParameter("stNodeId");
-        List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
-        for (LegislationProcessTask legislationProcessTask : list) {
-            String curStTaskStatus = legislationProcessTask.getStTaskStatus();
 
-            String[] stTaskStatusArray = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'").get(0).getStDoneName().split("#");
-            for (int i = 0; i < stTaskStatusArray.length; i++) {
-                if (curStTaskStatus.equals(stTaskStatusArray[i])) {
-                    legislationProcessTask.setStTaskStatus(stTaskStatusArray[i + 1]);
-                    break;
-                }
-            }
-            legislationProcessTask.setStUserId(userId);
-            legislationProcessTask.setStUserName(userName);
-            legislationProcessTask.setStRoleId(userRoleId);
-            legislationProcessTask.setStRoleName(userRole);
-            legislationProcessTask.setStTeamId(unitId);
-            legislationProcessTask.setStTeamName(unitName);
-            legislationProcessTaskService.update(legislationProcessTask);
-        }
+        legislationProcessTaskService.nextChildProcess(stDocId,stNodeId,userRoleId,userRole,currentPerson);
+
         return null;
     }
 
@@ -287,36 +218,9 @@ public class LegislationProcessTaskAction extends BaseAction {
     }
 
     /**
-     * 查询buttonInfo
-     *
-     * @param stNodeId
-     * @return
+     * 草案上报必填项校验
+     * @throws Exception
      */
-    private List<Object> queryButtonInfo(String stNodeId) {
-        List<Object> buttonNameList = new ArrayList<>();
-        HashMap<String, String> nameMap = null;
-
-        List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'");
-        if (nodeList != null && nodeList.size() > 0) {
-            WegovSimpleNode wegovSimpleNode = nodeList.get(0);
-            if (StringUtil.isNotEmpty(wegovSimpleNode.getStTodoName())) {
-                String[] stTodoNameArray = wegovSimpleNode.getStTodoName().split("#");
-                String[] stDoneNameArray = wegovSimpleNode.getStDoneName().split("#");
-                for (int i = 0; i < stTodoNameArray.length; i++) {
-                    nameMap = new HashMap<>();
-                    nameMap.put("buttonName", stTodoNameArray[i]);
-                    nameMap.put("buttonId", stDoneNameArray[i]);
-                    if (i == 0) {
-                        nameMap.put("buttonClass", "btn btn-w-m btn-success");
-                    } else {
-                        nameMap.put("buttonClass", "btn btn-w-m btn-default");
-                    }
-                    buttonNameList.add(nameMap);
-                }
-            }
-        }
-        return buttonNameList;
-    }
     @Action(value = "uploadReport")
     public void uploadReport() throws Exception {
         JSONObject jsonObject=new JSONObject();

@@ -1,11 +1,11 @@
 package com.wonders.fzb.simpleflow.services;
 
-import java.util.List;
-import java.util.Map;
-
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -74,5 +74,12 @@ public interface WegovSimpleNodeService{
 	 */
 	public List<WegovSimpleNode> findByHQL(String hql);
 
+	/****************************************************************************************************/
 
+	/**
+	 * 查询列表页tab信息
+	 * @param stNodeId
+	 * @return
+	 */
+	List<Object> queryButtonInfo(String stNodeId);
 }

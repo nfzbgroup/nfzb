@@ -1,12 +1,13 @@
 package com.wonders.fzb.legislation.services;
 
-import java.util.List;
-import java.util.Map;
-
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -84,4 +85,32 @@ public interface LegislationProcessTaskService{
 	Page<LegislationProcessDoc> findTaskDocListByNodeId(String sql, int pageNo,
 			int pageSize);
 
+	/****************************************************************************************************/
+
+	/**
+	 * 大节点扭转
+	 * @param stDocId
+	 * @param stNodeId
+	 */
+	public void nextProcess(String stDocId, String stNodeId);
+
+	/**
+	 * 退回（公共）
+	 * @param stDocId
+	 * @param stNodeId
+	 * @param userRoleId
+	 * @param userRole
+	 * @param currentPerson
+	 */
+	void returnProcess(String stDocId, String stNodeId, String userRoleId, String userRole, UserInfo currentPerson);
+
+	/**
+	 * 次节点流转（公共）
+	 * @param stDocId
+	 * @param stNodeId
+	 * @param userRoleId
+	 * @param userRole
+	 * @param currentPerson
+	 */
+	void nextChildProcess(String stDocId, String stNodeId, String userRoleId, String userRole, UserInfo currentPerson);
 }

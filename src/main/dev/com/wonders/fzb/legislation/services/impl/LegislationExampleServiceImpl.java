@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,5 +111,29 @@ public class LegislationExampleServiceImpl implements LegislationExampleService 
 	public List<LegislationExample> findByHQL(String hql) {
 		List<LegislationExample> legislationExampleList = legislationExampleDao.findByHQL(hql);
 		return legislationExampleList;
+	}
+
+	/**
+	 * 查询范本信息
+	 *
+	 * @param condMap
+	 * @param sortMap
+	 * @return
+	 */
+	@Override
+	public List<Map> queryLegislationExampleFiles(Map<String, Object> condMap, Map<String, String> sortMap) {
+		List<LegislationExample> legislationExampleList = findByList(condMap, sortMap);
+		List<Map> legislationExampleFilesList=new ArrayList<>();
+		legislationExampleList.forEach((LegislationExample legislationExample)->{
+			Map map=new HashMap();
+			map.put("stExampleId",legislationExample.getStExampleId());
+			map.put("stExampleName",legislationExample.getStExampleName());
+			map.put("stNeed",legislationExample.getStNeed());
+			map.put("fileId",null);
+			map.put("fileName",null);
+			map.put("fileUrl",null);
+			legislationExampleFilesList.add(map);
+		});
+		return legislationExampleFilesList;
 	}
 }

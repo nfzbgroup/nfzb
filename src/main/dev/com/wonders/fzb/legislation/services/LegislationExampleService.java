@@ -1,11 +1,11 @@
 package com.wonders.fzb.legislation.services;
 
-import java.util.List;
-import java.util.Map;
-
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.legislation.beans.LegislationExample;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -74,5 +74,13 @@ public interface LegislationExampleService{
 	 */
 	public List<LegislationExample> findByHQL(String hql);
 
+	/****************************************************************************************************/
 
+	/**
+	 * 查询范本信息
+	 * @param condMap
+	 * @param sortMap
+	 * @return
+	 */
+    List<Map> queryLegislationExampleFiles(Map<String,Object> condMap, Map<String,String> sortMap);
 }

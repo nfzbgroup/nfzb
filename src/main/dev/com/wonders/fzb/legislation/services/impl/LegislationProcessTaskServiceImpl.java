@@ -1,19 +1,22 @@
 package com.wonders.fzb.legislation.services.impl;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
+import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.dao.LegislationProcessTaskDao;
+import com.wonders.fzb.legislation.services.LegislationProcessDocService;
+import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.legislation.beans.*;
-import com.wonders.fzb.legislation.dao.*;
-import com.wonders.fzb.legislation.services.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,7 +31,10 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 
 	@Autowired
 	private LegislationProcessTaskDao legislationProcessTaskDao;
-	
+	@Autowired
+	private WegovSimpleNodeService wegovSimpleNodeService;
+	@Autowired
+	private LegislationProcessDocService legislationProcessDocService;
 	/**
 	 * 添加实体对象
 	 */
@@ -125,8 +131,122 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			int pageNo, int pageSize) {
 		return legislationProcessTaskDao.findTaskDocListByNodeId(sql, pageNo, pageSize);
 	}
-	
-	
-	
+
+	/**
+	 * 大节点扭转
+	 *
+	 * @param stDocId
+	 * @param stNodeId
+	 */
+	@Override
+	public void nextProcess(String stDocId, String stNodeId) {
+		List<LegislationProcessTask> list = legislationProcessTaskDao.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
+		for (LegislationProcessTask legislationProcessTask : list) {
+			legislationProcessTask.setStTaskStatus("DONE");
+			legislationProcessTaskDao.update(legislationProcessTask);
+
+			LegislationProcessTask nextLegislationProcessTask = new LegislationProcessTask();
+			nextLegislationProcessTask.setStDocId(legislationProcessTask.getStDocId());
+			nextLegislationProcessTask.setStFlowId(legislationProcessTask.getStFlowId());
+			List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'");
+			nextLegislationProcessTask.setStNodeId(nodeList.get(0).getStNextNode());
+			nextLegislationProcessTask.setStNodeName(wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + nodeList.get(0).getStNextNode() + "'").get(0).getStNodeName());
+			nextLegislationProcessTask.setStTaskStatus("TODO");
+			nextLegislationProcessTask.setDtOpenDate(new Date());
+			legislationProcessTaskDao.save(nextLegislationProcessTask);
+			legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeName='" + nextLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + nextLegislationProcessTask.getStDocId() + "'");
+		}
+	}
+
+	/**
+	 * 退回（公共）
+	 *
+	 * @param stDocId
+	 * @param stNodeId
+	 * @param userRoleId
+	 * @param userRole
+	 * @param currentPerson
+	 */
+	@Override
+	public void returnProcess(String stDocId, String stNodeId, String userRoleId, String userRole, UserInfo currentPerson) {
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
+		String unitId = currentPerson.getTeamInfos().get(0).getId();
+		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
+
+		List<LegislationProcessTask> list = findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
+		for (LegislationProcessTask legislationProcessTask : list) {
+			legislationProcessTask.setStUserId(userId);
+			legislationProcessTask.setStUserName(userName);
+			legislationProcessTask.setStRoleId(userRoleId);
+			legislationProcessTask.setStRoleName(userRole);
+			legislationProcessTask.setStTeamId(unitId);
+			legislationProcessTask.setStTeamName(unitName);
+			legislationProcessTask.setStEnable("UNABLE");
+			update(legislationProcessTask);
+
+			List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNextNode ='" + stNodeId + "'");
+			String nodeId = nodeList.get(0).getStNodeId();
+
+			LegislationProcessTask lastLegislationProcessTask = findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + nodeId + "' and t.stEnable is null").get(0);
+			lastLegislationProcessTask.setStEnable("UNABLE");
+			update(lastLegislationProcessTask);
+
+			LegislationProcessTask newLegislationProcessTask = new LegislationProcessTask();
+			newLegislationProcessTask.setStDocId(lastLegislationProcessTask.getStDocId());
+			newLegislationProcessTask.setStFlowId(lastLegislationProcessTask.getStFlowId());
+			newLegislationProcessTask.setStNodeId(lastLegislationProcessTask.getStNodeId());
+			newLegislationProcessTask.setStNodeName(lastLegislationProcessTask.getStNodeName());
+			newLegislationProcessTask.setStTaskStatus("DOING");
+			newLegislationProcessTask.setDtOpenDate(lastLegislationProcessTask.getDtOpenDate());
+			newLegislationProcessTask.setStUserId(lastLegislationProcessTask.getStUserId());
+			newLegislationProcessTask.setStUserName(lastLegislationProcessTask.getStUserName());
+			newLegislationProcessTask.setStRoleId(lastLegislationProcessTask.getStRoleId());
+			newLegislationProcessTask.setStRoleName(lastLegislationProcessTask.getStRoleName());
+			newLegislationProcessTask.setStTeamId(lastLegislationProcessTask.getStTeamId());
+			newLegislationProcessTask.setStTeamName(lastLegislationProcessTask.getStTeamName());
+
+			add(newLegislationProcessTask);
+			legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeName='" + lastLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + lastLegislationProcessTask.getStDocId() + "'");
+		}
+	}
+
+	/**
+	 * 次节点流转（公共）
+	 *
+	 * @param stDocId
+	 * @param stNodeId
+	 * @param userRoleId
+	 * @param userRole
+	 * @param currentPerson
+	 */
+	@Override
+	public void nextChildProcess(String stDocId, String stNodeId, String userRoleId, String userRole, UserInfo currentPerson) {
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
+		String unitId = currentPerson.getTeamInfos().get(0).getId();
+		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
+		List<LegislationProcessTask> list = findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
+		for (LegislationProcessTask legislationProcessTask : list) {
+			String curStTaskStatus = legislationProcessTask.getStTaskStatus();
+
+			String[] stTaskStatusArray = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'").get(0).getStDoneName().split("#");
+			for (int i = 0; i < stTaskStatusArray.length; i++) {
+				if (curStTaskStatus.equals(stTaskStatusArray[i])) {
+					legislationProcessTask.setStTaskStatus(stTaskStatusArray[i + 1]);
+					break;
+				}
+			}
+			legislationProcessTask.setStUserId(userId);
+			legislationProcessTask.setStUserName(userName);
+			legislationProcessTask.setStRoleId(userRoleId);
+			legislationProcessTask.setStRoleName(userRole);
+			legislationProcessTask.setStTeamId(unitId);
+			legislationProcessTask.setStTeamName(unitName);
+			update(legislationProcessTask);
+		}
+
+	}
+
 
 }

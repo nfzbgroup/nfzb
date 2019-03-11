@@ -1,19 +1,19 @@
 package com.wonders.fzb.simpleflow.services.impl;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.dao.WegovSimpleNodeDao;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+import dm.jdbc.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.simpleflow.beans.*;
-import com.wonders.fzb.simpleflow.dao.*;
-import com.wonders.fzb.simpleflow.services.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -112,5 +112,37 @@ public class WegovSimpleNodeServiceImpl implements WegovSimpleNodeService {
 	public List<WegovSimpleNode> findByHQL(String hql) {
 		List<WegovSimpleNode> wegovSimpleNodeList = wegovSimpleNodeDao.findByHQL(hql);
 		return wegovSimpleNodeList;
+	}
+
+	/**
+	 * 查询列表页tab信息
+	 *
+	 * @param stNodeId
+	 * @return
+	 */
+	@Override
+	public List<Object> queryButtonInfo(String stNodeId) {
+		List<Object> buttonNameList = new ArrayList<>();
+		HashMap<String, String> nameMap = null;
+		List<WegovSimpleNode> nodeList = findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'");
+		if (nodeList != null && nodeList.size() > 0) {
+			WegovSimpleNode wegovSimpleNode = nodeList.get(0);
+			if (StringUtil.isNotEmpty(wegovSimpleNode.getStTodoName())) {
+				String[] stTodoNameArray = wegovSimpleNode.getStTodoName().split("#");
+				String[] stDoneNameArray = wegovSimpleNode.getStDoneName().split("#");
+				for (int i = 0; i < stTodoNameArray.length; i++) {
+					nameMap = new HashMap<>();
+					nameMap.put("buttonName", stTodoNameArray[i]);
+					nameMap.put("buttonId", stDoneNameArray[i]);
+					if (i == 0) {
+						nameMap.put("buttonClass", "btn btn-w-m btn-success");
+					} else {
+						nameMap.put("buttonClass", "btn btn-w-m btn-default");
+					}
+					buttonNameList.add(nameMap);
+				}
+			}
+		}
+		return buttonNameList;
 	}
 }
