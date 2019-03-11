@@ -124,7 +124,6 @@ public class LegislationProcessDocAction extends BaseAction {
         String stNodeId = request.getParameter("stNodeId");
         Map<String, Object> condMap = new HashMap<>();
         Map<String, String> sortMap = new HashMap<>();
-		condMap.put("stType", "CREATE");
 		condMap.put("stNode", stNodeId);
         sortMap.put("stExampleId", "ASC");
         List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
@@ -285,7 +284,6 @@ public class LegislationProcessDocAction extends BaseAction {
 		String stNodeId = request.getParameter("stNodeId");
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();
-		condMap.put("stType", "CREATE");
 		condMap.put("stNode", stNodeId);
 		sortMap.put("stExampleId", "ASC");
 		List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
