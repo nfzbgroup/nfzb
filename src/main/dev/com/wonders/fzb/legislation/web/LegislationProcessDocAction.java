@@ -64,9 +64,12 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Action(value = "draft_doc_info", results = {@Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openInfoPage", location = "/legislation/legislationProcessManager_info.jsp"),
-			@Result(name = "openDealPage", location = "/legislation/legislationProcessManager_info.jsp"),
 			@Result(name = "openDraftHistoryPage",location = "/legislation/legislationProcessManager_draftHistory.jsp"),
-			@Result(name = "openSeparatePage",location = "/legislation/legislationProcessManager_separate.jsp")})
+			@Result(name = "openSeparatePage",location = "/legislation/legislationProcessManager_separate.jsp"),
+			@Result(name = "openDemonstrationPage",location = "/legislation/legislationProcessManager_demonstration.jsp"),
+			@Result(name = "openExpertDemonstrationPage",location = "/legislation/legislationProcessManager_expertDemonstration.jsp"),
+			@Result(name = "openLegislationDemonstrationPage",location = "/legislation/legislationProcessManager_legislationDemonstration.jsp"),
+			@Result(name = "openUnitDemonstrationPage",location = "/legislation/legislationProcessManager_unitDemonstration.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -136,10 +139,6 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 
-	private String openDealPage(){
-		return pageController();
-	}
-
 	private String openSeparatePage(){
 		String stDocId=request.getParameter("stDocId");
 		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
@@ -151,6 +150,75 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 
+	private String openDemonstrationPage(){
+		return pageController();
+	}
+
+	private String openExpertDemonstrationPage(){
+		String stNodeId = request.getParameter("stNodeId");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stNode", stNodeId);
+		sortMap.put("stExampleId", "ASC");
+		List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
+		List<Map> legislationExampleFilesList=new ArrayList<>();
+		legislationExampleList.forEach((LegislationExample legislationExample)->{
+			Map map=new HashMap();
+			map.put("stExampleId",legislationExample.getStExampleId());
+			map.put("stExampleName",legislationExample.getStExampleName());
+			map.put("stNeed",legislationExample.getStNeed());
+			map.put("fileId",null);
+			map.put("fileName",null);
+			map.put("fileUrl",null);
+			legislationExampleFilesList.add(map);
+		});
+		request.setAttribute("LegislationExampleList",legislationExampleFilesList);
+		return pageController();
+	}
+
+	private String openLegislationDemonstrationPage(){
+		String stNodeId = request.getParameter("stNodeId");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stNode", stNodeId);
+		sortMap.put("stExampleId", "ASC");
+		List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
+		List<Map> legislationExampleFilesList=new ArrayList<>();
+		legislationExampleList.forEach((LegislationExample legislationExample)->{
+			Map map=new HashMap();
+			map.put("stExampleId",legislationExample.getStExampleId());
+			map.put("stExampleName",legislationExample.getStExampleName());
+			map.put("stNeed",legislationExample.getStNeed());
+			map.put("fileId",null);
+			map.put("fileName",null);
+			map.put("fileUrl",null);
+			legislationExampleFilesList.add(map);
+		});
+		request.setAttribute("LegislationExampleList",legislationExampleFilesList);
+		return pageController();
+	}
+
+	private String openUnitDemonstrationPage(){
+		String stNodeId = request.getParameter("stNodeId");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stNode", stNodeId);
+		sortMap.put("stExampleId", "ASC");
+		List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
+		List<Map> legislationExampleFilesList=new ArrayList<>();
+		legislationExampleList.forEach((LegislationExample legislationExample)->{
+			Map map=new HashMap();
+			map.put("stExampleId",legislationExample.getStExampleId());
+			map.put("stExampleName",legislationExample.getStExampleName());
+			map.put("stNeed",legislationExample.getStNeed());
+			map.put("fileId",null);
+			map.put("fileName",null);
+			map.put("fileUrl",null);
+			legislationExampleFilesList.add(map);
+		});
+		request.setAttribute("LegislationExampleList",legislationExampleFilesList);
+		return pageController();
+	}
 	/**
 	 * 页面控制
 	 * @return

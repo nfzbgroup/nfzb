@@ -90,8 +90,7 @@
 			</div>
 			<div class="modal inmodal fade" id="legislationProcessForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog" style="width: 800px">
-					<div class="modal-content">
-
+					<div class="modal-content" id="demonstration">
 					</div>
 				</div>
 			</div>
@@ -157,11 +156,18 @@
         $('body').on('show.bs.modal', function () {
             $('.modal .modal-body').css('overflow-y', 'auto');
             $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
+            $('.modal .modal-body .demonstration').css('overflow-y', 'auto');
+            $('.modal .modal-body .demonstration').css('height', $(window).height() * 0.2);
         });
 	});
 	function openPage(method,stDocId) {
         $("#legislationProcessForm").modal({
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId
+        });
+    };
+    function openDemonstrationPage(method,stDocId) {
+        $.post("${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId,function(data){
+            $('#demonstration').html(data);
         });
     }
 	</script>

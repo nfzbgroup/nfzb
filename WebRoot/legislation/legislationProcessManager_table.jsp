@@ -49,7 +49,7 @@
 								</c:when>
 								<c:when test="${buttonStatus=='DOING'}">
 									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/>
-										<a href="javascript:void(0);" onclick="openPage('openDealPage','${task.stDocId}')" class="layer_full_link">办理</a></td>
+										<a href="javascript:void(0);" onclick="openPage('openDemonstrationPage','${task.stDocId}')"  class="layer_full_link">办理</a></td>
 								</c:when>
 								<c:otherwise>
 									<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
