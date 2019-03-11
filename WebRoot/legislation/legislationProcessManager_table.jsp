@@ -45,12 +45,12 @@
 								<td ><fmt:formatDate type="date" value="${task.dtCreateDate}" /></td>
 								<c:choose>
 									<c:when test="${buttonStatus=='TODO'}">
-										<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">编辑</a><br>
+										<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">编辑</a><br>
 											<a href="javaScript:void(0)" data-title="上报" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">上报</a></td>
 									</c:when>
 									<c:otherwise>
-										<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">编辑</a>
-											<a href="javaScript:void(0)" data-title="查看会前" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看会前</a><br/></td>
+										<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">编辑</a>
+											<a href="javaScript:void(0)" data-title="查看会前" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看会前</a><br/></td>
 									</c:otherwise>
 								</c:choose>
 							</tr>
@@ -72,7 +72,7 @@
 								<c:when test="${nodeId=='NOD_0000000101'}">
 									<c:choose>
 										<c:when test="${buttonStatus=='DONE'}">
-											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
 										</c:when>
 										<c:otherwise>
 											<td ><a href="javaScript:void(0)" data-title="修改" onclick="openPage('openEditPage','${task.stDocId}')" class="layer_full_link">修改</a><br/><a href="javascript:void(0);" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">上报</a></td>
@@ -83,16 +83,16 @@
 								<c:when test="${nodeId=='NOD_0000000103'}">
 									<c:choose>
 										<c:when test="${buttonStatus=='TODO'}">
-											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
 												<a href="javascript:void(0);" onclick="returnProcess('${task.stDocId}','${task.stNodeId}','returnProcess')" class="layer_full_link">退回</a>
 												<a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">确认认领</a></td>
 										</c:when>
 										<c:when test="${buttonStatus=='DOING'}">
-											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
 												<a href="javascript:void(0);" onclick="openPage('openDemonstrationPage','${task.stDocId}')"  class="layer_full_link">办理</a></td>
 										</c:when>
 										<c:otherwise>
-											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
 										</c:otherwise>
 									</c:choose>
 
@@ -100,13 +100,13 @@
 								<c:otherwise>
 									<c:choose>
 										<c:when test="${buttonStatus=='TODO'}">
-											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">接收</a></td>
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">接收</a></td>
 										</c:when>
 										<c:when test="${buttonStatus=='DOING'}">
-											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openSeparatePage','${task.stDocId}')" class="layer_full_link">分办</a></td>
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openSeparatePage','${task.stDocId}')" class="layer_full_link">分办</a></td>
 										</c:when>
 										<c:otherwise>
-											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('queryDocInfo','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
 										</c:otherwise>
 									</c:choose>
 								</c:otherwise>
