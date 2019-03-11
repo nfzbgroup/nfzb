@@ -165,12 +165,12 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 			legislationProcessDoc.setStNodeName("草案起草");
 			legislationProcessDoc.setDtCreateDate(new Date());
 
-			String stDocId=addObj(legislationProcessDoc);
-			legislationProcessDoc.setStDocNo(stDocId);
+			docId=addObj(legislationProcessDoc);
+			legislationProcessDoc.setStDocNo(docId);
 			update(legislationProcessDoc);
 
 			LegislationProcessTask newTask= new LegislationProcessTask();
-			newTask.setStDocId(stDocId);
+			newTask.setStDocId(docId);
 			newTask.setStFlowId(docName);
 			newTask.setStNodeId(legislationProcessDoc.getStNodeId());
 			newTask.setStNodeName(legislationProcessDoc.getStNodeName());
