@@ -7,22 +7,31 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >专家论证 > </span>
+            <span >审核会议 > </span>
         </li>
         <li>
-            <span >内容添加</span>
+            <span >发起</span>
         </li>
     </ul>
+    <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
-	<form id="expertDemonstrationForm" class="form-horizontal"
+	<form id="auditMeetingForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden name="docId" value="${stDocId}">
 		<div class="form-body">
             <div class="form-group">
-                <label class="col-sm-3 control-label">论证会议题：</label>
+                <label class="col-sm-3 control-label">会议名称：</label>
                 <div class="col-sm-9">
-					<textarea class="form-control" ></textarea>
+                    <input type="text"  class="form-control" value="未绑定接口">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">会议类型：</label>
+                <div class="col-sm-9">
+                    <select class="form-control" >
+                        <option>未绑定接口</option>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
@@ -41,19 +50,19 @@
                 <label class="col-sm-5 control-label" style="color: red;text-align: left">*需修改法规规章草案名称请在此处填写</label>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">论证会地点：</label>
+                <label class="col-sm-3 control-label">会议地点：</label>
                 <div class="col-sm-9">
                     <input type="text"  class="form-control" >
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">论证会时间：</label>
+                <label class="col-sm-3 control-label">会议时间：</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control" readonly id="demonstrationDate" name="demonstrationDate">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">论证会人员：</label>
+                <label class="col-sm-3 control-label">会议人员：</label>
                 <div class="col-sm-9">
                     <textarea class="form-control" ></textarea>
                 </div>
@@ -61,10 +70,10 @@
 			<div class="form-group text-center">
 					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
 						   name="btnSave"  value="提交"> &nbsp;&nbsp;
-					<input type="button" class="btn btn-w-m btn-success" onclick="openDemonstrationPage('openDemonstrationPage','${stDocId}')" value="返回">
+					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 			<div class="form-group">
-				<label class="control-label">专家论证前材料
+				<label class="control-label">审核会议前材料
 				</label>
 			</div>
             <div class="form-group">
@@ -118,7 +127,7 @@
                 </table>
             </div>
             <div class="form-group">
-                <label class="control-label">专家论证前其他材料
+                <label class="control-label">审核会议前其他材料
                 </label>
                 <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                 </label>

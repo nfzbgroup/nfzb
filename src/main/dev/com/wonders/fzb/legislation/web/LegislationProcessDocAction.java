@@ -69,7 +69,12 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openDemonstrationPage",location = "/legislation/legislationProcessManager_demonstration.jsp"),
 			@Result(name = "openExpertDemonstrationPage",location = "/legislation/legislationProcessManager_expertDemonstration.jsp"),
 			@Result(name = "openLegislationDemonstrationPage",location = "/legislation/legislationProcessManager_legislationDemonstration.jsp"),
-			@Result(name = "openUnitDemonstrationPage",location = "/legislation/legislationProcessManager_unitDemonstration.jsp")})
+			@Result(name = "openUnitDemonstrationPage",location = "/legislation/legislationProcessManager_unitDemonstration.jsp"),
+			@Result(name = "openExpertInfoPage",location = "/legislation/legislationProcessManager_expertInfo.jsp"),
+			@Result(name = "openLegislationInfoPage",location = "/legislation/legislationProcessManager_legislationInfo.jsp"),
+			@Result(name = "openAddAuditMeetingPage",location = "/legislation/legislationProcessManager_auditMeeting.jsp"),
+			@Result(name = "openEditAuditMeetingPage",location = "/legislation/legislationProcessManager_auditMeeting.jsp"),
+			@Result(name = "openAuditMeetingInfoPage",location = "/legislation/legislationProcessManager_auditMeetingInfo.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -217,6 +222,26 @@ public class LegislationProcessDocAction extends BaseAction {
 			legislationExampleFilesList.add(map);
 		});
 		request.setAttribute("LegislationExampleList",legislationExampleFilesList);
+		return pageController();
+	}
+
+	private String openExpertInfoPage(){
+		return pageController();
+	}
+
+	private String openLegislationInfoPage(){
+		return pageController();
+	}
+
+	private String openAddAuditMeetingPage(){
+		return pageController();
+	}
+
+	private String openEditAuditMeetingPage(){
+		return pageController();
+	}
+
+	private String openAuditMeetingInfoPage(){
 		return pageController();
 	}
 	/**

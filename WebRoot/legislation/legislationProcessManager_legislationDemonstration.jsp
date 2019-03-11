@@ -15,7 +15,7 @@
     </ul>
 </div>
 <div class="modal-body">
-	<form id="legislationProcessDocForm" class="form-horizontal"
+	<form id="legislationDemonstrationForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden name="docId" value="${stDocId}">
 		<div class="form-body">

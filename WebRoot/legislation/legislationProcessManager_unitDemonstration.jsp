@@ -16,7 +16,7 @@
 </div>
 <div class="modal-body">
     <h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">征求意见单</h2>
-	<form id="legislationProcessDocForm" class="form-horizontal"
+	<form id="unitDemonstrationForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden name="docId" value="${stDocId}">
 		<div class="form-body">

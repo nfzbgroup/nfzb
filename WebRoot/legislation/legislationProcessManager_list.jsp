@@ -88,7 +88,7 @@
 				</div>
 				</div>
 			</div>
-			<div class="modal inmodal fade" id="legislationProcessForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+			<div class="modal inmodal fade" id="legislationProcessForm" data-backdrop tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog" style="width: 800px">
 					<div class="modal-content" id="demonstration">
 					</div>
