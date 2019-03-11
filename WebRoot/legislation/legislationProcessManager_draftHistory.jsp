@@ -21,23 +21,28 @@
 			<th class="text-center">上传时间</th>
 		</thead>
 		<tbody>
+		<s:iterator value="#request.legislationDeal" var="deal">
 			<tr class="text-center">
 				<td>
-					<span>未绑接口</span>
+					<span>${deal.stActionName}</span>
 				</td>
 				<td>
-					<span>未绑接口</span>
+					<span>${deal.stBakOne}</span>
 				</td>
 				<td>
-					<span>未绑接口</span>
+					<s:iterator value="#deal.docList" var="files">
+						<span><a target="_blank" href="${basePath}/file/downloadAttach.do?name=${files.stTitle}&url=${files.stFileUrl}">${files.stTitle}</a></span></br>
+					</s:iterator>
 				</td>
 				<td>
-					<span>未绑接口</span>
+					<span>${deal.stUserName}</span>
 				</td>
 				<td>
-					<span>2019-03-07</span>
+					<span><span>${deal.dtDealDate}</span>
 				</td>
 			</tr>
+		</s:iterator>
+			
 		</tbody>
 	</table>
 	<div class="form-group text-center">

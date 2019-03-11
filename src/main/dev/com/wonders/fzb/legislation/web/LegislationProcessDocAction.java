@@ -2,7 +2,9 @@ package com.wonders.fzb.legislation.web;
 
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.TeamInfo;
 import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.*;
 import com.wonders.fzb.legislation.services.*;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
@@ -17,6 +19,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -52,10 +55,14 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationFilesService")
 	private LegislationFilesService legislationFilesService;
+	
+	@Autowired
+	@Qualifier("teamInfoService")
+	private TeamInfoService teamInfoService;
+	
 	@Autowired
 	@Qualifier("legislationProcessDealService")
 	private LegislationProcessDealService legislationProcessDealService;
-
 	
 	@Action(value = "draft_doc_info", results = {@Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_add.jsp"),
@@ -157,6 +164,33 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 	private String openDraftHistoryPage(){
+		String stDocId=request.getParameter("stDocId");
+		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stDocId",stDocId );
+		sortMap.put("stDealId", "ASC");
+		List<LegislationProcessDeal> dealList = legislationProcessDealService.findByList(condMap, sortMap);
+		List<Map> legislationDeal=new ArrayList<Map>();
+		for (int i = 0; i < dealList.size(); i++) {
+			Map<String, Object> filesMap = new HashMap<>();
+			filesMap.put("stActionName", dealList.get(i).getStActionName());
+			filesMap.put("stBakOne", dealList.get(i).getStBakOne());
+			filesMap.put("stUserName", dealList.get(i).getStUserName());
+			filesMap.put("dtDealDate", dealList.get(i).getDtDealDate());
+			List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='"+dealList.get(i).getStActionId()+"' and t.stSampleId!=null order by t.stSampleId ");
+			List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='"+dealList.get(i).getStActionId()+"' and t.stSampleId='null' order by t.stFileId ");
+			for(LegislationFiles legislationFiles:otherDocList){
+				docList.add(legislationFiles);
+			}
+			filesMap.put("docList", docList);
+			legislationDeal.add(filesMap);
+		}
+		
+		request.setAttribute("legislationDeal", legislationDeal);
+		request.setAttribute("legislationProcessDoc",legislationProcessDoc);
+//		request.setAttribute("docList",docList);
+		request.setAttribute("dealList", dealList);
 		return pageController();
 	}
 
@@ -168,6 +202,14 @@ public class LegislationProcessDocAction extends BaseAction {
 			request.setAttribute("legislationProcessTask", legislationProcessTask);
 		}
 		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
+		//查询分办处
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("idLike","U_3_" );
+		condMap.put("unitNameLike","法规处" );
+		sortMap.put("id", "ASC");
+		List<TeamInfo> teamInfoList=teamInfoService.findTeamInfoList(condMap, sortMap);
+		request.setAttribute("teamList", teamInfoList);
 		return pageController();
 	}
 
@@ -349,6 +391,8 @@ public class LegislationProcessDocAction extends BaseAction {
 		 String stDocId=request.getParameter("stDocId");
 		 String stComment1=request.getParameter("stComment1");//分办意见
 		 String transactDate=request.getParameter("transactDate");//办理时限
+		 String stDealId=request.getParameter("stDealId");
+		 String stDealName=request.getParameter("stDealName");
 		 
 		 LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
 		 
@@ -364,6 +408,11 @@ public class LegislationProcessDocAction extends BaseAction {
 						e.printStackTrace();
 					}
 	        	}
+	        	if(StringUtils.hasText(stDealId)) {//有选中值的时候再赋值
+	        		legislationProcessTask.setStDealId(stDealId);
+		        	legislationProcessTask.setStDealName(stDealName);
+	        	}
+	        	
 	        	if(action.equals("submit")) {//党委提交的时候才改变状态并生成新的task
 	        		legislationProcessTask.setDtCloseDate(new Date());
 		        	legislationProcessTask.setStTaskStatus("DONE");

@@ -18,7 +18,7 @@
 				<div class="col-md-4">
 					<input class="control-label underline" style="text-align:left" readonly value="<c:if test="${request.legislationProcessDoc.stUnitName!=null}">${request.legislationProcessDoc.stUnitName}</c:if>">
 				</div>
-				<label class="control-label col-md-5">收文日期：<span id="receiveYear" class="underline">2019</span>年&nbsp;<span id="receiveMonth" class="underline">03</span>月&nbsp;<span id="receiveDay" class="underline">08</span>日
+				<label class="control-label col-md-5">收文日期：<span id="receiveYear" class="underline">${request.legislationProcessTask.dtOpenDate}</span>
 				</label>
 			</div>
 			<div class="form-group">
@@ -45,9 +45,8 @@
 				<label class="control-label col-md-2">选择办理处：
 				</label>
 				<div class="col-md-5">
-					<select class="control-label" >
-						<option>未绑定接口</option>
-					</select>
+					<s:select id="distDealName" name="distDealName" list="#request.teamList" 
+					 value="unitName" listKey="id" listValue="unitName" headerKey="" headerValue="=请选择="/>
 				</div>
 				<div class="col-md-5">
 					<label class="control-label pull-right">办理时限：
@@ -66,12 +65,30 @@
 
 <script>
 $(function () {
+	/* var receiveTime="${request.legislationProcessTask.dtOpenDate}";
+	if(receiveTime!=null&&receiveYear!=""){
+		var receiveYear=(date.split(" "))[0];
+		document.getElementById('receiveYear').value=receiveYear;
+	} */
+	
+	/* var options=document.getElementById("distDealName");
+	$.each(options,function(i,option){
+		if($(option).attr("value")=="${request.legislationProcessTask.stDealName}"){
+			$(option).attr("selected",true);
+		}
+	}); */
+	
+        $("#distDealName option[value='${request.legislationProcessTask.stDealId}']").attr("selected","selected");
+
+	
 	document.getElementById('distComment1').value="${request.legislationProcessTask.stComment1}";
 	var date="${request.legislationProcessTask.dtDeadDate}";
-	var dateymd=(date.split(" "))[0];
-	document.getElementById('year').value=(dateymd.split("-"))[0];
-	document.getElementById('month').value=(dateymd.split("-"))[1];
-	document.getElementById('day').value=(dateymd.split("-"))[2];
+	if(date!=null&&date!=""){
+		var dateymd=(date.split(" "))[0];
+		document.getElementById('year').value=(dateymd.split("-"))[0];
+		document.getElementById('month').value=(dateymd.split("-"))[1];
+		document.getElementById('day').value=(dateymd.split("-"))[2];
+	}
 });
 	function distSubmit(action){
 		var param=$('#user_form').formToJson();
@@ -80,8 +97,9 @@ $(function () {
 		var month=$('#month').val();
 		var day=$('#day').val();
 		var transactDate=year+"年"+month+"月"+day+"日";
-		alert(distComment+":"+transactDate);
-		$.post("${basePath}/legislationProcessDoc/draft_dist_info.do?stDocId=${request.legislationProcessDoc.stDocId}&stComment1="+distComment+"&transactDate="+transactDate+"&action="+action,param,function(data){
+		var options=$("#distDealName option:selected");  //获取选中的项
+
+		$.post("${basePath}/legislationProcessDoc/draft_dist_info.do?stDocId=${request.legislationProcessDoc.stDocId}&stComment1="+distComment+"&transactDate="+transactDate+"&action="+action+"&stDealId="+options.val()+"&stDealName="+options.text(),param,function(data){
             $('#legislationProcessForm').modal('hide');
             submitForm(1);
         });
