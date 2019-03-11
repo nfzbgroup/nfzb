@@ -127,7 +127,7 @@
 								<c:choose>
 									<c:when test="${nodeId=='NOD_0000000140'||nodeId=='NOD_0000000141'}">
 										<div class="pull-right">
-											<label class="btn btn-w-m btn-success" id="addHeartMeeting" onclick="openPage('openHeartMeetingAddPage',null)">添加</label>
+											<label class="btn btn-w-m btn-success" id="addHeartMeeting" onclick="openTaskPage('openHeartMeetingAddPage',null)">添加</label>
 										</div>
 									</c:when>
 									<c:when test="${nodeId=='NOD_0000000101'}">
@@ -222,6 +222,12 @@
 	function openPage(method,stDocId) {
         $("#legislationProcessForm").modal({
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId
+        });
+    };
+
+    function openTaskPage(method,stTaskId) {
+        $("#legislationProcessForm").modal({
+            remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stTaskId="+stTaskId
         });
     };
     function openDemonstrationPage(method,stDocId) {

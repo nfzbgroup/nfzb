@@ -45,7 +45,7 @@
 								<td ><fmt:formatDate type="date" value="${task.dtCreateDate}" /></td>
 								<c:choose>
 									<c:when test="${buttonStatus=='TODO'}">
-										<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">编辑</a><br>
+										<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openHeartMeetingEditPage','TSK_0000000000000183')" class="layer_full_link">编辑</a><br>
 											<a href="javaScript:void(0)" data-title="上报" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">上报</a></td>
 									</c:when>
 									<c:otherwise>
