@@ -115,8 +115,8 @@ public class LegislationProcessDocAction extends BaseAction {
 		String stDocId=request.getParameter("stDocId");
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
 
-		List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stSampleId !='null' order by t.stSampleId ");
-		List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stSampleId='null' order by t.stFileId ");
+		List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='NOD_0000000101' and t.stSampleId !='null' order by t.stSampleId ");
+		List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='NOD_0000000101' and t.stSampleId='null' order by t.stFileId ");
 		for(LegislationFiles legislationFiles:otherDocList){
 			docList.add(legislationFiles);
 		}
@@ -134,6 +134,7 @@ public class LegislationProcessDocAction extends BaseAction {
         String stDocId=request.getParameter("stDocId");
         condMap.clear();
         condMap.put("stParentId",stDocId);
+		condMap.put("stNodeId",stNodeId);
         sortMap.clear();
         sortMap.put("dtPubDate","ASC");
         List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
@@ -307,8 +308,8 @@ public class LegislationProcessDocAction extends BaseAction {
 		condMap.put("stNodeId","NOD_0000000140");
 
 		legislationProcessTask= legislationProcessTaskService.findByList(condMap,sortMap).get(0);
-		List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStDocId()+"' and t.stSampleId !='null' order by t.stSampleId ");
-		List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStDocId()+"' and t.stSampleId='null' order by t.stFileId ");
+		List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStDocId()+"' and t.stNodeId ='NOD_0000000140' and t.stSampleId !='null' order by t.stSampleId ");
+		List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStDocId()+"' and t.stNodeId ='NOD_0000000140' and t.stSampleId='null' order by t.stFileId ");
 
 		request.setAttribute("docList",docList);
 		request.setAttribute("otherDocList",otherDocList);
@@ -325,8 +326,8 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> list = legislationProcessTaskService.findByList(condMap,sortMap);
 		if(list!=null && list.size()>0){
 			legislationProcessTask= legislationProcessTaskService.findByList(condMap,sortMap).get(0);
-			List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStDocId()+"' and t.stSampleId !='null' order by t.stSampleId ");
-			List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStDocId()+"' and t.stSampleId='null' order by t.stFileId ");
+			List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStDocId()+"' and t.stNodeId ='NOD_0000000141' and t.stSampleId !='null' order by t.stSampleId ");
+			List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStDocId()+"' and t.stNodeId ='NOD_0000000141' and t.stSampleId='null' order by t.stFileId ");
 
 			request.setAttribute("docList",docList);
 			request.setAttribute("otherDocList",otherDocList);
