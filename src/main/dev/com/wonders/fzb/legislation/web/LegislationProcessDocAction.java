@@ -85,7 +85,11 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openHeartMeetingBeforeInfoPage",location = "/legislation/legislationProcessManager_legislationBeforeInfo.jsp"),
 			@Result(name = "openHeartMeetingAfterInfoPage",location = "/legislation/legislationProcessManager_legislationAfterInfo.jsp"),
 			@Result(name = "openExpertAddPage",location = "/legislation/legislationProcessManager_expertForm.jsp"),
-			@Result(name = "openExpertEditPage",location = "/legislation/legislationProcessManager_expertForm.jsp")})
+			@Result(name = "openExpertEditPage",location = "/legislation/legislationProcessManager_expertForm.jsp"),
+			@Result(name = "openUnitAddPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
+			@Result(name = "openUnitEditPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
+			@Result(name = "openUnitSeekPage",location = "/legislation/legislationProcessManager_unitSeek.jsp"),
+			@Result(name = "openUnitReceivePage",location = "/legislation/legislationProcessManager_unitReceive.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -290,6 +294,22 @@ public class LegislationProcessDocAction extends BaseAction {
 
 	private String openExpertEditPage(){
 		return editDemonstrationPage();
+	}
+
+	private String openUnitAddPage(){
+		return addDemonstrationPage();
+	}
+
+	private String openUnitEditPage(){
+		return editDemonstrationPage();
+	}
+
+	private String openUnitSeekPage(){
+		return pageController();
+	}
+
+	private String openUnitReceivePage(){
+		return pageController();
 	}
 
 	private String addDemonstrationPage(){
