@@ -71,7 +71,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openLegislationDemonstrationPage",location = "/legislation/legislationProcessManager_legislationDemonstration.jsp"),
 			@Result(name = "openUnitDemonstrationPage",location = "/legislation/legislationProcessManager_unitDemonstration.jsp"),
 			@Result(name = "openExpertInfoPage",location = "/legislation/legislationProcessManager_expertInfo.jsp"),
-			@Result(name = "openLegislationInfoPage",location = "/legislation/legislationProcessManager_legislationInfo.jsp"),
+			@Result(name = "openLegislationInfoPage",location = "/legislation/legislationProcessManager_legislationBeforeInfo.jsp"),
 			@Result(name = "openAddAuditMeetingPage",location = "/legislation/legislationProcessManager_auditMeeting.jsp"),
 			@Result(name = "openEditAuditMeetingPage",location = "/legislation/legislationProcessManager_auditMeeting.jsp"),
 			@Result(name = "openAuditMeetingInfoPage",location = "/legislation/legislationProcessManager_auditMeetingInfo.jsp"),
@@ -82,6 +82,8 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openOnlineTabPage",location = "/legislation/legislationProcessManager_onlineTab.jsp"),
 			@Result(name = "openHeartMeetingAddPage",location = "/legislation/legislationProcessManager_legislationForm.jsp"),
 			@Result(name = "openHeartMeetingEditPage",location = "/legislation/legislationProcessManager_legislationForm.jsp"),
+			@Result(name = "openHeartMeetingBeforeInfoPage",location = "/legislation/legislationProcessManager_legislationBeforeInfo.jsp"),
+			@Result(name = "openHeartMeetingAfterInfoPage",location = "/legislation/legislationProcessManager_legislationAfterInfo.jsp"),
 			@Result(name = "openExpertAddPage",location = "/legislation/legislationProcessManager_expertForm.jsp"),
 			@Result(name = "openExpertEditPage",location = "/legislation/legislationProcessManager_expertForm.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
@@ -113,7 +115,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		String stDocId=request.getParameter("stDocId");
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
 
-		List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stSampleId!=null order by t.stSampleId ");
+		List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stSampleId !='null' order by t.stSampleId ");
 		List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stSampleId='null' order by t.stFileId ");
 		for(LegislationFiles legislationFiles:otherDocList){
 			docList.add(legislationFiles);
@@ -172,7 +174,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			filesMap.put("stBakOne", dealList.get(i).getStBakOne());
 			filesMap.put("stUserName", dealList.get(i).getStUserName());
 			filesMap.put("dtDealDate", dealList.get(i).getDtDealDate());
-			List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='"+dealList.get(i).getStActionId()+"' and t.stSampleId!=null order by t.stSampleId ");
+			List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='"+dealList.get(i).getStActionId()+"' and t.stSampleId !='null' order by t.stSampleId ");
 			List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='"+dealList.get(i).getStActionId()+"' and t.stSampleId='null' order by t.stFileId ");
 			for(LegislationFiles legislationFiles:otherDocList){
 				docList.add(legislationFiles);
@@ -280,13 +282,48 @@ public class LegislationProcessDocAction extends BaseAction {
 		request.setAttribute("legislationProcessTask",new LegislationProcessTask());
 		return pageController();
 	}
+	private String openHeartMeetingBeforeInfoPage(){
+		LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(request.getParameter("stTaskId"));
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stDocId",legislationProcessTask.getStDocId());
+		condMap.put("stNodeId","NOD_0000000140");
 
+		legislationProcessTask= legislationProcessTaskService.findByList(condMap,sortMap).get(0);
+		List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStTaskId()+"' and t.stSampleId !='null' order by t.stSampleId ");
+		List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStTaskId()+"' and t.stSampleId='null' order by t.stFileId ");
+
+		request.setAttribute("docList",docList);
+		request.setAttribute("otherDocList",otherDocList);
+		request.setAttribute("legislationProcessTask",legislationProcessTask);
+		return pageController();
+	}
+	private String openHeartMeetingAfterInfoPage(){
+		LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(request.getParameter("stTaskId"));
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stDocId",legislationProcessTask.getStDocId());
+		condMap.put("stTaskStatus",legislationProcessTask.getStTaskStatus());
+		condMap.put("stNodeId","NOD_0000000141");
+		List<LegislationProcessTask> list = legislationProcessTaskService.findByList(condMap,sortMap);
+		if(list!=null && list.size()>0){
+			legislationProcessTask= legislationProcessTaskService.findByList(condMap,sortMap).get(0);
+			List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStTaskId()+"' and t.stSampleId !='null' order by t.stSampleId ");
+			List<LegislationFiles> otherDocList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+legislationProcessTask.getStTaskId()+"' and t.stSampleId='null' order by t.stFileId ");
+
+			request.setAttribute("docList",docList);
+			request.setAttribute("otherDocList",otherDocList);
+			request.setAttribute("legislationProcessTask",legislationProcessTask);
+		}
+
+		return pageController();
+	}
 	private String openHeartMeetingEditPage(){
 		LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(request.getParameter("stTaskId"));
 		String stNodeId = request.getParameter("stNodeId");
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();
-		condMap.put("stNode", stNodeId);
+		condMap.put("stNode", "NOD_0000000140");
 		sortMap.put("stExampleId", "ASC");
 		List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
 		String stTaskId=request.getParameter("stTaskId");
@@ -384,7 +421,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
 			legislationProcessDeal.setStDocId(stDocId);
 			legislationProcessDeal.setStActionId(stNodeId);
-			legislationProcessDeal.setStActionName("立法听证会发起");
+			legislationProcessDeal.setStActionName("立法听证会会前");
 			legislationProcessDeal.setStUserId(userId);
 			legislationProcessDeal.setStUserName(userName);
 			legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
@@ -400,13 +437,27 @@ public class LegislationProcessDocAction extends BaseAction {
 			legislationProcessTask.setStComment2(stComment2);
 			legislationProcessTaskService.update(legislationProcessTask);
 
-			LegislationProcessDeal legislationProcessDeal = legislationProcessDealService.findByHQL("from LegislationProcessDeal t where 1=1 and t.stDocId='"+stDocId+"' and t.stActionId='"+stNodeId+"'").get(0);
-			legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
-			legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
-			legislationProcessDeal.setStUserId(userId);
-			legislationProcessDeal.setStUserName(userName);
-			legislationProcessDeal.setDtDealDate(new Date());
-			legislationProcessDealService.update(legislationProcessDeal);
+			List<LegislationProcessDeal> list = legislationProcessDealService.findByHQL("from LegislationProcessDeal t where 1=1 and t.stDocId='"+stDocId+"' and t.stActionId='"+stNodeId+"'");
+			if(list!=null && list.size()>0){
+				LegislationProcessDeal legislationProcessDeal = list.get(0);
+				legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
+				legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
+				legislationProcessDeal.setStUserId(userId);
+				legislationProcessDeal.setStUserName(userName);
+				legislationProcessDeal.setDtDealDate(new Date());
+				legislationProcessDealService.update(legislationProcessDeal);
+			}else{
+				LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
+				legislationProcessDeal.setStDocId(stDocId);
+				legislationProcessDeal.setStActionId(stNodeId);
+				legislationProcessDeal.setStActionName("立法听证会会后");
+				legislationProcessDeal.setStUserId(userId);
+				legislationProcessDeal.setStUserName(userName);
+				legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
+				legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
+				legislationProcessDeal.setDtDealDate(new Date());
+				legislationProcessDealService.add(legislationProcessDeal);
+			}
 
 
 		}

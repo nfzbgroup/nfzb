@@ -38,21 +38,57 @@
 					<c:when test="${retPage.totalSize > 0}">
 						<c:forEach items="${retPage.result}" var="task">
 							<tr class="text-center">
-								<td >${task.stDocNo}</td>
-								<td >${task.stDocName}</td>
-								<td >${task.stNodeName}</td>
-								<td >${task.stUserName}</td>
-								<td ><fmt:formatDate type="date" value="${task.dtCreateDate}" /></td>
+								<td >${task.stTaskId}</td>
+								<td >${task.stFlowId}</td>
+								<td >${task.stBakOne}</td>
+								<td ><fmt:formatDate type="date" value="${task.dtBakDate}" /></td>
+								<td >${task.stBakTwo}</td>
 								<c:choose>
-									<c:when test="${buttonStatus=='TODO'}">
-										<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openHeartMeetingEditPage','TSK_0000000000000183')" class="layer_full_link">编辑</a><br>
-											<a href="javaScript:void(0)" data-title="上报" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">上报</a></td>
+									<c:when test="${nodeId=='NOD_0000000140'}">
+										<c:choose>
+											<c:when test="${buttonStatus=='TODO'}">
+												<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openHeartMeetingEditPage','${task.stTaskId}')" class="layer_full_link">编辑</a><br>
+													<a href="javaScript:void(0)" data-title="上报" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">上报</a></td>
+											</c:when>
+											<c:otherwise>
+												<td >
+													<a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br/>
+													<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openHeartMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a><br/></td>
+
+											</c:otherwise>
+										</c:choose>
 									</c:when>
 									<c:otherwise>
-										<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">编辑</a>
-											<a href="javaScript:void(0)" data-title="查看会前" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看会前</a><br/></td>
+										<c:choose>
+											<c:when test="${buttonStatus=='TODO'}">
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+													<a href="javaScript:void(0)" data-title="接收" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">接收</a></td>
+											</c:when>
+											<c:when test="${buttonStatus=='SEND'}">
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+													<a href="javaScript:void(0)" data-title="送审" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')"  class="layer_full_link">送审</a></td>
+											</c:when>
+											<c:when test="${buttonStatus=='PUBLISH'}">
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+													<a href="javaScript:void(0)" data-title="发布" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')"  class="layer_full_link">发布</a></td>
+											</c:when>
+											<c:when test="${buttonStatus=='GATHER'}">
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+													<a href="javaScript:void(0)" data-title="汇总" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')"  class="layer_full_link">汇总</a></td>
+											</c:when>
+											<c:when test="${buttonStatus=='RESULT'}">
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+													<a href="javaScript:void(0)" data-title="结果发布" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')"  class="layer_full_link">结果发布</a></td>
+											</c:when>
+											<c:otherwise>
+												<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openHeartMeetingEditPage','${task.stTaskId}')" class="layer_full_link">编辑会后信息</a><br/>
+													<a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')"  class="layer_full_link">查看会前</a>
+													<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openHeartMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a></td>
+											</c:otherwise>
+										</c:choose>
 									</c:otherwise>
 								</c:choose>
+
 							</tr>
 						</c:forEach>
 					</c:when>

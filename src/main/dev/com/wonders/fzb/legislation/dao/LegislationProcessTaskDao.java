@@ -1,13 +1,13 @@
 package com.wonders.fzb.legislation.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.dao.BaseDao;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -32,4 +32,6 @@ public abstract interface LegislationProcessTaskDao extends BaseDao {
 
 	Page<LegislationProcessDoc> findTaskDocListByNodeId(String sql, int pageNo,
 			int pageSize);
+
+    Page<LegislationProcessTask> findTaskByNodeId(String sql, int pageNo, int pageSize);
 }

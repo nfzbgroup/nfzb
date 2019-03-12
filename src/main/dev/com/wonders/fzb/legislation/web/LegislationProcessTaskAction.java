@@ -71,7 +71,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         @Action(value = "draft_dist_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_create_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
-        @Action(value = "draft_deal_hearing_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
+        @Action(value = "draft_deal_hearing_deal", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}), @Action(value = "draft_deal_hearing_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
     })
     public String listMethodManager() throws Exception {
         String methodStr = request.getParameter("method");
@@ -94,6 +94,76 @@ public class LegislationProcessTaskAction extends BaseAction {
      * @return
      */
     private String queryTable() {
+        if("NOD_0000000140".equals(request.getParameter("stNodeId"))||"NOD_0000000141".equals(request.getParameter("stNodeId"))){
+            queryHearMeeting();
+        }else{
+            queryDoc();
+        }
+        return "QueryTable";
+    }
+
+    private void queryHearMeeting(){
+        String pageSize = request.getParameter("pageSize");
+        String pageNo = request.getParameter("pageNo");
+        String stNodeId = request.getParameter("stNodeId");
+        String address = request.getParameter("address");
+        String title = request.getParameter("title");
+        String taskStatus = request.getParameter("taskStatus");
+        String startTime = request.getParameter("startTime");
+        String endTime = request.getParameter("endTime");
+        String stDocName = request.getParameter("stDocName");
+
+        if (null == pageSize || "".equals(pageSize)) {
+            pageSize = "10";
+        }
+        if (null == pageNo || "".equals(pageNo)) {
+            pageNo = "1";
+        }
+
+        WegovSimpleNode nodeInfo = wegovSimpleNodeService.findById(stNodeId);
+        String baseSql = "WHERE 1=1 ";
+
+        if (null != stNodeId && !"".equals(stNodeId)) {
+            baseSql += "and t.st_node_Id = '" + stNodeId + "' ";
+        }
+        if (null != startTime && !"".equals(startTime)) {
+            baseSql += "and t.DT_BAK_DATE >= TO_DATE('" + startTime + "','yyyy-mm-dd')";
+        }
+        if (StringUtil.isNotEmpty(endTime)) {
+            baseSql += "and t.DT_BAK_DATE <= TO_DATE('" + endTime + "','yyyy-mm-dd')";
+        }
+        if (null != address && !"".equals(address)) {
+            baseSql += "and t.ST_BAK_TWO like '%" + address + "%' ";
+        }
+        if (null != title && !"".equals(title)) {
+            baseSql += "and t.ST_BAK_ONE like '%" + title + "%' ";
+        }
+        if (null != stDocName && !"".equals(stDocName)) {
+            baseSql += "and t.st_flow_id like '%" + stDocName + "%' ";
+        }
+        if (null != taskStatus && !"".equals(taskStatus)) {
+            baseSql += "and t.st_task_status = '" + taskStatus + "' ";
+        } else {
+            baseSql += "and t.st_task_status = 'TODO' ";
+        }
+        baseSql += "and t.st_enable is null ";
+        baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
+
+        String orderSql = " order by t.dt_open_date DESC";
+        Page<LegislationProcessTask> infoPage = legislationProcessTaskService.findTaskByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+
+        if (StringUtil.isEmpty(taskStatus)) {
+            request.setAttribute("buttonStatus", "TODO");
+        } else {
+            request.setAttribute("buttonStatus", taskStatus);
+        }
+        request.setAttribute("nodeInfo", nodeInfo);
+        request.setAttribute("pageNo", pageNo);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("retPage", infoPage);
+        request.setAttribute("nodeId", stNodeId);
+    }
+    private void queryDoc(){
         String pageSize = request.getParameter("pageSize");
         String pageNo = request.getParameter("pageNo");
         String stNodeId = request.getParameter("stNodeId");
@@ -135,10 +205,8 @@ public class LegislationProcessTaskAction extends BaseAction {
         }
         baseSql += "and d.st_node_Id = 'NOD_0000000101' ";
         baseSql += "and t.st_enable is null ";
-        //这个环节任务要加入当前人员的处室区分
-        if ("NOD_0000000101".equals(stNodeId)) {
-            baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
-        }
+        baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
+
         if ("NOD_0000000103".equals(stNodeId)) {
             baseSql += "and t.st_deal_Id = '" + session.getAttribute("unitCode") + "' ";
         }
@@ -156,7 +224,6 @@ public class LegislationProcessTaskAction extends BaseAction {
         request.setAttribute("pageSize", pageSize);
         request.setAttribute("retPage", infoPage);
         request.setAttribute("nodeId", stNodeId);
-        return "QueryTable";
     }
 
 
@@ -231,7 +298,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         condMap.put("stNode", stNode);
         condMap.put("stNeed", "NEED");
         List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, null);
-        List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"'");
+        List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='"+stNode+"'");
         if(docList.size()<legislationExampleList.size()){
             jsonObject.put("success",false);
 

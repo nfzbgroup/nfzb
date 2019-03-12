@@ -49,7 +49,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">听证会地点:</label>
 												<div class="col-md-7">
-													<input type="text"  class="form-control" id="address">
+													<input type="text"  class="form-control" id="address" name="address">
 												</div>
 											</div>
 										</div>
@@ -58,7 +58,7 @@
 											<div class="form-group">
 												<label class="col-md-3 control-label">听证会议题:</label>
 												<div class="col-md-7">
-													<input type="text"  class="form-control" id="title">
+													<input type="text"  class="form-control" id="title" name="title">
 												</div>
 											</div>
 										</div>
@@ -125,7 +125,7 @@
 								</div>
 
 								<c:choose>
-									<c:when test="${nodeId=='NOD_0000000140'||nodeId=='NOD_0000000141'}">
+									<c:when test="${nodeId=='NOD_0000000140'}">
 										<div class="pull-right">
 											<label class="btn btn-w-m btn-success" id="addHeartMeeting" onclick="openTaskPage('openHeartMeetingAddPage',null)">添加</label>
 										</div>

@@ -78,7 +78,9 @@ function submitForm(pageNo) {
         startTime:$('#startTime').val(),
         endTime:$('#endTime').val(),
         stDocName:$('#stDocName').val(),
-        stUserName:$('#stUserName').val()
+        stUserName:$('#stUserName').val(),
+        title:$('#title').val(),
+        address:$('#address').val()
 
     },function(data){
         $('#legislationProcessTaskTable').html(data);

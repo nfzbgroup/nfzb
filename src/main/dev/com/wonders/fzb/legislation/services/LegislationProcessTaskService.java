@@ -113,4 +113,14 @@ public interface LegislationProcessTaskService{
 	 * @param currentPerson
 	 */
 	void nextChildProcess(String stDocId, String stNodeId, String userRoleId, String userRole, UserInfo currentPerson);
+
+	/**
+	 * TASK表分页
+	 * @param sql
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	Page<LegislationProcessTask> findTaskByNodeId(String sql, int pageNo,
+												  int pageSize);
 }

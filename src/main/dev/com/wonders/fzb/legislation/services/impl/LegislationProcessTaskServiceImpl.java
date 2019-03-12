@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -152,7 +151,12 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			nextLegislationProcessTask.setStNodeId(nodeList.get(0).getStNextNode());
 			nextLegislationProcessTask.setStNodeName(wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + nodeList.get(0).getStNextNode() + "'").get(0).getStNodeName());
 			nextLegislationProcessTask.setStTaskStatus("TODO");
-			nextLegislationProcessTask.setDtOpenDate(new Date());
+			nextLegislationProcessTask.setStTeamId("U_3_1");
+			nextLegislationProcessTask.setStBakOne(legislationProcessTask.getStBakOne());
+			nextLegislationProcessTask.setStBakTwo(legislationProcessTask.getStBakTwo());
+			nextLegislationProcessTask.setDtBakDate(legislationProcessTask.getDtBakDate());
+			nextLegislationProcessTask.setStComment2(legislationProcessTask.getStComment2());
+
 			legislationProcessTaskDao.save(nextLegislationProcessTask);
 			legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeName='" + nextLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + nextLegislationProcessTask.getStDocId() + "'");
 		}
@@ -246,6 +250,19 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			update(legislationProcessTask);
 		}
 
+	}
+
+	/**
+	 * task列表分页
+	 * @param sql
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	@Override
+	public Page<LegislationProcessTask> findTaskByNodeId(String sql, int pageNo,
+														 int pageSize) {
+		return legislationProcessTaskDao.findTaskByNodeId(sql, pageNo, pageSize);
 	}
 
 

@@ -150,7 +150,42 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 		return new Page<LegislationProcessDoc>(Page.getStartOfAnyPage(pageNo, pageSize), users.size(), totalSize, pageSize, users);
 	}
 
+	@Override
+	public Page<LegislationProcessTask> findTaskByNodeId(String wheresql, int pageNo, int pageSize) {
+		String baseSql = " FROM LEGISLATION_PROCESS_TASK t ";
+		baseSql += wheresql;
+		String propView = "SELECT t.st_task_id,t.st_doc_id,t.st_flow_id,t.st_bak_one,t.dt_bak_date,t.st_bak_two,t.st_node_id";
+		String totalView = "SELECT COUNT(1) ";
 
+		List<LegislationProcessTask> tasks = packageTaskInfoBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));
+		int totalSize = ((BigDecimal) (Object) executeSqlQueryWithoutPage(totalView + baseSql).get(0)).intValue();
+		if (pageSize == 0)
+			pageSize = totalSize;
+		return new Page<LegislationProcessTask>(Page.getStartOfAnyPage(pageNo, pageSize), tasks.size(), totalSize, pageSize, tasks);
+	}
+
+	private LinkedList<LegislationProcessTask> packageTaskInfoBean(List<Object[]> results) {
+		LinkedList<LegislationProcessTask> tasks = new LinkedList<LegislationProcessTask>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		for (Object[] array : results) {
+			LegislationProcessTask taskInfo = new LegislationProcessTask();
+			//t.st_task_id,t.st_doc_id,t.st_flow_id,t.st_bak_one,t.dt_bak_date,t.st_bak_two
+			taskInfo.setStTaskId(array[0].toString());
+			taskInfo.setStDocId(array[1]== null ? "" : array[1].toString());
+			taskInfo.setStFlowId(array[2]== null ? "" : array[2].toString());
+			taskInfo.setStBakOne(array[3]== null ? "" : array[3].toString());
+			taskInfo.setStBakTwo(array[5]== null ? "" : array[5].toString());
+			taskInfo.setStNodeId(array[6]== null ? "" : array[6].toString());
+			try {
+				taskInfo.setDtBakDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			tasks.add(taskInfo);
+		}
+		return tasks;
+	}
 
 
 }

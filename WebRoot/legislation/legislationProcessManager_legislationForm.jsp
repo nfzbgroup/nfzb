@@ -72,9 +72,17 @@
 						   name="btnSave"  value="提交" onclick="saveLegislationDemonstration()"> &nbsp;&nbsp;
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
-			<div class="form-group">
-				<label class="control-label">立法听证前材料
-				</label>
+            <div class="form-group">
+            <c:choose>
+                <c:when test="${nodeId=='NOD_0000000140'}">
+                    <label class="control-label">立法听证前材料
+                    </label>
+                </c:when>
+                <c:otherwise>
+                    <label class="control-label">立法听证后材料
+                    </label>
+                </c:otherwise>
+            </c:choose>
 			</div>
             <div class="form-group">
                 <table class="table table-striped table-bordered table-hover"
@@ -127,8 +135,17 @@
                 </table>
             </div>
             <div class="form-group">
-                <label class="control-label">立法听证前其他材料
-                </label>
+                <c:choose>
+                    <c:when test="${nodeId=='NOD_0000000140'}">
+                        <label class="control-label">立法听证前其他材料
+                        </label>
+                    </c:when>
+                    <c:otherwise>
+                        <label class="control-label">立法听证后其他材料
+                        </label>
+                    </c:otherwise>
+                </c:choose>
+
                 <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                 </label>
                 <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
