@@ -17,7 +17,7 @@
 <div class="modal-body">
 	<table class="table table-border table-bordered">
 		<tr>
-			<td class="text-right">
+			<td class="text-right tab-left">
 				<label style="white-space: nowrap">听证会议题:</label>
 			</td>
 			<td class="text-center">
@@ -25,7 +25,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right">
+			<td class="text-right tab-left">
 				<label style="white-space: nowrap">对应草案:</label>
 			</td>
 			<td class="text-center">
@@ -33,7 +33,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right">
+			<td class="text-right tab-left">
 				<label style="white-space: nowrap">听证会地点:</label>
 			</td>
 			<td class="text-center">
@@ -41,7 +41,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right">
+			<td class="text-right tab-left">
 				<label style="white-space: nowrap">听证会时间:</label>
 			</td>
 			<td class="text-center">
@@ -49,7 +49,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right">
+			<td class="text-right tab-left">
 				<label style="white-space: nowrap">听证会人员:</label>
 			</td>
 			<td class="text-center">
@@ -57,7 +57,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right">
+			<td class="text-right tab-left">
 				<label style="white-space: nowrap">立法听证会前相关材料:</label>
 			</td>
 			<td class="text-center">
@@ -67,7 +67,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right">
+			<td class="text-right tab-left">
 				<label style="white-space: nowrap">立法听证会前其他材料:</label>
 			</td>
 			<td class="text-center">
@@ -89,3 +89,8 @@
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 	</div>
 </div>
+<script>
+    $(function () {
+        $(".tab-left").css('width', $(window).width() * 0.2)
+    })
+</script>

@@ -27,7 +27,7 @@
 	<div id="legislationProcessInfoTab">
 		<table class="table table-border table-bordered">
 			<tr>
-				<td class="text-right">
+				<td class="text-right tab-left">
 					<label style="white-space: nowrap">法规规章草案:</label>
 				</td>
 				<td class="text-center">
@@ -35,7 +35,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="text-right">
+				<td class="text-right tab-left">
 					<label style="white-space: nowrap">备注:</label>
 				</td>
 				<td class="text-center">
@@ -43,7 +43,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="text-right">
+				<td class="text-right tab-left">
 					<label style="white-space: nowrap">相关材料:</label>
 				</td>
 				<td class="text-center">
@@ -59,6 +59,9 @@
 	</div>
 </div>
 <script>
+    $(function () {
+        $(".tab-left").css('width', $(window).width() * 0.2)
+    });
 	function changeInfoTab(obj,method,stNodeId,stDocId){
 	    var $obj=$(obj);
         $obj.parent().children().attr("class","btn btn-w-m btn-default");
