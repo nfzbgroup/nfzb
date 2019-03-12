@@ -7,7 +7,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >立法听证 > </span>
+            <span >专家论证 > </span>
         </li>
         <li>
             <span >内容添加</span>
@@ -16,12 +16,12 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
-	<form id="legislationDemonstrationForm" class="form-horizontal"
+	<form id="expertDemonstrationForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
 		<div class="form-body">
             <div class="form-group">
-                <label class="col-sm-3 control-label">听证会议题：</label>
+                <label class="col-sm-3 control-label">论证会议题：</label>
                 <div class="col-sm-9">
 					<textarea class="form-control" name="stBakOne"><c:if test="${legislationProcessTask.stBakOne !=null}">${legislationProcessTask.stBakOne}</c:if></textarea>
                 </div>
@@ -50,19 +50,26 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">听证会地点：</label>
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-4">
+                    <input type="text"  class="form-control" >
+                </div>
+                <label class="col-sm-5 control-label" style="color: red;text-align: left">*需修改法规规章草案名称请在此处填写</label>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">论证会地点：</label>
                 <div class="col-sm-9">
                     <input type="text"  class="form-control" name="stBakTwo" <c:if test="${legislationProcessTask.stBakTwo !=null}">value="${legislationProcessTask.stBakTwo}" </c:if>>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">听证会时间：</label>
+                <label class="col-sm-3 control-label">论证会时间：</label>
                 <div class="col-sm-9">
                     <input type="text"  class="form-control" readonly id="dtBakDate" name="dtBakDate" <c:if test="${legislationProcessTask.dtBakDate !=null}">value="<fmt:formatDate value="${legislationProcessTask.dtBakDate}"/>" </c:if>>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">听证会人员：</label>
+                <label class="col-sm-3 control-label">论证会人员：</label>
                 <div class="col-sm-9">
                     <textarea class="form-control" name="stComment2" ><c:if test="${legislationProcessTask.stComment2 !=null}">${legislationProcessTask.stComment2}</c:if></textarea>
                 </div>
@@ -73,7 +80,7 @@
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 			<div class="form-group">
-				<label class="control-label">立法听证前材料
+				<label class="control-label">专家论证前材料
 				</label>
 			</div>
             <div class="form-group">
@@ -127,7 +134,7 @@
                 </table>
             </div>
             <div class="form-group">
-                <label class="control-label">立法听证前其他材料
+                <label class="control-label">专家论证前其他材料
                 </label>
                 <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                 </label>
@@ -178,7 +185,7 @@
         });
     });
     function saveLegislationDemonstration() {
-        var param=$('#legislationDemonstrationForm').formToJson();
+        var param=$('#expertDemonstrationForm').formToJson();
         if(param.stBakOne==null||param.stBakOne==""){
             Duang.error("提示","请输入听证会议题");
         }else if(param.stDocId==null||param.stDocId==""){
@@ -190,7 +197,7 @@
         }else if(param.stComment2==null||param.stComment2==""){
             Duang.error("提示","请输入听证会人员");
         }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveExpertDemonstration",param,function(data){
                 $('#legislationProcessForm').modal('hide');
                 submitForm(1);
             });
@@ -201,7 +208,7 @@
     }
     function uploadFile(id,type,stSampleId) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do?stNodeId=NOD_0000000140&stSampleId='+stSampleId,
+            url: '${basePath}/file/upload.do?stNodeId=NOD_0000000150&stSampleId='+stSampleId,
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,

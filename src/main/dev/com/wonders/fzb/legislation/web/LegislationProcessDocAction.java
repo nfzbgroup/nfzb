@@ -81,7 +81,9 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openAuditMeetingTabPage",location = "/legislation/legislationProcessManager_auditMeetingTab.jsp"),
 			@Result(name = "openOnlineTabPage",location = "/legislation/legislationProcessManager_onlineTab.jsp"),
 			@Result(name = "openHeartMeetingAddPage",location = "/legislation/legislationProcessManager_legislationForm.jsp"),
-			@Result(name = "openHeartMeetingEditPage",location = "/legislation/legislationProcessManager_legislationForm.jsp")})
+			@Result(name = "openHeartMeetingEditPage",location = "/legislation/legislationProcessManager_legislationForm.jsp"),
+			@Result(name = "openExpertAddPage",location = "/legislation/legislationProcessManager_expertForm.jsp"),
+			@Result(name = "openExpertEditPage",location = "/legislation/legislationProcessManager_expertForm.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -362,6 +364,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(StringUtil.isEmpty(stTaskId) || "null".equals(stTaskId)){
 			LegislationProcessTask newTask= new LegislationProcessTask();
 			newTask.setStDocId(stDocId);
+			newTask.setStFlowId(legislationProcessDoc.getStDocName());
 			newTask.setStBakOne(stBakOne);
 			newTask.setStBakTwo(stBakTwo);
 			newTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
@@ -391,7 +394,6 @@ public class LegislationProcessDocAction extends BaseAction {
 
 		}else {
 			LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
-			legislationProcessTask.setStDocId(stDocId);
 			legislationProcessTask.setStBakOne(stBakOne);
 			legislationProcessTask.setStBakTwo(stBakTwo);
 			legislationProcessTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
@@ -399,7 +401,6 @@ public class LegislationProcessDocAction extends BaseAction {
 			legislationProcessTaskService.update(legislationProcessTask);
 
 			LegislationProcessDeal legislationProcessDeal = legislationProcessDealService.findByHQL("from LegislationProcessDeal t where 1=1 and t.stDocId='"+stDocId+"' and t.stActionId='"+stNodeId+"'").get(0);
-			legislationProcessDeal.setStDocId(stDocId);
 			legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
 			legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
 			legislationProcessDeal.setStUserId(userId);
