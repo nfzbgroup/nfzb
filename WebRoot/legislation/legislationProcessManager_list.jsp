@@ -77,6 +77,51 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
+									<c:when test="${nodeId=='NOD_0000000150'||nodeId=='NOD_0000000151'}">
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="col-md-3 control-label">论证会时间:</label>
+												<div class="col-md-7">
+													<div class="input-group input-large">
+														<input type="text" class="form-control" readonly id="startTime" name="startTime">
+														<span class="input-group-addon"> - </span>
+														<input type="text" class="form-control" readonly id="endTime" name="endTime">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="col-md-3 control-label">论证会地点:</label>
+												<div class="col-md-7">
+													<input type="text"  class="form-control" id="address" name="address">
+												</div>
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="col-md-3 control-label">论证会议题:</label>
+												<div class="col-md-7">
+													<input type="text"  class="form-control" id="title" name="title">
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label class="col-md-3 control-label">对应草案:</label>
+												<div class="col-md-7">
+													<input type="text"  class="form-control" id="stDocName">
+												</div>
+											</div>
+										</div>
+
+
+										<div class="col-md-12">
+										</div>
+										<div class="col-md-5">
+										</div>
+									</c:when>
 									<c:otherwise>
 										<div class="col-md-4">
 											<div class="form-group">
@@ -128,6 +173,11 @@
 									<c:when test="${nodeId=='NOD_0000000140'}">
 										<div class="pull-right">
 											<label class="btn btn-w-m btn-success" id="addHeartMeeting" onclick="openTaskPage('openHeartMeetingAddPage',null)">添加</label>
+										</div>
+									</c:when>
+									<c:when test="${nodeId=='NOD_0000000150'}">
+										<div class="pull-right">
+											<label class="btn btn-w-m btn-success" id="addExpertMeeting" onclick="openTaskPage('openExpertMeetingAddPage',null)">添加</label>
 										</div>
 									</c:when>
 									<c:when test="${nodeId=='NOD_0000000101'}">

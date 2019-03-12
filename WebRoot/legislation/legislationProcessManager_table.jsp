@@ -19,6 +19,14 @@
 				<th class="text-center" data-field="district_name">听证会地点</th>
 				<th class="text-center" data-field="set">操作</th>
 			</c:when>
+			<c:when test="${nodeId=='NOD_0000000150'||nodeId=='NOD_0000000151'}">
+				<th class="text-center" data-field="id">编号</th>
+				<th class="text-center" data-field="district_name">对应草案</th>
+				<th class="text-center" data-field="district_name">论证会议题</th>
+				<th class="text-center" data-field="created_at">论证会时间</th>
+				<th class="text-center" data-field="district_name">论证会地点</th>
+				<th class="text-center" data-field="set">操作</th>
+			</c:when>
 			<c:otherwise>
 				<th class="text-center" data-field="id">草案编号</th>
 				<th class="text-center" data-field="district_name">法规规章草案</th>
