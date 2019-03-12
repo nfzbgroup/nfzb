@@ -30,29 +30,25 @@
                 <label class="col-sm-3 control-label">对应草案：</label>
                 <div class="col-sm-9">
                     <select class="form-control" name="stDocId" >
-                        <c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
-                            <c:choose>
-                                <c:when test="${legislationProcessTask.stDocId!=null}">
-                                    <c:forEach items="${legislationProcessDocList}" var="doc">
-                                        <c:if test="${legislationProcessTask.stDocId==doc.stDocId}">
-                                            <option value="${doc.stDocId}" selected>${doc.stDocName}</option>
-                                        </c:if>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
+                        <c:choose>
+                            <c:when test="${legislationProcessTask.stDocId!=null}">
+                                <option value="${legislationProcessDoc.stDocId}" selected>${legislationProcessDoc.stDocName}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
                                     <c:forEach items="${legislationProcessDocList}" var="doc">
                                         <option value="${doc.stDocId}">${doc.stDocName}</option>
                                     </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:if>
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label"></label>
                 <div class="col-sm-4">
-                    <input type="text"  class="form-control" >
+                    <input type="text"  class="form-control" name="newDocName">
                 </div>
                 <label class="col-sm-5 control-label" style="color: red;text-align: left">*需修改法规规章草案名称请在此处填写</label>
             </div>
@@ -187,17 +183,17 @@
     function saveLegislationDemonstration() {
         var param=$('#expertDemonstrationForm').formToJson();
         if(param.stBakOne==null||param.stBakOne==""){
-            Duang.error("提示","请输入听证会议题");
+            Duang.error("提示","请输入论证会议题");
         }else if(param.stDocId==null||param.stDocId==""){
             Duang.error("提示","请选择对应草案");
         }else if(param.stBakTwo==null||param.stBakTwo==""){
-            Duang.error("提示","请输入听证会地点");
+            Duang.error("提示","请输入论证会地点");
         }else if(param.dtBakDate==null||param.dtBakDate==""){
-            Duang.error("提示","请选择听证会时间");
+            Duang.error("提示","请选择论证会时间");
         }else if(param.stComment2==null||param.stComment2==""){
-            Duang.error("提示","请输入听证会人员");
+            Duang.error("提示","请输入论证会人员");
         }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveExpertDemonstration",param,function(data){
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
                 $('#legislationProcessForm').modal('hide');
                 submitForm(1);
             });

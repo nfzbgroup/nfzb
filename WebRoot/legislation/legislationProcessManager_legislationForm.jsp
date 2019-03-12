@@ -30,22 +30,18 @@
                 <label class="col-sm-3 control-label">对应草案：</label>
                 <div class="col-sm-9">
                     <select class="form-control" name="stDocId" >
-                        <c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
-                            <c:choose>
-                                <c:when test="${legislationProcessTask.stDocId!=null}">
-                                    <c:forEach items="${legislationProcessDocList}" var="doc">
-                                        <c:if test="${legislationProcessTask.stDocId==doc.stDocId}">
-                                            <option value="${doc.stDocId}" selected>${doc.stDocName}</option>
-                                        </c:if>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
+                        <c:choose>
+                            <c:when test="${legislationProcessTask.stDocId!=null}">
+                                  <option value="${legislationProcessDoc.stDocId}" selected>${legislationProcessDoc.stDocName}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
                                     <c:forEach items="${legislationProcessDocList}" var="doc">
                                         <option value="${doc.stDocId}">${doc.stDocName}</option>
                                     </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:if>
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
                     </select>
                 </div>
             </div>

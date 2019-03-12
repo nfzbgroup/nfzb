@@ -177,7 +177,7 @@
 									</c:when>
 									<c:when test="${nodeId=='NOD_0000000150'}">
 										<div class="pull-right">
-											<label class="btn btn-w-m btn-success" id="addExpertMeeting" onclick="openTaskPage('openExpertMeetingAddPage',null)">添加</label>
+											<label class="btn btn-w-m btn-success" id="addExpertMeeting" onclick="openTaskPage('openExpertAddPage',null)">添加</label>
 										</div>
 									</c:when>
 									<c:when test="${nodeId=='NOD_0000000101'}">

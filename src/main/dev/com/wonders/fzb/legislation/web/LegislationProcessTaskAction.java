@@ -207,8 +207,9 @@ public class LegislationProcessTaskAction extends BaseAction {
         }
         baseSql += "and d.st_node_Id = 'NOD_0000000101' ";
         baseSql += "and t.st_enable is null ";
-        baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
-
+        if ("NOD_0000000101".equals(stNodeId)) {
+            baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
+        }
         if ("NOD_0000000103".equals(stNodeId)) {
             baseSql += "and t.st_deal_Id = '" + session.getAttribute("unitCode") + "' ";
         }
