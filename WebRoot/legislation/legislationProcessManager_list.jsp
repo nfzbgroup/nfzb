@@ -122,6 +122,40 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
+									<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'}">
+										<div class="col-md-5">
+											<div class="form-group">
+												<label class="col-md-3 control-label">发起时间:</label>
+												<div class="col-md-7">
+													<div class="input-group input-large">
+														<input type="text" class="form-control" readonly id="startTime" name="startTime">
+														<span class="input-group-addon"> - </span>
+														<input type="text" class="form-control" readonly id="endTime" name="endTime">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="col-md-3 control-label">对应草案:</label>
+												<div class="col-md-7">
+													<input type="text"  class="form-control" id="stDocName">
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-group">
+												<label class="col-md-3 control-label">类型:</label>
+												<div class="col-md-7">
+													<input type="text"  class="form-control" id="opinionType" name="opinionType">
+												</div>
+											</div>
+										</div>
+										<div class="col-md-12">
+										</div>
+										<div class="col-md-5">
+										</div>
+									</c:when>
 									<c:otherwise>
 										<div class="col-md-4">
 											<div class="form-group">
@@ -160,6 +194,9 @@
 
 								<div class="col-md-4">
 									<label class="btn btn-w-m btn-success" onclick="submitForm(1)"> 查询</label>
+									<c:if test="${nodeId=='NOD_0000000120'}">
+										<label class="btn btn-w-m btn-success" onclick="openTaskPage('openUnitAddPage',null)">添加</label>
+									</c:if>
 								</div>
 								<div class="col-md-8 padding0 order-btn">
 

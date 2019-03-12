@@ -73,7 +73,8 @@ public class LegislationProcessTaskAction extends BaseAction {
         @Action(value = "draft_deal_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_hearing_deal", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_hearing_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
-        @Action(value = "draft_deal_expert_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
+        @Action(value = "draft_deal_expert_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
+        @Action(value = "draft_deal_deptopinion_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
     })
     public String listMethodManager() throws Exception {
         String methodStr = request.getParameter("method");
@@ -102,6 +103,64 @@ public class LegislationProcessTaskAction extends BaseAction {
             queryDoc();
         }
         return "QueryTable";
+    }
+
+    private void queryUnitOpinion(){
+        String pageSize = request.getParameter("pageSize");
+        String pageNo = request.getParameter("pageNo");
+        String stNodeId = request.getParameter("stNodeId");
+        String opinionType = request.getParameter("opinionType");
+        String taskStatus = request.getParameter("taskStatus");
+        String startTime = request.getParameter("startTime");
+        String endTime = request.getParameter("endTime");
+        String stDocName = request.getParameter("stDocName");
+
+        if (null == pageSize || "".equals(pageSize)) {
+            pageSize = "10";
+        }
+        if (null == pageNo || "".equals(pageNo)) {
+            pageNo = "1";
+        }
+
+        WegovSimpleNode nodeInfo = wegovSimpleNodeService.findById(stNodeId);
+        String baseSql = "WHERE 1=1 ";
+
+        if (null != stNodeId && !"".equals(stNodeId)) {
+            baseSql += "and t.st_node_Id = '" + stNodeId + "' ";
+        }
+        if (null != startTime && !"".equals(startTime)) {
+            baseSql += "and t.DT_OPEN_DATE >= TO_DATE('" + startTime + "','yyyy-mm-dd')";
+        }
+        if (StringUtil.isNotEmpty(endTime)) {
+            baseSql += "and t.DT_OPEN_DATE <= TO_DATE('" + endTime + "','yyyy-mm-dd')";
+        }
+        if (null != opinionType && !"".equals(opinionType)) {
+            baseSql += "and t.ST_BAK_ONE like '%" + opinionType + "%' ";
+        }
+        if (null != stDocName && !"".equals(stDocName)) {
+            baseSql += "and t.st_flow_id like '%" + stDocName + "%' ";
+        }
+        if (null != taskStatus && !"".equals(taskStatus)) {
+            baseSql += "and t.st_task_status = '" + taskStatus + "' ";
+        } else {
+            baseSql += "and t.st_task_status = 'TODO' ";
+        }
+        baseSql += "and t.st_enable is null ";
+        baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
+
+        String orderSql = " order by t.dt_open_date DESC";
+        Page<LegislationProcessTask> infoPage = legislationProcessTaskService.findTaskByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+
+        if (StringUtil.isEmpty(taskStatus)) {
+            request.setAttribute("buttonStatus", "TODO");
+        } else {
+            request.setAttribute("buttonStatus", taskStatus);
+        }
+        request.setAttribute("nodeInfo", nodeInfo);
+        request.setAttribute("pageNo", pageNo);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("retPage", infoPage);
+        request.setAttribute("nodeId", stNodeId);
     }
 
     private void queryHearMeeting(){

@@ -80,8 +80,8 @@ function submitForm(pageNo) {
         stDocName:$('#stDocName').val(),
         stUserName:$('#stUserName').val(),
         title:$('#title').val(),
-        address:$('#address').val()
-
+        address:$('#address').val(),
+        opinionType:$('#opinionType').val()
     },function(data){
         $('#legislationProcessTaskTable').html(data);
     });

@@ -27,6 +27,20 @@
 				<th class="text-center" data-field="district_name">论证会地点</th>
 				<th class="text-center" data-field="set">操作</th>
 			</c:when>
+			<c:when test="${nodeId=='NOD_0000000120'}">
+				<th class="text-center" data-field="id">编号</th>
+				<th class="text-center" data-field="district_name">对应草案</th>
+				<th class="text-center" data-field="district_name">经办处</th>
+				<th class="text-center" data-field="created_at">发起日期</th>
+				<th class="text-center" data-field="set">操作</th>
+			</c:when>
+			<c:when test="${nodeId=='NOD_0000000121'}">
+				<th class="text-center" data-field="id">编号</th>
+				<th class="text-center" data-field="district_name">对应草案</th>
+				<th class="text-center" data-field="district_name">类型</th>
+				<th class="text-center" data-field="created_at">征询发起日期</th>
+				<th class="text-center" data-field="set">操作</th>
+			</c:when>
 			<c:otherwise>
 				<th class="text-center" data-field="id">草案编号</th>
 				<th class="text-center" data-field="district_name">法规规章草案</th>
@@ -101,6 +115,34 @@
 						</c:forEach>
 					</c:when>
 				</c:choose>
+		</c:when>
+		<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'}">
+			<c:choose>
+				<c:when test="${retPage.totalSize > 0}">
+					<c:forEach items="${retPage.result}" var="task">
+						<tr class="text-center">
+							<td >${task.stTaskId}</td>
+							<td >${task.stFlowId}</td>
+							<td >${task.stBakOne}</td>
+							<td ><fmt:formatDate type="date" value="${task.dtOpenDate}" /></td>
+								<c:choose>
+									<c:when test="${buttonStatus=='TODO'}">
+										<td >
+											<a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br>
+											<a href="javaScript:void(0)" data-title="发送" onclick="openTaskPage('openUnitSeekPage','${task.stTaskId}')" class="layer_full_link">发送</a>
+										</td>
+									</c:when>
+									<c:otherwise>
+										<td >
+											<a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+											<a href="javaScript:void(0)" data-title="接收情况" onclick="openTaskPage('openUnitReceivePage','${task.stTaskId}')" class="layer_full_link">接收情况</a><br/>
+										</td>
+									</c:otherwise>
+								</c:choose>
+						</tr>
+					</c:forEach>
+				</c:when>
+			</c:choose>
 		</c:when>
 		<c:otherwise>
 			<c:choose>
