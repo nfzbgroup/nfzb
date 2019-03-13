@@ -103,6 +103,8 @@ public class LegislationProcessTaskAction extends BaseAction {
     private String queryTable() {
         if("NOD_0000000140".equals(request.getParameter("stNodeId"))||"NOD_0000000141".equals(request.getParameter("stNodeId"))){
             queryHearMeeting();
+        }else if("NOD_0000000120".equals(request.getParameter("stNodeId"))||"NOD_0000000121".equals(request.getParameter("stNodeId"))){
+            queryUnitOpinion();
         }else{
             queryDoc();
         }

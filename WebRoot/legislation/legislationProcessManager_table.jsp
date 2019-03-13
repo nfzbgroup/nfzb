@@ -27,18 +27,19 @@
 				<th class="text-center" data-field="district_name">论证会地点</th>
 				<th class="text-center" data-field="set">操作</th>
 			</c:when>
-			<c:when test="${nodeId=='NOD_0000000120'}">
+			<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'}">
 				<th class="text-center" data-field="id">编号</th>
 				<th class="text-center" data-field="district_name">对应草案</th>
+				<c:if test="${buttonStatuss=='TODO'}">
+					<th class="text-center" data-field="district_name">经办处</th>
+					<th class="text-center" data-field="created_at">发起日期</th>
+				</c:if>
+				<c:if test="${buttonStatuss=='DONE'}">
+					<th class="text-center" data-field="district_name">类型</th>
+					<th class="text-center" data-field="created_at">征询发起日期</th>
+				</c:if>
 				<th class="text-center" data-field="district_name">经办处</th>
 				<th class="text-center" data-field="created_at">发起日期</th>
-				<th class="text-center" data-field="set">操作</th>
-			</c:when>
-			<c:when test="${nodeId=='NOD_0000000121'}">
-				<th class="text-center" data-field="id">编号</th>
-				<th class="text-center" data-field="district_name">对应草案</th>
-				<th class="text-center" data-field="district_name">类型</th>
-				<th class="text-center" data-field="created_at">征询发起日期</th>
 				<th class="text-center" data-field="set">操作</th>
 			</c:when>
 			<c:otherwise>
@@ -135,7 +136,7 @@
 						<tr class="text-center">
 							<td >${task.stTaskId}</td>
 							<td >${task.stFlowId}</td>
-							<td >${task.stBakOne}</td>
+							<td ><c:if test="${buttonStatus=='TODO'}">${task.stTeamName}</c:if><c:if test="${buttonStatus=='DONE'}">${task.stBakOne}</c:if> </td>
 							<td ><fmt:formatDate type="date" value="${task.dtOpenDate}" /></td>
 								<c:choose>
 									<c:when test="${buttonStatus=='TODO'}">

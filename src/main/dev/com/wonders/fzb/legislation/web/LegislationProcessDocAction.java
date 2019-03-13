@@ -464,6 +464,8 @@ public class LegislationProcessDocAction extends BaseAction {
 			saveLegislation(stNodeId,"立法听证会发起");
 		}else if("NOD_0000000150".equals(stNodeId)||"NOD_0000000151".equals(stNodeId)){
 			saveLegislation(stNodeId,"专家论证会发起");
+		}else if("NOD_0000000120".equals(stNodeId)){
+			saveLegislation(stNodeId,"部门征求意见发起");
 		}
 		return null;
 	}
@@ -501,7 +503,11 @@ public class LegislationProcessDocAction extends BaseAction {
 			newTask.setStFlowId(legislationProcessDoc.getStDocName());
 			newTask.setStBakOne(stBakOne);
 			newTask.setStBakTwo(stBakTwo);
-			newTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
+			if(StringUtil.isNotEmpty(dtBakDate)){
+				newTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
+			}else {
+				newTask.setDtBakDate(null);
+			}
 			newTask.setStComment2(stComment2);
 			newTask.setStNodeId(stNodeId);
 			newTask.setStNodeName(stNodeName);
@@ -530,7 +536,11 @@ public class LegislationProcessDocAction extends BaseAction {
 			LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
 			legislationProcessTask.setStBakOne(stBakOne);
 			legislationProcessTask.setStBakTwo(stBakTwo);
-			legislationProcessTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
+			if(StringUtil.isNotEmpty(dtBakDate)){
+				legislationProcessTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
+			}else {
+				legislationProcessTask.setDtBakDate(null);
+			}
 			legislationProcessTask.setStComment2(stComment2);
 			legislationProcessTaskService.update(legislationProcessTask);
 			List<LegislationProcessDeal> list = legislationProcessDealService.findByHQL("from LegislationProcessDeal t where 1=1 and t.stDocId='"+stDocId+"' and t.stActionId='"+stNodeId+"'");

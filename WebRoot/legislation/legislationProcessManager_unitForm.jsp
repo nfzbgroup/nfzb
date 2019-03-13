@@ -51,7 +51,8 @@
                 <label class="col-sm-3 control-label">类型：</label>
                 <div class="col-sm-9">
                     <select  class="form-control" name="stBakOne" >
-                        <option>未绑定接口</option>
+                        <option value="征询">未绑定接口</option>
+                        <option value="征询含会签">征询含会签</option>
                     </select>
                 </div>
             </div>
@@ -59,7 +60,8 @@
                 <label class="col-sm-3 control-label">渠道：</label>
                 <div class="col-sm-9">
                     <select  class="form-control" name="stBakTwo">
-                        <option>未绑定接口</option>
+                        <option value="内部">未绑定接口</option>
+                        <option value="外部">外部</option>
                     </select>
                 </div>
             </div>
@@ -71,7 +73,7 @@
             </div>
 			<div class="form-group text-center">
 					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
-						   name="btnSave"  value="提交"> &nbsp;&nbsp;
+						   name="btnSave" onclick="saveLegislationDemonstration()" value="提交"> &nbsp;&nbsp;
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 			<div class="form-group">
@@ -172,6 +174,21 @@
 
 </div>
 <script>
+    function saveLegislationDemonstration() {
+        var param=$('#unitDemonstrationForm').formToJson();
+        if(param.stDocId==null||param.stDocId==""){
+            Duang.error("提示","请选择对应草案");
+        }else if(param.stBakOne==null||param.stBakOne==""){
+            Duang.error("提示","请选择类型");
+        }else if(param.stBakTwo==null||param.stBakTwo==""){
+            Duang.error("提示","请选择渠道");
+        }else {
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
+                $('#legislationProcessForm').modal('hide');
+                submitForm(1);
+            });
+        }
+    };
     function toUploadFile(obj) {
         $(obj).next().click();
     }

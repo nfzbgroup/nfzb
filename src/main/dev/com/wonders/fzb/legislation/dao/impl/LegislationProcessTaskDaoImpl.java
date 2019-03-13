@@ -154,7 +154,8 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 	public Page<LegislationProcessTask> findTaskByNodeId(String wheresql, int pageNo, int pageSize) {
 		String baseSql = " FROM LEGISLATION_PROCESS_TASK t ";
 		baseSql += wheresql;
-		String propView = "SELECT t.st_task_id,t.st_doc_id,t.st_flow_id,t.st_bak_one,t.dt_bak_date,t.st_bak_two,t.st_node_id";
+		String propView = "SELECT t.st_task_id,t.st_doc_id,t.st_flow_id,t.st_bak_one,t.dt_bak_date,t.st_bak_two,t.st_node_id," +
+				"t.dt_open_date,t.st_team_name";
 		String totalView = "SELECT COUNT(1) ";
 
 		List<LegislationProcessTask> tasks = packageTaskInfoBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));
@@ -169,15 +170,17 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		for (Object[] array : results) {
 			LegislationProcessTask taskInfo = new LegislationProcessTask();
-			//t.st_task_id,t.st_doc_id,t.st_flow_id,t.st_bak_one,t.dt_bak_date,t.st_bak_two
+			//t.st_task_id,t.st_doc_id,t.st_flow_id,t.st_bak_one,t.dt_bak_date,t.st_bak_two,t.st_node_id,t.dt_open_date,t.st_team_name
 			taskInfo.setStTaskId(array[0].toString());
 			taskInfo.setStDocId(array[1]== null ? "" : array[1].toString());
 			taskInfo.setStFlowId(array[2]== null ? "" : array[2].toString());
 			taskInfo.setStBakOne(array[3]== null ? "" : array[3].toString());
 			taskInfo.setStBakTwo(array[5]== null ? "" : array[5].toString());
 			taskInfo.setStNodeId(array[6]== null ? "" : array[6].toString());
+			taskInfo.setStTeamName(array[8]== null ? "" : array[8].toString());
 			try {
 				taskInfo.setDtBakDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
+				taskInfo.setDtOpenDate(array[7] == null ? null : dateFormat.parse(array[7].toString()));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
