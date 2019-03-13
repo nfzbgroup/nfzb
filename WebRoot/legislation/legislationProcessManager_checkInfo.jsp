@@ -20,19 +20,22 @@
 
 		</thead>
 		<tbody>
-			<tr class="text-center">
-				<td>
-					<span>提交审核</span>
-				</td>
-				<td>
-					<textarea readonly id="stComent" name="stComent" class="form-control">111111</textarea>
-				</td>
-				<td>11111111
-					<%--<s:iterator value="#deal.docList" var="files">--%>
-						<%--<span><a target="_blank" href="${basePath}/file/downloadAttach.do?name=${files.stTitle}&url=${files.stFileUrl}">${files.stTitle}</a></span></br>--%>
-					<%--</s:iterator>--%>
-				</td>
-			</tr>
+			<s:iterator value="#request.checkDetails" var="checkDetail">
+				<tr class="text-center">
+						<td>
+							<span>${checkDetail.stTitle}</span>
+						</td>
+						<td>
+							<textarea readonly class="form-control">${checkDetail.stContent}</textarea>
+						</td>
+						<td>
+							<s:iterator value="#checkDetail.filesList" var="files">
+								<span><a target="_blank" href="${basePath}/file/downloadAttach.do?name=${files.stTitle}&url=${files.stFileUrl}">${files.stTitle}</a></span></br>
+							</s:iterator>
+						</td>
+				</tr>
+			</s:iterator>
+
 		</tbody>
 	</table>
 	<div class="form-group text-center">

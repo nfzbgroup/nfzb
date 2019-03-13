@@ -135,6 +135,19 @@ public class LegislationProcessDocAction extends BaseAction {
 	}
 
 	private String openHeartMeetingCheckInfoPage(){
+		List<LegislationProcessTaskdetail> checkDetails = new ArrayList<>();
+		String stDocId=request.getParameter("stDocId");
+		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='NOD_0000000141'");
+		if(list!=null && list.size()>0){
+			String stTaskId = list.get(0).getStTaskId();
+			List<LegislationProcessTaskdetail> taskDetails = legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where t.stTaskId='"+stTaskId+"' order by t.stTaskdetailId");
+			for(LegislationProcessTaskdetail legislationProcessTaskdetail:taskDetails){
+				List<LegislationFiles> files = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId='"+legislationProcessTaskdetail.getStTaskdetailId()+"'");
+				legislationProcessTaskdetail.setFilesList(files);
+				checkDetails.add(legislationProcessTaskdetail);
+			}
+		}
+		request.setAttribute("checkDetails",checkDetails);
 		return pageController();
 	}
 	private String openCheckExplainPage(){
