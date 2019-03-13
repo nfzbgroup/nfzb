@@ -1,17 +1,10 @@
 package com.wonders.fzb.legislation.beans;
 
-import java.io.Serializable;
-import java.sql.Blob;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * LEGISLATION_PROCESS_TASK Bean (操作业务实体) 
@@ -550,5 +543,28 @@ public class LegislationProcessTask implements Serializable {
 	public void setDtCloseDate (Date dtCloseDate){
 		this.dtCloseDate = dtCloseDate;
 	}
+	@Transient
+	private boolean hasSendReturn=false;
+	@Transient
+	private boolean hasGatherReturn=false;
 
+	public boolean isHasSendReturn() {
+		return hasSendReturn;
+	}
+
+	public void setHasSendReturn(boolean hasSendReturn) {
+		this.hasSendReturn = hasSendReturn;
+	}
+
+	public static String getLegislationProcessTask() {
+		return LegislationProcessTask;
+	}
+
+	public boolean isHasGatherReturn() {
+		return hasGatherReturn;
+	}
+
+	public void setHasGatherReturn(boolean hasGatherReturn) {
+		this.hasGatherReturn = hasGatherReturn;
+	}
 }

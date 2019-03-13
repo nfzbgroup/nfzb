@@ -317,6 +317,11 @@
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stTaskId="+stTaskId
         });
     };
+    function openTaskPageWithStatus(method,stTaskId,buttonStatus,stDocId,stNodeId) {
+        $("#legislationProcessForm").modal({
+            remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stTaskId="+stTaskId+"&stTaskStatus="+buttonStatus+"&stDocId="+stDocId+"&stNodeId="+stNodeId
+        });
+    };
     function openDemonstrationPage(method,stDocId) {
         $.post("${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId,function(data){
             $('#demonstration').html(data);

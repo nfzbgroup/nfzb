@@ -9,10 +9,7 @@ import com.wonders.fzb.legislation.beans.LegislationExample;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
-import com.wonders.fzb.legislation.services.LegislationExampleService;
-import com.wonders.fzb.legislation.services.LegislationFilesService;
-import com.wonders.fzb.legislation.services.LegislationProcessDocService;
-import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
+import com.wonders.fzb.legislation.services.*;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import dm.jdbc.util.StringUtil;
@@ -24,7 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -57,6 +58,9 @@ public class LegislationProcessTaskAction extends BaseAction {
     @Autowired
     @Qualifier("legislationFilesService")
     private LegislationFilesService legislationFilesService;
+    @Autowired
+    @Qualifier("legislationProcessTaskdetailService")
+    private LegislationProcessTaskdetailService legislationProcessTaskdetailService;
 
     Page<LegislationProcessDoc> infoPage;
 
@@ -217,6 +221,22 @@ public class LegislationProcessTaskAction extends BaseAction {
             request.setAttribute("buttonStatus", "TODO");
         } else {
             request.setAttribute("buttonStatus", taskStatus);
+        }
+        if(stNodeId.equals("NOD_0000000141")) {
+            if (infoPage.getResult() != null && infoPage.getResult().size() > 0) {
+                List<LegislationProcessTask> list = new ArrayList<>();
+                for (LegislationProcessTask legislationProcessTask : infoPage.getResult()) {
+                    String taskId = legislationProcessTask.getStTaskId();
+                    if (legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='" + taskId + "' and t.stTaskStatus='SEND-RETURN'").size() > 0) {
+                        legislationProcessTask.setHasSendReturn(true);
+                    }
+                    if (legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='" + taskId + "' and t.stTaskStatus='GATHER-RETURN'").size() > 0) {
+                        legislationProcessTask.setHasGatherReturn(true);
+                    }
+                    list.add(legislationProcessTask);
+                }
+                infoPage.setResult(list);
+            }
         }
         request.setAttribute("nodeInfo", nodeInfo);
         request.setAttribute("pageNo", pageNo);

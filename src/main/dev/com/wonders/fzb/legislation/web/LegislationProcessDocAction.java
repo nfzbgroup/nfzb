@@ -60,7 +60,10 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationProcessDealService")
 	private LegislationProcessDealService legislationProcessDealService;
-	
+	@Autowired
+	@Qualifier("legislationProcessTaskdetailService")
+	private LegislationProcessTaskdetailService legislationProcessTaskdetailService;
+
 	@Action(value = "draft_doc_info", results = {@Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openEditPage", location = "/legislation/legislationProcessManager_add.jsp"),
 			@Result(name = "openInfoPage", location = "/legislation/legislationProcessManager_info.jsp"),
@@ -82,9 +85,11 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openOnlineTabPage",location = "/legislation/legislationProcessManager_onlineTab.jsp"),
 			@Result(name = "openHeartMeetingAddPage",location = "/legislation/legislationProcessManager_legislationForm.jsp"),
 			@Result(name = "openHeartMeetingEditPage",location = "/legislation/legislationProcessManager_legislationForm.jsp"),
+			@Result(name = "openHeartMeetingCheckInfoPage",location = "/legislation/legislationProcessManager_checkInfo.jsp"),
 			@Result(name = "openHeartMeetingBeforeInfoPage",location = "/legislation/legislationProcessManager_legislationBeforeInfo.jsp"),
 			@Result(name = "openHeartMeetingAfterInfoPage",location = "/legislation/legislationProcessManager_legislationAfterInfo.jsp"),
 			@Result(name = "openExpertAddPage",location = "/legislation/legislationProcessManager_expertForm.jsp"),
+			@Result(name = "openCheckExplainPage",location = "/legislation/legislationProcessManager_checkExplain.jsp"),
 			@Result(name = "openExpertEditPage",location = "/legislation/legislationProcessManager_expertForm.jsp"),
 			@Result(name = "openUnitAddPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
 			@Result(name = "openUnitEditPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
@@ -126,6 +131,17 @@ public class LegislationProcessDocAction extends BaseAction {
 		}
 		request.setAttribute("legislationProcessDoc",legislationProcessDoc);
 		request.setAttribute("docList",docList);
+		return pageController();
+	}
+
+	private String openHeartMeetingCheckInfoPage(){
+		return pageController();
+	}
+	private String openCheckExplainPage(){
+		String stTaskStatus=request.getParameter("stTaskStatus");
+
+		request.setAttribute("stTaskStatus",stTaskStatus);
+
 		return pageController();
 	}
 	private String openEditPage(){
@@ -550,4 +566,47 @@ public class LegislationProcessDocAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	/**
+	 * 审核操作
+	 * @return
+	 */
+	private String saveTaskCheck(){
+		String stTaskId = request.getParameter("stTaskId");
+		String stComent= request.getParameter("stComent");
+		String stTaskStatus =request.getParameter("stTaskStatus");
+
+		LegislationProcessTaskdetail legislationProcessTaskdetail = new LegislationProcessTaskdetail();
+		legislationProcessTaskdetail.setStTaskId(stTaskId);
+		legislationProcessTaskdetail.setStTaskStatus(stTaskStatus);
+		legislationProcessTaskdetail.setStContent(stComent);
+		if("SEND".equals(stTaskStatus)){
+			legislationProcessTaskdetail.setStTitle("审核");
+		}else if("PUBLISH".equals(stTaskStatus)){
+			legislationProcessTaskdetail.setStTitle("发布");
+		}else if("SEND-RETURN".equals(stTaskStatus)){
+			legislationProcessTaskdetail.setStTitle("审核结果");
+		}else if("GATHER-RETURN".equals(stTaskStatus)){
+			legislationProcessTaskdetail.setStTitle("网上报名结果");
+		}
+		String stTaskDetailId = legislationProcessTaskdetailService.addObj(legislationProcessTaskdetail);
+
+		Enumeration keys=request.getParameterNames();
+		while(keys.hasMoreElements()){
+			String key=(String)keys.nextElement();
+			String value=request.getParameter(key);
+			if(value.startsWith("FIL_")){
+				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stTaskDetailId+"' where s.stFileId='"+value+"'");
+			}
+		}
+		if(!"SEND-RETURN".equals(stTaskStatus) &&! "GATHER-RETURN".equals(stTaskStatus)){
+			UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+			String userRoleId =session.getAttribute("userRoleId").toString();
+			String userRole =session.getAttribute("userRole").toString();
+			String stDocId = request.getParameter("stDocId");
+			String stNodeId = request.getParameter("stNodeId");
+			legislationProcessTaskService.nextChildProcess(stDocId,stNodeId,userRoleId,userRole,currentPerson);
+		}
+
+		return null;
+	}
 }

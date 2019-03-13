@@ -76,14 +76,6 @@
 				</s:iterator>
 			</td>
 		</tr>
-		<%--<tr>--%>
-			<%--<td class="text-right">--%>
-				<%--<label style="white-space: nowrap">立法听证会前领导批示:</label>--%>
-			<%--</td>--%>
-			<%--<td class="text-center">--%>
-				<%--<label >接口未绑定</label>--%>
-			<%--</td>--%>
-		<%--</tr>--%>
 	</table>
 	<div class="form-group text-center">
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
