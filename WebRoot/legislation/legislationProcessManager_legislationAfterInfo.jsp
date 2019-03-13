@@ -57,9 +57,18 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right tab-left">
-				<label style="white-space: nowrap">立法听证会后相关材料:</label>
-			</td>
+			<c:choose>
+				<c:when test="${legislationProcessTask.stNodeId=='NOD_0000000150'}">
+					<td class="text-right tab-left">
+						<label style="white-space: nowrap">专家论证会后相关材料:</label>
+					</td>
+				</c:when>
+				<c:otherwise>
+					<td class="text-right tab-left">
+						<label style="white-space: nowrap">立法听证会后相关材料:</label>
+					</td>
+				</c:otherwise>
+			</c:choose>
 			<td class="text-center">
 				<s:iterator value="#request.docList" var="doc">
 					<label class="control-label col-md-12 text-center"><a target="_blank" href="${basePath}/file/downloadAttach.do?name=${doc.stTitle}&url=${doc.stFileUrl}">${doc.stTitle}</a></label>
@@ -67,9 +76,19 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right tab-left">
-				<label style="white-space: nowrap">立法听证会后其他材料:</label>
-			</td>
+			<c:choose>
+				<c:when test="${legislationProcessTask.stNodeId=='NOD_0000000150'}">
+					<td class="text-right tab-left">
+						<label style="white-space: nowrap">专家论证会后其他材料:</label>
+					</td>
+				</c:when>
+				<c:otherwise>
+					<td class="text-right tab-left">
+						<label style="white-space: nowrap">立法听证会后其他材料:</label>
+					</td>
+				</c:otherwise>
+			</c:choose>
+
 			<td class="text-center">
 				<s:iterator value="#request.otherDocList" var="doc">
 					<label class="control-label col-md-12 text-center"><a target="_blank" href="${basePath}/file/downloadAttach.do?name=${doc.stTitle}&url=${doc.stFileUrl}">${doc.stTitle}</a></label>

@@ -19,7 +19,7 @@
 	<form id="expertDemonstrationForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
-		<div class="form-body">
+        <div class="form-body">
             <div class="form-group">
                 <label class="col-sm-3 control-label">论证会议题：</label>
                 <div class="col-sm-9">
@@ -76,9 +76,16 @@
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 			<div class="form-group">
-				<label class="control-label">专家论证前材料
-				</label>
-			</div>
+                <c:choose>
+                    <c:when test="${legislationProcessTask.stNodeId=='NOD_0000000151'}">
+                        <label class="control-label">专家论证后材料
+                        </label>
+                    </c:when>
+                    <c:otherwise>
+                        <label class="control-label">专家论证前材料
+                        </label>
+                    </c:otherwise>
+                </c:choose>
             <div class="form-group">
                 <table class="table table-striped table-bordered table-hover"
                        data-toggle="table"
@@ -130,8 +137,17 @@
                 </table>
             </div>
             <div class="form-group">
-                <label class="control-label">专家论证前其他材料
-                </label>
+                <c:choose>
+                    <c:when test="${legislationProcessTask.stNodeId=='NOD_0000000151'}">
+                        <label class="control-label">专家论证后其他材料
+                        </label>
+                    </c:when>
+                    <c:otherwise>
+                        <label class="control-label">专家论证前其他材料
+                        </label>
+                    </c:otherwise>
+                </c:choose>
+
                 <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                 </label>
                 <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">

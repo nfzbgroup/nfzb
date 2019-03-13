@@ -76,8 +76,23 @@
 											<c:otherwise>
 												<td >
                                                     <a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openHeartMeetingCheckInfoPage','${task.stDocId}')" class="layer_full_link">审核情况</a><br/>
-                                                    <a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br/>
-													<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openHeartMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a><br/></td>
+                                                    <a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br/>
+													<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a><br/></td>
+
+											</c:otherwise>
+										</c:choose>
+									</c:when>
+									<c:when test="${nodeId=='NOD_0000000140'}">
+										<c:choose>
+											<c:when test="${buttonStatus=='TODO'}">
+												<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openHeartMeetingEditPage','${task.stTaskId}')" class="layer_full_link">编辑</a><br>
+													<a href="javaScript:void(0)" data-title="上报" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">上报</a></td>
+											</c:when>
+											<c:otherwise>
+												<td >
+													<a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openHeartMeetingCheckInfoPage','${task.stDocId}')" class="layer_full_link">审核情况</a><br/>
+													<a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br/>
+													<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a><br/></td>
 
 											</c:otherwise>
 										</c:choose>
@@ -85,15 +100,15 @@
 									<c:otherwise>
 										<c:choose>
 											<c:when test="${buttonStatus=='TODO'}">
-												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
 													<a href="javaScript:void(0)" data-title="接收" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">接收</a></td>
 											</c:when>
 											<c:when test="${buttonStatus=='SEND'}">
-												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
 													<a href="javaScript:void(0)" data-title="送审" onclick="openTaskPageWithStatus('openCheckExplainPage','${task.stTaskId}','${buttonStatus}','${task.stDocId}','${task.stNodeId}')"  class="layer_full_link">送审</a></td>
 											</c:when>
 											<c:when test="${buttonStatus=='PUBLISH'}">
-												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
 													 <a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openHeartMeetingCheckInfoPage','${task.stDocId}')" class="layer_full_link">审核情况</a><br/>
 													<c:if test="${task.hasSendReturn eq false}">
                                                         <a href="javaScript:void(0)" data-title="送审" onclick="openTaskPageWithStatus('openCheckExplainPage','${task.stTaskId}','SEND-RETURN','${task.stDocId}','${task.stNodeId}')"  class="layer_full_link">添加审核结果</a><br>
@@ -101,7 +116,7 @@
                                                     <a href="javaScript:void(0)" data-title="发布" onclick="publishProcess('openCheckExplainPage','${task.stTaskId}','${buttonStatus}','${task.stDocId}','${task.stNodeId}',${task.hasSendReturn})"  class="layer_full_link">发布</a></td>
 											</c:when>
 											<c:when test="${buttonStatus=='GATHER'}">
-												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
 													<a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openHeartMeetingCheckInfoPage','${task.stDocId}')" class="layer_full_link">审核情况</a><br/>
 													<c:if test="${task.hasGatherReturn eq false}">
                                                         <a href="javaScript:void(0)" data-title="网上报名" onclick="openTaskPageWithStatus('openCheckExplainPage','${task.stTaskId}','GATHER-RETURN','${task.stDocId}','${task.stNodeId}')"  class="layer_full_link">添加网上报名结果</a><br>
@@ -109,7 +124,7 @@
                                                     <a href="javaScript:void(0)" data-title="汇总" onclick="gatherProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess',${task.hasGatherReturn})"  class="layer_full_link">汇总</a></td>
 											</c:when>
 											<c:when test="${buttonStatus=='RESULT'}">
-												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
+												<td ><a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br>
 													<a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openHeartMeetingCheckInfoPage','${task.stDocId}')" class="layer_full_link">审核情况</a><br/>
 													<a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openHeartMeetingEditPage','${task.stTaskId}')" class="layer_full_link">编辑会后信息</a><br/>
                                                     <a href="javaScript:void(0)" data-title="确认发布" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')"  class="layer_full_link">确认发布</a></td>
@@ -117,8 +132,8 @@
 											<c:otherwise>
 												<td >
 													<a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openHeartMeetingCheckInfoPage','${task.stDocId}')" class="layer_full_link">审核情况</a><br/>
-													<a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openHeartMeetingBeforeInfoPage','${task.stTaskId}')"  class="layer_full_link">查看会前</a>
-													<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openHeartMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a></td>
+													<a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')"  class="layer_full_link">查看会前</a>
+													<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a></td>
 											</c:otherwise>
 										</c:choose>
 									</c:otherwise>
@@ -128,6 +143,53 @@
 						</c:forEach>
 					</c:when>
 				</c:choose>
+		</c:when>
+		<c:when test="${nodeId=='NOD_0000000150'||nodeId=='NOD_0000000151'}">
+			<c:choose>
+				<c:when test="${retPage.totalSize > 0}">
+					<c:forEach items="${retPage.result}" var="task">
+						<tr class="text-center">
+							<td >${task.stTaskId}</td>
+							<td >${task.stFlowId}</td>
+							<td >${task.stBakOne}</td>
+							<td ><fmt:formatDate type="date" value="${task.dtBakDate}" /></td>
+							<td >${task.stBakTwo}</td>
+							<c:choose>
+								<c:when test="${nodeId=='NOD_0000000150'}">
+									<c:choose>
+										<c:when test="${buttonStatus=='TODO'}">
+											<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openExpertEditPage','${task.stTaskId}')" class="layer_full_link">编辑</a><br>
+												<a href="javaScript:void(0)" data-title="提交确认" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">提交确认</a></td>
+										</c:when>
+										<c:otherwise>
+											<td >
+												<a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br/></td>
+
+										</c:otherwise>
+									</c:choose>
+								</c:when>
+								<c:when test="${nodeId=='NOD_0000000151'}">
+									<c:choose>
+										<c:when test="${buttonStatus=='TODO'}">
+											<td >
+												<a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br/>
+												<a href="javaScript:void(0)" data-title="编辑会后" onclick="openTaskPage('openExpertEditPage','${task.stTaskId}')" class="layer_full_link">编辑会后</a><br>
+												<a href="javaScript:void(0)" data-title="提交确认"  onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')"  class="layer_full_link">提交确认</a></td>
+										</c:when>
+										<c:otherwise>
+											<td >
+												<a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br/>
+												<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a><br/></td>
+
+										</c:otherwise>
+									</c:choose>
+								</c:when>
+							</c:choose>
+
+						</tr>
+					</c:forEach>
+				</c:when>
+			</c:choose>
 		</c:when>
 		<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'}">
 			<c:choose>

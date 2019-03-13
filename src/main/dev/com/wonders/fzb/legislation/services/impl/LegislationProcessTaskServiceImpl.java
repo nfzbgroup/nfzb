@@ -151,7 +151,11 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			nextLegislationProcessTask.setStNodeId(nodeList.get(0).getStNextNode());
 			nextLegislationProcessTask.setStNodeName(wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + nodeList.get(0).getStNextNode() + "'").get(0).getStNodeName());
 			nextLegislationProcessTask.setStTaskStatus("TODO");
-			nextLegislationProcessTask.setStTeamId("U_3_1");
+			if(stNodeId.equals("NOD_0000000150")){
+				nextLegislationProcessTask.setStTeamId(legislationProcessTask.getStTeamId());
+			}else{
+				nextLegislationProcessTask.setStTeamId("U_3_1");
+			}
 			nextLegislationProcessTask.setStBakOne(legislationProcessTask.getStBakOne());
 			nextLegislationProcessTask.setStBakTwo(legislationProcessTask.getStBakTwo());
 			nextLegislationProcessTask.setDtBakDate(legislationProcessTask.getDtBakDate());

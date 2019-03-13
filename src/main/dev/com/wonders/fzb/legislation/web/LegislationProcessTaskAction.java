@@ -78,6 +78,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         @Action(value = "draft_deal_hearing_deal", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_hearing_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_expert_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
+        @Action(value = "draft_deal_expert_deal", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_deptopinion_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
     })
     public String listMethodManager() throws Exception {
@@ -101,8 +102,9 @@ public class LegislationProcessTaskAction extends BaseAction {
      * @return
      */
     private String queryTable() {
-        if("NOD_0000000140".equals(request.getParameter("stNodeId"))||"NOD_0000000141".equals(request.getParameter("stNodeId"))){
-            queryHearMeeting();
+        if("NOD_0000000140".equals(request.getParameter("stNodeId"))||"NOD_0000000141".equals(request.getParameter("stNodeId"))
+                ||"NOD_0000000150".equals(request.getParameter("stNodeId"))||"NOD_0000000151".equals(request.getParameter("stNodeId"))){
+            queryTaskDetail();
         }else if("NOD_0000000120".equals(request.getParameter("stNodeId"))||"NOD_0000000121".equals(request.getParameter("stNodeId"))){
             queryUnitOpinion();
         }else{
@@ -169,7 +171,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         request.setAttribute("nodeId", stNodeId);
     }
 
-    private void queryHearMeeting(){
+    private void queryTaskDetail(){
         String pageSize = request.getParameter("pageSize");
         String pageNo = request.getParameter("pageNo");
         String stNodeId = request.getParameter("stNodeId");
