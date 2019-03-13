@@ -1,17 +1,10 @@
 package com.wonders.fzb.legislation.beans;
 
-import java.io.Serializable;
-import java.sql.Blob;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * LEGISLATION_PROCESS_DOC Bean (操作业务实体) 
@@ -270,5 +263,14 @@ public class LegislationProcessDoc implements Serializable {
 	public void setStNodeId (String stNodeId){
 		this.stNodeId = stNodeId;
 	}
+	@Transient
+	private boolean hasOaReturn=false;
 
+	public boolean isHasOaReturn() {
+		return hasOaReturn;
+	}
+
+	public void setHasOaReturn(boolean hasOaReturn) {
+		this.hasOaReturn = hasOaReturn;
+	}
 }

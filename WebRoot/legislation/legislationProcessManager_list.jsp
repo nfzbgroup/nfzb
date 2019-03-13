@@ -122,6 +122,40 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
+									<c:when test="${nodeId=='NOD_0000000170'}">
+										<div class="col-md-5">
+											<div class="form-group">
+												<label class="col-md-3 control-label">会议时间:</label>
+												<div class="col-md-9">
+													<div class="input-group input-large">
+														<input type="text" class="form-control" readonly id="startTime" name="startTime">
+														<span class="input-group-addon"> - </span>
+														<input type="text" class="form-control" readonly id="endTime" name="endTime">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-group">
+												<label class="col-md-5 control-label">草案名称:</label>
+												<div class="col-md-7">
+													<input type="text"  class="form-control" id="stDocName">
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="col-md-5 control-label">会议名称:</label>
+												<div class="col-md-7">
+													<input type="text"  class="form-control" id="stUserName">
+												</div>
+											</div>
+										</div>
+										<div class="col-md-12">
+										</div>
+										<div class="col-md-5">
+										</div>
+									</c:when>
 									<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'}">
 										<div class="col-md-5">
 											<div class="form-group">
@@ -157,9 +191,9 @@
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div class="col-md-4">
+										<div class="col-md-5">
 											<div class="form-group">
-												<label class="col-md-2 control-label">发起时间:</label>
+												<label class="col-md-3 control-label">发起时间:</label>
 												<div class="col-md-9">
 													<div class="input-group input-large">
 														<input type="text" class="form-control" readonly id="startTime" name="startTime">
@@ -169,7 +203,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-md-4">
+										<div class="col-md-3">
 											<div class="form-group">
 												<label class="col-md-5 control-label">草案名称:</label>
 												<div class="col-md-7">
@@ -309,6 +343,11 @@
 	function openPage(method,stDocId) {
         $("#legislationProcessForm").modal({
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId
+        });
+    };
+    function openProMeetPage(method,stDocId,buttonStatus) {
+        $("#legislationProcessForm").modal({
+            remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId+"&stTaskStatus="+buttonStatus
         });
     };
 

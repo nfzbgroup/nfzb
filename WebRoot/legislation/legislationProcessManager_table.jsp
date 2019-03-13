@@ -40,6 +40,22 @@
 				</c:if>
 				<th class="text-center" data-field="set">操作</th>
 			</c:when>
+			<c:when test="${nodeId=='NOD_0000000150'||nodeId=='NOD_0000000151'}">
+				<th class="text-center" data-field="id">编号</th>
+				<th class="text-center" data-field="district_name">对应草案</th>
+				<th class="text-center" data-field="district_name">论证会议题</th>
+				<th class="text-center" data-field="created_at">论证会时间</th>
+				<th class="text-center" data-field="district_name">论证会地点</th>
+				<th class="text-center" data-field="set">操作</th>
+			</c:when>
+			<c:when test="${nodeId=='NOD_0000000170'}">
+				<th class="text-center" data-field="id">编号</th>
+				<th class="text-center" data-field="district_name">会议名称</th>
+				<th class="text-center" data-field="district_name">对应草案</th>
+				<th class="text-center" data-field="created_at">会议类型</th>
+				<th class="text-center" data-field="district_name">会议时间</th>
+				<th class="text-center" data-field="set">操作</th>
+			</c:when>
 			<c:otherwise>
 				<th class="text-center" data-field="id">草案编号</th>
 				<th class="text-center" data-field="district_name">法规规章草案</th>
@@ -73,23 +89,8 @@
 											</c:when>
 											<c:otherwise>
 												<td >
-                                                    <a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openHeartMeetingCheckInfoPage','${task.stDocId}')" class="layer_full_link">审核情况</a><br/>
+                                                    <%--<a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openHeartMeetingCheckInfoPage','${task.stDocId}')" class="layer_full_link">审核情况</a><br/>--%>
                                                     <a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br/>
-													<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a><br/></td>
-
-											</c:otherwise>
-										</c:choose>
-									</c:when>
-									<c:when test="${nodeId=='NOD_0000000140'}">
-										<c:choose>
-											<c:when test="${buttonStatus=='TODO'}">
-												<td ><a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openHeartMeetingEditPage','${task.stTaskId}')" class="layer_full_link">编辑</a><br>
-													<a href="javaScript:void(0)" data-title="上报" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">上报</a></td>
-											</c:when>
-											<c:otherwise>
-												<td >
-													<a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openHeartMeetingCheckInfoPage','${task.stDocId}')" class="layer_full_link">审核情况</a><br/>
-													<a href="javaScript:void(0)" data-title="查看会前" onclick="openTaskPage('openMeetingBeforeInfoPage','${task.stTaskId}')" class="layer_full_link">查看会前</a><br/>
 													<a href="javaScript:void(0)" data-title="查看会后" onclick="openTaskPage('openMeetingAfterInfoPage','${task.stTaskId}')" class="layer_full_link">查看会后</a><br/></td>
 
 											</c:otherwise>
@@ -256,6 +257,28 @@
 									</c:choose>
 
 								</c:when>
+								<c:when test="${nodeId=='NOD_0000000104'}">
+									<c:choose>
+										<c:when test="${buttonStatus=='TODO'}">
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+												<a href="javaScript:void(0)" data-title="oa审核" onclick="openProMeetPage('openProMeetPage','${task.stDocId}','${buttonStatus}')"  class="layer_full_link">oa审核</a>
+											</td>
+										</c:when>
+										<c:when test="${buttonStatus=='DOING'}">
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+												<c:if test="${task.hasOaReturn eq false}">
+													<a href="javaScript:void(0)" data-title="添加oa审核结果" onclick="openProMeetPage('openProMeetPage','${task.stDocId}','TODO-RETURN')"  class="layer_full_link">添加oa审核结果</a><br>
+												</c:if>
+												<a href="javascript:void(0);" onclick="gatherProcess('${task.stDocId}','${task.stNodeId}','nextProcess',${task.hasOaReturn})"  class="layer_full_link">提交</a></td>
+										</c:when>
+										<c:otherwise>
+											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+												<a href="javaScript:void(0)" data-title="审核情况" onclick="openPage('openProMeetCheckInfoPage','${task.stDocId}')" class="layer_full_link">oa审核情况</a><br/>
+												<a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
+										</c:otherwise>
+									</c:choose>
+
+								</c:when>
 								<c:otherwise>
 									<c:choose>
 										<c:when test="${buttonStatus=='TODO'}">
@@ -307,13 +330,22 @@
             Duang.error("提示", "审核未完成，请等待或手动添加审核结果！");
         }
     }
-    function gatherProcess(stDocId,stNodeId,method,hasGatherReturn) {
-        if(hasGatherReturn){
-            nextProcess(stDocId,stNodeId,"nextChildProcess");
+    function gatherProcess(stDocId,stNodeId,method,hasReturn) {
+        if(hasReturn){
+            if(stNodeId=="NOD_0000000104"){
+                nextProcess(stDocId,stNodeId,method);
+			}else{
+                nextProcess(stDocId,stNodeId,"nextChildProcess");
+			}
         }else{
-            Duang.error("提示", "网上报名结果未反馈，请等待或手动添加！");
+            if(stNodeId=="NOD_0000000104"){
+                Duang.error("提示", "oa审核结果未反馈，请等待或手动添加！");
+            }else{
+                Duang.error("提示", "网上报名结果未反馈，请等待或手动添加！");
+            }
         }
     }
+
     function uploadReport(stDocId,stNodeId) {
         $.post("../legislationProcessTask/uploadReport.do?stDocId="+stDocId+"&stNode="+stNodeId,
             function (data) {

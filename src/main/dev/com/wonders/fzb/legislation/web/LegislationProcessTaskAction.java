@@ -74,11 +74,13 @@ public class LegislationProcessTaskAction extends BaseAction {
     @Actions({
         @Action(value = "draft_dist_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_create_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
+        @Action(value = "draft_promeet_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_info", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_hearing_deal", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_hearing_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_expert_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_expert_deal", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
+        @Action(value = "draft_check_meeting", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_deptopinion_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
     })
     public String listMethodManager() throws Exception {
@@ -304,6 +306,21 @@ public class LegislationProcessTaskAction extends BaseAction {
             request.setAttribute("buttonStatus", "TODO");
         } else {
             request.setAttribute("buttonStatus", taskStatus);
+        }
+        if(stNodeId.equals("NOD_0000000104")) {
+            if (infoPage.getResult() != null && infoPage.getResult().size() > 0) {
+                List<LegislationProcessDoc> list = new ArrayList<>();
+                for (LegislationProcessDoc legislationProcessDoc : infoPage.getResult()) {
+                    String docId = legislationProcessDoc.getStDocId();
+                    List<LegislationProcessTask> tasks = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+docId+"' and t.stNodeId='NOD_0000000104'");
+                    LegislationProcessTask legislationProcessTask = tasks.get(0);
+                    if (legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='" + legislationProcessTask.getStTaskId() + "' and t.stTaskStatus='TODO-RETURN'").size() > 0) {
+                        legislationProcessDoc.setHasOaReturn(true);
+                    }
+                    list.add(legislationProcessDoc);
+                }
+                infoPage.setResult(list);
+            }
         }
         request.setAttribute("nodeInfo", nodeInfo);
         request.setAttribute("pageNo", pageNo);

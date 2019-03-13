@@ -86,6 +86,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openHeartMeetingAddPage",location = "/legislation/legislationProcessManager_legislationForm.jsp"),
 			@Result(name = "openHeartMeetingEditPage",location = "/legislation/legislationProcessManager_legislationForm.jsp"),
 			@Result(name = "openHeartMeetingCheckInfoPage",location = "/legislation/legislationProcessManager_checkInfo.jsp"),
+			@Result(name = "openProMeetCheckInfoPage",location = "/legislation/legislationProcessManager_checkInfo.jsp"),
 			@Result(name = "openMeetingBeforeInfoPage",location = "/legislation/legislationProcessManager_legislationBeforeInfo.jsp"),
 			@Result(name = "openMeetingAfterInfoPage",location = "/legislation/legislationProcessManager_legislationAfterInfo.jsp"),
 			@Result(name = "openExpertAddPage",location = "/legislation/legislationProcessManager_expertForm.jsp"),
@@ -136,9 +137,22 @@ public class LegislationProcessDocAction extends BaseAction {
 	}
 
 	private String openHeartMeetingCheckInfoPage(){
-		List<LegislationProcessTaskdetail> checkDetails = new ArrayList<>();
 		String stDocId=request.getParameter("stDocId");
-		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='NOD_0000000141'");
+
+		request.setAttribute("checkDetails",queryDetails(stDocId,"NOD_0000000141"));
+		return pageController();
+	}
+
+	private String openProMeetCheckInfoPage(){
+		String stDocId=request.getParameter("stDocId");
+
+		request.setAttribute("checkDetails",queryDetails(stDocId,"NOD_0000000104"));
+		return pageController();
+	}
+
+	private List<LegislationProcessTaskdetail> queryDetails(String stDocId,String stNodeId){
+		List<LegislationProcessTaskdetail> checkDetails = new ArrayList<>();
+		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"'");
 		if(list!=null && list.size()>0){
 			String stTaskId = list.get(0).getStTaskId();
 			List<LegislationProcessTaskdetail> taskDetails = legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where t.stTaskId='"+stTaskId+"' order by t.stTaskdetailId");
@@ -148,8 +162,20 @@ public class LegislationProcessDocAction extends BaseAction {
 				checkDetails.add(legislationProcessTaskdetail);
 			}
 		}
-		request.setAttribute("checkDetails",checkDetails);
-		return pageController();
+		return checkDetails;
+	}
+	private String openProMeetPage(){
+		String stTaskStatus=request.getParameter("stTaskStatus");
+		String stDocId=request.getParameter("stDocId");
+
+		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='NOD_0000000104'");
+		LegislationProcessTask legislationProcessTask = list.get(0);
+		request.setAttribute("stTaskStatus",stTaskStatus);
+		request.setAttribute("nodeId",legislationProcessTask.getStNodeId());
+		request.setAttribute("stDocId",stDocId);
+		request.setAttribute("stTaskId",legislationProcessTask.getStTaskId());
+		request.setAttribute("requestUrl", request.getRequestURI());
+		return "openCheckExplainPage";
 	}
 	private String openCheckExplainPage(){
 		String stTaskStatus=request.getParameter("stTaskStatus");
@@ -622,6 +648,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		legislationProcessTaskdetail.setStTaskId(stTaskId);
 		legislationProcessTaskdetail.setStTaskStatus(stTaskStatus);
 		legislationProcessTaskdetail.setStContent(stComent);
+
 		if("SEND".equals(stTaskStatus)){
 			legislationProcessTaskdetail.setStTitle("审核");
 		}else if("PUBLISH".equals(stTaskStatus)){
@@ -630,6 +657,10 @@ public class LegislationProcessDocAction extends BaseAction {
 			legislationProcessTaskdetail.setStTitle("审核结果");
 		}else if("GATHER-RETURN".equals(stTaskStatus)){
 			legislationProcessTaskdetail.setStTitle("网上报名结果");
+		}else if("TODO".equals(stTaskStatus)){
+			legislationProcessTaskdetail.setStTitle("OA审核");
+		}else if("TODO-RETURN".equals(stTaskStatus)){
+			legislationProcessTaskdetail.setStTitle("OA审核结果");
 		}
 		String stTaskDetailId = legislationProcessTaskdetailService.addObj(legislationProcessTaskdetail);
 
@@ -641,7 +672,7 @@ public class LegislationProcessDocAction extends BaseAction {
 				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stTaskDetailId+"' where s.stFileId='"+value+"'");
 			}
 		}
-		if(!"SEND-RETURN".equals(stTaskStatus) &&! "GATHER-RETURN".equals(stTaskStatus)){
+		if(!"SEND-RETURN".equals(stTaskStatus) &&! "GATHER-RETURN".equals(stTaskStatus)&&! "TODO-RETURN".equals(stTaskStatus)){
 			UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 			String userRoleId =session.getAttribute("userRoleId").toString();
 			String userRole =session.getAttribute("userRole").toString();
