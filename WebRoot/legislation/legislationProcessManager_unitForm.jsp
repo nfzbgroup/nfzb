@@ -51,8 +51,22 @@
                 <label class="col-sm-3 control-label">类型：</label>
                 <div class="col-sm-9">
                     <select  class="form-control" name="stBakOne" >
-                        <option value="征询">未绑定接口</option>
-                        <option value="征询含会签">征询含会签</option>
+                        <c:choose>
+                            <c:when test="${legislationProcessTask.stBakOne !=null}">
+                                <c:if test="${legislationProcessTask.stBakOne=='征询'}">
+                                    <option value="征询" selected>征询</option>
+                                    <option value="征询含会签">征询含会签</option>
+                                </c:if>
+                                <c:if test="${legislationProcessTask.stBakOne=='征询含会签'}">
+                                    <option value="征询" >征询</option>
+                                    <option value="征询含会签" selected>征询含会签</option>
+                                </c:if>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="征询">征询</option>
+                                <option value="征询含会签">征询含会签</option>
+                            </c:otherwise>
+                        </c:choose>
                     </select>
                 </div>
             </div>
@@ -60,15 +74,23 @@
                 <label class="col-sm-3 control-label">渠道：</label>
                 <div class="col-sm-9">
                     <select  class="form-control" name="stBakTwo">
-                        <option value="内部">未绑定接口</option>
-                        <option value="外部">外部</option>
+                        <c:choose>
+                            <c:when test="${legislationProcessTask.stBakTwo !=null}">
+                                <c:if test="${legislationProcessTask.stBakTwo=='内部'}">
+                                    <option value="内部" selected>内部</option>
+                                    <option value="外部">外部</option>
+                                </c:if>
+                                <c:if test="${legislationProcessTask.stBakTwo=='外部'}">
+                                    <option value="内部">内部</option>
+                                    <option value="外部" selected>外部</option>
+                                </c:if>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="内部">内部</option>
+                                <option value="外部">外部</option>
+                            </c:otherwise>
+                        </c:choose>
                     </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">表单：</label>
-                <div class="col-sm-4">
-                    <label class="btn btn-w-m btn-success" >编辑</label>
                 </div>
             </div>
 			<div class="form-group text-center">

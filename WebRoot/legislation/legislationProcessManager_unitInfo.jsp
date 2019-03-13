@@ -6,18 +6,19 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span >专家论证会 > </span>
+			<span >单位意见征求 > </span>
 		</li>
 		<li>
-			<span>查看会前信息</span>
+			<span>查看</span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
+	<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">征求意见单</h2>
 	<table class="table table-border table-bordered">
 		<tr>
-			<td class="text-right tab-left">
+			<td class="text-right">
 				<label style="white-space: nowrap">论证会议题:</label>
 			</td>
 			<td class="text-center">
@@ -25,7 +26,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right tab-left">
+			<td class="text-right">
 				<label style="white-space: nowrap">对应草案:</label>
 			</td>
 			<td class="text-center">
@@ -33,7 +34,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right tab-left">
+			<td class="text-right">
 				<label style="white-space: nowrap">论证会地点:</label>
 			</td>
 			<td class="text-center">
@@ -41,7 +42,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right tab-left">
+			<td class="text-right">
 				<label style="white-space: nowrap">论证会时间:</label>
 			</td>
 			<td class="text-center">
@@ -49,7 +50,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="text-right tab-left">
+			<td class="text-right">
 				<label style="white-space: nowrap">论证会人员:</label>
 			</td>
 			<td class="text-center">

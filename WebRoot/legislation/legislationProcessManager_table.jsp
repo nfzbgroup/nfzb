@@ -30,16 +30,14 @@
 			<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'}">
 				<th class="text-center" data-field="id">编号</th>
 				<th class="text-center" data-field="district_name">对应草案</th>
-				<c:if test="${buttonStatuss=='TODO'}">
+				<c:if test="${buttonStatus=='TODO'}">
 					<th class="text-center" data-field="district_name">经办处</th>
 					<th class="text-center" data-field="created_at">发起日期</th>
 				</c:if>
-				<c:if test="${buttonStatuss=='DONE'}">
+				<c:if test="${buttonStatus=='DONE'}">
 					<th class="text-center" data-field="district_name">类型</th>
 					<th class="text-center" data-field="created_at">征询发起日期</th>
 				</c:if>
-				<th class="text-center" data-field="district_name">经办处</th>
-				<th class="text-center" data-field="created_at">发起日期</th>
 				<th class="text-center" data-field="set">操作</th>
 			</c:when>
 			<c:otherwise>
@@ -141,13 +139,13 @@
 								<c:choose>
 									<c:when test="${buttonStatus=='TODO'}">
 										<td >
-											<a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br>
+											<a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openUnitEditPage','${task.stTaskId}')" class="layer_full_link">编辑</a><br>
 											<a href="javaScript:void(0)" data-title="发送" onclick="openTaskPage('openUnitSeekPage','${task.stTaskId}')" class="layer_full_link">发送</a>
 										</td>
 									</c:when>
 									<c:otherwise>
 										<td >
-											<a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stTaskId}')" class="layer_full_link">查看</a><br/>
 											<a href="javaScript:void(0)" data-title="接收情况" onclick="openTaskPage('openUnitReceivePage','${task.stTaskId}')" class="layer_full_link">接收情况</a><br/>
 										</td>
 									</c:otherwise>
