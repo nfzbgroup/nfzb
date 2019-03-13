@@ -94,7 +94,8 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openUnitAddPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
 			@Result(name = "openUnitEditPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
 			@Result(name = "openUnitSeekPage",location = "/legislation/legislationProcessManager_unitSeek.jsp"),
-			@Result(name = "openUnitReceivePage",location = "/legislation/legislationProcessManager_unitReceive.jsp")})
+			@Result(name = "openUnitReceivePage",location = "/legislation/legislationProcessManager_unitReceive.jsp"),
+			@Result(name = "openUnitInfoPage",location = "/legislation/legislationProcessManager_unitInfo.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
