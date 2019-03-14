@@ -7,10 +7,8 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.*;
 import com.wonders.fzb.legislation.services.*;
-import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import dm.jdbc.util.StringUtil;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -171,8 +169,9 @@ public class LegislationProcessDocAction extends BaseAction {
 	private String openProMeetPage(){
 		String stTaskStatus=request.getParameter("stTaskStatus");
 		String stDocId=request.getParameter("stDocId");
+        String stNodeId = request.getParameter("stNodeId");
 
-		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='NOD_0000000104'");
+		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"'");
 		LegislationProcessTask legislationProcessTask = list.get(0);
 		request.setAttribute("stTaskStatus",stTaskStatus);
 		request.setAttribute("nodeId",legislationProcessTask.getStNodeId());
@@ -374,68 +373,16 @@ public class LegislationProcessDocAction extends BaseAction {
 	}
 
 	private String sendUnit(){
-		String teamId = request.getParameter("teamId");
-		String stNodeId = request.getParameter("stNodeId");
-		String stTaskId=request.getParameter("stTaskId");
-		LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
-		legislationProcessTask.setStTaskStatus("DONE");
-		legislationProcessTaskService.update(legislationProcessTask);
-		String[] teamIdArray=teamId.split(",");
-		WegovSimpleNode node=wegovSimpleNodeService.findById(stNodeId);
-		WegovSimpleNode nextNode=wegovSimpleNodeService.findById(node.getStNextNode());
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-		String userId = currentPerson.getUserId();
-		String userName = currentPerson.getName();
-		for (int i = 0; i < teamIdArray.length; i++) {
-			TeamInfo teamInfo=teamInfoService.findTeamInfoByTeamId("MODULE_LEGISLATE",teamIdArray[i]);
-			LegislationProcessTask newTask= new LegislationProcessTask();
-			newTask.setStDocId(legislationProcessTask.getStDocId());
-			newTask.setStFlowId(legislationProcessTask.getStFlowId());
-			newTask.setStBakOne(legislationProcessTask.getStBakOne());
-			newTask.setStBakTwo(legislationProcessTask.getStBakTwo());
-			newTask.setStNodeId(nextNode.getStNodeId());
-			newTask.setStNodeName(nextNode.getStNodeName());
-			newTask.setStTaskStatus("TODO");
-			newTask.setDtOpenDate(legislationProcessTask.getDtOpenDate());
-			newTask.setDtDealDate(legislationProcessTask.getDtDealDate());
-			newTask.setStUserId(userId);
-			newTask.setStUserName(userName);
-			newTask.setStRoleId(session.getAttribute("userRoleId").toString());
-			newTask.setStRoleName(session.getAttribute("userRole").toString());
-			newTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
-			newTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
-			newTask.setStParentId(teamInfo.getId());
-			newTask.setStComment1(teamInfo.getTeamName());
-
-			legislationProcessTaskService.add(newTask);
-		}
+        String userRoleId = session.getAttribute("userRoleId").toString();
+        String userRole = session.getAttribute("userRole").toString();
+        legislationProcessTaskService.sendUnit(request,currentPerson,userRoleId,userRole);
 		return null;
 	}
 
 	public String addOpinion(){
-		String stTaskId=request.getParameter("stTaskId");
-		String opinion=request.getParameter("opinion");
-		String stNodeId=request.getParameter("stNodeId");
-		WegovSimpleNode node=wegovSimpleNodeService.findById(stNodeId);
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-		String userId = currentPerson.getUserId();
-		String userName = currentPerson.getName();
-		LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
-		legislationProcessTask.setStComment2(opinion);
-		legislationProcessTask.setDtBakDate(new Date());
-		legislationProcessTask.setStTaskStatus("DONE");
-		legislationProcessTaskService.update(legislationProcessTask);
-		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(legislationProcessTask.getStDocId());
-		LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
-		legislationProcessDeal.setStDocId(legislationProcessDoc.getStDocId());
-		legislationProcessDeal.setStActionId(stNodeId);
-		legislationProcessDeal.setStActionName(node.getStNodeName());
-		legislationProcessDeal.setStUserId(userId);
-		legislationProcessDeal.setStUserName(userName);
-		legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
-		legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
-		legislationProcessDeal.setDtDealDate(new Date());
-		legislationProcessDealService.add(legislationProcessDeal);
+        legislationProcessTaskService.addOpinion(request,currentPerson);
 		return null;
 	}
 
@@ -630,110 +577,10 @@ public class LegislationProcessDocAction extends BaseAction {
 	}
 
 	private void saveLegislation(String stNodeId,String stNodeName) throws Exception{
-		String stTaskId = request.getParameter("stTaskId");
-		String stBakOne = request.getParameter("stBakOne");
-		String stDocId = request.getParameter("stDocId");
-		String stBakTwo = request.getParameter("stBakTwo");
-		String dtBakDate = request.getParameter("dtBakDate");
-		String stComment2 = request.getParameter("stComment2");
-		String newDocName = request.getParameter("newDocName");
-
-		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-		String userId = currentPerson.getUserId();
-		String userName = currentPerson.getName();
-		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
-		if(StringUtil.isNotEmpty(newDocName)){
-			legislationProcessDoc.setStDocName(newDocName);
-			legislationProcessDocService.update(legislationProcessDoc);
-			List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"'");
-			legislationProcessTaskList.forEach((LegislationProcessTask newLegislationProcessTask)->{
-				newLegislationProcessTask.setStFlowId(newDocName);
-				legislationProcessTaskService.update(newLegislationProcessTask);
-			});
-			List<LegislationProcessDeal> legislationProcessDealList=legislationProcessDealService.findByHQL("from LegislationProcessDeal t where 1=1 and t.stDocId='"+stDocId+"'");
-			legislationProcessDealList.forEach((LegislationProcessDeal newLegislationProcessDeal)->{
-				newLegislationProcessDeal.setStBakOne(newDocName);
-				legislationProcessDealService.update(newLegislationProcessDeal);
-			});
-		}
-		if(StringUtil.isEmpty(stTaskId) || "null".equals(stTaskId)){
-			LegislationProcessTask newTask= new LegislationProcessTask();
-			newTask.setStDocId(stDocId);
-			newTask.setStFlowId(legislationProcessDoc.getStDocName());
-			newTask.setStBakOne(stBakOne);
-			newTask.setStBakTwo(stBakTwo);
-			if(StringUtil.isNotEmpty(dtBakDate)){
-				newTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
-			}else {
-				newTask.setDtBakDate(null);
-			}
-			newTask.setStComment2(stComment2);
-			newTask.setStNodeId(stNodeId);
-			newTask.setStNodeName(stNodeName);
-			newTask.setStTaskStatus("TODO");
-			newTask.setDtOpenDate(new Date());
-			newTask.setStUserId(userId);
-			newTask.setStUserName(userName);
-			newTask.setStRoleId(session.getAttribute("userRoleId").toString());
-			newTask.setStRoleName(session.getAttribute("userRole").toString());
-			newTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
-			newTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
-			legislationProcessTaskService.addObj(newTask);
-
-			LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
-			legislationProcessDeal.setStDocId(stDocId);
-			legislationProcessDeal.setStActionId(stNodeId);
-			legislationProcessDeal.setStActionName(stNodeName);
-			legislationProcessDeal.setStUserId(userId);
-			legislationProcessDeal.setStUserName(userName);
-			legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
-			legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
-			legislationProcessDeal.setDtDealDate(new Date());
-			legislationProcessDealService.add(legislationProcessDeal);
-
-		}else {
-			LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
-			legislationProcessTask.setStBakOne(stBakOne);
-			legislationProcessTask.setStBakTwo(stBakTwo);
-			if(StringUtil.isNotEmpty(dtBakDate)){
-				legislationProcessTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
-			}else {
-				legislationProcessTask.setDtBakDate(null);
-			}
-			legislationProcessTask.setStComment2(stComment2);
-			legislationProcessTaskService.update(legislationProcessTask);
-			List<LegislationProcessDeal> list = legislationProcessDealService.findByHQL("from LegislationProcessDeal t where 1=1 and t.stDocId='"+stDocId+"' and t.stActionId='"+stNodeId+"'");
-			if(list!=null && list.size()>0){
-				LegislationProcessDeal legislationProcessDeal = list.get(0);
-				legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
-				legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
-				legislationProcessDeal.setStUserId(userId);
-				legislationProcessDeal.setStUserName(userName);
-				legislationProcessDeal.setDtDealDate(new Date());
-				legislationProcessDealService.update(legislationProcessDeal);
-			}else{
-				LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
-				legislationProcessDeal.setStDocId(stDocId);
-				legislationProcessDeal.setStActionId(stNodeId);
-				legislationProcessDeal.setStActionName("立法听证会会后");
-				legislationProcessDeal.setStUserId(userId);
-				legislationProcessDeal.setStUserName(userName);
-				legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
-				legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
-				legislationProcessDeal.setDtDealDate(new Date());
-				legislationProcessDealService.add(legislationProcessDeal);
-			}
-
-
-		}
-		Enumeration keys=request.getParameterNames();
-		while(keys.hasMoreElements()){
-			String key=(String)keys.nextElement();
-			String value=request.getParameter(key);
-			if(value.startsWith("FIL_")){
-				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stDocId+"' where s.stFileId='"+value+"'");
-			}
-		}
+        UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+        String userRoleId= session.getAttribute("userRoleId").toString();
+        String userRole= session.getAttribute("userRole").toString();
+        legislationProcessDocService.saveLegislation(request,currentPerson,userRoleId,userRole,stNodeId,stNodeName);
 	}
 
 
@@ -754,46 +601,11 @@ public class LegislationProcessDocAction extends BaseAction {
 	 * @return
 	 */
 	private String saveTaskCheck(){
-		String stTaskId = request.getParameter("stTaskId");
-		String stComent= request.getParameter("stComent");
-		String stTaskStatus =request.getParameter("stTaskStatus");
+        UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+        String userRoleId= session.getAttribute("userRoleId").toString();
+        String userRole= session.getAttribute("userRole").toString();
+        legislationProcessTaskService.saveTaskCheck(request,currentPerson,userRoleId,userRole);
 
-		LegislationProcessTaskdetail legislationProcessTaskdetail = new LegislationProcessTaskdetail();
-		legislationProcessTaskdetail.setStTaskId(stTaskId);
-		legislationProcessTaskdetail.setStTaskStatus(stTaskStatus);
-		legislationProcessTaskdetail.setStContent(stComent);
-
-		if("SEND".equals(stTaskStatus)){
-			legislationProcessTaskdetail.setStTitle("审核");
-		}else if("PUBLISH".equals(stTaskStatus)){
-			legislationProcessTaskdetail.setStTitle("发布");
-		}else if("SEND-RETURN".equals(stTaskStatus)){
-			legislationProcessTaskdetail.setStTitle("审核结果");
-		}else if("GATHER-RETURN".equals(stTaskStatus)){
-			legislationProcessTaskdetail.setStTitle("网上报名结果");
-		}else if("TODO".equals(stTaskStatus)){
-			legislationProcessTaskdetail.setStTitle("OA审核");
-		}else if("TODO-RETURN".equals(stTaskStatus)){
-			legislationProcessTaskdetail.setStTitle("OA审核结果");
-		}
-		String stTaskDetailId = legislationProcessTaskdetailService.addObj(legislationProcessTaskdetail);
-
-		Enumeration keys=request.getParameterNames();
-		while(keys.hasMoreElements()){
-			String key=(String)keys.nextElement();
-			String value=request.getParameter(key);
-			if(value.startsWith("FIL_")){
-				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stTaskDetailId+"' where s.stFileId='"+value+"'");
-			}
-		}
-		if(!"SEND-RETURN".equals(stTaskStatus) &&! "GATHER-RETURN".equals(stTaskStatus)&&! "TODO-RETURN".equals(stTaskStatus)){
-			UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-			String userRoleId =session.getAttribute("userRoleId").toString();
-			String userRole =session.getAttribute("userRole").toString();
-			String stDocId = request.getParameter("stDocId");
-			String stNodeId = request.getParameter("stNodeId");
-			legislationProcessTaskService.nextChildProcess(stDocId,stNodeId,userRoleId,userRole,currentPerson);
-		}
 
 		return null;
 	}

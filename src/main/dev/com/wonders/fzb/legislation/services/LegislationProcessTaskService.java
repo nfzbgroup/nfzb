@@ -6,6 +6,7 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
@@ -134,4 +135,17 @@ public interface LegislationProcessTaskService{
 	 */
 	Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo,
 														 int pageSize);
+
+	/**
+	 *
+	 * @param request
+	 * @param currentPerson
+	 * @param userRoleId
+	 * @param userRole
+	 */
+    void sendUnit(HttpServletRequest request, UserInfo currentPerson,String userRoleId,String userRole);
+
+	void addOpinion(HttpServletRequest request, UserInfo currentPerson);
+
+	void saveTaskCheck(HttpServletRequest request,UserInfo currentPerson,String userRoleId,String userRole);
 }

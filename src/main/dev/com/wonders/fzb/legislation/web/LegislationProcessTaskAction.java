@@ -171,7 +171,17 @@ public class LegislationProcessTaskAction extends BaseAction {
             for(String stDocId:stDocSource.split("#")){
                 stDocSourceBuffer.append(legislationProcessDocService.findById(stDocId).getStDocName()).append("<br>");
             }
+
             legislationProcessDoc.setStDocSource(stDocSourceBuffer.toString());
+
+            if(StringUtil.isNotEmpty(taskStatus) && ("INPUT").equals(taskStatus)){
+                String docId = legislationProcessDoc.getStDocId();
+                List<LegislationProcessTask> tasks = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+docId+"' and t.stNodeId='"+stNodeId+"'");
+                LegislationProcessTask legislationProcessTask = tasks.get(0);
+                if (legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='" + legislationProcessTask.getStTaskId() + "' and t.stTaskStatus='TODO-RETURN'").size() > 0) {
+                    legislationProcessDoc.setHasReturn(true);
+                }
+            }
             resultList.add(legislationProcessDoc);
         }
         infoPage.setResult(resultList);
@@ -389,7 +399,7 @@ public class LegislationProcessTaskAction extends BaseAction {
                     List<LegislationProcessTask> tasks = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+docId+"' and t.stNodeId='NOD_0000000104'");
                     LegislationProcessTask legislationProcessTask = tasks.get(0);
                     if (legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='" + legislationProcessTask.getStTaskId() + "' and t.stTaskStatus='TODO-RETURN'").size() > 0) {
-                        legislationProcessDoc.setHasOaReturn(true);
+                        legislationProcessDoc.setHasReturn(true);
                     }
                     list.add(legislationProcessDoc);
                 }
@@ -402,7 +412,6 @@ public class LegislationProcessTaskAction extends BaseAction {
         request.setAttribute("retPage", infoPage);
         request.setAttribute("nodeId", stNodeId);
     }
-
 
     /**
      * 主节点流转（共用）

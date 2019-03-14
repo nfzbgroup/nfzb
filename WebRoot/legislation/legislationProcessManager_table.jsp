@@ -264,13 +264,23 @@
 								<c:when test="${buttonStatus=='TODO'}">
 									<td >
 										<a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openUnitEditPage','${task.stDocId}')" class="layer_full_link">编辑</a><br>
-										<a href="javaScript:void(0)" data-title="发布" onclick="openPage('openEditMeetingPage',null)" class="layer_full_link">发布会议</a>
+										<a href="javaScript:void(0)" data-title="发布会议" onclick="openProMeetPage('openProMeetPage','${task.stDocId}','${buttonStatus}')" class="layer_full_link">提交并发布会议</a>
+									</td>
+								</c:when>
+								<c:when test="${buttonStatus=='INPUT'}">
+									<td >
+										<c:if test="${task.hasReturn eq false}">
+											<a href="javaScript:void(0)" data-title="添加发布会议结果" onclick="openProMeetPage('openProMeetPage','${task.stDocId}','TODO-RETURN')"  class="layer_full_link">添加发布会议结果</a><br>
+										</c:if>
+										<a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openUnitEditPage','${task.stDocId}')" class="layer_full_link">编辑会后信息</a><br>
+
+										<a href="javascript:void(0);" onclick="gatherProcess('${task.stDocId}','${task.stNodeId}','nextProcess',${task.hasReturn})"  class="layer_full_link">提交</a></td>
 									</td>
 								</c:when>
 								<c:otherwise>
 									<td >
-										<a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
-										<a href="javaScript:void(0)" data-title="接收情况" onclick="openTaskPage('openUnitReceivePage','${task.stDocId}')" class="layer_full_link">接收情况</a><br/>
+										<a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stDocId}')" class="layer_full_link">查看会前</a><br/>
+										<a href="javaScript:void(0)" data-title="接收情况" onclick="openTaskPage('openUnitReceivePage','${task.stDocId}')" class="layer_full_link">查看会后</a><br/>
 									</td>
 								</c:otherwise>
 							</c:choose>
@@ -328,10 +338,10 @@
 										</c:when>
 										<c:when test="${buttonStatus=='DOING'}">
 											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
-												<c:if test="${task.hasOaReturn eq false}">
+												<c:if test="${task.hasReturn eq false}">
 													<a href="javaScript:void(0)" data-title="添加oa审核结果" onclick="openProMeetPage('openProMeetPage','${task.stDocId}','TODO-RETURN')"  class="layer_full_link">添加oa审核结果</a><br>
 												</c:if>
-												<a href="javascript:void(0);" onclick="gatherProcess('${task.stDocId}','${task.stNodeId}','nextProcess',${task.hasOaReturn})"  class="layer_full_link">提交</a></td>
+												<a href="javascript:void(0);" onclick="gatherProcess('${task.stDocId}','${task.stNodeId}','nextProcess',${task.hasReturn})"  class="layer_full_link">提交</a></td>
 										</c:when>
 										<c:otherwise>
 											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
@@ -394,14 +404,12 @@
     }
     function gatherProcess(stDocId,stNodeId,method,hasReturn) {
         if(hasReturn){
-            if(stNodeId=="NOD_0000000104"){
-                nextProcess(stDocId,stNodeId,method);
-			}else{
-                nextProcess(stDocId,stNodeId,"nextChildProcess");
-			}
+            nextProcess(stDocId,stNodeId,method);
         }else{
             if(stNodeId=="NOD_0000000104"){
                 Duang.error("提示", "oa审核结果未反馈，请等待或手动添加！");
+            }else if(stNodeId=="NOD_0000000170"){
+                Duang.error("提示", "审核会议发布结果未反馈，请等待或手动添加！");
             }else{
                 Duang.error("提示", "网上报名结果未反馈，请等待或手动添加！");
             }

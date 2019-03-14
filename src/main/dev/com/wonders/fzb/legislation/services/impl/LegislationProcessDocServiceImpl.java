@@ -14,6 +14,7 @@ import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import dm.jdbc.util.StringUtil;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -275,6 +276,113 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 				legislationProcessTaskService.update(legislationProcessTask);
 			}
 
+		}
+	}
+
+	@Override
+	public void saveLegislation(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole,String stNodeId,String stNodeName) throws Exception{
+		String stTaskId = request.getParameter("stTaskId");
+		String stBakOne = request.getParameter("stBakOne");
+		String stDocId = request.getParameter("stDocId");
+		String stBakTwo = request.getParameter("stBakTwo");
+		String dtBakDate = request.getParameter("dtBakDate");
+		String stComment2 = request.getParameter("stComment2");
+		String newDocName = request.getParameter("newDocName");
+
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
+		LegislationProcessDoc legislationProcessDoc=findById(stDocId);
+		if(StringUtil.isNotEmpty(newDocName)){
+			legislationProcessDoc.setStDocName(newDocName);
+			update(legislationProcessDoc);
+			List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"'");
+			legislationProcessTaskList.forEach((LegislationProcessTask newLegislationProcessTask)->{
+				newLegislationProcessTask.setStFlowId(newDocName);
+				legislationProcessTaskService.update(newLegislationProcessTask);
+			});
+			List<LegislationProcessDeal> legislationProcessDealList=legislationProcessDealService.findByHQL("from LegislationProcessDeal t where 1=1 and t.stDocId='"+stDocId+"'");
+			legislationProcessDealList.forEach((LegislationProcessDeal newLegislationProcessDeal)->{
+				newLegislationProcessDeal.setStBakOne(newDocName);
+				legislationProcessDealService.update(newLegislationProcessDeal);
+			});
+		}
+		if(StringUtil.isEmpty(stTaskId) || "null".equals(stTaskId)){
+			LegislationProcessTask newTask= new LegislationProcessTask();
+			newTask.setStDocId(stDocId);
+			newTask.setStFlowId(legislationProcessDoc.getStDocName());
+			newTask.setStBakOne(stBakOne);
+			newTask.setStBakTwo(stBakTwo);
+			if(StringUtil.isNotEmpty(dtBakDate)){
+				newTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
+			}else {
+				newTask.setDtBakDate(null);
+			}
+			newTask.setStComment2(stComment2);
+			newTask.setStNodeId(stNodeId);
+			newTask.setStNodeName(stNodeName);
+			newTask.setStTaskStatus("TODO");
+			newTask.setDtOpenDate(new Date());
+			newTask.setStUserId(userId);
+			newTask.setStUserName(userName);
+			newTask.setStRoleId(userRoleId);
+			newTask.setStRoleName(userRole);
+			newTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
+			newTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
+			legislationProcessTaskService.addObj(newTask);
+
+			LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
+			legislationProcessDeal.setStDocId(stDocId);
+			legislationProcessDeal.setStActionId(stNodeId);
+			legislationProcessDeal.setStActionName(stNodeName);
+			legislationProcessDeal.setStUserId(userId);
+			legislationProcessDeal.setStUserName(userName);
+			legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
+			legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
+			legislationProcessDeal.setDtDealDate(new Date());
+			legislationProcessDealService.add(legislationProcessDeal);
+
+		}else {
+			LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
+			legislationProcessTask.setStBakOne(stBakOne);
+			legislationProcessTask.setStBakTwo(stBakTwo);
+			if(StringUtil.isNotEmpty(dtBakDate)){
+				legislationProcessTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
+			}else {
+				legislationProcessTask.setDtBakDate(null);
+			}
+			legislationProcessTask.setStComment2(stComment2);
+			legislationProcessTaskService.update(legislationProcessTask);
+			List<LegislationProcessDeal> list = legislationProcessDealService.findByHQL("from LegislationProcessDeal t where 1=1 and t.stDocId='"+stDocId+"' and t.stActionId='"+stNodeId+"'");
+			if(list!=null && list.size()>0){
+				LegislationProcessDeal legislationProcessDeal = list.get(0);
+				legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
+				legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
+				legislationProcessDeal.setStUserId(userId);
+				legislationProcessDeal.setStUserName(userName);
+				legislationProcessDeal.setDtDealDate(new Date());
+				legislationProcessDealService.update(legislationProcessDeal);
+			}else{
+				LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
+				legislationProcessDeal.setStDocId(stDocId);
+				legislationProcessDeal.setStActionId(stNodeId);
+				legislationProcessDeal.setStActionName("立法听证会会后");
+				legislationProcessDeal.setStUserId(userId);
+				legislationProcessDeal.setStUserName(userName);
+				legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
+				legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
+				legislationProcessDeal.setDtDealDate(new Date());
+				legislationProcessDealService.add(legislationProcessDeal);
+			}
+
+
+		}
+		Enumeration keys=request.getParameterNames();
+		while(keys.hasMoreElements()){
+			String key=(String)keys.nextElement();
+			String value=request.getParameter(key);
+			if(value.startsWith("FIL_")){
+				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stDocId+"' where s.stFileId='"+value+"'");
+			}
 		}
 	}
 }

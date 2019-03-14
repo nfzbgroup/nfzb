@@ -49,7 +49,7 @@
 
 							</td>
 							<td style="text-align: center">
-								<c:if test="${nodeId=='NOD_0000000120'}">
+								<c:if test="${nodeId=='NOD_0000000121'}">
 									<label class="btn btn-success" onclick="toUploadFile(this)">点击上传</label>
 									<input id="${t.stTaskId}" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id)">
 								</c:if>

@@ -264,13 +264,13 @@ public class LegislationProcessDoc implements Serializable {
 		this.stNodeId = stNodeId;
 	}
 	@Transient
-	private boolean hasOaReturn=false;
+	private boolean hasReturn=false;
 
-	public boolean isHasOaReturn() {
-		return hasOaReturn;
+	public boolean isHasReturn() {
+		return hasReturn;
 	}
 
-	public void setHasOaReturn(boolean hasOaReturn) {
-		this.hasOaReturn = hasOaReturn;
+	public void setHasReturn(boolean hasReturn) {
+		this.hasReturn = hasReturn;
 	}
 }
