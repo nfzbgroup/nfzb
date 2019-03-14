@@ -250,6 +250,36 @@
 				</c:when>
 			</c:choose>
 		</c:when>
+		<c:when test="${nodeId=='NOD_0000000170'}">
+			<c:choose>
+				<c:when test="${retPage.totalSize > 0}">
+					<c:forEach items="${retPage.result}" var="task">
+						<tr class="text-center">
+							<td >${task.stDocId}</td>
+							<td >${task.stDocName}</td>
+							<td >${task.stDocSource}</td>
+							<td >${task.stDocNo}</td>
+							<td ><fmt:formatDate type="date" value="${task.dtCreateDate}" /></td>
+							<c:choose>
+								<c:when test="${buttonStatus=='TODO'}">
+									<td >
+										<a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openUnitEditPage','${task.stDocId}')" class="layer_full_link">编辑</a><br>
+										<a href="javaScript:void(0)" data-title="发布" onclick="openPage('openEditMeetingPage',null)" class="layer_full_link">发布会议</a>
+									</td>
+								</c:when>
+								<c:otherwise>
+									<td >
+										<a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+										<a href="javaScript:void(0)" data-title="接收情况" onclick="openTaskPage('openUnitReceivePage','${task.stDocId}')" class="layer_full_link">接收情况</a><br/>
+									</td>
+								</c:otherwise>
+							</c:choose>
+						</tr>
+					</c:forEach>
+				</c:when>
+			</c:choose>
+		</c:when>
+
 		<c:otherwise>
 			<c:choose>
 				<c:when test="${retPage.totalSize > 0}">

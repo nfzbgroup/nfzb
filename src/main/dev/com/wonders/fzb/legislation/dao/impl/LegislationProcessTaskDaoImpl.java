@@ -165,6 +165,46 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 		return new Page<LegislationProcessTask>(Page.getStartOfAnyPage(pageNo, pageSize), tasks.size(), totalSize, pageSize, tasks);
 	}
 
+	@Override
+	public Page<LegislationProcessDoc> findCheckMeetingByNodeId(String wheresql, int pageNo, int pageSize) {
+		String baseSql = " FROM LEGISLATION_PROCESS_DOC d ";
+		baseSql += " INNER JOIN LEGISLATION_PROCESS_TASK t ";
+		baseSql += " ON d.st_doc_id = t.st_doc_id ";
+		baseSql += wheresql;
+		String propView = "SELECT d.st_doc_id,d.st_doc_name,d.st_node_name,t.st_node_id,d.DT_CREATE_DATE,d.ST_COMENT,d.ST_DOC_NO,d.ST_DOC_SOURCE";
+		String totalView = "SELECT COUNT(1) ";
+
+		List<LegislationProcessDoc> users = packageCheckMeetingBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));
+		int totalSize = ((BigDecimal) (Object) executeSqlQueryWithoutPage(totalView + baseSql).get(0)).intValue();
+		if (pageSize == 0)
+			pageSize = totalSize;
+		return new Page<LegislationProcessDoc>(Page.getStartOfAnyPage(pageNo, pageSize), users.size(), totalSize, pageSize, users);
+	}
+
+	private List<LegislationProcessDoc> packageCheckMeetingBean(List<Object[]> results) {
+		LinkedList<LegislationProcessDoc> docInfos = new LinkedList<LegislationProcessDoc>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		for (Object[] array : results) {
+			LegislationProcessDoc docInfo = new LegislationProcessDoc();
+			//d.st_doc_id,d.st_doc_name,d.st_node_name,t.st_node_id,d.DT_CREATE_DATE,d.ST_COMENT,d.ST_DOC_NO,d.ST_DOC_SOURCE
+			docInfo.setStDocId(array[0].toString());
+			docInfo.setStDocName(array[1] == null ? "" : array[1].toString());
+			docInfo.setStNodeName(array[2] == null ? "" : array[2].toString());
+			docInfo.setStNodeId(array[3] == null ? "" : array[3].toString());
+			try {
+				docInfo.setDtCreateDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			docInfo.setStComent(array[5] == null ? "" : array[5].toString());
+			docInfo.setStDocNo(array[6] == null ? "" : array[6].toString());
+			docInfo.setStDocSource(array[7] == null ? "" : array[7].toString());
+
+			docInfos.add(docInfo);
+		}
+		return docInfos;
+	}
+
 	private LinkedList<LegislationProcessTask> packageTaskInfoBean(List<Object[]> results) {
 		LinkedList<LegislationProcessTask> tasks = new LinkedList<LegislationProcessTask>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

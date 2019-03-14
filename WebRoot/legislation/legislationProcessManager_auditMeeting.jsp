@@ -23,14 +23,14 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议名称：</label>
                 <div class="col-sm-9">
-                    <input type="text"  class="form-control" value="未绑定接口">
+                    <input type="text"  class="form-control" id="stDocName" name="stDocName" <c:if test="${legislationProcessDoc.stDocName !=null}">value="${legislationProcessDoc.stDocName}" </c:if>>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议类型：</label>
                 <div class="col-sm-9">
                     <select class="form-control" >
-                        <option>未绑定接口</option>
+                        <option name="stDocNo">草案审核会议</option>
                     </select>
                 </div>
             </div>
@@ -45,26 +45,26 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"></label>
                 <div class="col-sm-4">
-                    <input type="text"  class="form-control" >
+                    <input type="text"  class="form-control" name="updatedStDocName">
                 </div>
                 <label class="col-sm-5 control-label" style="color: red;text-align: left">*需修改法规规章草案名称请在此处填写</label>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议地点：</label>
                 <div class="col-sm-9">
-                    <input type="text"  class="form-control" >
+                    <input type="text"  class="form-control" id="stNodeName" name="stNodeName" <c:if test="${legislationProcessDoc.stNodeName !=null}">value="${legislationProcessDoc.stNodeName}" </c:if>>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议时间：</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" readonly id="demonstrationDate" name="demonstrationDate">
+                    <input type="text" class="form-control" readonly id="dtCreateDate" name="dtCreateDate" <c:if test="${legislationProcessDoc.dtCreateDate !=null}">value="${legislationProcessDoc.dtCreateDate}" </c:if>>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议人员：</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" ></textarea>
+                    <textarea class="form-control" id="stComent" name="stComent" <c:if test="${legislationProcessDoc.stComent !=null}">value="${legislationProcessDoc.stComent}" </c:if>></textarea>
                 </div>
             </div>
 			<div class="form-group text-center">

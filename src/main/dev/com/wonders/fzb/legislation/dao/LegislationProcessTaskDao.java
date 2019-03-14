@@ -34,4 +34,6 @@ public abstract interface LegislationProcessTaskDao extends BaseDao {
 			int pageSize);
 
     Page<LegislationProcessTask> findTaskByNodeId(String sql, int pageNo, int pageSize);
+
+    Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize);
 }

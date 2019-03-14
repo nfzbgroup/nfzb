@@ -124,4 +124,14 @@ public interface LegislationProcessTaskService{
 	 */
 	Page<LegislationProcessTask> findTaskByNodeId(String sql, int pageNo,
 												  int pageSize);
+
+	/**
+	 * 查询审核会议
+	 * @param sql
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo,
+														 int pageSize);
 }

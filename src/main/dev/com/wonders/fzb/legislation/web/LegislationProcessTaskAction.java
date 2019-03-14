@@ -111,10 +111,80 @@ public class LegislationProcessTaskAction extends BaseAction {
             queryTaskDetail();
         }else if("NOD_0000000120".equals(request.getParameter("stNodeId"))||"NOD_0000000121".equals(request.getParameter("stNodeId"))||"NOD_0000000122".equals(request.getParameter("stNodeId"))){
             queryUnitOpinion();
+        }else if("NOD_0000000170".equals(request.getParameter("stNodeId"))){
+            queryCheckMeeting();
         }else{
             queryDoc();
         }
         return "QueryTable";
+    }
+
+    private void queryCheckMeeting() {
+        String pageSize = request.getParameter("pageSize");
+        String pageNo = request.getParameter("pageNo");
+        String stNodeId = request.getParameter("stNodeId");
+        String taskStatus = request.getParameter("taskStatus");
+        String startTime = request.getParameter("startTime");
+        String endTime = request.getParameter("endTime");
+        String stDocName = request.getParameter("stDocName");
+
+        if (null == pageSize || "".equals(pageSize)) {
+            pageSize = "10";
+        }
+        if (null == pageNo || "".equals(pageNo)) {
+            pageNo = "1";
+        }
+
+        WegovSimpleNode nodeInfo = wegovSimpleNodeService.findById(stNodeId);
+        String baseSql = "WHERE 1=1 ";
+
+        if (null != stNodeId && !"".equals(stNodeId)) {
+            baseSql += "and t.st_node_Id = '" + stNodeId + "' ";
+        }
+        if (null != startTime && !"".equals(startTime)) {
+            baseSql += "and d.DT_CREATE_DATE >= TO_DATE('" + startTime + "','yyyy-mm-dd')";
+        }
+        if (StringUtil.isNotEmpty(endTime)) {
+            baseSql += "and d.DT_CREATE_DATE <= TO_DATE('" + endTime + "','yyyy-mm-dd')";
+        }
+        if (null != stDocName && !"".equals(stDocName)) {
+            baseSql += "and d.st_doc_name like '%" + stDocName + "%' ";
+        }
+        if (null != taskStatus && !"".equals(taskStatus)) {
+            baseSql += "and t.st_task_status = '" + taskStatus + "' ";
+        } else {
+            baseSql += "and t.st_task_status = 'TODO' ";
+        }
+        baseSql += "and d.st_node_Id = '"+stNodeId+"'";
+        baseSql += "and t.st_enable is null ";
+        baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
+
+
+        String orderSql = " order by d.dt_create_date DESC";
+        infoPage = legislationProcessTaskService.findCheckMeetingByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+
+        List<LegislationProcessDoc> resultList = new ArrayList<>();
+        List<LegislationProcessDoc> docList = infoPage.getResult();
+        for(LegislationProcessDoc legislationProcessDoc:docList){
+            StringBuffer stDocSourceBuffer = new StringBuffer();
+            String stDocSource = legislationProcessDoc.getStDocSource();  //标书id拼凑 DFT_0000000000000141#DFT_0000000000000140
+            for(String stDocId:stDocSource.split("#")){
+                stDocSourceBuffer.append(legislationProcessDocService.findById(stDocId).getStDocName()).append("<br>");
+            }
+            legislationProcessDoc.setStDocSource(stDocSourceBuffer.toString());
+            resultList.add(legislationProcessDoc);
+        }
+        infoPage.setResult(resultList);
+        if (StringUtil.isEmpty(taskStatus)) {
+            request.setAttribute("buttonStatus", "TODO");
+        } else {
+            request.setAttribute("buttonStatus", taskStatus);
+        }
+        request.setAttribute("nodeInfo", nodeInfo);
+        request.setAttribute("pageNo", pageNo);
+        request.setAttribute("pageSize", pageSize);
+        request.setAttribute("retPage", infoPage);
+        request.setAttribute("nodeId", stNodeId);
     }
 
     private void queryUnitOpinion(){

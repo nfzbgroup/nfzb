@@ -281,5 +281,18 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 		return legislationProcessTaskDao.findTaskByNodeId(sql, pageNo, pageSize);
 	}
 
+	/**
+	 * 查询审核会议
+	 *
+	 * @param sql
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	@Override
+	public Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) {
+		return legislationProcessTaskDao.findCheckMeetingByNodeId(sql, pageNo, pageSize);
+	}
+
 
 }

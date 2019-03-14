@@ -123,7 +123,7 @@
 										</div>
 									</c:when>
 									<c:when test="${nodeId=='NOD_0000000170'}">
-										<div class="col-md-5">
+										<div class="col-md-6">
 											<div class="form-group">
 												<label class="col-md-3 control-label">会议时间:</label>
 												<div class="col-md-9">
@@ -135,19 +135,19 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-md-3">
-											<div class="form-group">
-												<label class="col-md-5 control-label">草案名称:</label>
-												<div class="col-md-7">
-													<input type="text"  class="form-control" id="stDocName">
-												</div>
-											</div>
-										</div>
-										<div class="col-md-4">
+										<%--<div class="col-md-3">--%>
+											<%--<div class="form-group">--%>
+												<%--<label class="col-md-5 control-label">草案名称:</label>--%>
+												<%--<div class="col-md-7">--%>
+													<%--<input type="text"  class="form-control" id="stDraftName">--%>
+												<%--</div>--%>
+											<%--</div>--%>
+										<%--</div>--%>
+										<div class="col-md-6">
 											<div class="form-group">
 												<label class="col-md-5 control-label">会议名称:</label>
 												<div class="col-md-7">
-													<input type="text"  class="form-control" id="stUserName">
+													<input type="text"  class="form-control" id="stDocName">
 												</div>
 											</div>
 										</div>
@@ -249,6 +249,11 @@
 									<c:when test="${nodeId=='NOD_0000000150'}">
 										<div class="pull-right">
 											<label class="btn btn-w-m btn-success" id="addExpertMeeting" onclick="openTaskPage('openExpertAddPage',null)">添加</label>
+										</div>
+									</c:when>
+									<c:when test="${nodeId=='NOD_0000000170'}">
+										<div class="pull-right">
+											<label class="btn btn-w-m btn-success" id="addEditMeeting" onclick="openTaskPage('openEditMeetingPage',null)">添加</label>
 										</div>
 									</c:when>
 									<c:when test="${nodeId=='NOD_0000000101'}">

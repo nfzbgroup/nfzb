@@ -97,6 +97,8 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openUnitEditPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
 			@Result(name = "openUnitSeekPage",location = "/legislation/legislationProcessManager_unitSeek.jsp"),
 			@Result(name = "openUnitReceivePage",location = "/legislation/legislationProcessManager_unitReceive.jsp"),
+			@Result(name = "openEditMeetingPage",location = "/legislation/legislationProcessManager_auditMeeting.jsp"),
+			@Result(name = "openUnitInfoPage",location = "/legislation/legislationProcessManager_unitInfo.jsp"),
 			@Result(name = "openUnitInfoPage",location = "/legislation/legislationProcessManager_unitInfo.jsp"),
 			@Result(name = "openUnitAddOpinionPage",location = "/legislation/legislationProcessManager_unitAddOpinion.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
@@ -271,6 +273,9 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 
+	private String openEditMeetingPage(){
+		return pageController();
+	}
 
 	private String openDemonstrationPage(){
 		return pageController();
