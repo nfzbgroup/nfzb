@@ -3,6 +3,7 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
@@ -24,49 +25,23 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>
-					<input type="checkbox" name="unit">
-				</td>
-				<td style="text-align: center">
-					上海市黄浦区人民振幅法制办公室
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="checkbox" name="unit">
-				</td>
-				<td style="text-align: center">
-					上海市黄浦区人民振幅法制办公室2
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="checkbox" name="unit">
-				</td>
-				<td style="text-align: center">
-					上海市黄浦区人民振幅法制办公室3
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="checkbox" name="unit">
-				</td>
-				<td style="text-align: center">
-					上海市黄浦区人民振幅法制办公室4
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="checkbox" name="unit">
-				</td>
-				<td style="text-align: center">
-					上海市黄浦区人民振幅法制办公室5
-				</td>
-			</tr>
+		<c:if test="${teamInfoList !=null&&fn:length(teamInfoList)>0}">
+			<c:forEach var="t" items="${teamInfoList}">
+				<tr>
+					<td>
+						<input type="checkbox" name="unit" value="${t.id}">
+					</td>
+					<td style="text-align: center">
+						${t.teamName}
+					</td>
+				</tr>
+			</c:forEach>
+		</c:if>
 		</tbody>
 	</table>
 	<div class="form-group text-center">
+		<input type="button" class="btn btn-w-m btn-success" id="btnSave"
+			   name="btnSave" onclick="sendUnit()" value="确定"> &nbsp;&nbsp;
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 	</div>
 </div>
@@ -80,7 +55,7 @@
 				if($(this).prop("checked")){
 					checkedNum++;
 				}
-            })
+            });
 			if(num==checkedNum){
 				$("#all").prop("checked",true);
 			}else{
@@ -94,5 +69,21 @@
 		}else{
             $('[name="unit"]').prop("checked",false);
 		}
+    };
+	function sendUnit() {
+	    var teamId="";
+        var checkedNum=0;
+        $('[name="unit"]:checked').each(function () {
+			teamId=teamId+","+this.value;
+            checkedNum++;
+        });
+        if(checkedNum>0){
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=sendUnit&stTaskId=${stTaskId}&teamId="+teamId.substring(1),function(data){
+                $('#legislationProcessForm').modal('hide');
+                submitForm(1);
+            });
+        }else{
+            Duang.error("提示","请选择征询单位");
+        }
     }
 </script>

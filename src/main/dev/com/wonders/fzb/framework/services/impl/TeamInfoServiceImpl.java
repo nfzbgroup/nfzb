@@ -161,6 +161,13 @@ public class TeamInfoServiceImpl implements TeamInfoService{
 	public List<MOR> findMorTypeList(String moduleId, String orgType) {
 		return platformDao.findMorTypeList(moduleId, orgType);
 	}	
+	
+
+	@Override
+	public List<TeamInfo> findTeamInfoInModuleByType(String moduleId,
+			String type) {
+		return platformDao.findTeamInfoInModuleByType(moduleId,type);
+	}
 
 	@Override
 	public List<TeamInfo> findTeamInfoSuperList(String moduleId, String cid) {

@@ -127,6 +127,21 @@ public class PlatformDaoImpl extends BaseSupportDao implements PlatformDao {
 
 		return packageTeamInfo(results);
 	}
+	
+	@Override
+	public List<TeamInfo> findTeamInfoInModuleByType(String moduleId, String type) {
+		/* 为了避免hibernate many to many 查询出现的N+1的情况 使用HQL来做left join 只开销一次数据库 */
+		String hql = "SELECT team,mor FROM TeamInfo team ";
+		hql += " LEFT JOIN MOR mor ON  mor.teamCid = team.id ";
+		// hql += " LEFT JOIN OUR our ON mor.id = our.morId ";
+		// hql += " LEFT JOIN UserInfo user ON our.userId = user.userId ";
+		hql += " WHERE mor.orgType = '" + type + "' AND mor.moduleId = '" + moduleId + "'";
+
+		List<Object[]> results = executeHqlQuery(hql);
+
+		return packageTeamInfo(results);
+	}
+	
 
 	@Override
 	public List<TeamInfo> findTeamInfoSuperListRi(String moduleId, String cid) {

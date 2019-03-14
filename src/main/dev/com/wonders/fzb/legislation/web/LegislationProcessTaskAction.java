@@ -81,7 +81,9 @@ public class LegislationProcessTaskAction extends BaseAction {
         @Action(value = "draft_deal_expert_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_expert_deal", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_check_meeting", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
-        @Action(value = "draft_deal_deptopinion_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
+        @Action(value = "draft_deal_deptopinion_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
+        @Action(value = "draft_deal_deptopinion_send", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
+        @Action(value = "draft_deal_deptopinion_input", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
     })
     public String listMethodManager() throws Exception {
         String methodStr = request.getParameter("method");
@@ -107,7 +109,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         if("NOD_0000000140".equals(request.getParameter("stNodeId"))||"NOD_0000000141".equals(request.getParameter("stNodeId"))
                 ||"NOD_0000000150".equals(request.getParameter("stNodeId"))||"NOD_0000000151".equals(request.getParameter("stNodeId"))){
             queryTaskDetail();
-        }else if("NOD_0000000120".equals(request.getParameter("stNodeId"))||"NOD_0000000121".equals(request.getParameter("stNodeId"))){
+        }else if("NOD_0000000120".equals(request.getParameter("stNodeId"))||"NOD_0000000121".equals(request.getParameter("stNodeId"))||"NOD_0000000122".equals(request.getParameter("stNodeId"))){
             queryUnitOpinion();
         }else{
             queryDoc();
@@ -156,7 +158,9 @@ public class LegislationProcessTaskAction extends BaseAction {
             baseSql += "and t.st_task_status = 'TODO' ";
         }
         baseSql += "and t.st_enable is null ";
-        baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
+        if(stNodeId.equals("NOD_0000000122")){
+            baseSql += "and t.st_parent_Id = '" + session.getAttribute("unitCode") + "' ";
+        }
 
         String orderSql = " order by t.dt_open_date DESC";
         Page<LegislationProcessTask> infoPage = legislationProcessTaskService.findTaskByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
@@ -339,7 +343,7 @@ public class LegislationProcessTaskAction extends BaseAction {
     private String nextProcess() throws FzbDaoException {
         String stDocId = request.getParameter("stDocId");
         String stNodeId = request.getParameter("stNodeId");
-        legislationProcessTaskService.nextProcess(stDocId,stNodeId);
+        legislationProcessTaskService.nextProcess(stDocId,stNodeId,session);
 
         return null;
     }

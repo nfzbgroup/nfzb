@@ -6,6 +6,7 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +93,7 @@ public interface LegislationProcessTaskService{
 	 * @param stDocId
 	 * @param stNodeId
 	 */
-	public void nextProcess(String stDocId, String stNodeId);
+	public void nextProcess(String stDocId, String stNodeId, HttpSession session);
 
 	/**
 	 * 退回（公共）

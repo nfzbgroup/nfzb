@@ -2,6 +2,7 @@ package com.wonders.fzb.framework.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.dao.BaseDao;
 import com.wonders.fzb.base.exception.FzbDaoException;
@@ -208,5 +209,14 @@ public abstract interface PlatformDao extends BaseDao {
 	 * @return
 	 */
 	public String addPublicityMor(MOR mor);
+
+	
+	/**
+	 * 查询某个模块中，某一类单位的信息  liujun
+	 * @param moduleId
+	 * @param type
+	 * @return
+	 */
+	List<TeamInfo> findTeamInfoInModuleByType(String moduleId, String type);
 
 }

@@ -155,7 +155,7 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 		String baseSql = " FROM LEGISLATION_PROCESS_TASK t ";
 		baseSql += wheresql;
 		String propView = "SELECT t.st_task_id,t.st_doc_id,t.st_flow_id,t.st_bak_one,t.dt_bak_date,t.st_bak_two,t.st_node_id," +
-				"t.dt_open_date,t.st_team_name";
+				"t.dt_open_date,t.st_team_name,t.dt_deal_date";
 		String totalView = "SELECT COUNT(1) ";
 
 		List<LegislationProcessTask> tasks = packageTaskInfoBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));
@@ -181,6 +181,7 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 			try {
 				taskInfo.setDtBakDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
 				taskInfo.setDtOpenDate(array[7] == null ? null : dateFormat.parse(array[7].toString()));
+				taskInfo.setDtDealDate(array[9] == null ? null : dateFormat.parse(array[9].toString()));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

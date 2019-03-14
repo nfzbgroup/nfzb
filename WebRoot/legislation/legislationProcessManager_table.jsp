@@ -27,7 +27,7 @@
 				<th class="text-center" data-field="district_name">论证会地点</th>
 				<th class="text-center" data-field="set">操作</th>
 			</c:when>
-			<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'}">
+			<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'||nodeId=='NOD_0000000122'}">
 				<th class="text-center" data-field="id">编号</th>
 				<th class="text-center" data-field="district_name">对应草案</th>
 				<c:if test="${buttonStatus=='TODO'}">
@@ -190,7 +190,7 @@
 				</c:when>
 			</c:choose>
 		</c:when>
-		<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'}">
+		<c:when test="${nodeId=='NOD_0000000120'||nodeId=='NOD_0000000121'||nodeId=='NOD_0000000122'}">
 			<c:choose>
 				<c:when test="${retPage.totalSize > 0}">
 					<c:forEach items="${retPage.result}" var="task">
@@ -198,21 +198,53 @@
 							<td >${task.stTaskId}</td>
 							<td >${task.stFlowId}</td>
 							<td ><c:if test="${buttonStatus=='TODO'}">${task.stTeamName}</c:if><c:if test="${buttonStatus=='DONE'}">${task.stBakOne}</c:if> </td>
-							<td ><fmt:formatDate type="date" value="${task.dtOpenDate}" /></td>
+							<td ><c:if test="${buttonStatus=='TODO'}"><fmt:formatDate type="date" value="${task.dtOpenDate}" /></c:if><c:if test="${buttonStatus=='DONE'}"><fmt:formatDate type="date" value="${task.dtDealDate}" /></c:if></td>
+						   <c:if test="${nodeId=='NOD_0000000120'}">
+							   <c:choose>
+								   <c:when test="${buttonStatus=='TODO'}">
+									   <td >
+										   <a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openUnitEditPage','${task.stTaskId}')" class="layer_full_link">编辑</a><br>
+										   <a href="javaScript:void(0)" data-title="发起征询" onclick="uploadReport('${task.stDocId}','${task.stNodeId}')" class="layer_full_link">发起征询</a>
+									   </td>
+								   </c:when>
+								   <c:otherwise>
+									   <td >
+										   <a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stTaskId}')" class="layer_full_link">查看</a><br/>
+										   <a href="javaScript:void(0)" data-title="接收情况" onclick="openPage('openUnitReceivePage','${task.stDocId}')" class="layer_full_link">接收情况</a><br/>
+									   </td>
+								   </c:otherwise>
+							   </c:choose>
+						   </c:if>
+							<c:if test="${nodeId=='NOD_0000000121'}">
 								<c:choose>
 									<c:when test="${buttonStatus=='TODO'}">
 										<td >
-											<a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openUnitEditPage','${task.stTaskId}')" class="layer_full_link">编辑</a><br>
-											<a href="javaScript:void(0)" data-title="发送" onclick="openTaskPage('openUnitSeekPage','${task.stTaskId}')" class="layer_full_link">发送</a>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stTaskId}')" class="layer_full_link">查看</a><br>
+											<a href="javaScript:void(0)" data-title="发送部门" onclick="openTaskPage('openUnitSeekPage','${task.stTaskId}')" class="layer_full_link">发送部门</a>
 										</td>
 									</c:when>
 									<c:otherwise>
 										<td >
 											<a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stTaskId}')" class="layer_full_link">查看</a><br/>
-											<a href="javaScript:void(0)" data-title="接收情况" onclick="openTaskPage('openUnitReceivePage','${task.stTaskId}')" class="layer_full_link">接收情况</a><br/>
+											<a href="javaScript:void(0)" data-title="接收情况" onclick="openPage('openUnitReceivePage','${task.stDocId}')" class="layer_full_link">接收情况</a><br/>
 										</td>
 									</c:otherwise>
 								</c:choose>
+							</c:if>
+							<c:if test="${nodeId=='NOD_0000000122'}">
+								<c:choose>
+									<c:when test="${buttonStatus=='TODO'}">
+										<td >
+											<a href="javaScript:void(0)" data-title="填写意见" onclick="openTaskPage('openUnitAddOpinionPage','${task.stTaskId}')" class="layer_full_link">填写意见</a>
+										</td>
+									</c:when>
+									<c:otherwise>
+										<td >
+											<a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stTaskId}')" class="layer_full_link">查看</a><br/>
+										</td>
+									</c:otherwise>
+								</c:choose>
+							</c:if>
 						</tr>
 					</c:forEach>
 				</c:when>

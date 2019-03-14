@@ -89,6 +89,15 @@ public interface TeamInfoService {
 	 */
 	public List<MOR> findMorTypeList(String moduleId, String orgType);
 	
+	
+	/**
+	 * 某一模块的某类型单位信息  liujun
+	 * @param moduleId
+	 * @param type
+	 * @return
+	 */
+	public List<TeamInfo> findTeamInfoInModuleByType(String moduleId, String type);
+	
 	/**
 	 * 查询上级单位
 	 * @param moduleId 系统模块ID

@@ -3,6 +3,7 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
@@ -33,80 +34,42 @@
 		</tr>
 		</thead>
 		<tbody>
-		<tr>
-			<td style="text-align: center">
-				未绑定接口
-			</td>
-			<td style="text-align: center">
-				已反馈
-			</td>
-			<td style="text-align: center">
-				2019-08-30 20:18:36
-			</td>
-			<td style="text-align: center">
-				上海草案.doc
-			</td>
-		</tr>
-		<tr>
-			<td style="text-align: center">
-				未绑定接口2
-			</td>
-			<td style="text-align: center">
-				未接收
-			</td>
-			<td style="text-align: center">
+		<c:if test="${opinionList !=null&&fn:length(opinionList)>0}">
+			<c:forEach var="t" items="${opinionList}">
+				<tr>
+					<td style="text-align: center">
+						${t.stTeamName}
+					</td>
+					<c:choose>
+						<c:when test="${t.stTaskStatus=='TODO'}">
+							<td style="text-align: center">
+								未接收
+							</td>
+							<td style="text-align: center">
 
-			</td>
-			<td style="text-align: center">
-				<label class="btn btn-success" onclick="toUploadFile(this)">点击上传</label>
-				<input id="2" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id)">
-			</td>
-		</tr>
-		<tr>
-			<td style="text-align: center">
-				未绑定接口3
-			</td>
-			<td style="text-align: center">
-				未接收
-			</td>
-			<td style="text-align: center">
-
-			</td>
-			<td style="text-align: center">
-				<label class="btn btn-success" onclick="toUploadFile(this)">点击上传</label>
-				<input id="3" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id)">
-			</td>
-		</tr>
-		<tr>
-			<td style="text-align: center">
-				未绑定接口4
-			</td>
-			<td style="text-align: center">
-				未接收
-			</td>
-			<td style="text-align: center">
-
-			</td>
-			<td style="text-align: center">
-				<label class="btn btn-success" onclick="toUploadFile(this)">点击上传</label>
-				<input id="4" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id)">
-			</td>
-		</tr>
-		<tr>
-			<td style="text-align: center">
-				未绑定接口5
-			</td>
-			<td style="text-align: center">
-				未接收
-			</td>
-			<td style="text-align: center">
-
-			</td>
-			<td style="text-align: center">
-				<label class="btn btn-success" onclick="toUploadFile(this)">点击上传</label>
-				<input id="5" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id)">
-			</td>
-		</tr>
+							</td>
+							<td style="text-align: center">
+								<c:if test="${nodeId=='NOD_0000000120'}">
+									<label class="btn btn-success" onclick="toUploadFile(this)">点击上传</label>
+									<input id="${t.stTaskId}" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id)">
+								</c:if>
+							</td>
+						</c:when>
+						<c:otherwise>
+							<td style="text-align: center">
+								已反馈
+							</td>
+							<td style="text-align: center">
+								2019-08-30 20:18:36
+							</td>
+							<td style="text-align: center">
+								<a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${t.fileName}&url=${t.fileUrl}">${t.fileName}</a>
+							</td>
+						</c:otherwise>
+					</c:choose>
+				</tr>
+			</c:forEach>
+		</c:if>
 		</tbody>
 	</table>
 	<div class="form-group text-center">
@@ -118,27 +81,27 @@
         $(obj).next().click();
     }
     function uploadFile(id) {
-        <%--$.ajaxFileUpload({--%>
-            <%--url: '${basePath}/file/upload.do?stNodeId=NOD_0000000101&stSampleId='+stSampleId,--%>
-            <%--type: 'post',--%>
-            <%--secureuri: false,                       //是否启用安全提交,默认为false--%>
-            <%--fileElementId: id,--%>
-            <%--dataType: 'JSON',--%>
-            <%--success: function (data, status) {        //服务器响应成功时的处理函数--%>
-                <%--data = data.replace(/<.*?>/ig, "");  //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀--%>
-                <%--var file = JSON.parse(data);--%>
-                <%--if (file.success) {--%>
+        $.ajaxFileUpload({
+            url: '${basePath}/file/addOpinion.do?stTaskId='+id,
+            type: 'post',
+            secureuri: false,                       //是否启用安全提交,默认为false
+            fileElementId: id,
+            dataType: 'JSON',
+            success: function (data, status) {        //服务器响应成功时的处理函数
+                data = data.replace(/<.*?>/ig, "");  //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+                var file = JSON.parse(data);
+                if (file.success) {
 					$("#"+id).parent().prev().prev().html('已反馈');
-					$("#"+id).parent().prev().html("2019-03-10 20:18:36");
-        			$("#"+id).parent().html("上海市交通条例草案.doc");
-                    Duang.info("提示", "上传材料成功");
-        //         } else {
-        //             Duang.error("提示", "上传材料失败");
-        //         }
-        //     },
-        //     error: function (data, status, e) { //服务器响应失败时的处理函数
-        //         Duang.error("提示", "上传材料失败");
-        //     }
-        // });
+					$("#"+id).parent().prev().html(file.time);
+        			$("#"+id).parent().html('<a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">'+file.name+'</a>');
+                    Duang.info("提示", "操作成功");
+                } else {
+                    Duang.error("提示", "操作失败");
+                }
+            },
+            error: function (data, status, e) { //服务器响应失败时的处理函数
+                Duang.error("提示", "操作失败");
+            }
+        });
     }
 </script>

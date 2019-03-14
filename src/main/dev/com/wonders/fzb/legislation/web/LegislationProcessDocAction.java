@@ -7,6 +7,7 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.*;
 import com.wonders.fzb.legislation.services.*;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import dm.jdbc.util.StringUtil;
 import org.apache.commons.lang3.time.DateUtils;
@@ -96,7 +97,8 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openUnitEditPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
 			@Result(name = "openUnitSeekPage",location = "/legislation/legislationProcessManager_unitSeek.jsp"),
 			@Result(name = "openUnitReceivePage",location = "/legislation/legislationProcessManager_unitReceive.jsp"),
-			@Result(name = "openUnitInfoPage",location = "/legislation/legislationProcessManager_unitInfo.jsp")})
+			@Result(name = "openUnitInfoPage",location = "/legislation/legislationProcessManager_unitInfo.jsp"),
+			@Result(name = "openUnitAddOpinionPage",location = "/legislation/legislationProcessManager_unitAddOpinion.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -361,10 +363,116 @@ public class LegislationProcessDocAction extends BaseAction {
 	}
 
 	private String openUnitSeekPage(){
+		List<TeamInfo> teamInfoList=teamInfoService.findTeamInfoInModuleByType("MODULE_LEGISLATE","委办局");
+		request.setAttribute("teamInfoList",teamInfoList);
 		return pageController();
 	}
 
+	private String sendUnit(){
+		String teamId = request.getParameter("teamId");
+		String stNodeId = request.getParameter("stNodeId");
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
+		legislationProcessTask.setStTaskStatus("DONE");
+		legislationProcessTaskService.update(legislationProcessTask);
+		String[] teamIdArray=teamId.split(",");
+		WegovSimpleNode node=wegovSimpleNodeService.findById(stNodeId);
+		WegovSimpleNode nextNode=wegovSimpleNodeService.findById(node.getStNextNode());
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
+		for (int i = 0; i < teamIdArray.length; i++) {
+			TeamInfo teamInfo=teamInfoService.findTeamInfoByTeamId("MODULE_LEGISLATE",teamIdArray[i]);
+			LegislationProcessTask newTask= new LegislationProcessTask();
+			newTask.setStDocId(legislationProcessTask.getStDocId());
+			newTask.setStFlowId(legislationProcessTask.getStFlowId());
+			newTask.setStBakOne(legislationProcessTask.getStBakOne());
+			newTask.setStBakTwo(legislationProcessTask.getStBakTwo());
+			newTask.setStNodeId(nextNode.getStNodeId());
+			newTask.setStNodeName(nextNode.getStNodeName());
+			newTask.setStTaskStatus("TODO");
+			newTask.setDtOpenDate(legislationProcessTask.getDtOpenDate());
+			newTask.setDtDealDate(legislationProcessTask.getDtDealDate());
+			newTask.setStUserId(userId);
+			newTask.setStUserName(userName);
+			newTask.setStRoleId(session.getAttribute("userRoleId").toString());
+			newTask.setStRoleName(session.getAttribute("userRole").toString());
+			newTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
+			newTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
+			newTask.setStParentId(teamInfo.getId());
+			newTask.setStComment1(teamInfo.getTeamName());
+
+			legislationProcessTaskService.add(newTask);
+		}
+		return null;
+	}
+
+	public String addOpinion(){
+		String stTaskId=request.getParameter("stTaskId");
+		String opinion=request.getParameter("opinion");
+		String stNodeId=request.getParameter("stNodeId");
+		WegovSimpleNode node=wegovSimpleNodeService.findById(stNodeId);
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
+		LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
+		legislationProcessTask.setStComment2(opinion);
+		legislationProcessTask.setDtBakDate(new Date());
+		legislationProcessTask.setStTaskStatus("DONE");
+		legislationProcessTaskService.update(legislationProcessTask);
+		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(legislationProcessTask.getStDocId());
+		LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
+		legislationProcessDeal.setStDocId(legislationProcessDoc.getStDocId());
+		legislationProcessDeal.setStActionId(stNodeId);
+		legislationProcessDeal.setStActionName(node.getStNodeName());
+		legislationProcessDeal.setStUserId(userId);
+		legislationProcessDeal.setStUserName(userName);
+		legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());
+		legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
+		legislationProcessDeal.setDtDealDate(new Date());
+		legislationProcessDealService.add(legislationProcessDeal);
+		return null;
+	}
+
 	private String openUnitReceivePage(){
+		String stDocId=request.getParameter("stDocId");
+		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='NOD_0000000122' and t.stEnable is null");
+		List<Map> opinionList=new ArrayList<>();
+		legislationProcessTaskList.forEach((LegislationProcessTask legislationProcessTask)->{
+			Map map=new HashMap();
+			map.put("stTaskId",legislationProcessTask.getStTaskId());
+			map.put("stTeamName",legislationProcessTask.getStComment1());
+			map.put("stTaskStatus",legislationProcessTask.getStTaskStatus());
+			map.put("dtBakDate",legislationProcessTask.getDtBakDate());
+			if(StringUtil.isNotEmpty(legislationProcessTask.getStComment2())){
+				LegislationFiles legislationFiles=legislationFilesService.findById(legislationProcessTask.getStComment2());
+				map.put("fileName",legislationFiles.getStTitle());
+				map.put("fileUrl",legislationFiles.getStFileUrl());
+			}else{
+				map.put("fileName",null);
+				map.put("fileUrl",null);
+			}
+			opinionList.add(map);
+		});
+		request.setAttribute("opinionList",opinionList);
+		return pageController();
+	}
+
+	private String openUnitInfoPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId",legislationProcessTask.getStDocId());
+		condMap.put("stNodeId","NOD_0000000120");
+		sortMap.put("dtPubDate","ASC");
+		List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+		if(StringUtil.isNotEmpty(legislationProcessTask.getStComment2())){
+			LegislationFiles legislationFiles=legislationFilesService.findById(legislationProcessTask.getStComment2());
+			request.setAttribute("legislationFiles",legislationFiles);
+		}
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("legislationProcessTask",legislationProcessTask);
 		return pageController();
 	}
 
@@ -622,6 +730,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			}
 		}
 	}
+
 
 	/**
 	 * 提交分办

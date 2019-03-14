@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +28,7 @@ import java.util.Map;
  
 @Service("legislationProcessTaskService")
 @Transactional
-public class LegislationProcessTaskServiceImpl implements LegislationProcessTaskService {
+public class LegislationProcessTaskServiceImpl implements LegislationProcessTaskService{
 
 	@Autowired
 	private LegislationProcessTaskDao legislationProcessTaskDao;
@@ -138,10 +140,13 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	 * @param stNodeId
 	 */
 	@Override
-	public void nextProcess(String stDocId, String stNodeId) {
+	public void nextProcess(String stDocId, String stNodeId,HttpSession session) {
 		List<LegislationProcessTask> list = legislationProcessTaskDao.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
 		for (LegislationProcessTask legislationProcessTask : list) {
 			legislationProcessTask.setStTaskStatus("DONE");
+			if(stNodeId.equals("NOD_0000000120")){
+				legislationProcessTask.setDtDealDate(new Date());
+			}
 			legislationProcessTaskDao.update(legislationProcessTask);
 
 			LegislationProcessTask nextLegislationProcessTask = new LegislationProcessTask();
@@ -155,6 +160,13 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 				nextLegislationProcessTask.setStTeamId(legislationProcessTask.getStTeamId());
 			}else{
 				nextLegislationProcessTask.setStTeamId("U_3_1");
+			}
+			if(stNodeId.equals("NOD_0000000120")){
+				nextLegislationProcessTask.setDtOpenDate(legislationProcessTask.getDtOpenDate());
+				nextLegislationProcessTask.setDtDealDate(legislationProcessTask.getDtDealDate());
+				UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+				nextLegislationProcessTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
+				nextLegislationProcessTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
 			}
 			nextLegislationProcessTask.setStBakOne(legislationProcessTask.getStBakOne());
 			nextLegislationProcessTask.setStBakTwo(legislationProcessTask.getStBakTwo());
