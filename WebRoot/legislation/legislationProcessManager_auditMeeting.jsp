@@ -18,7 +18,7 @@
 <div class="modal-body">
 	<form id="auditMeetingForm" class="form-horizontal"
 		  novalidate="novalidate">
-        <input hidden name="stDocId" value="${stDocId}">
+        <input hidden name="stDocId" <c:if test="${legislationProcessDoc.stDocId !=null}">value="${legislationProcessDoc.stDocId}" </c:if>>
 		<div class="form-body">
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议名称：</label>

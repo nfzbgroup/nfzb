@@ -333,23 +333,27 @@ public class LegislationProcessDocAction extends BaseAction {
 		condMap.put("stNodeId","NOD_0000000170");
 		sortMap.put("dtPubDate","ASC");
 		if("INPUT".equals(stTaskStatus)){
-			List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='NOD_0000000170' and t.stTaskStatus='INPUT' and t.stEnable is null");
-			if(legislationProcessTaskList.size()>0){
-				LegislationProcessTask legislationProcessTask=legislationProcessTaskList.get(0);
-				Map map=new HashMap();
-				map.put("stDocId",legislationProcessTask.getStTaskId());
+			LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='NOD_0000000170' and t.stTaskStatus='INPUT' and t.stEnable is null").get(0);
+			Map map=new HashMap();
+			map.put("stDocId",legislationProcessTask.getStTaskId());
+			if(legislationProcessTask.getStComment1()!=null&&"after".equals(legislationProcessTask.getStComment1())){
 				map.put("stActive",legislationProcessTask.getStActive());
 				map.put("stDocName",legislationProcessTask.getStBakOne());
 				map.put("stDocNo",legislationProcessTask.getStBakTwo());
 				map.put("stNodeName",legislationProcessTask.getStNodeName());
 				map.put("stComent",legislationProcessTask.getStComment2());
 				map.put("dtCreateDate",legislationProcessTask.getDtBakDate());
-				request.setAttribute("legislationProcessDoc",map);
 				condMap.put("stParentId",legislationProcessTask.getStTaskId());
 			}else{
-				request.setAttribute("legislationProcessDoc",legislationProcessDoc);
+				map.put("stActive","true");
+				map.put("stDocName",legislationProcessDoc.getStDocName());
+				map.put("stDocNo",legislationProcessDoc.getStDocNo());
+				map.put("stNodeName",legislationProcessDoc.getStNodeName());
+				map.put("stComent",legislationProcessDoc.getStComent());
+				map.put("dtCreateDate",legislationProcessDoc.getDtCreateDate());
 				condMap.put("stParentId","-1");
 			}
+			request.setAttribute("legislationProcessDoc",map);
 		}else{
 			request.setAttribute("legislationProcessDoc",legislationProcessDoc);
 			condMap.put("stParentId",legislationProcessDoc.getStDocId());
@@ -472,6 +476,7 @@ public class LegislationProcessDocAction extends BaseAction {
 				legislationProcessTask.setStBakTwo(stDocNo);
 				legislationProcessTask.setStNodeName(stNodeName);
 				legislationProcessTask.setStComment2(stComent);
+				legislationProcessTask.setStComment1("after");
 				legislationProcessTask.setDtBakDate(DateUtils.parseDate(dtCreateDate,"yyyy-MM-dd"));
 				legislationProcessTaskService.update(legislationProcessTask);
 			}
