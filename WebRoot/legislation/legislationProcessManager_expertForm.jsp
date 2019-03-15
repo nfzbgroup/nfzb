@@ -86,6 +86,7 @@
                         </label>
                     </c:otherwise>
                 </c:choose>
+            </div>
             <div class="form-group">
                 <table class="table table-striped table-bordered table-hover"
                        data-toggle="table"

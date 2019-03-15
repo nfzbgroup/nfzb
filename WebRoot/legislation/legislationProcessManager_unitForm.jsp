@@ -250,7 +250,7 @@
                 Duang.error("提示", "上传材料失败");
             }
         });
-    }
+    };
     function deleteAttach(attachObj,type,id,fileId,stSampleId) {
         $.post('${basePath}/file/deleteAttach.do?fileId='+fileId);
 

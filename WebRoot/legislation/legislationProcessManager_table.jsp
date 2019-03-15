@@ -263,7 +263,7 @@
 							<c:choose>
 								<c:when test="${buttonStatus=='TODO'}">
 									<td >
-										<a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openUnitEditPage','${task.stDocId}')" class="layer_full_link">编辑</a><br>
+										<a href="javaScript:void(0)" data-title="编辑" onclick="openProMeetPage('openEditAuditMeetingPage','${task.stDocId}','${buttonStatus}')" class="layer_full_link">编辑</a><br>
 										<a href="javaScript:void(0)" data-title="发布会议" onclick="openProMeetPage('openProMeetPage','${task.stDocId}','${buttonStatus}')" class="layer_full_link">提交并发布会议</a>
 									</td>
 								</c:when>

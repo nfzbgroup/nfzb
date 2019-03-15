@@ -253,7 +253,7 @@
 									</c:when>
 									<c:when test="${nodeId=='NOD_0000000170'}">
 										<div class="pull-right">
-											<label class="btn btn-w-m btn-success" id="addEditMeeting" onclick="openTaskPage('openEditMeetingPage',null)">添加</label>
+											<label class="btn btn-w-m btn-success" id="addEditMeeting" onclick="openTaskPage('openAddAuditMeetingPage',null)">添加</label>
 										</div>
 									</c:when>
 									<c:when test="${nodeId=='NOD_0000000101'}">
@@ -275,7 +275,7 @@
 			</div>
 			<div class="modal inmodal fade" id="legislationProcessForm" data-backdrop tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog" style="width: 800px">
-					<div class="modal-content" id="demonstration">
+					<div class="modal-content">
 					</div>
 				</div>
 			</div>

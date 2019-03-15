@@ -18,7 +18,7 @@
 <div class="modal-body">
 	<form id="auditMeetingForm" class="form-horizontal"
 		  novalidate="novalidate">
-        <input hidden name="docId" value="${stDocId}">
+        <input hidden name="stDocId" value="${stDocId}">
 		<div class="form-body">
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议名称：</label>
@@ -29,25 +29,52 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议类型：</label>
                 <div class="col-sm-9">
-                    <select class="form-control" >
-                        <option name="stDocNo">草案审核会议</option>
+                    <select class="form-control" name="stDocNo">
+                        <option  value="草案审核会议">草案审核会议</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">对应草案：</label>
                 <div class="col-sm-9">
-                    <select class="form-control" >
-                        <option>未绑定接口</option>
-                    </select>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <c:if test="${legislationProcessDoc.stDocId==null}">
+                                <th class="text-center">
+                                    选择草案
+                                </th>
+                            </c:if>
+                            <th class="text-center">
+                                草案名称
+                            </th>
+                            <th class="text-center">
+                                新草案名称
+                            </th>
+                        </thead>
+                        <tbody>
+                        <c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
+                            <c:forEach items="${legislationProcessDocList}" var="doc">
+                                <tr>
+                                    <c:if test="${legislationProcessDoc.stDocId==null}">
+                                        <td class="text-center">
+                                            <input type="checkbox" name="stDocSourceCheck" value="${doc.stDocId}">
+                                        </td>
+                                    </c:if>
+                                    <td class="text-center">
+                                            ${doc.stDocName}
+                                    </td>
+                                    <td class="text-center">
+                                         <c:if test="${legislationProcessDoc.stDocId !=null}">
+                                         <input type="checkbox" style="display: none" name="stDocSourceCheck" checked value="${doc.stDocId}">
+                                         </c:if>
+                                         <input type="text" name="${doc.stDocId}" placeholder="需修改法规规章草案名称请在此处填写">
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:if>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label"></label>
-                <div class="col-sm-4">
-                    <input type="text"  class="form-control" name="updatedStDocName">
-                </div>
-                <label class="col-sm-5 control-label" style="color: red;text-align: left">*需修改法规规章草案名称请在此处填写</label>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议地点：</label>
@@ -58,18 +85,37 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议时间：</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" readonly id="dtCreateDate" name="dtCreateDate" <c:if test="${legislationProcessDoc.dtCreateDate !=null}">value="${legislationProcessDoc.dtCreateDate}" </c:if>>
+                    <input type="text" class="form-control" readonly id="dtCreateDate" name="dtCreateDate" <c:if test="${legislationProcessDoc.dtCreateDate !=null}">value="<fmt:formatDate value="${legislationProcessDoc.dtCreateDate}"/>" </c:if>>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">会议人员：</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" id="stComent" name="stComent" <c:if test="${legislationProcessDoc.stComent !=null}">value="${legislationProcessDoc.stComent}" </c:if>></textarea>
+                    <textarea class="form-control" id="stComent" name="stComent" ><c:if test="${legislationProcessDoc.stComent !=null}">${legislationProcessDoc.stComent}</c:if></textarea>
                 </div>
             </div>
+            <c:if test="${stTaskStatus=='INPUT'}">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">审核结果：</label>
+                    <div class="col-sm-9">
+                        <select name="stActive" class="form-control">
+                            <c:choose>
+                                <c:when test="${legislationProcessDoc.stActive=='true'}">
+                                    <option value="true" selected>成功</option>
+                                    <option value="false">失败</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="true" >成功</option>
+                                    <option value="false" selected>失败</option>
+                                </c:otherwise>
+                            </c:choose>
+                        </select>
+                    </div>
+                </div>
+            </c:if>
 			<div class="form-group text-center">
 					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
-						   name="btnSave"  value="提交"> &nbsp;&nbsp;
+						   name="btnSave" onclick="saveAuditMeeting()" value="提交"> &nbsp;&nbsp;
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 			<div class="form-group">
@@ -172,17 +218,17 @@
 <script>
     $(function () {
         laydate.render({
-            elem: '#demonstrationDate',
+            elem: '#dtCreateDate',
             format:'yyyy-MM-dd',
             calendar: true,
         });
     });
     function toUploadFile(obj) {
         $(obj).next().click();
-    }
+    };
     function uploadFile(id,type,stSampleId) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do?stNodeId=NOD_0000000101&stSampleId='+stSampleId,
+            url: '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId='+stSampleId,
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,
@@ -216,7 +262,7 @@
                 Duang.error("提示", "上传材料失败");
             }
         });
-    }
+    };
     function deleteAttach(attachObj,type,id,fileId,stSampleId) {
         $.post('${basePath}/file/deleteAttach.do?fileId='+fileId);
 
@@ -228,6 +274,36 @@
             obj.parent().html(html);
         }else{
             obj.parent().parent().remove();
+        }
+    };
+    function saveAuditMeeting() {
+        var param=$('#auditMeetingForm').formToJson();
+        var stDocSource="";
+        var checkedNum=0;
+        $('[name="stDocSourceCheck"]:checked').each(function () {
+            stDocSource=stDocSource+"#"+this.value;
+            checkedNum++;
+        });
+        if(checkedNum>0){
+            param.stDocSource=stDocSource.substring(1);
+        }
+        if(param.stDocName==null||param.stDocName==""){
+            Duang.error("提示","请输入会议名称");
+        }else if(param.stDocNo==null||param.stDocNo==""){
+            Duang.error("提示","请选择会议类型");
+        }else if(param.stDocSource==null||param.stDocSource==""){
+            Duang.error("提示","请选择对应草案");
+        }else if(param.stNodeName==null||param.stNodeName==""){
+            Duang.error("提示","请输入会议地点");
+        }else if(param.dtCreateDate==null||param.dtCreateDate==""){
+            Duang.error("提示","请选择会议时间");
+        }else if(param.stComent==null||param.stComent==""){
+            Duang.error("提示","请输入会议人员");
+        }else {
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveAuditMeeting",param,function(data){
+                $('#legislationProcessForm').modal('hide');
+                submitForm(1);
+            });
         }
     }
 </script>
