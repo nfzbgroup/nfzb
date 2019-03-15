@@ -272,7 +272,7 @@
 										<c:if test="${task.hasReturn eq false}">
 											<a href="javaScript:void(0)" data-title="添加发布会议结果" onclick="openProMeetPage('openProMeetPage','${task.stDocId}','TODO-RETURN')"  class="layer_full_link">添加发布会议结果</a><br>
 										</c:if>
-										<a href="javaScript:void(0)" data-title="编辑" onclick="openTaskPage('openUnitEditPage','${task.stDocId}')" class="layer_full_link">编辑会后信息</a><br>
+										<a href="javaScript:void(0)" data-title="编辑" onclick="openProMeetPage('openEditAuditMeetingPage','${task.stDocId}','${buttonStatus}')" class="layer_full_link">编辑会后信息</a><br>
 
 										<a href="javascript:void(0);" onclick="gatherProcess('${task.stDocId}','${task.stNodeId}','nextProcess',${task.hasReturn})"  class="layer_full_link">提交</a></td>
 									</td>
