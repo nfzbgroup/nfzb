@@ -388,7 +388,6 @@ public class LegislationProcessDocAction extends BaseAction {
 		String dtCreateDate = request.getParameter("dtCreateDate");
 		String stComent = request.getParameter("stComent");
 		String stActive = request.getParameter("stActive");
-
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String userId = currentPerson.getUserId();
 		String userName = currentPerson.getName();
