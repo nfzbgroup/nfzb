@@ -1,6 +1,5 @@
 package com.wonders.fzb.legislation.web;
 
-import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.TeamInfo;
@@ -307,7 +306,7 @@ public class LegislationProcessDocAction extends BaseAction {
 
 	private String openAddAuditMeetingPage(){
 		request.setAttribute("LegislationExampleList",queryLegislationExampleFiles());
-		List<LegislationProcessDoc> legislationProcessDocList=legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null and d.stDocId not in (select a.stDocId from LegislationProcessDeal a where a.stActionId='NOD_0000000170')");
+		List<LegislationProcessDoc> legislationProcessDocList=legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null");
 		request.setAttribute("legislationProcessDocList",legislationProcessDocList);
 		request.setAttribute("legislationProcessDoc",new LegislationProcessDoc());
 		request.setAttribute("stTaskStatus","TODO");

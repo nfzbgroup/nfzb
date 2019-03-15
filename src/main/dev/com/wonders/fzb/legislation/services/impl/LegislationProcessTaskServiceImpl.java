@@ -302,8 +302,14 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			legislationProcessTask.setStUserName(userName);
 			legislationProcessTask.setStRoleId(userRoleId);
 			legislationProcessTask.setStRoleName(userRole);
-			legislationProcessTask.setStTeamId(unitId);
-			legislationProcessTask.setStTeamName(unitName);
+			if("NOD_0000000105".equals(stNodeId)){
+				LegislationProcessTask lastTask = findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='NOD_0000000104' and t.stEnable is null").get(0);
+				legislationProcessTask.setStTeamId(lastTask.getStTeamId());
+				legislationProcessTask.setStTeamName(lastTask.getStTeamName());
+			}else{
+				legislationProcessTask.setStTeamId(unitId);
+				legislationProcessTask.setStTeamName(unitName);
+			}
 			update(legislationProcessTask);
 		}
 
