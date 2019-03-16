@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -459,6 +460,27 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 
+	private String saveHandleDemonstration() throws IOException {
+		String stTaskId=request.getParameter("stTaskId");
+		String stComment2=request.getParameter("stComment2");
+		LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
+		legislationProcessTask.setStComment2(stComment2);
+		legislationProcessTaskService.update(legislationProcessTask);
+		Enumeration keys=request.getParameterNames();
+		while(keys.hasMoreElements()){
+			String key=(String)keys.nextElement();
+			String value=request.getParameter(key);
+			if(value.startsWith("FIL_")){
+				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+legislationProcessTask.getStDocId()+"' where s.stFileId='"+value+"'");
+			}
+		}
+		JSONObject jsonObject=new JSONObject();
+		jsonObject.put("stTaskId",stTaskId);
+		jsonObject.put("success",true);
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jsonObject);
+		return null;
+	}
 	private String openExpertInfoPage(){
 		return pageController();
 	}

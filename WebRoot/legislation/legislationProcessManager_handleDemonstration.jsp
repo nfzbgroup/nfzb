@@ -80,7 +80,7 @@
                         +'<td class="text-left">材料</td>'
                         +'<td>'+file.name+'</td>'
                         +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
-                        +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'
+                        +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\','+null+')">删除</label>'
                         +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                         +'</td></tr>';
                     $('#otherMaterial').append(html);
@@ -99,7 +99,7 @@
         if(param.stComment2==null||param.stComment2==""){
             Duang.error("提示","请输入指导说明");
         }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveHandleDemonstration",param,function(data){
                 if(data.success){
                     Duang.success("提示","操作成功");
                 }else{
