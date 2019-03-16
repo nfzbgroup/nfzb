@@ -6,7 +6,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <form id="expertDemonstrationForm" class="form-horizontal"
       novalidate="novalidate">
-    <input hidden name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
+    <input hidden name="stTaskId" id="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
     <div class="form-body">
         <div class="form-group">
             <label class="col-sm-3 control-label">论证会议题：</label>
@@ -18,18 +18,7 @@
             <label class="col-sm-3 control-label">对应草案：</label>
             <div class="col-sm-9">
                 <select class="form-control" name="stDocId" >
-                    <c:choose>
-                        <c:when test="${legislationProcessTask.stDocId!=null}">
-                            <option value="${legislationProcessDoc.stDocId}" selected>${legislationProcessDoc.stDocName}</option>
-                        </c:when>
-                        <c:otherwise>
-                            <c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
-                                <c:forEach items="${legislationProcessDocList}" var="doc">
-                                    <option value="${doc.stDocId}">${doc.stDocName}</option>
-                                </c:forEach>
-                            </c:if>
-                        </c:otherwise>
-                    </c:choose>
+                    <option value="${legislationProcessDoc.stDocId}" selected>${legislationProcessDoc.stDocName}</option>
                 </select>
             </div>
         </div>
@@ -59,16 +48,8 @@
             </div>
         </div>
         <div class="form-group">
-            <c:choose>
-                <c:when test="${legislationProcessTask.stNodeId=='NOD_0000000151'}">
-                    <label class="control-label">专家论证后材料
-                    </label>
-                </c:when>
-                <c:otherwise>
-                    <label class="control-label">专家论证前材料
-                    </label>
-                </c:otherwise>
-            </c:choose>
+                <label class="control-label">专家论证前材料
+                </label>
         </div>
         <div class="form-group">
             <table class="table table-striped table-bordered table-hover"
@@ -121,17 +102,8 @@
             </table>
         </div>
         <div class="form-group">
-            <c:choose>
-                <c:when test="${legislationProcessTask.stNodeId=='NOD_0000000151'}">
-                    <label class="control-label">专家论证后其他材料
-                    </label>
-                </c:when>
-                <c:otherwise>
-                    <label class="control-label">专家论证前其他材料
-                    </label>
-                </c:otherwise>
-            </c:choose>
-
+            <label class="control-label">专家论证前其他材料
+            </label>
             <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
             </label>
             <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
@@ -171,7 +143,7 @@
         <div class="form-group text-center">
             <input type="button" class="btn btn-w-m btn-success" id="btnSave"
                    name="btnSave"  value="提交" onclick="saveLegislationDemonstration()"> &nbsp;&nbsp;
-            <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
+            <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
     </div>
 </form>
@@ -196,10 +168,51 @@
         }else if(param.stComment2==null||param.stComment2==""){
             Duang.error("提示","请输入论证会人员");
         }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
-                $('#legislationProcessForm').modal('hide');
-                submitForm(1);
+            $.post("../${requestUrl}?stNodeId=NOD_0000000150&method=saveLegislationDemonstration",param,function(data){
+                if(data.success){
+                    $('#stTaskId').val(data.stTaskId);
+                    Duang.success("提示","操作成功");
+                }else{
+                    Duang.error("提示","操作失败");
+                }
             });
         }
+    };
+    function uploadFile(id,type,stSampleId) {
+        $.ajaxFileUpload({
+            url: '${basePath}/file/upload.do?stNodeId=NOD_0000000150&stSampleId='+stSampleId,
+            type: 'post',
+            secureuri: false,                       //是否启用安全提交,默认为false
+            fileElementId: id,
+            dataType: 'JSON',
+            success: function (data, status) {        //服务器响应成功时的处理函数
+                data = data.replace(/<.*?>/ig, "");  //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+                var file = JSON.parse(data);
+                if (file.success) {
+                    if(type==1){
+                        var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
+                            +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
+                            +'<label  style="color: red" onclick="deleteAttach(this,1,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')" >删除</label>';
+                        $("#"+id).parent().prev().html('<span>'+file.name+'</span>');
+                        $("#"+id).parent().html(html);
+                    }else{
+                        var html='<tr class="text-center">'
+                            +'<td class="text-left">需要报送的其他材料</td>'
+                            +'<td>'+file.name+'</td>'
+                            +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
+                            +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'
+                            +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
+                            +'</td></tr>';
+                        $('#otherMaterial').append(html);
+                    }
+                    Duang.success("提示", "上传材料成功");
+                } else {
+                    Duang.error("提示", "上传材料失败");
+                }
+            },
+            error: function (data, status, e) { //服务器响应失败时的处理函数
+                Duang.error("提示", "上传材料失败");
+            }
+        });
     };
 </script>

@@ -280,7 +280,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 	}
 
 	@Override
-	public void saveLegislation(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole,String stNodeId,String stNodeName) throws Exception{
+	public String saveLegislation(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole,String stNodeId,String stNodeName) throws Exception{
 		String stTaskId = request.getParameter("stTaskId");
 		String stBakOne = request.getParameter("stBakOne");
 		String stDocId = request.getParameter("stDocId");
@@ -328,7 +328,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 			newTask.setStRoleName(userRole);
 			newTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
 			newTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
-			legislationProcessTaskService.addObj(newTask);
+			stTaskId=legislationProcessTaskService.addObj(newTask);
 
 			LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
 			legislationProcessDeal.setStDocId(stDocId);
@@ -384,5 +384,6 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stDocId+"' where s.stFileId='"+value+"'");
 			}
 		}
+		return stTaskId;
 	}
 }

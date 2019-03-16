@@ -95,7 +95,7 @@
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                             +'</td></tr>';
                         $('#otherMaterial').append(html);
-                    Duang.info("提示", "上传附件成功");
+                    Duang.success("提示", "上传附件成功");
                 } else {
                     Duang.error("提示", "上传附件失败");
                 }

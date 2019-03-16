@@ -106,17 +106,17 @@
 			fileElementId: id,
 			dataType: 'JSON',
 			success: function (data, status) {        //服务器响应成功时的处理函数
-			data = data.replace(/<.*?>/ig, "");  //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
-			var file = JSON.parse(data);
-			if (file.success) {
-                var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
-                    +'<label  style="color: red" onclick="deleteAttach(this,\''+id+'\',\''+file.fileId+'\')" >删除</label>';
-                $("#opinion").val(file.fileId);
-                $("#"+id).parent().html(html);
-			Duang.info("提示", "上传材料成功");
-                } else {
-                    Duang.error("提示", "上传材料失败");
-                }
+				data = data.replace(/<.*?>/ig, "");  //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+				var file = JSON.parse(data);
+				if (file.success) {
+					var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
+						+'<label  style="color: red" onclick="deleteAttach(this,\''+id+'\',\''+file.fileId+'\')" >删除</label>';
+					$("#opinion").val(file.fileId);
+					$("#"+id).parent().html(html);
+					Duang.success("提示", "上传材料成功");
+				} else {
+						Duang.error("提示", "上传材料失败");
+				}
             },
             error: function (data, status, e) { //服务器响应失败时的处理函数
                 Duang.error("提示", "上传材料失败");

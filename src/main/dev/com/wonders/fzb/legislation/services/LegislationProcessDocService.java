@@ -95,5 +95,5 @@ public interface LegislationProcessDocService{
 	 */
 	void draft_dist_info(HttpServletRequest request);
 
-    void saveLegislation(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole,String stNodeId,String stNodeName) throws Exception;
+	String saveLegislation(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole,String stNodeId,String stNodeName) throws Exception;
 }

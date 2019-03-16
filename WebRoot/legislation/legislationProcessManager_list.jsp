@@ -366,7 +366,9 @@
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stTaskId="+stTaskId+"&stTaskStatus="+buttonStatus+"&stDocId="+stDocId+"&stNodeId="+stNodeId
         });
     };
-    function openDemonstrationPage(method,stDocId) {
+    function openDemonstrationPage(obj,method,stDocId) {
+        $(obj).parent().children().attr("class","btn btn-w-m btn-default");
+        $(obj).attr("class","btn btn-w-m btn-success");
         $.post("${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId,function(data){
             $('#demonstration').html(data);
         });

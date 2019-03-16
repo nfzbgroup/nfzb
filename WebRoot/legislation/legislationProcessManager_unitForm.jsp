@@ -241,7 +241,7 @@
                             +'</td></tr>';
                         $('#otherMaterial').append(html);
                     }
-                    Duang.info("提示", "上传材料成功");
+                    Duang.success("提示", "上传材料成功");
                 } else {
                     Duang.error("提示", "上传材料失败");
                 }

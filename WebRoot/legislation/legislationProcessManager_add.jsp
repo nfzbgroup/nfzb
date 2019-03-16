@@ -33,7 +33,7 @@
 			<div class="form-group text-center">
 					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
 						   name="btnSave" onclick="saveLegislationProcessDoc()" value="提交"> &nbsp;&nbsp;
-					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
+					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 			<div class="form-group">
 				<label class="control-label">起草材料
@@ -176,7 +176,7 @@
                             +'</td></tr>';
                         $('#otherMaterial').append(html);
                     }
-                    Duang.info("提示", "上传材料成功");
+                    Duang.success("提示", "上传材料成功");
                 } else {
                     Duang.error("提示", "上传材料失败");
                 }

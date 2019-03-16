@@ -320,8 +320,11 @@
 												<a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">确认认领</a></td>
 										</c:when>
 										<c:when test="${buttonStatus=='DOING'}">
-											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
-												<a href="javascript:void(0);" onclick="openPage('openDemonstrationPage','${task.stDocId}')"  class="layer_full_link">办理</a></td>
+											<td >
+												<a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
+												<a href="javascript:void(0);" onclick="openPage('openDemonstrationPage','${task.stDocId}')"  class="layer_full_link">办理</a>
+												<a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextChildProcess')" class="layer_full_link">办理完成</a></td>
+											</td>
 										</c:when>
 										<c:otherwise>
 											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/><a href="javascript:void(0);" onclick="openPage('openDraftHistoryPage','${task.stDocId}')" class="layer_full_link">草案历史 </a><a href="javascript:void(0);" class="layer_full_link"> 办理情况</a></td>
