@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -419,11 +420,23 @@ public class LegislationProcessTaskAction extends BaseAction {
      * @return
      * @throws FzbDaoException
      */
-    private String nextProcess() throws FzbDaoException {
+    @Action(value = "nextProcess")
+    private String nextProcess() throws FzbDaoException, IOException {
         String stDocId = request.getParameter("stDocId");
         String stNodeId = request.getParameter("stNodeId");
+        String buttonId=request.getParameter("buttonId");
         legislationProcessTaskService.nextProcess(stDocId,stNodeId,session);
-
+        UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+        String teamId=currentPerson.getTeamInfos().get(0).getId();
+        Boolean removeDisabled=false;
+        if("unitEdit".equals(buttonId)&&"U_3_1".equals(teamId)){
+            removeDisabled=true;
+        }
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("removeDisabled",removeDisabled);
+        jsonObject.put("success",true);
+        response.setContentType("application/json; charset=UTF-8");
+        response.getWriter().print(jsonObject);
         return null;
     }
 

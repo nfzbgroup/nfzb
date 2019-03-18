@@ -21,7 +21,7 @@
 </head>
 
 <body class="gray-bg">
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight" id="processIndex">
 	<div class="row">
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
@@ -366,11 +366,14 @@
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stTaskId="+stTaskId+"&stTaskStatus="+buttonStatus+"&stDocId="+stDocId+"&stNodeId="+stNodeId
         });
     };
-    function openDemonstrationPage(obj,method,stDocId) {
-        $(obj).parent().children().attr("class","btn btn-w-m btn-default");
-        $(obj).attr("class","btn btn-w-m btn-success");
-        $.post("${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId,function(data){
-            $('#demonstration').html(data);
+    function openProcessIndex(stDocId,stDocName) {
+        layer.open({
+            type: 2,
+            title: stDocName,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['100%', '100%'],
+            content: '${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method=openProcessIndexPage&stDocId='+stDocId //iframe的url
         });
     }
 	</script>

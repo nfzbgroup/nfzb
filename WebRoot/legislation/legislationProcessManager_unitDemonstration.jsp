@@ -4,6 +4,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <span >单位意见征求 > </span>
+        </li>
+        <li>
+            <span >内容添加</span>
+        </li>
+    </ul>
+    <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+</div>
+<div class="modal-body">
 <h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">征求意见单</h2>
 <form id="unitDemonstrationForm" class="form-horizontal"
       novalidate="novalidate">
@@ -164,16 +176,20 @@
             </table>
         </div>
         <div class="form-group text-center">
-            <input type="button" class="btn btn-w-m btn-success" id="btnSave"
-                   name="btnSave" onclick="saveLegislationDemonstration()" value="提交"> &nbsp;&nbsp;
+            <input type="button" class="btn btn-w-m btn-success"
+                   name="btnSave" onclick="saveLegislationDemonstration()" value="保存"> &nbsp;&nbsp;
+            <input type="button" class="btn btn-w-m btn-success"
+                   name="btnSave" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadReport1('${stDocId}','${nodeId}','${buttonId}')"</c:if>
+                   <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="发起征询"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
     </div>
 </form>
+</div>
 <script>
     function uploadFile(id,type,stSampleId) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do?stNodeId=NOD_0000000120&stSampleId='+stSampleId,
+            url: '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId='+stSampleId,
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,
@@ -217,9 +233,10 @@
         }else if(param.stBakTwo==null||param.stBakTwo==""){
             Duang.error("提示","请选择渠道");
         }else {
-            $.post("../${requestUrl}?stNodeId=NOD_0000000120&method=saveLegislationDemonstration",param,function(data){
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
                 if(data.success){
-                    $('#stTaskId').val(data.stTaskId);
+                    $('#processIndexForm').modal('hide');
+                    $('#${buttonId}').attr("class","btn btn-warning process-btn");
                     Duang.success("提示","操作成功");
                 }else{
                     Duang.error("提示","操作失败");

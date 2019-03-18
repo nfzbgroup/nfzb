@@ -79,8 +79,11 @@
         });
         if(checkedNum>0){
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=sendUnit&stTaskId=${stTaskId}&teamId="+teamId.substring(1),function(data){
-                $('#legislationProcessForm').modal('hide');
-                submitForm(1);
+				$('#processIndexForm').modal('hide');
+				$('#${buttonId}').attr("class","btn btn-primary process-btn");
+				$('#${buttonId}').parent().next().children().attr("class","btn btn-primary process-btn");
+				$('#${buttonId}').parent().next().children().disabled=false;
+				Duang.success("提示","发送成功");
             });
         }else{
             Duang.error("提示","请选择征询单位");

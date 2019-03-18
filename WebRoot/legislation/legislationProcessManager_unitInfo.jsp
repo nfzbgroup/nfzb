@@ -4,7 +4,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<c:if test="${nodeId !='NOD_0000000103'}">
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
@@ -16,7 +15,6 @@
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
-</c:if>
 <div class="modal-body">
 	<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">征求意见单</h2>
 	<table class="table table-border table-bordered">
@@ -88,9 +86,7 @@
 	<div class="form-group text-center">
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 	</div>
-<c:if test="${nodeId !='NOD_0000000103'}">
-	</div>
-</c:if>
+</div>
 <script>
     $(function () {
         $(".tab-left").css('width', $(window).width() * 0.2)
