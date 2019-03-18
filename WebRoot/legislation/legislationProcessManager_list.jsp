@@ -274,7 +274,13 @@
 				</div>
 			</div>
 			<div class="modal inmodal fade" id="legislationProcessForm" data-backdrop tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
-				<div class="modal-dialog" style="width: 800px">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					</div>
+				</div>
+			</div>
+			<div class="modal inmodal fade" id="processIndexForm" data-backdrop tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+				<div class="modal-dialog">
 					<div class="modal-content">
 					</div>
 				</div>
@@ -340,9 +346,8 @@
         });
         $('body').on('show.bs.modal', function () {
             $('.modal .modal-body').css('overflow-y', 'auto');
-            $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
-            $('.modal .modal-body .demonstration').css('overflow-y', 'auto');
-            $('.modal .modal-body .demonstration').css('height', $(window).height() * 0.2);
+            $('.modal .modal-body').css('height', $(window).height());
+			$('.modal .modal-dialog').css('width', $(window).width());
         });
 	});
 	function openPage(method,stDocId) {
@@ -367,14 +372,9 @@
         });
     };
     function openProcessIndex(stDocId,stDocName) {
-        layer.open({
-            type: 2,
-            title: stDocName,
-            shadeClose: true,
-            shade: 0.8,
-            area: ['100%', '100%'],
-            content: '${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method=openProcessIndexPage&stDocId='+stDocId //iframe的url
-        });
+		$("#legislationProcessForm").modal({
+			remote:  '${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method=openProcessIndexPage&stDocId='+stDocId+'&stDocName='+stDocName
+		});
     }
 	</script>
 </body>

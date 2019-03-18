@@ -420,7 +420,6 @@ public class LegislationProcessTaskAction extends BaseAction {
      * @return
      * @throws FzbDaoException
      */
-    @Action(value = "nextProcess")
     private String nextProcess() throws FzbDaoException, IOException {
         String stDocId = request.getParameter("stDocId");
         String stNodeId = request.getParameter("stNodeId");

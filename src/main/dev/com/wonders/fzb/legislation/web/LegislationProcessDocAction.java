@@ -118,6 +118,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		String unitReceiveClass="btn btn-default btn-rounded process-btn";
 		Boolean unitReceiveDisabled=true;
 		String stDocId=request.getParameter("stDocId");
+		String stDocName=request.getParameter("stDocName");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String teamId=currentPerson.getTeamInfos().get(0).getId();
 		String stNodeId="NOD_0000000120";
@@ -154,6 +155,7 @@ public class LegislationProcessDocAction extends BaseAction {
 				}
 			}
 		}
+		request.setAttribute("stDocName",stDocName);
 		request.setAttribute("unitEditClass",unitEditClass);
 		request.setAttribute("unitEditDisabled",unitEditDisabled);
 		request.setAttribute("unitSendClass",unitSendClass);
