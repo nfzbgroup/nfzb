@@ -148,4 +148,6 @@ public interface LegislationProcessTaskService{
 	void addOpinion(HttpServletRequest request, UserInfo currentPerson);
 
 	void saveTaskCheck(HttpServletRequest request,UserInfo currentPerson,String userRoleId,String userRole);
+
+	void dealFinish(HttpServletRequest request, HttpSession session);
 }

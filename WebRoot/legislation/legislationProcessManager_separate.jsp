@@ -65,19 +65,7 @@
 
 <script>
 $(function () {
-	/* var receiveTime="${request.legislationProcessTask.dtOpenDate}";
-	if(receiveTime!=null&&receiveYear!=""){
-		var receiveYear=(date.split(" "))[0];
-		document.getElementById('receiveYear').value=receiveYear;
-	} */
-	
-	/* var options=document.getElementById("distDealName");
-	$.each(options,function(i,option){
-		if($(option).attr("value")=="${request.legislationProcessTask.stDealName}"){
-			$(option).attr("selected",true);
-		}
-	}); */
-	
+
         $("#distDealName option[value='${request.legislationProcessTask.stDealId}']").attr("selected","selected");
 
 	

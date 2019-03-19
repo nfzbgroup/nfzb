@@ -93,6 +93,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openMeetingAfterInfoPage",location = "/legislation/legislationProcessManager_legislationAfterInfo.jsp"),
 			@Result(name = "openExpertAddPage",location = "/legislation/legislationProcessManager_expertForm.jsp"),
 			@Result(name = "openCheckExplainPage",location = "/legislation/legislationProcessManager_checkExplain.jsp"),
+			@Result(name = "openLeaderIdeaPage",location = "/legislation/legislationProcessManager_leaderIdea.jsp"),
 			@Result(name = "openExpertEditPage",location = "/legislation/legislationProcessManager_expertForm.jsp"),
 			@Result(name = "openUnitAddPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
 			@Result(name = "openUnitEditPage",location = "/legislation/legislationProcessManager_unitForm.jsp"),
@@ -379,6 +380,9 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 
+	private String openLeaderIdeaPage(){
+		return pageController();
+	}
 	private String openEditMeetingPage(){
 		return pageController();
 	}
@@ -747,8 +751,8 @@ public class LegislationProcessDocAction extends BaseAction {
 		String stDocId=request.getParameter("stDocId");
 		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
 		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + legislationProcessDoc.getStDocId() + "' and t.stNodeId='NOD_0000000102' and t.stEnable is null");
-		for (LegislationProcessTask legislationProcessTask : list) {
-			request.setAttribute("legislationProcessTask", legislationProcessTask);
+		if(list!=null && list.size()>0){
+			request.setAttribute("legislationProcessTask", list.get(0));
 		}
 		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
 		return pageController();
@@ -1137,6 +1141,11 @@ public class LegislationProcessDocAction extends BaseAction {
         String userRole= session.getAttribute("userRole").toString();
         legislationProcessTaskService.saveTaskCheck(request,currentPerson,userRoleId,userRole);
 
+		return null;
+	}
+
+	private String dealFinish(){
+		legislationProcessTaskService.dealFinish(request,session);
 
 		return null;
 	}

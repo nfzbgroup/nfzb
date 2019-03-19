@@ -363,6 +363,20 @@
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId
         });
     };
+
+    function openLeaderIdeaPage(method,stDocId,stNodeId) {
+        $.post("../legislationProcessTask/checkDealInfo.do?stDocId="+stDocId,
+            function (data) {
+                if(data.success) {
+                    $("#legislationProcessForm").modal({
+                        remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${stNodeId}&method="+method+"&stDocId="+stDocId
+                    });
+                }else{
+                    Duang.error("提示", "子流程未完成，请先完成子流程处理！");
+                }
+            },
+            "json")
+    };
     function openProMeetPage(method,stDocId,buttonStatus) {
         $("#legislationProcessForm").modal({
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId+"&stTaskStatus="+buttonStatus

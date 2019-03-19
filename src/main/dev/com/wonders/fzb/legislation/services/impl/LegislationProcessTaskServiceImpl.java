@@ -156,6 +156,16 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	public void nextProcess(String stDocId, String stNodeId,HttpSession session) {
 		List<LegislationProcessTask> list = legislationProcessTaskDao.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
 		for (LegislationProcessTask legislationProcessTask : list) {
+			if("NOD_0000000105".equals(stNodeId)){
+				if(legislationProcessTask.getStActive().equals("false")){
+					legislationProcessTask.setStActive(null);
+					legislationProcessTask.setStTaskStatus("TODO");
+					legislationProcessTask.setDtOpenDate(new Date());
+					legislationProcessTaskDao.saveOrUpdate(legislationProcessTask);
+					return;
+				}
+			}
+
 			legislationProcessTask.setStTaskStatus("DONE");
 			if(stNodeId.equals("NOD_0000000120")){
 				legislationProcessTask.setDtDealDate(new Date());
@@ -199,21 +209,9 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			}
 
 			if(stNodeId.equals("NOD_0000000170")){
-				String active = legislationProcessTask.getStActive();
 				String[] legDocIdArray=legislationProcessDocService.findById(stDocId).getStDocSource().split("#");
-
-				if(active.equals("true")){
-					for(String legDocId:legDocIdArray){
-						nextProcess(legDocId, "NOD_0000000105",session);
-					}
-				}else{
-					for(String legDocId:legDocIdArray) {
-						List<LegislationProcessTask> legList = legislationProcessTaskDao.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + legDocId + "' and t.stNodeId='NOD_0000000105' and t.stEnable is null");
-						LegislationProcessTask legTask = legList.get(0);
-						legTask.setStTaskStatus("TODO");
-						legTask.setDtOpenDate(new Date());
-						legislationProcessTaskDao.saveOrUpdate(legTask);
-					}
+				for(String legDocId:legDocIdArray){
+					nextProcess(legDocId, "NOD_0000000105",session);
 				}
 			}
 		}
@@ -463,6 +461,34 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 				nextChildProcess(legDocId,"NOD_0000000105",userRoleId,userRole,currentPerson);
 			}
 		}
+	}
+
+	@Override
+	public void dealFinish(HttpServletRequest request, HttpSession session) {
+		String stDocId = request.getParameter("stDocId");
+		String stNodeId = request.getParameter("stNodeId");
+
+		String stComent= request.getParameter("stComent");
+
+		List<LegislationProcessTask> list = findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='NOD_0000000103' and t.stEnable is null");
+		LegislationProcessTask legislationProcessTask = list.get(0);
+
+		legislationProcessTask.setStComment2(stComent);
+		update(legislationProcessTask);
+
+
+		String stTaskId = legislationProcessTask.getStTaskId();
+
+		Enumeration keys=request.getParameterNames();
+		while(keys.hasMoreElements()){
+			String key=(String)keys.nextElement();
+			String value=request.getParameter(key);
+			if(value.startsWith("FIL_")){
+				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stTaskId+"' where s.stFileId='"+value+"'");
+			}
+		}
+		nextProcess(stDocId,"NOD_0000000103",session);
+
 	}
 
 

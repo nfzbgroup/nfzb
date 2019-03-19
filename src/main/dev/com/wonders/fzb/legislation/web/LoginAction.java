@@ -126,6 +126,7 @@ public class LoginAction extends BaseAction {
 					Map<String, String> sortMap = new LinkedHashMap<String, String>();
                     condMap.put("stSubmitRoleLike", userRole);
                     condMap.put("stFlowName", "立法过程");
+					condMap.put("stMenu", "YES");
 					sortMap.put("stNodeId", "ASC");
 					List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByList(
 							condMap, sortMap);
