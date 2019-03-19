@@ -404,7 +404,16 @@ public class LegislationProcessTaskAction extends BaseAction {
         infoPage = legislationProcessTaskService.findTaskDocListByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
 
         if (StringUtil.isEmpty(taskStatus)) {
-            request.setAttribute("buttonStatus", "TODO");
+            if ("NOD_0000000103".equals(stNodeId)) {
+                boolean isZhc = (boolean) session.getAttribute("isZhc");
+                if(isZhc){
+                    request.setAttribute("buttonStatus", "DOING");
+                }else{
+                    request.setAttribute("buttonStatus", "TODO");
+                }
+            }else{
+                request.setAttribute("buttonStatus", "TODO");
+            }
         } else {
             request.setAttribute("buttonStatus", taskStatus);
         }
