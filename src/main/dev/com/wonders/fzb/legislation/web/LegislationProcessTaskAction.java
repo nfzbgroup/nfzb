@@ -381,6 +381,8 @@ public class LegislationProcessTaskAction extends BaseAction {
                 boolean isZhc = (boolean) session.getAttribute("isZhc");
                 if(isZhc){
                     baseSql += "and t.st_task_status = 'DOING' ";
+                }else{
+                    baseSql += "and t.st_task_status = 'TODO' ";
                 }
             }else{
                 baseSql += "and t.st_task_status = 'TODO' ";
