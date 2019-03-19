@@ -87,7 +87,9 @@
 								<span class="fa arrow"></span>
 							</a>
 							<ul class="nav nav-second-level">
-								<li><a class="J_menuItem" href="../legislationProcessTask/draft_deal_info.do?stNodeId=NOD_0000000103">立法办理</a></li>
+								<c:if test="${isZhc}">
+									<li><a class="J_menuItem" href="../legislationProcessTask/draft_deal_info.do?stNodeId=NOD_0000000103">立法办理</a></li>
+								</c:if>
 								<s:iterator value="#request.nodeList" var="task">
 									<li><a class="J_menuItem" href="../legislationProcessTask/${task.stInfoUrl}?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
 								</s:iterator>

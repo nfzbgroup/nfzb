@@ -131,7 +131,7 @@ public class LoginAction extends BaseAction {
 							condMap, sortMap);
 					System.out.println("查询到的节点个数：" + nodeList.size());
 					request.setAttribute("nodeList", nodeList);
-					
+					request.setAttribute("isZhc",isZhc);
 					
 					return SUCCESS;
 				} else {

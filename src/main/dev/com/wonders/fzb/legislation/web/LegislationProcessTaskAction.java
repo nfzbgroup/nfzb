@@ -92,6 +92,10 @@ public class LegislationProcessTaskAction extends BaseAction {
             String stNodeId = request.getParameter("stNodeId");
             request.setAttribute("requestUrl", request.getRequestURI());
             request.setAttribute("nodeId", stNodeId);
+
+            boolean isZhc = (boolean) session.getAttribute("isZhc");
+
+            request.setAttribute("isZhc", isZhc);
             request.setAttribute("stTodoNameList", wegovSimpleNodeService.queryButtonInfo(stNodeId));
             return SUCCESS;
         } else {
@@ -373,7 +377,14 @@ public class LegislationProcessTaskAction extends BaseAction {
         if (null != taskStatus && !"".equals(taskStatus)) {
             baseSql += "and t.st_task_status = '" + taskStatus + "' ";
         } else {
-            baseSql += "and t.st_task_status = 'TODO' ";
+            if ("NOD_0000000103".equals(stNodeId)) {
+                boolean isZhc = (boolean) session.getAttribute("isZhc");
+                if(isZhc){
+                    baseSql += "and t.st_task_status = 'DOING' ";
+                }
+            }else{
+                baseSql += "and t.st_task_status = 'TODO' ";
+            }
         }
         baseSql += "and d.st_node_Id = 'NOD_0000000101' ";
         baseSql += "and t.st_enable is null ";
@@ -381,7 +392,10 @@ public class LegislationProcessTaskAction extends BaseAction {
             baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
         }
         if ("NOD_0000000103".equals(stNodeId)) {
-            baseSql += "and t.st_deal_Id = '" + session.getAttribute("unitCode") + "' ";
+            boolean isZhc = (boolean) session.getAttribute("isZhc");
+            if(!isZhc){
+                baseSql += "and t.st_deal_Id = '" + session.getAttribute("unitCode") + "' ";
+            }
         }
 
         String orderSql = " order by d.dt_create_date DESC";

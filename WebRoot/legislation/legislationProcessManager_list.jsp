@@ -233,10 +233,18 @@
 									</c:if>
 								</div>
 								<div class="col-md-8 padding0 order-btn">
+									<c:choose>
+										<c:when test="${nodeId=='NOD_0000000103' && isZhc eq true}">
+											<label class="btn btn-w-m btn-success" id="DOING" onclick="changeType('DOING')">待处理</label>
+											<label class="btn btn-w-m btn-default" id="DONE" onclick="changeType('DONE')">已处理</label>
+										</c:when>
+										<c:otherwise>
+											<s:iterator value="#request.stTodoNameList" var="buttonTask">
+												<label class="${buttonTask.buttonClass}" id=${buttonTask.buttonId} onclick="changeType('${buttonTask.buttonId}')">${buttonTask.buttonName}</label>
+											</s:iterator>
+										</c:otherwise>
+									</c:choose>
 
-									<s:iterator value="#request.stTodoNameList" var="buttonTask">
-										<label class="${buttonTask.buttonClass}" id=${buttonTask.buttonId} onclick="changeType('${buttonTask.buttonId}')">${buttonTask.buttonName}</label>
-									</s:iterator>
 
 								</div>
 
