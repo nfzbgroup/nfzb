@@ -80,9 +80,10 @@
         if(checkedNum>0){
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=sendUnit&stTaskId=${stTaskId}&teamId="+teamId.substring(1),function(data){
 				$('#processIndexForm').modal('hide');
-				$('#${buttonId}').attr("class","btn btn-primary process-btn");
-				$('#${buttonId}').parent().next().children().attr("class","btn btn-primary process-btn");
-				$('#${buttonId}').parent().next().children().disabled=false;
+				$('#${buttonId}').attr("class","btn btn-primary btn-rounded process-btn");
+                $('#${buttonId}').attr("disabled","disabled");
+				$('#${buttonId}').parent().next().children().attr("class","btn btn-warning btn-rounded process-btn");
+				$('#${buttonId}').parent().next().children().removeAttr('disabled');
 				Duang.success("提示","发送成功");
             });
         }else{

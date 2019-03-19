@@ -355,7 +355,7 @@
         $('body').on('show.bs.modal', function () {
             $('.modal .modal-body').css('overflow-y', 'auto');
             $('.modal .modal-body').css('height', $(window).height());
-			$('.modal .modal-dialog').css('width', $(window).width());
+			$('.modal .modal-dialog').css('width', $(window).width()*0.99);
         });
 	});
 	function openPage(method,stDocId) {

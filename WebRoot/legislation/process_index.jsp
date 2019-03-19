@@ -52,10 +52,10 @@
 		</tr>
 		<tr>
 			<td>
-				<label class="btn btn-default process-btn">专家论证会发起</label>
+				<label id="expertBefore" class="${expertBeforeClass}" <c:if test="${expertBeforeDisabled}">disabled="disabled" </c:if> onclick="openDemonstrationPage(this.id,'openExpertDemonstrationPage','${stDocId}','NOD_0000000150')">专家论证会发起</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">专家论证会结果归档</label>
+				<label id="expertAfter" class="${expertAfterClass}" <c:if test="${expertAfterDisabled}">disabled="disabled" </c:if> onclick="openDemonstrationPage(this.id,'openExpertDemonstrationPage','${stDocId}','NOD_0000000151')">专家论证会结果归档</label>
 			</td>
 		</tr>
 		<tr>
@@ -125,10 +125,10 @@
             $.post("../"+$('#requestUrl').val()+"?stDocId="+stDocId+"&stNodeId="+stNodeId+"&method="+method+"&buttonId="+buttonId,function(data){
                 if(data.success){
                     $('#processIndexForm').modal('hide');
-                    $('#'+buttonId).attr("class","btn btn-primary process-btn");
+                    $('#'+buttonId).attr("class","btn btn-primary btn-rounded process-btn");
                     if(data.removeDisabled){
-						$('#'+buttonId).parent().next().children().attr("class","btn btn-warning process-btn");
-                        $('#'+buttonId).parent().next().children().disabled=false;
+						$('#'+buttonId).parent().next().children().attr("class","btn btn-warning btn-rounded process-btn");
+                        $('#'+buttonId).parent().next().children().removeAttr('disabled');
                     }
                     Duang.success("提示","操作成功");
                 }else{

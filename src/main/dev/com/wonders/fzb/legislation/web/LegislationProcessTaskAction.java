@@ -456,6 +456,9 @@ public class LegislationProcessTaskAction extends BaseAction {
         if("unitEdit".equals(buttonId)&&"U_3_1".equals(teamId)){
             removeDisabled=true;
         }
+        if("expertBefore".equals(buttonId)&&"U_3_7".equals(teamId)){
+            removeDisabled=true;
+        }
         JSONObject jsonObject=new JSONObject();
         jsonObject.put("removeDisabled",removeDisabled);
         jsonObject.put("success",true);

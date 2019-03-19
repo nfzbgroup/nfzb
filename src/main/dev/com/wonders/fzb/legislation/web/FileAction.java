@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import java.io.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -154,10 +155,16 @@ public class FileAction extends BaseAction {
         legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
         legislationProcessDeal.setDtDealDate(new Date());
         legislationProcessDealService.add(legislationProcessDeal);
+        List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+legislationProcessTask.getStDocId()+"' and t.stNodeId='NOD_0000000122' and t.stEnable is null and t.stComment2 is null");
+        Boolean changeClass=false;
+        if(legislationProcessTaskList.size()==0){
+            changeClass=true;
+        }
         jsonObject.put("url",path+"/"+fileName);
         jsonObject.put("name",uploadFileName);
         jsonObject.put("time",DateFormatUtils.format(legislationProcessTask.getDtBakDate(),"yyyy-MM-dd HH:mm:ss"));
         jsonObject.put("success",true);
+        jsonObject.put("changeClass",changeClass);
         response.setContentType("application/json; charset=UTF-8");
         response.getWriter().print(jsonObject);
     }

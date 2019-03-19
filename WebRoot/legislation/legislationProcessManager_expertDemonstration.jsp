@@ -4,9 +4,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <span >专家论证 > </span>
+        </li>
+        <li>
+            <span >内容添加</span>
+        </li>
+    </ul>
+    <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+</div>
+<div class="modal-body">
 <form id="expertDemonstrationForm" class="form-horizontal"
       novalidate="novalidate">
     <input hidden name="stTaskId" id="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
+    <input type="hidden" name="stDocId" value="${legislationProcessDoc.stDocId}">
     <div class="form-body">
         <div class="form-group">
             <label class="col-sm-3 control-label">论证会议题：</label>
@@ -16,11 +29,7 @@
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">对应草案：</label>
-            <div class="col-sm-9">
-                <select class="form-control" name="stDocId" >
-                    <option value="${legislationProcessDoc.stDocId}" selected>${legislationProcessDoc.stDocName}</option>
-                </select>
-            </div>
+            <label class="col-sm-4 control-label">${legislationProcessDoc.stDocName}</label>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label"></label>
@@ -48,8 +57,8 @@
             </div>
         </div>
         <div class="form-group">
-                <label class="control-label">专家论证前材料
-                </label>
+            <label class="control-label">专家论证<c:if test="${nodeId=='NOD_0000000150'}">前</c:if><c:if test="${nodeId=='NOD_0000000151'}">后</c:if>材料
+            </label>
         </div>
         <div class="form-group">
             <table class="table table-striped table-bordered table-hover"
@@ -102,7 +111,7 @@
             </table>
         </div>
         <div class="form-group">
-            <label class="control-label">专家论证前其他材料
+            <label class="control-label">专家论证<c:if test="${nodeId=='NOD_0000000150'}">前</c:if><c:if test="${nodeId=='NOD_0000000151'}">后</c:if>其他材料
             </label>
             <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
             </label>
@@ -141,12 +150,16 @@
             </table>
         </div>
         <div class="form-group text-center">
-            <input type="button" class="btn btn-w-m btn-success" id="btnSave"
-                   name="btnSave"  value="提交" onclick="saveLegislationDemonstration()"> &nbsp;&nbsp;
+            <input type="button" class="btn btn-w-m btn-success"
+                   name="btnSave"  value="保存" onclick="saveLegislationDemonstration()"> &nbsp;&nbsp;
+            <input type="button" class="btn btn-w-m btn-success"
+                   name="btnSave"  value="提交确认" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadReport1('${stDocId}','${nodeId}','${buttonId}')"</c:if>
+                   <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if>> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
     </div>
 </form>
+</div>
 <script>
     $(function () {
         laydate.render({
@@ -159,8 +172,6 @@
         var param=$('#expertDemonstrationForm').formToJson();
         if(param.stBakOne==null||param.stBakOne==""){
             Duang.error("提示","请输入论证会议题");
-        }else if(param.stDocId==null||param.stDocId==""){
-            Duang.error("提示","请选择对应草案");
         }else if(param.stBakTwo==null||param.stBakTwo==""){
             Duang.error("提示","请输入论证会地点");
         }else if(param.dtBakDate==null||param.dtBakDate==""){
@@ -168,9 +179,10 @@
         }else if(param.stComment2==null||param.stComment2==""){
             Duang.error("提示","请输入论证会人员");
         }else {
-            $.post("../${requestUrl}?stNodeId=NOD_0000000150&method=saveLegislationDemonstration",param,function(data){
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
                 if(data.success){
-                    $('#stTaskId').val(data.stTaskId);
+                    $('#processIndexForm').modal('hide');
+                    $('#${buttonId}').attr("class","btn btn-warning process-btn");
                     Duang.success("提示","操作成功");
                 }else{
                     Duang.error("提示","操作失败");
@@ -180,7 +192,7 @@
     };
     function uploadFile(id,type,stSampleId) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do?stNodeId=NOD_0000000150&stSampleId='+stSampleId,
+            url: '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId='+stSampleId,
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,

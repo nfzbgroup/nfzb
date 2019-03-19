@@ -94,7 +94,10 @@
 					$("#"+id).parent().prev().prev().html('已反馈');
 					$("#"+id).parent().prev().html(file.time);
         			$("#"+id).parent().html('<a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">'+file.name+'</a>');
-                    Duang.success("提示", "操作成功");
+                    if(file.changeClass){
+						$("#${buttonId}").attr("class","btn btn-primary btn-rounded process-btn");
+                    }
+        			Duang.success("提示", "操作成功");
                 } else {
                     Duang.error("提示", "操作失败");
                 }

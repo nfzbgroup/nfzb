@@ -20,14 +20,11 @@
 <form id="unitDemonstrationForm" class="form-horizontal"
       novalidate="novalidate">
     <input hidden id="stTaskId" name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
+    <input type="hidden" name="stDocId" value="${legislationProcessDoc.stDocId}">
     <div class="form-body">
         <div class="form-group">
             <label class="col-sm-3 control-label">对应草案：</label>
-            <div class="col-sm-9">
-                <select class="form-control" name="stDocId" >
-                    <option value="${legislationProcessDoc.stDocId}" selected>${legislationProcessDoc.stDocName}</option>
-                </select>
-            </div>
+            <label class="col-sm-4 control-label">${legislationProcessDoc.stDocName}</label>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label"></label>
@@ -226,9 +223,7 @@
     };
     function saveLegislationDemonstration() {
         var param=$('#unitDemonstrationForm').formToJson();
-        if(param.stDocId==null||param.stDocId==""){
-            Duang.error("提示","请选择对应草案");
-        }else if(param.stBakOne==null||param.stBakOne==""){
+        if(param.stBakOne==null||param.stBakOne==""){
             Duang.error("提示","请选择类型");
         }else if(param.stBakTwo==null||param.stBakTwo==""){
             Duang.error("提示","请选择渠道");
@@ -236,7 +231,7 @@
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
                 if(data.success){
                     $('#processIndexForm').modal('hide');
-                    $('#${buttonId}').attr("class","btn btn-warning process-btn");
+                    $('#${buttonId}').attr("class","btn btn-warning btn-rounded process-btn");
                     Duang.success("提示","操作成功");
                 }else{
                     Duang.error("提示","操作失败");
