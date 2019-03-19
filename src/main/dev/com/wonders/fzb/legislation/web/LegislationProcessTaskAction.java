@@ -340,6 +340,8 @@ public class LegislationProcessTaskAction extends BaseAction {
         request.setAttribute("nodeId", stNodeId);
     }
     private void queryDoc(){
+        boolean isZhc = (boolean) session.getAttribute("isZhc");
+
         String pageSize = request.getParameter("pageSize");
         String pageNo = request.getParameter("pageNo");
         String stNodeId = request.getParameter("stNodeId");
@@ -378,7 +380,6 @@ public class LegislationProcessTaskAction extends BaseAction {
             baseSql += "and t.st_task_status = '" + taskStatus + "' ";
         } else {
             if ("NOD_0000000103".equals(stNodeId)) {
-                boolean isZhc = (boolean) session.getAttribute("isZhc");
                 if(isZhc){
                     baseSql += "and t.st_task_status = 'DOING' ";
                 }else{
@@ -394,7 +395,6 @@ public class LegislationProcessTaskAction extends BaseAction {
             baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
         }
         if ("NOD_0000000103".equals(stNodeId)) {
-            boolean isZhc = (boolean) session.getAttribute("isZhc");
             if(!isZhc){
                 baseSql += "and t.st_deal_Id = '" + session.getAttribute("unitCode") + "' ";
             }
@@ -405,7 +405,6 @@ public class LegislationProcessTaskAction extends BaseAction {
 
         if (StringUtil.isEmpty(taskStatus)) {
             if ("NOD_0000000103".equals(stNodeId)) {
-                boolean isZhc = (boolean) session.getAttribute("isZhc");
                 if(isZhc){
                     request.setAttribute("buttonStatus", "DOING");
                 }else{
@@ -432,6 +431,7 @@ public class LegislationProcessTaskAction extends BaseAction {
                 infoPage.setResult(list);
             }
         }
+        request.setAttribute("isZhc", isZhc);
         request.setAttribute("nodeInfo", nodeInfo);
         request.setAttribute("pageNo", pageNo);
         request.setAttribute("pageSize", pageSize);

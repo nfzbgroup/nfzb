@@ -323,7 +323,9 @@
 											<td >
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPage('openInfoPage','${task.stDocId}')" class="layer_full_link">查看</a><br/>
 												<a href="javascript:void(0);" onclick="openProcessIndex('${task.stDocId}','${task.stDocName}')"  class="layer_full_link">办理</a>
-												<a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextProcess')" class="layer_full_link">办理完成</a></td>
+												<c:if test="${isZhc eq false}">
+													<a href="javascript:void(0);" onclick="nextProcess('${task.stDocId}','${task.stNodeId}','nextProcess')" class="layer_full_link">办理完成</a></td>
+												</c:if>
 											</td>
 										</c:when>
 										<c:otherwise>
