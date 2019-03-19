@@ -540,30 +540,30 @@ public class LegislationProcessTaskAction extends BaseAction {
         JSONObject jsonObject=new JSONObject();
         String stDocId = request.getParameter("stDocId");
 
-//        List<LegislationProcessTask> departmentList =  legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId ='NOD_0000000122' and t.stEnable is null");
-//        List<LegislationProcessTask> countersignList =  legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId ='NOD_0000000162' and t.stEnable is null");
-//
-//        if(departmentList==null ||departmentList.size()<=0||countersignList==null ||countersignList.size()<=0){
-//            jsonObject.put("success",false);
-//            response.setContentType("application/json; charset=UTF-8");
-//            response.getWriter().print(jsonObject);
-//            return;
-//        }
-//        List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId in('NOD_0000000122','NOD_0000000162') and t.stTaskStatus<>'DONE' and t.stEnable is null");
-//        if(list.size()>0){
-//            jsonObject.put("success",false);
-//            response.setContentType("application/json; charset=UTF-8");
-//            response.getWriter().print(jsonObject);
-//            return;
-//        }
-//
-//        List<LegislationProcessTask> otherList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId in('NOD_0000000131','NOD_0000000141','NOD_0000000151') and t.stTaskStatus='DONE' and t.stEnable is null");
-//        if(otherList.size()<3){
-//            jsonObject.put("success",false);
-//            response.setContentType("application/json; charset=UTF-8");
-//            response.getWriter().print(jsonObject);
-//            return;
-//        }
+        List<LegislationProcessTask> departmentList =  legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId ='NOD_0000000122' and t.stEnable is null");
+        List<LegislationProcessTask> countersignList =  legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId ='NOD_0000000162' and t.stEnable is null");
+
+        if(departmentList==null ||departmentList.size()<=0||countersignList==null ||countersignList.size()<=0){
+            jsonObject.put("success",false);
+            response.setContentType("application/json; charset=UTF-8");
+            response.getWriter().print(jsonObject);
+            return;
+        }
+        List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId in('NOD_0000000122','NOD_0000000162') and t.stTaskStatus<>'DONE' and t.stEnable is null");
+        if(list.size()>0){
+            jsonObject.put("success",false);
+            response.setContentType("application/json; charset=UTF-8");
+            response.getWriter().print(jsonObject);
+            return;
+        }
+
+        List<LegislationProcessTask> otherList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId in('NOD_0000000131','NOD_0000000141','NOD_0000000151') and t.stTaskStatus='DONE' and t.stEnable is null");
+        if(otherList.size()<3){
+            jsonObject.put("success",false);
+            response.setContentType("application/json; charset=UTF-8");
+            response.getWriter().print(jsonObject);
+            return;
+        }
         jsonObject.put("success",true);
         response.setContentType("application/json; charset=UTF-8");
         response.getWriter().print(jsonObject);
