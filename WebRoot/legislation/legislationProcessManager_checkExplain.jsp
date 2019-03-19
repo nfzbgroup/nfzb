@@ -35,7 +35,7 @@
                 </label>
                 <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                 </label>
-                <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
+                <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id)">
             </div>
             <div class="form-group">
                 <table class="table table-striped table-hover"
@@ -68,16 +68,20 @@
         if(param.stComent==null||param.stComent==""){
             Duang.error("提示","请输入情况说明！");
         }else {
-                $.post("../${requestUrl}?stTaskId=${stTaskId}&method=saveTaskCheck&stTaskStatus=${stTaskStatus}",param,function(data){
-                $('#legislationProcessForm').modal('hide');
-                submitForm(1);
+             $.post("../${requestUrl}?stTaskId=${stTaskId}&method=saveTaskCheck&stTaskStatus=${stTaskStatus}",param,function(data){
+                 $('#processIndexForm').modal('hide');
+                 $('#${buttonId}').attr("class","btn btn-primary btn-rounded process-btn");
+                 $('#${buttonId}').attr("disabled","disabled");
+                 $('#${buttonId}').parent().next().children().attr("class","btn btn-warning btn-rounded process-btn");
+                 $('#${buttonId}').parent().next().children().removeAttr('disabled');
+                 Duang.success("提示","操作成功");
             });
         }
     };
     function toUploadFile(obj) {
         $(obj).next().click();
     }
-    function uploadFile(id,type,stSampleId) {
+    function uploadFile(id) {
         $.ajaxFileUpload({
             url: '${basePath}/file/upload.do?stNodeId=${stNodeId}',
             type: 'post',
@@ -91,11 +95,11 @@
                         var html='<tr class="text-center">'
                             +'<td>'+file.name+'</td>'
                             +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
-                            +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'
+                            +'<label  style="color: red" onclick="deleteAttach(this,\''+file.fileId+'\')">删除</label>'
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                             +'</td></tr>';
                         $('#otherMaterial').append(html);
-                    Duang.success("提示", "上传附件成功");
+                Duang.success("提示", "上传附件成功");
                 } else {
                     Duang.error("提示", "上传附件失败");
                 }
@@ -105,10 +109,9 @@
             }
         });
     }
-    function deleteAttach(attachObj,type,id,fileId,stSampleId) {
+    function deleteAttach(attachObj,fileId) {
         $.post('${basePath}/file/deleteAttach.do?fileId='+fileId);
-
         var obj=$(attachObj);
-            obj.parent().parent().remove();
+        obj.parent().parent().remove();
     }
 </script>

@@ -153,8 +153,18 @@
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSave"  value="保存" onclick="saveLegislationDemonstration()"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success"
-                   name="btnSave"  value="提交确认" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadReport1('${stDocId}','${nodeId}','${buttonId}')"</c:if>
-                   <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if>> &nbsp;&nbsp;
+                   name="btnSave"  value="提交确认"
+                    <c:if test="${legislationProcessTask.stTaskId !=null}">
+                           <c:if test="${nodeId=='NOD_0000000150'}">
+                            onclick="uploadDemonstrationReport('${stDocId}','${nodeId}','${buttonId}')"
+                           </c:if>
+                            <c:if test="${nodeId=='NOD_0000000151'}">
+                            onclick="nextChildDemonstrationProcess('${stDocId}','${nodeId}','nextChildProcess','${buttonId}')"
+                            </c:if>
+                    </c:if>
+                    <c:if test="${legislationProcessTask.stTaskId ==null}">
+                    disabled="disabled"
+                    </c:if>> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
     </div>
@@ -182,7 +192,7 @@
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
                 if(data.success){
                     $('#processIndexForm').modal('hide');
-                    $('#${buttonId}').attr("class","btn btn-warning process-btn");
+                    $('#${buttonId}').attr("class","btn btn-warning btn-rounded process-btn");
                     Duang.success("提示","操作成功");
                 }else{
                     Duang.error("提示","操作失败");

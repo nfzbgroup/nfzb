@@ -176,7 +176,7 @@
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSave" onclick="saveLegislationDemonstration()" value="保存"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success"
-                   name="btnSave" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadReport1('${stDocId}','${nodeId}','${buttonId}')"</c:if>
+                   name="btnSave" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadDemonstrationReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
                    <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="发起征询"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>

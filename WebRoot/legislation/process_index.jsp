@@ -27,27 +27,27 @@
 				<label id="unitSend" class="${unitSendClass}" <c:if test="${unitSendDisabled}">disabled="disabled" </c:if> onclick="openDemonstrationPage(this.id,'openUnitSeekPage','${stDocId}','NOD_0000000121')">部门征求意见发送部门</label>
 			</td>
 			<td>
-				<label id="unitReceive" class="${unitReceiveClass}" <c:if test="${unitReceiveDisabled}">disabled="disabled" </c:if> onclick="openDemonstrationPage(this.id,'openUnitReceivePage','${stDocId}','NOD_0000000120')">部门征求意见接受反馈</label>
+				<label id="unitReceive" class="${unitReceiveClass}" <c:if test="${unitReceiveDisabled}">disabled="disabled" </c:if> onclick="openDemonstrationPage(this.id,'openUnitReceivePage','${stDocId}','NOD_0000000120')">部门征求意见接收反馈</label>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label class="btn btn-default process-btn">网上征求意见发起</label>
+				<label class="btn btn-default btn-rounded process-btn">网上征求意见发起</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">网上征求意见接收</label>
+				<label class="btn btn-default btn-rounded process-btn">网上征求意见接收</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">网上征求意见送审</label>
+				<label class="btn btn-default btn-rounded process-btn">网上征求意见送审</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">网上征求意见上网发布</label>
+				<label class="btn btn-default btn-rounded process-btn">网上征求意见上网发布</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">网上意见汇总</label>
+				<label class="btn btn-default btn-rounded process-btn">网上意见汇总</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">采纳意见发布</label>
+				<label class="btn btn-default btn-rounded process-btn">采纳意见发布</label>
 			</td>
 		</tr>
 		<tr>
@@ -60,36 +60,36 @@
 		</tr>
 		<tr>
 			<td>
-				<label class="btn btn-default process-btn">立法听证会发起</label>
+				<label id="legislationEdit" class="${legislationEditClass}" <c:if test="${legislationEditDisabled}">disabled="disabled" </c:if> onclick="openDemonstrationPage(this.id,'openLegislationDemonstrationPage','${stDocId}','NOD_0000000140')">立法听证会发起</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">立法听证会接收</label>
+				<label id="legislationReceive" class="${legislationReceiveClass}" <c:if test="${legislationReceiveDisabled}">disabled="disabled" </c:if> onclick="openDemonstrationPage(this.id,'openLegislationReceivePage','${stDocId}','NOD_0000000141')">立法听证会接收</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">立法听证会送审</label>
+				<label id="legislationCensorship" class="${legislationCensorshipClass}" <c:if test="${legislationCensorshipDisabled}">disabled="disabled" </c:if> onclick="openTaskPageWithStatus('openCheckExplainPage',this.id,'SEND','${stDocId}','NOD_0000000141')">立法听证会送审</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">立法听证会上网发布</label>
+				<label id="legislationRelease" class="${legislationReleaseClass}" <c:if test="${legislationReleaseDisabled}">disabled="disabled" </c:if>>立法听证会上网发布</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">立法听证会网上报名</label>
+				<label id="legislationRegistration" class="${legislationRegistrationClass}" <c:if test="${legislationRegistrationDisabled}">disabled="disabled" </c:if>>立法听证会网上报名</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">立法听证会结果归档</label>
+				<label id="legislationFile" class="${legislationFileClass}" <c:if test="${legislationFileDisabled}">disabled="disabled" </c:if>>立法听证会结果归档</label>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label class="btn btn-default process-btn">部门会签编辑</label>
+				<label class="btn btn-default btn-rounded process-btn">部门会签编辑</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">部门会签盖章</label>
+				<label class="btn btn-default btn-rounded process-btn">部门会签盖章</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">部门会签发起发送部门</label>
+				<label class="btn btn-default btn-rounded process-btn">部门会签发起发送部门</label>
 			</td>
 			<td>
-				<label class="btn btn-default process-btn">部门会签结果接收反馈</label>
+				<label class="btn btn-default btn-rounded process-btn">部门会签结果接收反馈</label>
 			</td>
 		</tr>
 		</tbody>
@@ -108,18 +108,39 @@
             });
 		}
     };
-    function uploadReport1(stDocId,stNodeId,buttonId) {
+    function uploadDemonstrationReport(stDocId,stNodeId,buttonId) {
         $.post("../legislationProcessTask/uploadReport.do?stDocId="+stDocId+"&stNode="+stNodeId,
             function (data) {
                 if(data.success) {
-                    nextProcess1(stDocId,stNodeId,"nextProcess",buttonId);
+                    nextDemonstrationProcess(stDocId,stNodeId,"nextProcess",buttonId);
                 }else{
                     Duang.error("提示", "请补全必填材料！");
                 }
             },
             "json")
     };
-    function nextProcess1(stDocId,stNodeId,method,buttonId) {
+    function nextDemonstrationProcess(stDocId,stNodeId,method,buttonId) {
+        layer.confirm('请确认操作！',function(index){
+            layer.close(layer.index);
+            $.post("../"+$('#requestUrl').val()+"?stDocId="+stDocId+"&stNodeId="+stNodeId+"&method="+method+"&buttonId="+buttonId,function(data){
+                if(data.success){
+                    $('#processIndexForm').modal('hide');
+                    $('#'+buttonId).attr("class","btn btn-primary btn-rounded process-btn");
+                    if(data.addDisabled){
+                        $('#'+buttonId).attr("disabled","disabled");
+                    }
+                    if(data.removeDisabled){
+						$('#'+buttonId).parent().next().children().attr("class","btn btn-warning btn-rounded process-btn");
+                        $('#'+buttonId).parent().next().children().removeAttr('disabled');
+                    }
+                    Duang.success("提示","操作成功");
+                }else{
+                    Duang.error("提示","操作失败");
+                }
+            });
+        });
+    };
+    function nextChildDemonstrationProcess(stDocId,stNodeId,method,buttonId) {
         layer.confirm('请确认操作！',function(index){
             layer.close(layer.index);
             $.post("../"+$('#requestUrl').val()+"?stDocId="+stDocId+"&stNodeId="+stNodeId+"&method="+method+"&buttonId="+buttonId,function(data){
@@ -127,7 +148,7 @@
                     $('#processIndexForm').modal('hide');
                     $('#'+buttonId).attr("class","btn btn-primary btn-rounded process-btn");
                     if(data.removeDisabled){
-						$('#'+buttonId).parent().next().children().attr("class","btn btn-warning btn-rounded process-btn");
+                        $('#'+buttonId).parent().next().children().attr("class","btn btn-warning btn-rounded process-btn");
                         $('#'+buttonId).parent().next().children().removeAttr('disabled');
                     }
                     Duang.success("提示","操作成功");
@@ -151,5 +172,12 @@
         }else{
             obj.parent().parent().remove();
         }
-    }
+    };
+    function openDemonstrationTaskPageWithStatus(method,buttonId,buttonStatus,stDocId,stNodeId) {
+        if($('#'+buttonId).attr("disabled")==undefined){
+            $("#processIndexForm").modal({
+                remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?buttonId="+buttonId+"&method="+method+"&stDocId="+stDocId+"&stNodeId="+stNodeId+"&stTaskStatus="+buttonStatus
+            });
+        }
+    };
 </script>

@@ -489,7 +489,7 @@ public class LegislationProcessTaskAction extends BaseAction {
      * @return
      * @throws FzbDaoException
      */
-    private String nextChildProcess() throws FzbDaoException {
+    private String nextChildProcess() throws FzbDaoException, IOException {
         UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
         String userRoleId =session.getAttribute("userRoleId").toString();
         String userRole =session.getAttribute("userRole").toString();
@@ -498,6 +498,20 @@ public class LegislationProcessTaskAction extends BaseAction {
 
         legislationProcessTaskService.nextChildProcess(stDocId,stNodeId,userRoleId,userRole,currentPerson);
 
+        String buttonId=request.getParameter("buttonId");
+        String teamId=currentPerson.getTeamInfos().get(0).getId();
+        JSONObject jsonObject=new JSONObject();
+        Boolean removeDisabled=false;
+        Boolean addDisabled=false;
+        if("legislationReceive".equals(buttonId)&&"U_3_1".equals(teamId)){
+            removeDisabled=true;
+            addDisabled=true;
+        }
+        jsonObject.put("success",true);
+        jsonObject.put("removeDisabled",removeDisabled);
+        jsonObject.put("addDisabled",addDisabled);
+        response.setContentType("application/json; charset=UTF-8");
+        response.getWriter().print(jsonObject);
         return null;
     }
 

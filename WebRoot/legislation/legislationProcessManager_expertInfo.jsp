@@ -10,7 +10,7 @@
 			<span >专家论证会 > </span>
 		</li>
 		<li>
-			<span>查看会前信息</span>
+			<span>查看会<c:if test="${nodeId=='NOD_0000000150'}">前</c:if><c:if test="${nodeId=='NOD_0000000151'}">后</c:if>信息</span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -73,7 +73,7 @@
 		</tr>
 		<tr>
 			<td class="text-right tab-lef">
-				<label style="white-space: nowrap">专家论证会前其他材料:</label>
+				<label style="white-space: nowrap">专家论证会<c:if test="${nodeId=='NOD_0000000150'}">前</c:if><c:if test="${nodeId=='NOD_0000000151'}">后</c:if>其他材料:</label>
 			</td>
 			<td class="text-center">
 				<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">

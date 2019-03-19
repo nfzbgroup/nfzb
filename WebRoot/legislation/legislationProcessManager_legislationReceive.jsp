@@ -10,7 +10,7 @@
 			<span >立法听证会 > </span>
 		</li>
 		<li>
-			<span>查看会前信息</span>
+			<span>接收</span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -87,6 +87,9 @@
 		</tr>
 	</table>
 	<div class="form-group text-center">
+		<input type="button" class="btn btn-w-m btn-success"
+			   name="btnSave"  value="接收"
+			   onclick="nextChildDemonstrationProcess('${stDocId}','${nodeId}','nextChildProcess','${buttonId}')"> &nbsp;&nbsp;
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 	</div>
 </div>
