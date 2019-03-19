@@ -95,7 +95,7 @@
 					$("#"+id).parent().prev().html(file.time);
         			$("#"+id).parent().html('<a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">'+file.name+'</a>');
                     if(file.changeClass){
-						$("#${buttonId}").attr("class","btn btn-primary btn-rounded process-btn");
+						$("#${buttonId}").parent().attr("class","cell row_items row_item5 bcg_blue border_width border_style border_radius border_color_red");
                     }
         			Duang.success("提示", "操作成功");
                 } else {

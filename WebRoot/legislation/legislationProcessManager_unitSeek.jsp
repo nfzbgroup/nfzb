@@ -80,10 +80,12 @@
         if(checkedNum>0){
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=sendUnit&stTaskId=${stTaskId}&teamId="+teamId.substring(1),function(data){
 				$('#processIndexForm').modal('hide');
-				$('#${buttonId}').attr("class","btn btn-primary btn-rounded process-btn");
-                $('#${buttonId}').attr("disabled","disabled");
-				$('#${buttonId}').parent().next().children().attr("class","btn btn-warning btn-rounded process-btn");
-				$('#${buttonId}').parent().next().children().removeAttr('disabled');
+				$('#${buttonId}').parent().attr("class","cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_red");
+                $('#${buttonId}').attr("class","removeHand");
+				$('#${buttonId}').attr("handStatus","1");
+				$('#${buttonId}').parent().next().attr("class","cell row_items row_item5 bcg_green border_width border_style border_radius border_color_red");
+				$('#${buttonId}').parent().next().children().removeAttr('handStatus');
+				$('#${buttonId}').parent().next().children().removeAttr('class');
 				Duang.success("提示","发送成功");
             });
         }else{

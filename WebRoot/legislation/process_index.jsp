@@ -5,10 +5,7 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span >单位意见征求 > </span>
-		</li>
-		<li>
-			<span>填写意见</span>
+			<span >${stDocName} </span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>

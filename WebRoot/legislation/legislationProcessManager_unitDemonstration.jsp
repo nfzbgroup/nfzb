@@ -231,7 +231,7 @@
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
                 if(data.success){
                     $('#processIndexForm').modal('hide');
-                    $('#${buttonId}').attr("class","btn btn-warning btn-rounded process-btn");
+                    $('#${buttonId}').parent().attr("class","cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t");
                     Duang.success("提示","操作成功");
                 }else{
                     Duang.error("提示","操作失败");

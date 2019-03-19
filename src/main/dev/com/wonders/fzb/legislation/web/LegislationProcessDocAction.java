@@ -103,7 +103,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openUnitInfoPage",location = "/legislation/legislationProcessManager_unitInfo.jsp"),
 			@Result(name = "openUnitAddOpinionPage",location = "/legislation/legislationProcessManager_unitAddOpinion.jsp"),
 			@Result(name = "openHandleDemonstrationPage",location = "/legislation/legislationProcessManager_handleDemonstration.jsp"),
-			@Result(name = "openProcessIndexPage",location = "/legislation/process_index.jsp"),
+			@Result(name = "openProcessIndexPage",location = "/legislation/demo.jsp"),
 			@Result(name = "openLegislationReceivePage",location = "/legislation/legislationProcessManager_legislationReceive.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -113,11 +113,11 @@ public class LegislationProcessDocAction extends BaseAction {
 	}
 
 	private String openProcessIndexPage(){
-		String unitEditClass="btn btn-default btn-rounded process-btn";
+		String unitEditClass="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t";
 		Boolean unitEditDisabled=true;
-		String unitSendClass="btn btn-default btn-rounded process-btn";
+		String unitSendClass="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_red";
 		Boolean unitSendDisabled=true;
-		String unitReceiveClass="btn btn-default btn-rounded process-btn";
+		String unitReceiveClass="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_red";
 		Boolean unitReceiveDisabled=true;
 		String expertBeforeClass="btn btn-default btn-rounded process-btn";
 		Boolean expertBeforeDisabled=true;
@@ -144,17 +144,18 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(unitEditList.size()>0){
 			if("TODO".equals(unitEditList.get(0).getStTaskStatus())){
 				if("U_3_7".equals(teamId)){
-					unitEditClass="btn btn-warning btn-rounded process-btn";
+					unitEditClass="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t";
 					unitEditDisabled=false;
 				}
 			}else{
-				unitEditClass="btn btn-primary btn-rounded process-btn";
+				unitEditClass="cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t";
 				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
 					unitEditDisabled=false;
 				}
 			}
 		}else {
 			if("U_3_7".equals(teamId)){
+				unitEditClass="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t";
 				unitEditDisabled=false;
 			}
 		}
@@ -163,11 +164,11 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(unitSendList.size()>0){
 			if("TODO".equals(unitSendList.get(0).getStTaskStatus())){
 				if("U_3_1".equals(teamId)){
-					unitSendClass="btn btn-warning btn-rounded process-btn";
+					unitSendClass="cell row_items row_item4 bcg_green border_width border_style border_radius border_color_red";
 					unitSendDisabled=false;
 				}
 			}else {
-				unitSendClass="btn btn-primary btn-rounded process-btn";
+				unitSendClass="cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_red";
 				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
 					unitReceiveDisabled=false;
 				}
@@ -179,10 +180,10 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(unitReceiveList.size()>0){
 			if(unitReceiveFinishList.size()>0){
 				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
-					unitReceiveClass="btn btn-warning btn-rounded process-btn";
+					unitReceiveClass="cell row_items row_item5 bcg_green border_width border_style border_radius border_color_red";
 				}
 			}else {
-				unitReceiveClass="btn btn-primary btn-rounded process-btn";
+				unitReceiveClass="cell row_items row_item5 bcg_blue border_width border_style border_radius border_color_red";
 			}
 		}
 		stNodeId="NOD_0000000150";
@@ -254,6 +255,42 @@ public class LegislationProcessDocAction extends BaseAction {
 					}
 				}else{
 					legislationCensorshipClass="btn btn-primary btn-rounded process-btn";
+					if ("PUBLISH".equals(stTaskStatus)) {
+						if("U_3_7".equals(teamId)){
+							legislationReleaseClass="btn btn-warning btn-rounded process-btn";
+							legislationReleaseDisabled=false;
+							legislationCensorshipDisabled=false;
+						}
+					} else {
+						legislationReleaseClass="btn btn-primary btn-rounded process-btn";
+						if ("GATHER".equals(stTaskStatus)) {
+							if ("U_3_7".equals(teamId)) {
+								legislationRegistrationClass="btn btn-warning btn-rounded process-btn";
+								legislationRegistrationDisabled=false;
+								legislationCensorshipDisabled=false;
+								legislationReleaseDisabled=false;
+							}
+						} else {
+							legislationRegistrationClass="btn btn-primary btn-rounded process-btn";
+							if ("RESULT".equals(stTaskStatus)) {
+								if ("U_3_7".equals(teamId)) {
+									legislationFileClass="btn btn-warning btn-rounded process-btn";
+									legislationFileDisabled=false;
+									legislationRegistrationDisabled=false;
+									legislationCensorshipDisabled=false;
+									legislationReleaseDisabled=false;
+								}
+							} else {
+								legislationFileClass="btn btn-primary btn-rounded process-btn";
+								if ("U_3_7".equals(teamId)) {
+									legislationFileDisabled=false;
+									legislationRegistrationDisabled=false;
+									legislationCensorshipDisabled=false;
+									legislationReleaseDisabled=false;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -583,6 +620,19 @@ public class LegislationProcessDocAction extends BaseAction {
 	}
 
 	private String openLegislationReceivePage(){
+		String stDocId=request.getParameter("stDocId");
+		String stNodeId=request.getParameter("stNodeId");
+		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
+		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId",stDocId);
+		condMap.put("stNodeId",stNodeId);
+		sortMap.put("dtPubDate","ASC");
+		List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("legislationProcessTask",legislationProcessTaskList.get(0));
+		request.setAttribute("buttonId",request.getParameter("buttonId"));
 		return pageController();
 	}
 	private String openHandleDemonstrationPage(){
