@@ -48,11 +48,16 @@ a{display: block;}
 .flowPic .row1{position: absolute;left:169px;}
 .flowPic .row1 .row_child{position:relative;}
 .row .row_items{position:absolute;}
+.flowPic .one_row{top:70px;}
 .flowPic .two_row{top:130px;}
 .flowPic .three_row{top:190px;}
 .flowPic .four_row{top:248px;}
 .flowPic .five_row{top:310px;}
 .flowPic .six_row{top:369px;}
+.flowPic .seven_row{top:430px;}
+.flowPic .eight_row{top:489px;}
+.flowPic .nine_row{top:549px;}
+.flowPic .ten_row{top:608px;}
 .row1 .row_item1{left:0;}
 .row1 .row_item2{left:147px;}
 .row1 .row_item3{left:294px;}

@@ -507,6 +507,9 @@ public class LegislationProcessTaskAction extends BaseAction {
             removeDisabled=true;
             addDisabled=true;
         }
+        if("legislationCensorship".equals(buttonId)&&"U_3_1".equals(teamId)){
+            removeDisabled=true;
+        }
         jsonObject.put("success",true);
         jsonObject.put("removeDisabled",removeDisabled);
         jsonObject.put("addDisabled",addDisabled);

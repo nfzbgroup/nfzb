@@ -103,8 +103,9 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openUnitInfoPage",location = "/legislation/legislationProcessManager_unitInfo.jsp"),
 			@Result(name = "openUnitAddOpinionPage",location = "/legislation/legislationProcessManager_unitAddOpinion.jsp"),
 			@Result(name = "openHandleDemonstrationPage",location = "/legislation/legislationProcessManager_handleDemonstration.jsp"),
-			@Result(name = "openProcessIndexPage",location = "/legislation/demo.jsp"),
-			@Result(name = "openLegislationReceivePage",location = "/legislation/legislationProcessManager_legislationReceive.jsp")})
+			@Result(name = "openProcessIndexPage",location = "/legislation/process_index.jsp"),
+			@Result(name = "openLegislationReceivePage",location = "/legislation/legislationProcessManager_legislationReceive.jsp"),
+			@Result(name = "openLegislationCensorshipPage",location = "/legislation/legislationProcessManager_legislationCensorship.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -119,21 +120,21 @@ public class LegislationProcessDocAction extends BaseAction {
 		Boolean unitSendDisabled=true;
 		String unitReceiveClass="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_red";
 		Boolean unitReceiveDisabled=true;
-		String expertBeforeClass="btn btn-default btn-rounded process-btn";
+		String expertBeforeClass="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t";
 		Boolean expertBeforeDisabled=true;
-		String expertAfterClass="btn btn-default btn-rounded process-btn";
+		String expertAfterClass="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_t";
 		Boolean expertAfterDisabled=true;
-		String legislationEditClass="btn btn-default btn-rounded process-btn";
+		String legislationEditClass="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t";
 		Boolean legislationEditDisabled=true;
-		String legislationReceiveClass="btn btn-default btn-rounded process-btn";
+		String legislationReceiveClass="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_red";
 		Boolean legislationReceiveDisabled=true;
-		String legislationCensorshipClass="btn btn-default btn-rounded process-btn";
+		String legislationCensorshipClass="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_yellow";
 		Boolean legislationCensorshipDisabled=true;
-		String legislationReleaseClass="btn btn-default btn-rounded process-btn";
+		String legislationReleaseClass="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_purple";
 		Boolean legislationReleaseDisabled=true;
-		String legislationRegistrationClass="btn btn-default btn-rounded process-btn";
+		String legislationRegistrationClass="cell row_items row_item6 bcg_gray border_width border_style border_radius border_color_purple";
 		Boolean legislationRegistrationDisabled=true;
-		String legislationFileClass="btn btn-default btn-rounded process-btn";
+		String legislationFileClass="cell row_items row_item7 bcg_gray border_width border_style border_radius border_color_t";
 		Boolean legislationFileDisabled=true;
 		String stDocId=request.getParameter("stDocId");
 		String stDocName=request.getParameter("stDocName");
@@ -191,10 +192,10 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(expertBeforeList.size()>0){
 			if("TODO".equals(expertBeforeList.get(0).getStTaskStatus())){
 				if("U_3_7".equals(teamId)){
-					expertBeforeClass="btn btn-warning btn-rounded process-btn";
+					expertBeforeClass="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t";
 				}
 			}else{
-				expertBeforeClass="btn btn-primary btn-rounded process-btn";
+				expertBeforeClass="cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t";
 			}
 			if("U_3_7".equals(teamId)){
 				expertBeforeDisabled=false;
@@ -209,10 +210,10 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(expertAfterList.size()>0){
 			if("TODO".equals(expertAfterList.get(0).getStTaskStatus())){
 				if("U_3_7".equals(teamId)){
-					expertAfterClass="btn btn-warning btn-rounded process-btn";
+					expertAfterClass="cell row_items row_item3 bcg_green border_width border_style border_radius border_color_t";
 				}
 			}else{
-				expertAfterClass="btn btn-primary btn-rounded process-btn";
+				expertAfterClass="cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_t";
 			}
 			if("U_3_7".equals(teamId)){
 				expertAfterDisabled=false;
@@ -223,11 +224,11 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(legislationEditList.size()>0){
 			if("TODO".equals(legislationEditList.get(0).getStTaskStatus())){
 				if("U_3_7".equals(teamId)){
-					legislationEditClass="btn btn-warning btn-rounded process-btn";
+					legislationEditClass="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t";
 					legislationEditDisabled=false;
 				}
 			}else{
-				legislationEditClass="btn btn-primary btn-rounded process-btn";
+				legislationEditClass="cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t";
 				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
 					legislationEditDisabled=false;
 				}
@@ -242,47 +243,47 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(legislationReceiveList.size()>0){
 			String stTaskStatus=legislationReceiveList.get(0).getStTaskStatus();
 			if("TODO".equals(stTaskStatus)){
-				if("U_3_7".equals(teamId)){
-					legislationReceiveClass="btn btn-warning btn-rounded process-btn";
+				if("U_3_1".equals(teamId)){
+					legislationReceiveClass="cell row_items row_item3 bcg_green border_width border_style border_radius border_color_red";
 					legislationReceiveDisabled=false;
 				}
 			}else{
-				legislationReceiveClass="btn btn-primary btn-rounded process-btn";
+				legislationReceiveClass="cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_red";
 				if("SEND".equals(stTaskStatus)){
-					if("U_3_7".equals(teamId)){
-						legislationCensorshipClass="btn btn-warning btn-rounded process-btn";
+					if("U_3_1".equals(teamId)){
+						legislationCensorshipClass="cell row_items row_item4 bcg_green border_width border_style border_radius border_color_yellow";
 						legislationCensorshipDisabled=false;
 					}
 				}else{
-					legislationCensorshipClass="btn btn-primary btn-rounded process-btn";
+					legislationCensorshipClass="cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_yellow";
 					if ("PUBLISH".equals(stTaskStatus)) {
-						if("U_3_7".equals(teamId)){
-							legislationReleaseClass="btn btn-warning btn-rounded process-btn";
+						if("U_3_1".equals(teamId)){
+							legislationReleaseClass="cell row_items row_item5 bcg_green border_width border_style border_radius border_color_purple";
 							legislationReleaseDisabled=false;
 							legislationCensorshipDisabled=false;
 						}
 					} else {
-						legislationReleaseClass="btn btn-primary btn-rounded process-btn";
+						legislationReleaseClass="cell row_items row_item5 bcg_blue border_width border_style border_radius border_color_purple";
 						if ("GATHER".equals(stTaskStatus)) {
-							if ("U_3_7".equals(teamId)) {
-								legislationRegistrationClass="btn btn-warning btn-rounded process-btn";
+							if ("U_3_1".equals(teamId)) {
+								legislationRegistrationClass="cell row_items row_item6 bcg_green border_width border_style border_radius border_color_purple";
 								legislationRegistrationDisabled=false;
 								legislationCensorshipDisabled=false;
 								legislationReleaseDisabled=false;
 							}
 						} else {
-							legislationRegistrationClass="btn btn-primary btn-rounded process-btn";
+							legislationRegistrationClass="cell row_items row_item6 bcg_blue border_width border_style border_radius border_color_purple";
 							if ("RESULT".equals(stTaskStatus)) {
-								if ("U_3_7".equals(teamId)) {
-									legislationFileClass="btn btn-warning btn-rounded process-btn";
+								if ("U_3_1".equals(teamId)) {
+									legislationFileClass="cell row_items row_item7 bcg_green border_width border_style border_radius border_color_t";
 									legislationFileDisabled=false;
 									legislationRegistrationDisabled=false;
 									legislationCensorshipDisabled=false;
 									legislationReleaseDisabled=false;
 								}
 							} else {
-								legislationFileClass="btn btn-primary btn-rounded process-btn";
-								if ("U_3_7".equals(teamId)) {
+								legislationFileClass="cell row_items row_item7 bcg_blue border_width border_style border_radius border_color_t";
+								if ("U_3_1".equals(teamId)) {
 									legislationFileDisabled=false;
 									legislationRegistrationDisabled=false;
 									legislationCensorshipDisabled=false;
@@ -396,12 +397,8 @@ public class LegislationProcessDocAction extends BaseAction {
 	}
 	private String openCheckExplainPage(){
 		String stTaskStatus=request.getParameter("stTaskStatus");
-		String stDocId=request.getParameter("stDocId");
-		String method=request.getParameter("method");
-		String stNodeId=request.getParameter("stNodeId");
-		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stTaskStatus='"+stTaskStatus+"' and t.stEnable is null");
 		request.setAttribute("stTaskStatus",stTaskStatus);
-		return demonstrationPageController(method,legislationProcessTaskList.get(0).getStTaskId());
+		return pageController();
 	}
 	private String openEditPage(){
         String stNodeId = request.getParameter("stNodeId");
@@ -619,21 +616,74 @@ public class LegislationProcessDocAction extends BaseAction {
 		return method;
 	}
 
+	/**
+	 * 办理页面--跳转立法听证会接收页面
+	 * @return
+	 */
 	private String openLegislationReceivePage(){
 		String stDocId=request.getParameter("stDocId");
 		String stNodeId=request.getParameter("stNodeId");
-		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
 		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();
 		condMap.put("stParentId",stDocId);
-		condMap.put("stNodeId",stNodeId);
+		condMap.put("stNodeId","NOD_0000000140");
 		sortMap.put("dtPubDate","ASC");
 		List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
 		request.setAttribute("legislationFilesList",legislationFilesList);
 		request.setAttribute("legislationProcessTask",legislationProcessTaskList.get(0));
 		request.setAttribute("buttonId",request.getParameter("buttonId"));
 		return pageController();
+	}
+
+	/**
+	 * 办理页面--跳转立法听证会送审页面
+	 * @return
+	 */
+	private String openLegislationCensorshipPage(){
+		String stDocId=request.getParameter("stDocId");
+		String stNodeId=request.getParameter("stNodeId");
+		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+		if(!"SEND".equals(legislationProcessTaskList.get(0).getStTaskStatus())){
+			List<LegislationProcessTaskdetail> checkDetails = new ArrayList<>();
+			List<LegislationProcessTaskdetail> taskDetails = legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where t.stTaskId='"+legislationProcessTaskList.get(0).getStTaskId()+"' and t.stTaskStatus in ('SEND','SEND-RETURN') order by t.stTaskdetailId");
+			for(LegislationProcessTaskdetail legislationProcessTaskdetail:taskDetails){
+				List<LegislationFiles> files = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId='"+legislationProcessTaskdetail.getStTaskdetailId()+"'");
+				legislationProcessTaskdetail.setFilesList(files);
+				checkDetails.add(legislationProcessTaskdetail);
+			}
+			request.setAttribute("checkDetails",checkDetails);
+			return "openProMeetCheckInfoPage";
+		}else{
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId",stDocId);
+			condMap.put("stNodeId","NOD_0000000140");
+			sortMap.put("dtPubDate","ASC");
+			List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+			Boolean sendDisabled=false;
+			Boolean sendReturnDisabled=false;
+			Integer disabledNumber=0;
+			String stTaskStatus="SEND";
+			List<LegislationProcessTaskdetail> sendList=legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='"+legislationProcessTaskList.get(0).getStTaskId()+"' and t.stTaskStatus='"+stTaskStatus+"' ");
+			if(sendList.size()>0){
+				sendDisabled=true;
+				disabledNumber++;
+			}
+			stTaskStatus="SEND-RETURN";
+			List<LegislationProcessTaskdetail> sendReturnList=legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='"+legislationProcessTaskList.get(0).getStTaskId()+"' and t.stTaskStatus='"+stTaskStatus+"' ");
+			if(sendReturnList.size()>0){
+				sendReturnDisabled=true;
+				disabledNumber++;
+			}
+			request.setAttribute("disabledNumber",disabledNumber);
+			request.setAttribute("sendDisabled",sendDisabled);
+			request.setAttribute("sendReturnDisabled",sendReturnDisabled);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationProcessTask",legislationProcessTaskList.get(0));
+			request.setAttribute("buttonId",request.getParameter("buttonId"));
+			return pageController();
+		}
 	}
 	private String openHandleDemonstrationPage(){
 		String stDocId=request.getParameter("stDocId");

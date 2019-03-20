@@ -20,6 +20,7 @@
       novalidate="novalidate">
     <input hidden name="stTaskId" id="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
     <input type="hidden" name="stDocId" value="${legislationProcessDoc.stDocId}">
+    <input type="hidden" id="buttonId" value="${buttonId}">
     <div class="form-body">
         <div class="form-group">
             <label class="col-sm-3 control-label">论证会议题：</label>
@@ -192,7 +193,10 @@
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
                 if(data.success){
                     $('#processIndexForm').modal('hide');
-                    $('#${buttonId}').attr("class","btn btn-warning btn-rounded process-btn");
+                    var buttonId=$('#buttonId').val();
+                    if("expertBefore"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t");
+                    }
                     Duang.success("提示","操作成功");
                 }else{
                     Duang.error("提示","操作失败");

@@ -293,6 +293,12 @@
 					</div>
 				</div>
 			</div>
+			<div class="modal inmodal fade" id="processIndexChildForm" data-backdrop tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

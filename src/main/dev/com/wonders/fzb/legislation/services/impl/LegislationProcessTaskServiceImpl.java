@@ -449,7 +449,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stTaskDetailId+"' where s.stFileId='"+value+"'");
 			}
 		}
-		if(!"SEND-RETURN".equals(stTaskStatus) &&! "GATHER-RETURN".equals(stTaskStatus)&&! "TODO-RETURN".equals(stTaskStatus)){
+		if(!"SEND".equals(stTaskStatus)&&!"SEND-RETURN".equals(stTaskStatus) &&! "GATHER-RETURN".equals(stTaskStatus)&&! "TODO-RETURN".equals(stTaskStatus)){
 			String stDocId = request.getParameter("stDocId");
 			String stNodeId = request.getParameter("stNodeId");
 			nextChildProcess(stDocId,stNodeId,userRoleId,userRole,currentPerson);
