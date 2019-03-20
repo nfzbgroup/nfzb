@@ -16,7 +16,7 @@
 	<form id="legislationTaskCheckForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden name="stTaskId" value="${stTaskId}">
-        <input hidden name="stTaskStatus" value="${stTaskStatus}">
+        <input hidden id="stTaskStatus" name="stTaskStatus" value="${stTaskStatus}">
         <input hidden name="stDocId" value="${stDocId}">
         <input hidden name="stNodeId" value="${nodeId}">
 
@@ -70,12 +70,17 @@
         }else {
              $.post("../${requestUrl}?stTaskId=${stTaskId}&method=saveTaskCheck&stTaskStatus=${stTaskStatus}",param,function(data){
                  $('#processIndexChildForm').modal('hide');
-                 $('#${stTaskStatus}').attr("disabled","disabled");
-                 var disabledNumber=Number($('#disabledNumber').val());
-                 $('#disabledNumber').val(disabledNumber+1);
-                 var disabledNumberLater=Number($('#disabledNumber').val());
-                 if(disabledNumberLater==2){
-                    $('#nextStep').removeAttr('disabled');
+                 var stTaskStatus=$('#stTaskStatus').val();
+                 $('#'+stTaskStatus).attr("disabled","disabled");
+                 if("PUBLISH"==stTaskStatus||"GATHER-RETURN"==stTaskStatus){
+                     $('#nextStep').removeAttr('disabled');
+                 }else{
+                     var disabledNumber=Number($('#disabledNumber').val());
+                     $('#disabledNumber').val(disabledNumber+1);
+                     var disabledNumberLater=Number($('#disabledNumber').val());
+                     if(disabledNumberLater==2){
+                         $('#nextStep').removeAttr('disabled');
+                     }
                  }
                  Duang.success("提示","操作成功");
             });

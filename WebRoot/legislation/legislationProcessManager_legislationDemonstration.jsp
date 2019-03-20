@@ -51,7 +51,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label">立法听证前材料
+            <label class="control-label">立法听证<c:if test="${nodeId=='NOD_0000000140'}">前</c:if><c:if test="${nodeId=='NOD_0000000141'}">后</c:if>材料
             </label>
         </div>
         <div class="form-group">
@@ -105,7 +105,7 @@
             </table>
         </div>
         <div class="form-group">
-            <label class="control-label">立法听证前其他材料
+            <label class="control-label">立法听证<c:if test="${nodeId=='NOD_0000000140'}">前</c:if><c:if test="${nodeId=='NOD_0000000141'}">后</c:if>其他材料
             </label>
             <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
             </label>
@@ -146,9 +146,16 @@
         <div class="form-group text-center">
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSave"  value="保存" onclick="saveLegislationDemonstration()"> &nbsp;&nbsp;
-            <input type="button" class="btn btn-w-m btn-success"
-                   name="btnSave" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadDemonstrationReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
-                   <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="上报"> &nbsp;&nbsp;
+            <c:if test="${nodeId=='NOD_0000000140'}">
+                <input type="button" class="btn btn-w-m btn-success"
+                       <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadDemonstrationReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
+                       <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="上报"> &nbsp;&nbsp;
+            </c:if>
+            <c:if test="${nodeId=='NOD_0000000141'}">
+                <input type="button" class="btn btn-w-m btn-success"
+                     onclick="nextChildDemonstrationProcess('${stDocId}','${nodeId}','nextChildProcess','${buttonId}')"
+                       value="确认发布"> &nbsp;&nbsp;
+            </c:if>
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
     </div>
@@ -224,4 +231,8 @@
             });
         }
     };
+
+    function x() {
+        
+    }
 </script>

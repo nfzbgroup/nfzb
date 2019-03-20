@@ -453,7 +453,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
         String teamId=currentPerson.getTeamInfos().get(0).getId();
         Boolean removeDisabled=false;
-        if("unitEdit".equals(buttonId)&&"U_3_1".equals(teamId)){
+        if("unitEdit".equals(buttonId)&&"U_3_7".equals(teamId)){
             removeDisabled=true;
         }
         if("expertBefore".equals(buttonId)&&"U_3_7".equals(teamId)){
@@ -508,6 +508,12 @@ public class LegislationProcessTaskAction extends BaseAction {
             addDisabled=true;
         }
         if("legislationCensorship".equals(buttonId)&&"U_3_1".equals(teamId)){
+            removeDisabled=true;
+        }
+        if("legislationRelease".equals(buttonId)&&"U_3_1".equals(teamId)){
+            removeDisabled=true;
+        }
+        if("legislationRegistration".equals(buttonId)&&"U_3_1".equals(teamId)){
             removeDisabled=true;
         }
         jsonObject.put("success",true);

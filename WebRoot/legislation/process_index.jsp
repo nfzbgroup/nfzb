@@ -51,12 +51,12 @@
 											<span class="img_style img_style1 font_color_blue border_blue border_radius_circle">立</span>
 										</a>
 									</div>
-									<%--<div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_yellow">--%>
-									<%--<a href="javaScript:void(0)">--%>
-									<%--<p class="font_color_black">部门征求意见</br>盖章</p>--%>
-									<%--<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>--%>
-									<%--</a>--%>
-									<%--</div>--%>
+									<div class="${unitSealClass}">
+									<a href="javaScript:void(0)" id="unitSeal" <c:if test="${unitSealDisabled}">handStatus="1" class="removeHand" </c:if> onclick="changeUnitSeal(this.id)">
+									<p class="font_color_black">部门征求意见</br>盖章</p>
+									<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
+									</a>
+									</div>
 									<div class="${unitSendClass}" >
 										<a href="javaScript:void(0)" id="unitSend" <c:if test="${unitSendDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openUnitSeekPage','${stDocId}','NOD_0000000121')">
 											<p class="font_color_black">部门征求意见</br>发送部门</p>
@@ -180,19 +180,19 @@
 										</a>
 									</div>
 									<div class="${legislationReleaseClass}">
-										<a href="javaScript:void(0)" id="legislationRelease" <c:if test="${legislationReleaseDisabled}">handStatus="1" class="removeHand" </c:if>>
+										<a href="javaScript:void(0)" id="legislationRelease" <c:if test="${legislationReleaseDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openLegislationReleasePage','${stDocId}','NOD_0000000141')">
 											<p class="font_color_black">立法听证会上</br>网发布</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
 									</div>
 									<div class="${legislationRegistrationClass}">
-										<a href="javaScript:void(0)" id="legislationRegistration" <c:if test="${legislationRegistrationDisabled}">handStatus="1" class="removeHand" </c:if>>
+										<a href="javaScript:void(0)" id="legislationRegistration" <c:if test="${legislationRegistrationDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openLegislationRegistrationPage','${stDocId}','NOD_0000000141')">
 											<p class="font_color_black">立法听证会网</br>上报名</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
 									</div>
 									<div class="${legislationFileClass}">
-										<a href="javaScript:void(0)" id="legislationFile" <c:if test="${legislationFileDisabled}">handStatus="1" class="removeHand" </c:if>>
+										<a href="javaScript:void(0)" id="legislationFile" <c:if test="${legislationFileDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openLegislationDemonstrationPage','${stDocId}','NOD_0000000141')">
 											<p class="font_color_black">立法听证会结</br>果归档</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
@@ -284,7 +284,7 @@
                     }
                     if(data.removeDisabled){
                         if ("unitEdit"==buttonId) {
-                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item4 bcg_green border_width border_style border_radius border_color_red");
+                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item3 bcg_green border_width border_style border_radius border_color_yellow");
                         }
                         if("expertBefore"==buttonId){
                             $('#'+buttonId).parent().next().attr("class","cell row_items row_item3 bcg_green border_width border_style border_radius border_color_t");
@@ -314,6 +314,15 @@
                     if("legislationCensorship"==buttonId){
                         $('#'+buttonId).parent().attr("class","cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_yellow");
                     }
+                    if("legislationRelease"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item5 bcg_blue border_width border_style border_radius border_color_purple");
+                    }
+                    if("legislationRegistration"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item6 bcg_blue border_width border_style border_radius border_color_purple");
+                    }
+                    if("legislationFile"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item7 bcg_blue border_width border_style border_radius border_color_t");
+                    }
                     if(data.addDisabled){
                         $('#'+buttonId).attr("class","removeHand");
                         $('#'+buttonId).attr("handStatus","1");
@@ -324,6 +333,12 @@
                         }
                         if("legislationCensorship"==buttonId){
                             $('#'+buttonId).parent().next().attr("class","cell row_items row_item5 bcg_green border_width border_style border_radius border_color_purple");
+                        }
+                        if("legislationRelease"==buttonId){
+                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item6 bcg_green border_width border_style border_radius border_color_purple");
+                        }
+                        if("legislationRegistration"==buttonId){
+                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item7 bcg_green border_width border_style border_radius border_color_t");
                         }
                         $('#'+buttonId).parent().next().children().removeAttr('handStatus');
                         $('#'+buttonId).parent().next().children().removeAttr('class');
@@ -354,4 +369,11 @@
 			remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?method="+method+"&stDocId="+stDocId+"&stNodeId="+stNodeId+"&stTaskStatus="+buttonStatus+"&stTaskId="+stTaskId
 		});
     };
+    function changeUnitSeal(buttonId) {
+        if($('#'+buttonId).attr("handStatus")==undefined){
+            $('#'+buttonId).parent().attr("class","cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_yellow");
+            $('#'+buttonId).attr("class","removeHand");
+            $('#'+buttonId).attr("handStatus","1");
+        }
+    }
 </script>
