@@ -89,14 +89,14 @@
 				</c:if>
 			</td>
 		</tr>
-		<tr>
-			<td class="text-right text-center">
-				<label style="white-space: nowrap">审核会议前领导批示:</label>
-			</td>
-			<td class="text-center">
-				<label >接口未绑定</label>
-			</td>
-		</tr>
+		<%--<tr>--%>
+			<%--<td class="text-right text-center">--%>
+				<%--<label style="white-space: nowrap">审核会议前领导批示:</label>--%>
+			<%--</td>--%>
+			<%--<td class="text-center">--%>
+				<%--<label >接口未绑定</label>--%>
+			<%--</td>--%>
+		<%--</tr>--%>
 	</table>
 	<div class="form-group text-center">
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
