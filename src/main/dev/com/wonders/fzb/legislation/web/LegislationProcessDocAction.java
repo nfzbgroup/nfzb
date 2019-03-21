@@ -588,7 +588,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			condMap.put("stNodeId",stNodeId);
 			sortMap.put("dtPubDate","ASC");
 			List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
-			if("RESULT".equals(legislationProcessTaskList.get(0).getStTaskStatus())){
+			if("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())||"RESULT".equals(legislationProcessTaskList.get(0).getStTaskStatus())){
 				List<Map> legislationExampleFilesList =new ArrayList<>();
 				legislationExampleList.forEach((LegislationExample legislationExample)->{
 					Map map=new HashMap();
@@ -734,6 +734,10 @@ public class LegislationProcessDocAction extends BaseAction {
 		}
 	}
 
+    /**
+     * 办理页面--跳转立法听证会网上报名页面
+     * @return
+     */
 	private String openLegislationRegistrationPage(){
 		String stDocId=request.getParameter("stDocId");
 		String stNodeId=request.getParameter("stNodeId");
@@ -811,6 +815,10 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 
+    /**
+     * 跳转新增审核会议信息页面
+     * @return
+     */
 	private String openAddAuditMeetingPage(){
 		request.setAttribute("LegislationExampleList",queryLegislationExampleFiles());
 		List<LegislationProcessDoc> legislationProcessDocList=legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null");
@@ -820,6 +828,10 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 
+    /**
+     *跳转编辑审核会议信息页面
+     * @return
+     */
 	private String openEditAuditMeetingPage(){
 		String stDocId=request.getParameter("stDocId");
 		String stTaskStatus=request.getParameter("stTaskStatus");
@@ -830,10 +842,15 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
 		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
 		String[] stDocIdArray=legislationProcessDoc.getStDocSource().split("#");
-		List<LegislationProcessDoc> legislationProcessDocList=new ArrayList<>();
+		List<Map> legislationProcessDocList=new ArrayList<>();
 		for (int i = 0; i <stDocIdArray.length ; i++) {
 			LegislationProcessDoc checkedDoc=legislationProcessDocService.findById(stDocIdArray[i]);
-			legislationProcessDocList.add(checkedDoc);
+			Map map=new HashMap();
+			map.put("stDocId",checkedDoc.getStDocId());
+            map.put("stDocName",checkedDoc.getStDocName());
+            List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocIdArray[i]+"' and stNodeId='NOD_0000000105' and t.stEnable is null");
+            map.put("stActive",legislationProcessTaskList.get(0).getStActive()==null?"true":legislationProcessTaskList.get(0).getStActive());
+			legislationProcessDocList.add(map);
 		}
 		condMap.clear();
 		sortMap.clear();
@@ -889,6 +906,11 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 
+    /**
+     * 保存审核会议信息
+     * @return
+     * @throws Exception
+     */
 	private String saveAuditMeeting() throws Exception{
 		String stDocId = request.getParameter("stDocId");
 		String stDocName = request.getParameter("stDocName");
@@ -897,7 +919,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		String stNodeName = request.getParameter("stNodeName");
 		String dtCreateDate = request.getParameter("dtCreateDate");
 		String stComent = request.getParameter("stComent");
-		String stActive = request.getParameter("stActive");
+		String stTaskStatus=request.getParameter("stTaskStatus");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String userId = currentPerson.getUserId();
 		String userName = currentPerson.getName();
@@ -921,6 +943,14 @@ public class LegislationProcessDocAction extends BaseAction {
 					newLegislationProcessDeal.setStBakOne(newDocName);
 					legislationProcessDealService.update(newLegislationProcessDeal);
 				});
+			}
+			if("INPUT".equals(stTaskStatus)){
+                String stActive=request.getParameter("stActive"+stDocIdArray[i]);
+                List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocIdArray[i]+"' and stNodeId='NOD_0000000105' and t.stEnable is null");
+                legislationProcessTaskList.forEach((LegislationProcessTask legislationProcessTask)->{
+                     legislationProcessTask.setStActive(stActive);
+                     legislationProcessTaskService.update(legislationProcessTask);
+                });
 			}
 		}
 		if(StringUtil.isEmpty(stDocId)){
@@ -968,7 +998,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			}
 
 		}else{
-			if(StringUtil.isEmpty(stActive)){
+			if("TODO".equals(stTaskStatus)){
 				LegislationProcessDoc auditMeeting=legislationProcessDocService.findById(stDocId);
 				auditMeeting.setStDocName(stDocName);
 				auditMeeting.setStDocNo(stDocNo);
@@ -978,7 +1008,6 @@ public class LegislationProcessDocAction extends BaseAction {
 				legislationProcessDocService.update(auditMeeting);
 			}else{
 				LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stDocId);
-				legislationProcessTask.setStActive(stActive);
 				legislationProcessTask.setStBakOne(stDocName);
 				legislationProcessTask.setStBakTwo(stDocNo);
 				legislationProcessTask.setStNodeName(stNodeName);
@@ -999,9 +1028,44 @@ public class LegislationProcessDocAction extends BaseAction {
 		return null;
 	}
 
+    /**
+     * 跳转审核会议详情页
+     * @return
+     */
 	private String openAuditMeetingInfoPage(){
 		String stDocId=request.getParameter("stDocId");
-
+        String stTaskStatus=request.getParameter("stTaskStatus");
+        LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
+        String[] stDocIdArray=legislationProcessDoc.getStDocSource().split("#");
+        List<LegislationProcessDoc> legislationProcessDocList=new ArrayList<>();
+        for (int i = 0; i <stDocIdArray.length ; i++) {
+            LegislationProcessDoc checkedDoc=legislationProcessDocService.findById(stDocIdArray[i]);
+            legislationProcessDocList.add(checkedDoc);
+        }
+        Map<String, Object> condMap = new HashMap<>();
+        Map<String, String> sortMap = new HashMap<>();
+        condMap.put("stNodeId","NOD_0000000170");
+        sortMap.put("dtPubDate","ASC");
+        if("before".equals(stTaskStatus)){
+            request.setAttribute("legislationProcessDoc",legislationProcessDoc);
+            condMap.put("stParentId",legislationProcessDoc.getStDocId());
+        }else{
+            LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='NOD_0000000170' and t.stEnable is null").get(0);
+            Map map=new HashMap();
+            map.put("stDocId",legislationProcessTask.getStTaskId());
+            map.put("stActive",legislationProcessTask.getStActive());
+            map.put("stDocName",legislationProcessTask.getStBakOne());
+            map.put("stDocNo",legislationProcessTask.getStBakTwo());
+            map.put("stNodeName",legislationProcessTask.getStNodeName());
+            map.put("stComent",legislationProcessTask.getStComment2());
+            map.put("dtCreateDate",legislationProcessTask.getDtBakDate());
+            request.setAttribute("legislationProcessDoc",map);
+            condMap.put("stParentId",legislationProcessTask.getStTaskId());
+        }
+        List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+        request.setAttribute("legislationFilesList",legislationFilesList);
+        request.setAttribute("legislationProcessDocList",legislationProcessDocList);
+        request.setAttribute("stTaskStatus",stTaskStatus);
 		return pageController();
 	}
 

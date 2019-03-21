@@ -56,7 +56,7 @@
             <div class="form-group text-center">
                 <input type="button" class="btn btn-w-m btn-success" id="btnSave"
                        name="btnSave" onclick="saveTaskCheck()" value="提交"> &nbsp;&nbsp;
-                <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
+                <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
             </div>
 		</div>
 	</form>
@@ -69,18 +69,23 @@
             Duang.error("提示","请输入情况说明！");
         }else {
              $.post("../${requestUrl}?stTaskId=${stTaskId}&method=saveTaskCheck&stTaskStatus=${stTaskStatus}",param,function(data){
-                 $('#processIndexChildForm').modal('hide');
                  var stTaskStatus=$('#stTaskStatus').val();
-                 $('#'+stTaskStatus).attr("disabled","disabled");
                  if("PUBLISH"==stTaskStatus||"GATHER-RETURN"==stTaskStatus){
+                     $('#processIndexChildForm').modal('hide');
+                     $('#'+stTaskStatus).attr("disabled","disabled");
                      $('#nextStep').removeAttr('disabled');
-                 }else{
+                 }else if("SEND"==stTaskStatus||"SEND-RETURN"==stTaskStatus){
+                     $('#processIndexChildForm').modal('hide');
+                     $('#'+stTaskStatus).attr("disabled","disabled");
                      var disabledNumber=Number($('#disabledNumber').val());
                      $('#disabledNumber').val(disabledNumber+1);
                      var disabledNumberLater=Number($('#disabledNumber').val());
                      if(disabledNumberLater==2){
                          $('#nextStep').removeAttr('disabled');
                      }
+                 }else {
+                     $('#legislationProcessForm').modal('hide');
+                     submitForm(1);
                  }
                  Duang.success("提示","操作成功");
             });

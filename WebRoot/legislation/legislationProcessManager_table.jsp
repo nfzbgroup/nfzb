@@ -279,8 +279,8 @@
 								</c:when>
 								<c:otherwise>
 									<td >
-										<a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stDocId}')" class="layer_full_link">查看会前</a><br/>
-										<a href="javaScript:void(0)" data-title="接收情况" onclick="openTaskPage('openUnitReceivePage','${task.stDocId}')" class="layer_full_link">查看会后</a><br/>
+										<a href="javaScript:void(0)" data-title="查看" onclick="openProMeetPage('openAuditMeetingInfoPage','${task.stDocId}','before')" class="layer_full_link">查看会前</a><br/>
+										<a href="javaScript:void(0)" data-title="接收情况" onclick="openProMeetPage('openAuditMeetingInfoPage','${task.stDocId}','after')" class="layer_full_link">查看会后</a><br/>
 									</td>
 								</c:otherwise>
 							</c:choose>

@@ -50,6 +50,11 @@
                             <th class="text-center">
                                 新草案名称
                             </th>
+                            <c:if test="${stTaskStatus=='INPUT'}">
+                                <th class="text-center">
+                                    审核结果
+                                </th>
+                            </c:if>
                         </thead>
                         <tbody>
                         <c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
@@ -69,6 +74,22 @@
                                          </c:if>
                                          <input type="text" name="${doc.stDocId}" placeholder="需修改法规规章草案名称请在此处填写">
                                     </td>
+                                    <c:if test="${stTaskStatus=='INPUT'}">
+                                        <td class="text-center">
+                                            <select name="stActive${doc.stDocId}">
+                                                <c:choose>
+                                                    <c:when test="${doc.stActive=='true'}">
+                                                        <option value="true" selected>成功</option>
+                                                        <option value="false">失败</option>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <option value="true" >成功</option>
+                                                        <option value="false" selected>失败</option>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </select>
+                                        </td>
+                                    </c:if>
                                 </tr>
                             </c:forEach>
                         </c:if>
@@ -94,25 +115,6 @@
                     <textarea class="form-control" id="stComent" name="stComent" ><c:if test="${legislationProcessDoc.stComent !=null}">${legislationProcessDoc.stComent}</c:if></textarea>
                 </div>
             </div>
-            <c:if test="${stTaskStatus=='INPUT'}">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">审核结果：</label>
-                    <div class="col-sm-9">
-                        <select name="stActive" class="form-control">
-                            <c:choose>
-                                <c:when test="${legislationProcessDoc.stActive=='true'}">
-                                    <option value="true" selected>成功</option>
-                                    <option value="false">失败</option>
-                                </c:when>
-                                <c:otherwise>
-                                    <option value="true" >成功</option>
-                                    <option value="false" selected>失败</option>
-                                </c:otherwise>
-                            </c:choose>
-                        </select>
-                    </div>
-                </div>
-            </c:if>
 			<div class="form-group text-center">
 					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
 						   name="btnSave" onclick="saveAuditMeeting()" value="提交"> &nbsp;&nbsp;
@@ -300,7 +302,7 @@
         }else if(param.stComent==null||param.stComent==""){
             Duang.error("提示","请输入会议人员");
         }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveAuditMeeting",param,function(data){
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveAuditMeeting&stTaskStatus=${stTaskStatus}",param,function(data){
                 $('#legislationProcessForm').modal('hide');
                 submitForm(1);
             });
