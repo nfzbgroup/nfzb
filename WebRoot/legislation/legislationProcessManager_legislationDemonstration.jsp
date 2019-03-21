@@ -153,8 +153,7 @@
             </c:if>
             <c:if test="${nodeId=='NOD_0000000141'}">
                 <input type="button" class="btn btn-w-m btn-success"
-                     onclick="nextChildDemonstrationProcess('${stDocId}','${nodeId}','nextChildProcess','${buttonId}')"
-                       value="确认发布"> &nbsp;&nbsp;
+                     onclick="confirmRelease()" value="确认发布"> &nbsp;&nbsp;
             </c:if>
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
@@ -232,7 +231,24 @@
         }
     };
 
-    function x() {
-        
+    function confirmRelease() {
+        var param=$('#legislationDemonstrationForm').formToJson();
+        if(param.stBakOne==null||param.stBakOne==""){
+            Duang.error("提示","请输入听证会议题");
+        }else if(param.stBakTwo==null||param.stBakTwo==""){
+            Duang.error("提示","请输入听证会地点");
+        }else if(param.dtBakDate==null||param.dtBakDate==""){
+            Duang.error("提示","请选择听证会时间");
+        }else if(param.stComment2==null||param.stComment2==""){
+            Duang.error("提示","请输入听证会人员");
+        }else {
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
+                if(data.success){
+                    nextChildDemonstrationProcess('${stDocId}','${nodeId}','nextChildProcess','${buttonId}')
+                }else{
+                    Duang.error("提示","操作失败");
+                }
+            });
+        }
     }
 </script>
