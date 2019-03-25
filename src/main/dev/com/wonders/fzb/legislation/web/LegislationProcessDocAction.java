@@ -116,7 +116,8 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openOnlineReleasePage",location = "/legislation/legislationProcessManager_onlineRelease.jsp"),
 			@Result(name = "openOnlineSummaryPage",location = "/legislation/legislationProcessManager_onlineSummary.jsp"),
 			@Result(name = "openOnlinePublishPage",location = "/legislation/legislationProcessManager_onlinePublish.jsp"),
-			@Result(name = "openOnlineSummaryInfoPage",location = "/legislation/legislationProcessManager_onlineSummaryInfo.jsp")})
+			@Result(name = "openOnlineSummaryInfoPage",location = "/legislation/legislationProcessManager_onlineSummaryInfo.jsp"),
+			@Result(name = "openOnlinePublishPage",location = "/legislation/legislationProcessManager_onlineSummaryInfo.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -861,6 +862,27 @@ public class LegislationProcessDocAction extends BaseAction {
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().print(jsonObject);
 		return null;
+	}
+
+	/**
+	 * 办理页面--跳转采纳意见发布页面
+	 * @return
+	 */
+	private String openOnlinePublishPage(){
+		String stDocId=request.getParameter("stDocId");
+		String stNodeId=request.getParameter("stNodeId");
+		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId",stDocId);
+		condMap.put("stNodeId",stNodeId);
+		sortMap.put("dtPubDate","ASC");
+		List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("buttonId",request.getParameter("buttonId"));
+		request.setAttribute("requestUrl", request.getRequestURI());
+		request.setAttribute("legislationProcessTask",legislationProcessTaskList.get(0));
+		return pageController();
 	}
 	/**
 	 * 办理页面--跳转专家论证会发起页面和专家论证会结果归档页面

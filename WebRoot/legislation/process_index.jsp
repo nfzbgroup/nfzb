@@ -116,7 +116,7 @@
 										</a>
 									</div>
 									<div class="${onlinePublishClass}">
-										<a href="javaScript:void(0)" id="onlinePublish" <c:if test="${onlinePublishDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openOnlineDemonstrationPage','${stDocId}','NOD_0000000131')">
+										<a href="javaScript:void(0)" id="onlinePublish" <c:if test="${onlinePublishDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openOnlinePublishPage','${stDocId}','NOD_0000000131')">
 											<p class="font_color_black">采纳意见发布</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 										</a>

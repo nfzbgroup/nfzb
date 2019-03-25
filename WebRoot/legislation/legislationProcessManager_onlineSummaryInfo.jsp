@@ -9,9 +9,16 @@
 		<li>
 			<span >网上征求意见 > </span>
 		</li>
-		<li>
-			<span >汇总 </span>
-		</li>
+		<c:if test="${legislationProcessTask.stTaskStatus=='RESULT'}">
+			<li>
+				<span >采纳意见发布 </span>
+			</li>
+		</c:if>
+		<c:if test="${legislationProcessTask.stTaskStatus !='RESULT'}">
+			<li>
+				<span >汇总详情 </span>
+			</li>
+		</c:if>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
@@ -95,6 +102,10 @@
 		</tr>
 	</table>
 	<div class="form-group text-center">
+		<c:if test="${legislationProcessTask.stTaskStatus=='RESULT'}">
+			<input type="button" class="btn btn-w-m btn-success" value="发布"
+				   onclick="nextChildDemonstrationProcess('${legislationProcessTask.stDocId}','${nodeId}','nextChildProcess','${buttonId}')" > &nbsp;&nbsp;
+		</c:if>
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 	</div>
 </div>
