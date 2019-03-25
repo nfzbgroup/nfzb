@@ -8,6 +8,7 @@ import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -147,7 +148,9 @@ public interface LegislationProcessTaskService{
 
 	void addOpinion(HttpServletRequest request, UserInfo currentPerson);
 
-	void saveTaskCheck(HttpServletRequest request,UserInfo currentPerson,String userRoleId,String userRole);
+	void saveTaskCheck(HttpServletRequest request,UserInfo currentPerson,String userRoleId,String userRole) throws ParseException;
 
 	void dealFinish(HttpServletRequest request, HttpSession session);
+
+	void saveOnlineSummary(HttpServletRequest request);
 }

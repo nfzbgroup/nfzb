@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
 
 
@@ -107,7 +108,15 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "openLegislationReceivePage",location = "/legislation/legislationProcessManager_legislationReceive.jsp"),
 			@Result(name = "openLegislationCensorshipPage",location = "/legislation/legislationProcessManager_legislationCensorship.jsp"),
 			@Result(name = "openLegislationReleasePage",location = "/legislation/legislationProcessManager_legislationRelease.jsp"),
-			@Result(name = "openLegislationRegistrationPage",location = "/legislation/legislationProcessManager_legislationRegistration.jsp")})
+			@Result(name = "openLegislationRegistrationPage",location = "/legislation/legislationProcessManager_legislationRegistration.jsp"),
+            @Result(name = "openOnlineDemonstrationPage",location = "/legislation/legislationProcessManager_onlineDemonstration.jsp"),
+            @Result(name = "openOnlineInfoPage",location = "/legislation/legislationProcessManager_onlineInfo.jsp"),
+			@Result(name = "openOnlineSealPage",location = "/legislation/legislationProcessManager_onlineSeal.jsp"),
+			@Result(name = "openOnlineCensorshipPage",location = "/legislation/legislationProcessManager_onlineCensorship.jsp"),
+			@Result(name = "openOnlineReleasePage",location = "/legislation/legislationProcessManager_onlineRelease.jsp"),
+			@Result(name = "openOnlineSummaryPage",location = "/legislation/legislationProcessManager_onlineSummary.jsp"),
+			@Result(name = "openOnlinePublishPage",location = "/legislation/legislationProcessManager_onlinePublish.jsp"),
+			@Result(name = "openOnlineSummaryInfoPage",location = "/legislation/legislationProcessManager_onlineSummaryInfo.jsp")})
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -140,6 +149,18 @@ public class LegislationProcessDocAction extends BaseAction {
 		Boolean legislationRegistrationDisabled=true;
 		String legislationFileClass="cell row_items row_item7 bcg_gray border_width border_style border_radius border_color_t";
 		Boolean legislationFileDisabled=true;
+		String onlineEditClass="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t";
+		Boolean onlineEditDisabled=true;
+        String onlineSealClass="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_red";
+        Boolean onlineSealDisabled=true;
+        String onlineCensorshipClass="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_yellow";
+        Boolean onlineCensorshipDisabled=true;
+        String onlineReleaseClass="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_purple";
+        Boolean onlineReleaseDisabled=true;
+        String onlineSummaryClass="cell row_items row_item6 bcg_gray border_width border_style border_radius border_color_purple";
+        Boolean onlineSummaryDisabled=true;
+        String onlinePublishClass="cell row_items row_item7 bcg_gray border_width border_style border_radius border_color_purple";
+        Boolean onlinePublishDisabled=true;
 		String stDocId=request.getParameter("stDocId");
 		String stDocName=request.getParameter("stDocName");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
@@ -303,6 +324,85 @@ public class LegislationProcessDocAction extends BaseAction {
 				}
 			}
 		}
+		stNodeId="NOD_0000000130";
+		List<LegislationProcessTask> onlineEditList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+		if(onlineEditList.size()>0){
+			if("TODO".equals(onlineEditList.get(0).getStTaskStatus())){
+				if("U_3_7".equals(teamId)){
+					onlineEditClass="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t";
+					onlineEditDisabled=false;
+				}
+			}else{
+				onlineEditClass="cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t";
+				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
+					onlineEditDisabled=false;
+				}
+			}
+		}else {
+			if("U_3_7".equals(teamId)){
+				onlineEditDisabled=false;
+			}
+		}
+		stNodeId="NOD_0000000131";
+		List<LegislationProcessTask> onlineSealList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+		if(onlineSealList.size()>0){
+			String stTaskStatus=onlineSealList.get(0).getStTaskStatus();
+			if("TODO".equals(stTaskStatus)){
+				if("U_3_1".equals(teamId)){
+					onlineSealClass="cell row_items row_item3 bcg_green border_width border_style border_radius border_color_red";
+					onlineSealDisabled=false;
+				}
+			}else{
+				onlineSealClass="cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_red";
+				if("SEND".equals(stTaskStatus)){
+					if("U_3_1".equals(teamId)){
+						onlineCensorshipClass="cell row_items row_item4 bcg_green border_width border_style border_radius border_color_yellow";
+						onlineCensorshipDisabled=false;
+					}
+				}else{
+					onlineCensorshipClass="cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_yellow";
+					if ("PUBLISH".equals(stTaskStatus)) {
+						if("U_3_1".equals(teamId)){
+							onlineReleaseClass="cell row_items row_item5 bcg_green border_width border_style border_radius border_color_purple";
+							onlineReleaseDisabled=false;
+							onlineCensorshipDisabled=false;
+						}
+					} else {
+						onlineReleaseClass="cell row_items row_item5 bcg_blue border_width border_style border_radius border_color_purple";
+						if ("GATHER".equals(stTaskStatus)) {
+							if ("U_3_1".equals(teamId)) {
+								onlineSummaryClass="cell row_items row_item6 bcg_green border_width border_style border_radius border_color_purple";
+								onlineSummaryDisabled=false;
+								onlineCensorshipDisabled=false;
+								onlineReleaseDisabled=false;
+							}
+						} else {
+							onlineSummaryClass="cell row_items row_item6 bcg_blue border_width border_style border_radius border_color_purple";
+							if ("RESULT".equals(stTaskStatus)) {
+								if ("U_3_1".equals(teamId)) {
+									onlinePublishClass="cell row_items row_item7 bcg_green border_width border_style border_radius border_color_purple";
+									onlinePublishDisabled=false;
+									onlineSummaryDisabled=false;
+									onlineCensorshipDisabled=false;
+									onlineReleaseDisabled=false;
+								}
+							} else {
+								onlinePublishClass="cell row_items row_item7 bcg_blue border_width border_style border_radius border_color_purple";
+								if ("U_3_1".equals(teamId)) {
+									onlinePublishDisabled=false;
+									onlineSummaryDisabled=false;
+									onlineCensorshipDisabled=false;
+									onlineReleaseDisabled=false;
+								}
+								if("U_3_7".equals(teamId)){
+									onlinePublishDisabled=false;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		request.setAttribute("stDocName",stDocName);
 		request.setAttribute("unitEditClass",unitEditClass);
 		request.setAttribute("unitEditDisabled",unitEditDisabled);
@@ -312,10 +412,12 @@ public class LegislationProcessDocAction extends BaseAction {
 		request.setAttribute("unitSendDisabled",unitSendDisabled);
 		request.setAttribute("unitReceiveClass",unitReceiveClass);
 		request.setAttribute("unitReceiveDisabled",unitReceiveDisabled);
+
 		request.setAttribute("expertBeforeClass",expertBeforeClass);
 		request.setAttribute("expertBeforeDisabled",expertBeforeDisabled);
 		request.setAttribute("expertAfterClass",expertAfterClass);
 		request.setAttribute("expertAfterDisabled",expertAfterDisabled);
+
 		request.setAttribute("legislationEditClass",legislationEditClass);
 		request.setAttribute("legislationEditDisabled",legislationEditDisabled);
 		request.setAttribute("legislationReceiveClass",legislationReceiveClass);
@@ -328,6 +430,19 @@ public class LegislationProcessDocAction extends BaseAction {
 		request.setAttribute("legislationRegistrationDisabled",legislationRegistrationDisabled);
 		request.setAttribute("legislationFileClass",legislationFileClass);
 		request.setAttribute("legislationFileDisabled",legislationFileDisabled);
+
+        request.setAttribute("onlineEditClass",onlineEditClass);
+        request.setAttribute("onlineEditDisabled",onlineEditDisabled);
+        request.setAttribute("onlineSealClass",onlineSealClass);
+        request.setAttribute("onlineSealDisabled",onlineSealDisabled);
+        request.setAttribute("onlineCensorshipClass",onlineCensorshipClass);
+        request.setAttribute("onlineCensorshipDisabled",onlineCensorshipDisabled);
+        request.setAttribute("onlineReleaseClass",onlineReleaseClass);
+        request.setAttribute("onlineReleaseDisabled",onlineReleaseDisabled);
+        request.setAttribute("onlineSummaryClass",onlineSummaryClass);
+        request.setAttribute("onlineSummaryDisabled",onlineSummaryDisabled);
+        request.setAttribute("onlinePublishClass",onlinePublishClass);
+        request.setAttribute("onlinePublishDisabled",onlinePublishDisabled);
 		return pageController();
 	}
 	private String openAddPage(){
@@ -506,6 +621,247 @@ public class LegislationProcessDocAction extends BaseAction {
 		return pageController();
 	}
 
+	/**
+	 * 办理页面--跳转网上征求意见发起页面
+	 * @return
+	 */
+	private String openOnlineDemonstrationPage(){
+        String method;
+        String stDocId=request.getParameter("stDocId");
+        String stNodeId=request.getParameter("stNodeId");
+        LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(stDocId);
+        List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+        Map<String, Object> condMap = new HashMap<>();
+        Map<String, String> sortMap = new HashMap<>();
+        condMap.put("stNode", stNodeId);
+        sortMap.put("stExampleId", "ASC");
+        if(legislationProcessTaskList.size()>0){
+            List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
+            condMap.clear();
+            sortMap.clear();
+            condMap.put("stParentId",stDocId);
+            condMap.put("stNodeId",stNodeId);
+            sortMap.put("dtPubDate","ASC");
+            List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+            if("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())){
+                List<Map> legislationExampleFilesList =new ArrayList<>();
+                legislationExampleList.forEach((LegislationExample legislationExample)->{
+                    Map map=new HashMap();
+                    map.put("stExampleId",legislationExample.getStExampleId());
+                    map.put("stExampleName",legislationExample.getStExampleName());
+                    map.put("stNeed",legislationExample.getStNeed());
+                    legislationFilesList.forEach((LegislationFiles legislationFiles)->{
+                        if(null!=legislationFiles.getStSampleId()&&
+                                legislationExample.getStExampleId().equals(legislationFiles.getStSampleId())){
+                            map.put("fileId",legislationFiles.getStFileId());
+                            map.put("fileName",legislationFiles.getStTitle());
+                            map.put("fileUrl",legislationFiles.getStFileUrl());
+                        }
+                    });
+                    legislationExampleFilesList.add(map);
+                });
+                request.setAttribute("LegislationExampleList",legislationExampleFilesList);
+                method="openOnlineDemonstrationPage";
+            }else{
+                method="openOnlineInfoPage";
+            }
+            request.setAttribute("legislationFilesList",legislationFilesList);
+            request.setAttribute("legislationProcessTask",legislationProcessTaskList.get(0));
+        }else{
+            List<Map> legislationExampleFilesList=legislationExampleService.queryLegislationExampleFiles(condMap,sortMap);
+            request.setAttribute("legislationProcessTask",new LegislationProcessTask());
+            request.setAttribute("LegislationExampleList",legislationExampleFilesList);
+            method="openOnlineDemonstrationPage";
+        }
+        request.setAttribute("nodeId",stNodeId);
+        request.setAttribute("stDocId",stDocId);
+        request.setAttribute("buttonId",request.getParameter("buttonId"));
+        request.setAttribute("requestUrl", request.getRequestURI());
+        request.setAttribute("legislationProcessDoc", legislationProcessDoc);
+        return method;
+    }
+
+	/**
+	 * 办理页面--跳转网上征求意见盖章页面
+	 * @return
+	 */
+	private String openOnlineSealPage(){
+		String stDocId=request.getParameter("stDocId");
+		String stNodeId=request.getParameter("stNodeId");
+		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId",stDocId);
+		condMap.put("stNodeId","NOD_0000000130");
+		sortMap.put("dtPubDate","ASC");
+		List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("legislationProcessTask",legislationProcessTaskList.get(0));
+		request.setAttribute("buttonId",request.getParameter("buttonId"));
+		return pageController();
+	}
+
+	/**
+	 * 办理页面--跳转网上征求意见送审页面
+	 * @return
+	 */
+	private String openOnlineCensorshipPage(){
+		String stDocId=request.getParameter("stDocId");
+		String stNodeId=request.getParameter("stNodeId");
+		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+		if(!"SEND".equals(legislationProcessTaskList.get(0).getStTaskStatus())){
+			List<LegislationProcessTaskdetail> checkDetails = new ArrayList<>();
+			List<LegislationProcessTaskdetail> taskDetails = legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where t.stTaskId='"+legislationProcessTaskList.get(0).getStTaskId()+"' and t.stTaskStatus in ('SEND','SEND-RETURN') order by t.stTaskdetailId");
+			for(LegislationProcessTaskdetail legislationProcessTaskdetail:taskDetails){
+				List<LegislationFiles> files = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId='"+legislationProcessTaskdetail.getStTaskdetailId()+"'");
+				legislationProcessTaskdetail.setFilesList(files);
+				checkDetails.add(legislationProcessTaskdetail);
+			}
+			request.setAttribute("checkDetails",checkDetails);
+			return "openProMeetCheckInfoPage";
+		}else{
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId",stDocId);
+			condMap.put("stNodeId","NOD_0000000130");
+			sortMap.put("dtPubDate","ASC");
+			List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+			Boolean sendDisabled=false;
+			Boolean sendReturnDisabled=false;
+			Integer disabledNumber=0;
+			String stTaskStatus="SEND";
+			List<LegislationProcessTaskdetail> sendList=legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='"+legislationProcessTaskList.get(0).getStTaskId()+"' and t.stTaskStatus='"+stTaskStatus+"' ");
+			if(sendList.size()>0){
+				sendDisabled=true;
+				disabledNumber++;
+			}
+			stTaskStatus="SEND-RETURN";
+			List<LegislationProcessTaskdetail> sendReturnList=legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='"+legislationProcessTaskList.get(0).getStTaskId()+"' and t.stTaskStatus='"+stTaskStatus+"' ");
+			if(sendReturnList.size()>0){
+				sendReturnDisabled=true;
+				disabledNumber++;
+			}
+			request.setAttribute("disabledNumber",disabledNumber);
+			request.setAttribute("sendDisabled",sendDisabled);
+			request.setAttribute("sendReturnDisabled",sendReturnDisabled);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationProcessTask",legislationProcessTaskList.get(0));
+			request.setAttribute("buttonId",request.getParameter("buttonId"));
+			return pageController();
+		}
+	}
+
+	/**
+	 * 办理页面--跳转网上征求意见上网发布页面
+	 * @return
+	 */
+	private String openOnlineReleasePage(){
+		String stDocId=request.getParameter("stDocId");
+		String stNodeId=request.getParameter("stNodeId");
+		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+		if(!"PUBLISH".equals(legislationProcessTaskList.get(0).getStTaskStatus())){
+			List<LegislationProcessTaskdetail> checkDetails = new ArrayList<>();
+			List<LegislationProcessTaskdetail> taskDetails = legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where t.stTaskId='"+legislationProcessTaskList.get(0).getStTaskId()+"' and t.stTaskStatus in ('SEND','SEND-RETURN','PUBLISH') order by t.stTaskdetailId");
+			for(LegislationProcessTaskdetail legislationProcessTaskdetail:taskDetails){
+				List<LegislationFiles> files = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId='"+legislationProcessTaskdetail.getStTaskdetailId()+"'");
+				legislationProcessTaskdetail.setFilesList(files);
+				checkDetails.add(legislationProcessTaskdetail);
+			}
+			request.setAttribute("checkDetails",checkDetails);
+			return "openProMeetCheckInfoPage";
+		}else{
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId",stDocId);
+			condMap.put("stNodeId","NOD_0000000130");
+			sortMap.put("dtPubDate","ASC");
+			List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+			Boolean publishListDisabled=false;
+			List<LegislationProcessTaskdetail> publishList=legislationProcessTaskdetailService.findByHQL("from LegislationProcessTaskdetail t where 1=1 and t.stTaskId='"+legislationProcessTaskList.get(0).getStTaskId()+"' and t.stTaskStatus='PUBLISH' ");
+			if(publishList.size()>0){
+				publishListDisabled=true;
+			}
+			request.setAttribute("publishListDisabled",publishListDisabled);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationProcessTask",legislationProcessTaskList.get(0));
+			request.setAttribute("buttonId",request.getParameter("buttonId"));
+			return pageController();
+		}
+	}
+
+	/**
+	 * 办理页面--跳转网上意见汇总页面
+	 * @return
+	 */
+	private String openOnlineSummaryPage(){
+		String method;
+		String stDocId=request.getParameter("stDocId");
+		String stNodeId=request.getParameter("stNodeId");
+		List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stNode", stNodeId);
+		sortMap.put("stExampleId", "ASC");
+		List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, sortMap);
+		condMap.clear();
+		sortMap.clear();
+		condMap.put("stParentId",stDocId);
+		condMap.put("stNodeId",stNodeId);
+		sortMap.put("dtPubDate","ASC");
+		List<LegislationFiles> legislationFilesList=legislationFilesService.findByList(condMap,sortMap);
+		if("GATHER".equals(legislationProcessTaskList.get(0).getStTaskStatus())){
+			List<Map> legislationExampleFilesList =new ArrayList<>();
+			legislationExampleList.forEach((LegislationExample legislationExample)->{
+				Map map=new HashMap();
+				map.put("stExampleId",legislationExample.getStExampleId());
+				map.put("stExampleName",legislationExample.getStExampleName());
+				map.put("stNeed",legislationExample.getStNeed());
+				if(legislationFilesList.size()>0){
+					legislationFilesList.forEach((LegislationFiles legislationFiles)->{
+						if(null!=legislationFiles.getStSampleId()&&
+								legislationExample.getStExampleId().equals(legislationFiles.getStSampleId())){
+							map.put("fileId",legislationFiles.getStFileId());
+							map.put("fileName",legislationFiles.getStTitle());
+							map.put("fileUrl",legislationFiles.getStFileUrl());
+						}
+					});
+				}else{
+					map.put("fileId",null);
+					map.put("fileName",null);
+					map.put("fileUrl",null);
+				}
+				legislationExampleFilesList.add(map);
+			});
+			Boolean summaryDisabled=false;
+			if(null==legislationProcessTaskList.get(0).getStBakTwo()){
+				summaryDisabled=true;
+			}
+			request.setAttribute("summaryDisabled",summaryDisabled);
+			request.setAttribute("LegislationExampleList",legislationExampleFilesList);
+			method="openOnlineSummaryPage";
+		}else{
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			method="openOnlineSummaryInfoPage";
+		}
+		request.setAttribute("nodeId",stNodeId);
+		request.setAttribute("buttonId",request.getParameter("buttonId"));
+		request.setAttribute("requestUrl", request.getRequestURI());
+		request.setAttribute("legislationProcessTask",legislationProcessTaskList.get(0));
+		return method;
+	}
+
+	/**
+	 * 网上意见汇总保存
+	 * @return
+	 */
+	private String saveOnlineSummary() throws IOException {
+		legislationProcessTaskService.saveOnlineSummary(request);
+		JSONObject jsonObject=new JSONObject();
+		jsonObject.put("success",true);
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jsonObject);
+		return null;
+	}
 	/**
 	 * 办理页面--跳转专家论证会发起页面和专家论证会结果归档页面
 	 * @return
@@ -1426,6 +1782,8 @@ public class LegislationProcessDocAction extends BaseAction {
 			stTaskId=saveLegislation(stNodeId,"立法听证会发起");
 		}else if("NOD_0000000150".equals(stNodeId)||"NOD_0000000151".equals(stNodeId)){
 			stTaskId=saveLegislation(stNodeId,"专家论证会发起");
+		}else if("NOD_0000000130".equals(stNodeId)||"NOD_0000000131".equals(stNodeId)){
+			stTaskId=saveLegislation(stNodeId,"网上征求意见发起");
 		}else{
 			stTaskId=saveLegislation(stNodeId,"部门征求意见发起");
 		}
@@ -1461,7 +1819,7 @@ public class LegislationProcessDocAction extends BaseAction {
 	 * 审核操作
 	 * @return
 	 */
-	private String saveTaskCheck(){
+	private String saveTaskCheck() throws ParseException {
         UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
         String userRoleId= session.getAttribute("userRoleId").toString();
         String userRole= session.getAttribute("userRole").toString();

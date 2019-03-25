@@ -4,3 +4,6 @@
 .underline-grey{
     border-bottom:  2px solid #e7eaec;
 }
+.control-label-left{
+    text-align: left!important
+}

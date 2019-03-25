@@ -13,12 +13,14 @@ import com.wonders.fzb.legislation.dao.LegislationProcessTaskDao;
 import com.wonders.fzb.legislation.services.*;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -404,7 +406,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	}
 
 	@Override
-	public void saveTaskCheck(HttpServletRequest request,UserInfo currentPerson,String userRoleId,String userRole) {
+	public void saveTaskCheck(HttpServletRequest request,UserInfo currentPerson,String userRoleId,String userRole) throws ParseException {
 		String stTaskId = request.getParameter("stTaskId");
 		String stComent= request.getParameter("stComent");
 		String stTaskStatus =request.getParameter("stTaskStatus");
@@ -439,6 +441,24 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			}
 		}
 
+		if(nodeId.equals("NOD_0000000131")){
+			if("SEND".equals(stTaskStatus)){
+				String stComment1=request.getParameter("stComment1");
+				LegislationProcessTask legislationProcessTask=findById(stTaskId);
+				legislationProcessTask.setStComment1(stComment1);
+				update(legislationProcessTask);
+			}
+			if("PUBLISH".equals(stTaskStatus)){
+				String stBakOne=request.getParameter("stBakOne");
+				String dtBakDate=request.getParameter("dtBakDate");
+				String dtDeadDate=request.getParameter("dtDeadDate");
+				LegislationProcessTask legislationProcessTask=findById(stTaskId);
+				legislationProcessTask.setStBakOne(stBakOne);
+				legislationProcessTask.setDtBakDate(DateUtils.parseDate(dtBakDate,"yyyy-MM-dd"));
+				legislationProcessTask.setDtDeadDate(DateUtils.parseDate(dtDeadDate,"yyyy-MM-dd"));
+				update(legislationProcessTask);
+			}
+		}
 		String stTaskDetailId = legislationProcessTaskdetailService.addObj(legislationProcessTaskdetail);
 
 		Enumeration keys=request.getParameterNames();
@@ -491,5 +511,20 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 
 	}
 
-
+	@Override
+	public void saveOnlineSummary(HttpServletRequest request) {
+		String stTaskId = request.getParameter("stTaskId");
+		String stBakTwo=request.getParameter("stBakTwo");
+		LegislationProcessTask legislationProcessTask=findById(stTaskId);
+		legislationProcessTask.setStBakTwo(stBakTwo);
+		update(legislationProcessTask);
+		Enumeration keys=request.getParameterNames();
+		while(keys.hasMoreElements()){
+			String key=(String)keys.nextElement();
+			String value=request.getParameter(key);
+			if(value.startsWith("FIL_")){
+				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+legislationProcessTask.getStDocId()+"' where s.stFileId='"+value+"'");
+			}
+		}
+	}
 }

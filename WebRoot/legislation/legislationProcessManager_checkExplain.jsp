@@ -23,13 +23,39 @@
         <div class="form-body">
 
 			<div class="form-group">
-				<label class="col-sm-2 control-label text-left">情况说明：</label>
-				<div class="col-sm-10">
+				<label class="col-sm-3 control-label text-left">情况说明：</label>
+				<div class="col-sm-9">
 					<textarea id="stComent" name="stComent" class="form-control"></textarea>
 				</div>
 			</div>
-
-
+            <c:if test="${nodeId=='NOD_0000000131'&&stTaskStatus=='SEND'}">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label text-left">办领导意见：</label>
+                    <div class="col-sm-9">
+                        <textarea  name="stComment1" class="form-control"></textarea>
+                    </div>
+                </div>
+            </c:if>
+            <c:if test="${nodeId=='NOD_0000000131'&&stTaskStatus=='PUBLISH'}">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label text-left">综合处意见：</label>
+                    <div class="col-sm-9">
+                        <textarea  name="stBakOne" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">征求意见开始时间：</label>
+                    <div class="col-sm-9">
+                        <input type="text"  class="form-control" readonly id="dtBakDate" name="dtBakDate" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">征求意见结束时间：</label>
+                    <div class="col-sm-9">
+                        <input type="text"  class="form-control" readonly id="dtDeadDate" name="dtDeadDate" >
+                    </div>
+                </div>
+            </c:if>
             <div class="form-group">
                 <label class="control-label">附件上传
                 </label>
@@ -63,11 +89,31 @@
 
 </div>
 <script>
+    $(function () {
+        laydate.render({
+            elem: '#dtBakDate',
+            format:'yyyy-MM-dd',
+            calendar: true,
+        });
+        laydate.render({
+            elem: '#dtDeadDate',
+            format:'yyyy-MM-dd',
+            calendar: true,
+        });
+    });
     function saveTaskCheck() {
         var param=$('#legislationTaskCheckForm').formToJson();
         if(param.stComent==null||param.stComent==""){
             Duang.error("提示","请输入情况说明！");
-        }else {
+        }else if(param.stNodeId=='NOD_0000000131'&&param.stTaskStatus=='SEND'&&(param.stComment1==null||param.stComment1=="")){
+            Duang.error("提示","请输入办领导意见！");
+        }else if(param.stNodeId=='NOD_0000000131'&&param.stTaskStatus=='PUBLISH'&&(param.stBakOne==null||param.stBakOne=="")){
+            Duang.error("提示","请输入综合处意见！");
+        }else if(param.stNodeId=='NOD_0000000131'&&param.stTaskStatus=='PUBLISH'&&(param.dtBakDate==null||param.dtBakDate=="")){
+            Duang.error("提示","请选择征求意见开始时间！");
+        }else if(param.stNodeId=='NOD_0000000131'&&param.stTaskStatus=='PUBLISH'&&(param.dtDeadDate==null||param.dtDeadDate=="")){
+            Duang.error("提示","请选择综征求意见结束时间！");
+        }else{
              $.post("../${requestUrl}?stTaskId=${stTaskId}&method=saveTaskCheck&stTaskStatus=${stTaskStatus}",param,function(data){
                  var stTaskStatus=$('#stTaskStatus').val();
                  if("PUBLISH"==stTaskStatus||"GATHER-RETURN"==stTaskStatus){

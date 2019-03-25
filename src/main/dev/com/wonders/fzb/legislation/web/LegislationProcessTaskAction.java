@@ -516,6 +516,19 @@ public class LegislationProcessTaskAction extends BaseAction {
         if("legislationRegistration".equals(buttonId)&&"U_3_1".equals(teamId)){
             removeDisabled=true;
         }
+        if("onlineSeal".equals(buttonId)&&"U_3_1".equals(teamId)){
+            removeDisabled=true;
+            addDisabled=true;
+        }
+        if("onlineCensorship".equals(buttonId)&&"U_3_1".equals(teamId)){
+            removeDisabled=true;
+        }
+        if("onlineRelease".equals(buttonId)&&"U_3_1".equals(teamId)){
+            removeDisabled=true;
+        }
+        if("onlineSummary".equals(buttonId)&&"U_3_1".equals(teamId)){
+            removeDisabled=true;
+        }
         jsonObject.put("success",true);
         jsonObject.put("removeDisabled",removeDisabled);
         jsonObject.put("addDisabled",addDisabled);

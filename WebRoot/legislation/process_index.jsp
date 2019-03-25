@@ -85,38 +85,38 @@
 											<span class="img_style border_radius_circle"><img src="${basePath}/legislation/assets/demo/flow11.png"></span>
 										</a>
 									</div>
-									<div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
-										<a href="javaScript:void(0)">
+									<div class="${onlineEditClass}">
+										<a href="javaScript:void(0)" id="onlineEdit" <c:if test="${onlineEditDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openOnlineDemonstrationPage','${stDocId}','NOD_0000000130')">
 											<p class="font_color_black">网上征求意见</br>发起</p>
 											<span class="img_style img_style1 font_color_blue border_blue border_radius_circle">立</span>
 										</a>
 									</div>
-									<div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_red">
-										<a href="javaScript:void(0)">
+									<div class="${onlineSealClass}">
+										<a href="javaScript:void(0)" id="onlineSeal" <c:if test="${onlineSealDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openOnlineSealPage','${stDocId}','NOD_0000000131')">
 											<p class="font_color_black">网上征求意见</br>盖章</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
 									</div>
-									<div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_yellow">
-										<a href="javaScript:void(0)">
+									<div class="${onlineCensorshipClass}">
+										<a href="javaScript:void(0)" id="onlineCensorship" <c:if test="${onlineCensorshipDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openOnlineCensorshipPage','${stDocId}','NOD_0000000131')">
 											<p class="font_color_black">网上征求意见</br>送审</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
 									</div>
-									<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_purple">
-										<a href="javaScript:void(0)">
+									<div class="${onlineReleaseClass}">
+										<a href="javaScript:void(0)" id="onlineRelease" <c:if test="${onlineReleaseDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openOnlineReleasePage','${stDocId}','NOD_0000000131')">
 											<p class="font_color_black">网上征求意见</br>上网发布</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
 									</div>
-									<div class="cell row_items row_item6 bcg_gray border_width border_style border_radius border_color_purple">
-										<a href="javaScript:void(0)">
+									<div class="${onlineSummaryClass}">
+										<a href="javaScript:void(0)" id="onlineSummary" <c:if test="${onlineSummaryDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openOnlineSummaryPage','${stDocId}','NOD_0000000131')">
 											<p class="font_color_black">网上意见汇总</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
 									</div>
-									<div class="cell row_items row_item7 bcg_gray border_width border_style border_radius border_color_purple">
-										<a href="javaScript:void(0)">
+									<div class="${onlinePublishClass}">
+										<a href="javaScript:void(0)" id="onlinePublish" <c:if test="${onlinePublishDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openOnlineDemonstrationPage','${stDocId}','NOD_0000000131')">
 											<p class="font_color_black">采纳意见发布</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
@@ -278,6 +278,9 @@
                     if("legislationEdit"==buttonId){
                         $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t");
                     }
+                    if("onlineEdit"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t");
+                    }
                     if(data.addDisabled){
                         $('#'+buttonId).attr("class","removeHand");
                         $('#'+buttonId).attr("handStatus","1");
@@ -323,6 +326,21 @@
                     if("legislationFile"==buttonId){
                         $('#'+buttonId).parent().attr("class","cell row_items row_item7 bcg_blue border_width border_style border_radius border_color_t");
                     }
+                    if("onlineSeal"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_red");
+                    }
+                    if("onlineCensorship"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_yellow");
+                    }
+                    if("onlineRelease"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item5 bcg_blue border_width border_style border_radius border_color_purple");
+                    }
+                    if("onlineSummary"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item6 bcg_blue border_width border_style border_radius border_color_purple");
+                    }
+                    if("onlinePublish"==buttonId){
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item7 bcg_blue border_width border_style border_radius border_color_purple");
+                    }
                     if(data.addDisabled){
                         $('#'+buttonId).attr("class","removeHand");
                         $('#'+buttonId).attr("handStatus","1");
@@ -339,6 +357,18 @@
                         }
                         if("legislationRegistration"==buttonId){
                             $('#'+buttonId).parent().next().attr("class","cell row_items row_item7 bcg_green border_width border_style border_radius border_color_t");
+                        }
+                        if("onlineSeal"==buttonId){
+                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item4 bcg_green border_width border_style border_radius border_color_yellow");
+                        }
+                        if("onlineCensorship"==buttonId){
+                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item5 bcg_green border_width border_style border_radius border_color_purple");
+                        }
+                        if("onlineRelease"==buttonId){
+                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item6 bcg_green border_width border_style border_radius border_color_purple");
+                        }
+                        if("onlineSummary"==buttonId){
+                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item7 bcg_green border_width border_style border_radius border_color_purple");
                         }
                         $('#'+buttonId).parent().next().children().removeAttr('handStatus');
                         $('#'+buttonId).parent().next().children().removeAttr('class');
@@ -375,5 +405,5 @@
             $('#'+buttonId).attr("class","removeHand");
             $('#'+buttonId).attr("handStatus","1");
         }
-    }
+    };
 </script>
