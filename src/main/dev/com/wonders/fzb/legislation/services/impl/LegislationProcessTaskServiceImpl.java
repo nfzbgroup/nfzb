@@ -395,7 +395,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 		LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(legislationProcessTask.getStDocId());
 		LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
 		legislationProcessDeal.setStDocId(legislationProcessDoc.getStDocId());
-		legislationProcessDeal.setStActionId(stNodeId);
+		legislationProcessDeal.setStActionId(opinion);
 		legislationProcessDeal.setStActionName(node.getStNodeName());
 		legislationProcessDeal.setStUserId(userId);
 		legislationProcessDeal.setStUserName(userName);

@@ -300,11 +300,6 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 				newLegislationProcessTask.setStFlowId(newDocName);
 				legislationProcessTaskService.update(newLegislationProcessTask);
 			});
-			List<LegislationProcessDeal> legislationProcessDealList=legislationProcessDealService.findByHQL("from LegislationProcessDeal t where 1=1 and t.stDocId='"+stDocId+"'");
-			legislationProcessDealList.forEach((LegislationProcessDeal newLegislationProcessDeal)->{
-				newLegislationProcessDeal.setStBakOne(newDocName);
-				legislationProcessDealService.update(newLegislationProcessDeal);
-			});
 		}
 		if(StringUtil.isEmpty(stTaskId) || "null".equals(stTaskId)){
 			LegislationProcessTask newTask= new LegislationProcessTask();
@@ -365,7 +360,11 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 				LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
 				legislationProcessDeal.setStDocId(stDocId);
 				legislationProcessDeal.setStActionId(stNodeId);
-				legislationProcessDeal.setStActionName("立法听证会会后");
+				if("NOD_0000000151".equals(stNodeId)){
+					legislationProcessDeal.setStActionName("专家论证会会后");
+				}else{
+					legislationProcessDeal.setStActionName("立法听证会会后");
+				}
 				legislationProcessDeal.setStUserId(userId);
 				legislationProcessDeal.setStUserName(userName);
 				legislationProcessDeal.setStBakOne(legislationProcessDoc.getStDocName());

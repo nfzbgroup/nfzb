@@ -86,7 +86,7 @@
 	</form>
 	<div class="form-group text-center">
 		<input type="button" class="btn btn-w-m btn-success" id="btnSave"
-			   name="btnSave" onclick="addOpinion()" value="提交"> &nbsp;&nbsp;
+			   name="btnSave" onclick="addOpinion('${buttonId}')" value="提交"> &nbsp;&nbsp;
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 	</div>
 </div>
@@ -100,7 +100,7 @@
     };
     function uploadFile(id) {
         $.ajaxFileUpload({
-			url: '${basePath}/file/addOpinion.do?stTaskId=${stTaskId}',
+			url: '${basePath}/file/upload.do?stNodeId=${nodeId}',
 			type: 'post',
 			secureuri: false,                       //是否启用安全提交,默认为false
 			fileElementId: id,
@@ -113,9 +113,9 @@
 						+'<label  style="color: red" onclick="deleteAttach(this,\''+id+'\',\''+file.fileId+'\')" >删除</label>';
 					$("#opinion").val(file.fileId);
 					$("#"+id).parent().html(html);
-					Duang.success("提示", "上传材料成功");
+					Duang.success("提示", "反馈成功");
 				} else {
-						Duang.error("提示", "上传材料失败");
+						Duang.error("提示", "反馈失败");
 				}
             },
             error: function (data, status, e) { //服务器响应失败时的处理函数
@@ -131,14 +131,14 @@
         $("#opinion").val("");
 		obj.parent().html(html);
     };
-    function addOpinion() {
+    function addOpinion(buttonId) {
         var param=$('#unitOpinionForm').formToJson();
         if(param.opinion==null||param.opinion==""){
             Duang.error("提示","请上传反馈意见");
         }else {
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=addOpinion",param,function(data){
-                $('#legislationProcessForm').modal('hide');
-                submitForm(1);
+                $('#processIndexForm').modal('hide');
+                $("#"+buttonId).parent().attr("class","cell row_items row_item5 bcg_blue border_width border_style border_radius border_color_red");
             });
         }
     }

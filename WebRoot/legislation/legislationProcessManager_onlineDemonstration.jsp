@@ -126,7 +126,7 @@
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSave"  value="保存" onclick="saveLegislationDemonstration()"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success"
-                   <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadDemonstrationReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
+                   <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="confirmOnlineReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
                    <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="上报"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
@@ -188,4 +188,18 @@
             });
         }
     };
+    function confirmOnlineReport(stDocId,nodeId,buttonId) {
+        var param=$('#onlineDemonstrationForm').formToJson();
+        if(param.stComment2==null||param.stComment2==""){
+            Duang.error("提示","请输入经办部门意见");
+        }else {
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
+                if(data.success){
+                    uploadDemonstrationReport(stDocId,nodeId,buttonId);
+                }else{
+                    Duang.error("提示","操作失败");
+                }
+            });
+        }
+    }
 </script>

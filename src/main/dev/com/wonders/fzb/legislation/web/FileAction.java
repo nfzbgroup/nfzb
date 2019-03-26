@@ -4,14 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
-import com.wonders.fzb.legislation.beans.LegislationFiles;
-import com.wonders.fzb.legislation.beans.LegislationProcessDeal;
-import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
-import com.wonders.fzb.legislation.beans.LegislationProcessTask;
-import com.wonders.fzb.legislation.services.LegislationFilesService;
-import com.wonders.fzb.legislation.services.LegislationProcessDealService;
-import com.wonders.fzb.legislation.services.LegislationProcessDocService;
-import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
+import com.wonders.fzb.legislation.beans.*;
+import com.wonders.fzb.legislation.services.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.struts2.convention.annotation.Action;
@@ -48,6 +42,10 @@ public class FileAction extends BaseAction {
     @Autowired
     @Qualifier("legislationProcessDealService")
     private LegislationProcessDealService legislationProcessDealService;
+
+    @Autowired
+    @Qualifier("legislationExampleService")
+    private LegislationExampleService legislationExampleService;
 
     private File upload;
 
@@ -94,6 +92,7 @@ public class FileAction extends BaseAction {
         UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
         String userId = currentPerson.getUserId();
         String userName = currentPerson.getName();
+        String stSampleId=request.getParameter("stSampleId");
 
         LegislationFiles legislationFiles = new LegislationFiles();
         legislationFiles.setStFileUrl(path+"/"+fileName);
@@ -103,7 +102,11 @@ public class FileAction extends BaseAction {
         legislationFiles.setDtPubDate(new Date());
         legislationFiles.setStTitle(uploadFileName);
         legislationFiles.setStNodeId(request.getParameter("stNodeId"));
-        legislationFiles.setStSampleId(request.getParameter("stSampleId"));
+        if(null!=stSampleId&&!"null".equals(stSampleId)){
+            LegislationExample legislationExample = legislationExampleService.findById(stSampleId);
+            legislationFiles.setStFileType(legislationExample.getStNeed());
+            legislationFiles.setStSampleId(stSampleId);
+        }
 
         String fileId = legislationFilesService.addObj(legislationFiles);
 
@@ -129,6 +132,7 @@ public class FileAction extends BaseAction {
         String userName = currentPerson.getName();
 
         String stTaskId=request.getParameter("stTaskId");
+        String stNodeId=request.getParameter("stNodeId");
         LegislationProcessTask legislationProcessTask=legislationProcessTaskService.findById(stTaskId);
         LegislationFiles legislationFiles = new LegislationFiles();
         legislationFiles.setStFileUrl(path+"/"+fileName);
@@ -138,6 +142,7 @@ public class FileAction extends BaseAction {
         legislationFiles.setDtPubDate(new Date());
         legislationFiles.setStTitle(uploadFileName);
         legislationFiles.setStNodeId(legislationProcessTask.getStNodeId());
+        legislationFiles.setStParentId(stTaskId);
 
         String fileId = legislationFilesService.addObj(legislationFiles);
         legislationProcessTask.setStComment2(fileId);
@@ -146,8 +151,8 @@ public class FileAction extends BaseAction {
         legislationProcessTaskService.update(legislationProcessTask);
         LegislationProcessDoc legislationProcessDoc=legislationProcessDocService.findById(legislationProcessTask.getStDocId());
         LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
-        legislationProcessDeal.setStDocId(legislationProcessDoc.getStDocId());
-        legislationProcessDeal.setStActionId(legislationProcessTask.getStNodeId());
+        legislationProcessDeal.setStDocId(legislationProcessTask.getStDocId());
+        legislationProcessDeal.setStActionId(fileId);
         legislationProcessDeal.setStActionName(legislationProcessTask.getStNodeName());
         legislationProcessDeal.setStUserId(userId);
         legislationProcessDeal.setStUserName(userName);
@@ -155,13 +160,14 @@ public class FileAction extends BaseAction {
         legislationProcessDeal.setStBakTwo(legislationProcessDoc.getStComent());
         legislationProcessDeal.setDtDealDate(new Date());
         legislationProcessDealService.add(legislationProcessDeal);
-        List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+legislationProcessTask.getStDocId()+"' and t.stNodeId='NOD_0000000122' and t.stEnable is null and t.stComment2 is null");
+        List<LegislationProcessTask> legislationProcessTaskList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+legislationProcessTask.getStDocId()+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null and t.stComment2 is null");
         Boolean changeClass=false;
         if(legislationProcessTaskList.size()==0){
             changeClass=true;
         }
         jsonObject.put("url",path+"/"+fileName);
         jsonObject.put("name",uploadFileName);
+        jsonObject.put("fileId",fileId);
         jsonObject.put("time",DateFormatUtils.format(legislationProcessTask.getDtBakDate(),"yyyy-MM-dd HH:mm:ss"));
         jsonObject.put("success",true);
         jsonObject.put("changeClass",changeClass);

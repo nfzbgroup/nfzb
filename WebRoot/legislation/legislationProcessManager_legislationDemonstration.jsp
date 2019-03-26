@@ -146,15 +146,11 @@
         <div class="form-group text-center">
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSave"  value="保存" onclick="saveLegislationDemonstration()"> &nbsp;&nbsp;
-            <c:if test="${nodeId=='NOD_0000000140'}">
                 <input type="button" class="btn btn-w-m btn-success"
-                       <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadDemonstrationReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
-                       <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="上报"> &nbsp;&nbsp;
-            </c:if>
-            <c:if test="${nodeId=='NOD_0000000141'}">
-                <input type="button" class="btn btn-w-m btn-success"
-                     onclick="confirmRelease()" value="确认发布"> &nbsp;&nbsp;
-            </c:if>
+                       <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="confirmLegislationReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
+                       <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if>
+                       <c:if test="${nodeId=='NOD_0000000140'}">value="上报" </c:if>
+                       <c:if test="${nodeId=='NOD_0000000141'}">value="确认发布"</c:if>> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
     </div>
@@ -230,8 +226,7 @@
             });
         }
     };
-
-    function confirmRelease() {
+    function confirmLegislationReport(stDocId,nodeId,buttonId) {
         var param=$('#legislationDemonstrationForm').formToJson();
         if(param.stBakOne==null||param.stBakOne==""){
             Duang.error("提示","请输入听证会议题");
@@ -244,7 +239,11 @@
         }else {
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
                 if(data.success){
-                    nextChildDemonstrationProcess('${stDocId}','${nodeId}','nextChildProcess','${buttonId}')
+                    if(nodeId=='NOD_0000000140'){
+                        uploadDemonstrationReport(stDocId,nodeId,buttonId);
+                    }else{
+                        uploadChildDemonstrationReport(stDocId,nodeId,buttonId);
+                    }
                 }else{
                     Duang.error("提示","操作失败");
                 }

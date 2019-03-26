@@ -177,7 +177,7 @@
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSave" onclick="saveLegislationDemonstration()" value="保存"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success"
-                   name="btnSave" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="uploadDemonstrationReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
+                   name="btnSave" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="confirmReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
                    <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="发起征询"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
@@ -241,4 +241,20 @@
             });
         }
     };
+    function confirmReport(stDocId,nodeId,buttonId) {
+        var param=$('#unitDemonstrationForm').formToJson();
+        if(param.stBakOne==null||param.stBakOne==""){
+            Duang.error("提示","请选择类型");
+        }else if(param.stBakTwo==null||param.stBakTwo==""){
+            Duang.error("提示","请选择渠道");
+        }else {
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
+                if(data.success){
+                    uploadDemonstrationReport(stDocId,nodeId,buttonId);
+                }else{
+                    Duang.error("提示","操作失败");
+                }
+            });
+        }
+    }
 </script>

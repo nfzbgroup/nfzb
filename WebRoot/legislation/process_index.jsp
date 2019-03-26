@@ -63,12 +63,24 @@
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">法制调研处</span>
 										</a>
 									</div>
-									<div class="${unitReceiveClass}">
-										<a href="javaScript:void(0)" id="unitReceive" <c:if test="${unitReceiveDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openUnitReceivePage','${stDocId}','NOD_0000000120')">
-											<p class="font_color_black">部门征求意见</br>接受发聩</p>
-											<span class="img_style img_style1 font_color_blue border_blue border_radius_circle">立</span>
-										</a>
-									</div>
+									<c:choose>
+										<c:when test="${nodeId=='NOD_0000000122'}">
+											<div class="${unitReceiveClass}">
+												<a href="javaScript:void(0)" id="unitOpinion" <c:if test="${unitReceiveDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openUnitAddOpinionPage','${stDocId}','NOD_0000000122')">
+													<p class="font_color_black">部门征求意见</br>接受发聩</p>
+													<span class="img_style img_style1 font_color_blue border_blue border_radius_circle">立</span>
+												</a>
+											</div>
+										</c:when>
+										<c:otherwise>
+											<div class="${unitReceiveClass}">
+												<a href="javaScript:void(0)" id="unitReceive" <c:if test="${unitReceiveDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openUnitReceivePage','${stDocId}','NOD_0000000122')">
+													<p class="font_color_black">部门征求意见</br>接受发聩</p>
+													<span class="img_style img_style1 font_color_blue border_blue border_radius_circle">立</span>
+												</a>
+											</div>
+										</c:otherwise>
+									</c:choose>
 								</div>
 							</div>
 							<div class="row1 three_row">
@@ -211,26 +223,26 @@
 											<span class="img_style border_radius_circle"><img src="${basePath}/legislation/assets/demo/flow9.png"></span>
 										</a>
 									</div>
-									<div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
-										<a href="javaScript:void(0)">
+									<div class="${departmentEditClass}">
+										<a href="javaScript:void(0)" id="departmentEdit" <c:if test="${departmentEditDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openDepartmentDemonstrationPage','${stDocId}','NOD_0000000160')">
 											<p class="font_color_black">部门会签编辑</p>
 											<span class="img_style img_style1 font_color_blue border_blue border_radius_circle">立</span>
 										</a>
 									</div>
-									<div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_yellow">
-										<a href="javaScript:void(0)">
+									<div class="${departmentSealClass}">
+										<a href="javaScript:void(0)" id="departmentSeal" onclick="changeUnitSeal(this.id)">
 											<p class="font_color_black">部门会签盖章</p>
 											<span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
 									</div>
-									<div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_red">
-										<a href="javaScript:void(0)">
+									<div class="${departmentSendClass}">
+										<a href="javaScript:void(0)" id="departmentSend" <c:if test="${departmentSendDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openDepartmentSeekPage','${stDocId}','NOD_0000000161')">
 											<p class="font_color_black">部门会签发起</br>发送部门</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">立</span>
 										</a>
 									</div>
-									<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_red">
-										<a href="javaScript:void(0)">
+									<div class="${departmentReceiveClass}">
+										<a href="javaScript:void(0)" id="departmentReceive" <c:if test="${departmentReceiveDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openDepartmentReceivePage','${stDocId}','NOD_0000000162')">
 											<p class="font_color_black">部门会签结果</br>接收反馈</p>
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">立</span>
 										</a>
@@ -263,6 +275,17 @@
             },
             "json")
     };
+    function uploadChildDemonstrationReport(stDocId,stNodeId,buttonId) {
+        $.post("../legislationProcessTask/uploadReport.do?stDocId="+stDocId+"&stNode="+stNodeId,
+            function (data) {
+                if(data.success) {
+                    nextChildDemonstrationProcess(stDocId,stNodeId,"nextChildProcess",buttonId);
+                }else{
+                    Duang.error("提示", "请补全必填材料！");
+                }
+            },
+            "json")
+    };
     function nextDemonstrationProcess(stDocId,stNodeId,method,buttonId) {
         layer.confirm('请确认操作！',function(index){
             layer.close(layer.index);
@@ -281,12 +304,18 @@
                     if("onlineEdit"==buttonId){
                         $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t");
                     }
+                    if ("departmentEdit"==buttonId) {
+                        $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t");
+                    }
                     if(data.addDisabled){
                         $('#'+buttonId).attr("class","removeHand");
                         $('#'+buttonId).attr("handStatus","1");
                     }
                     if(data.removeDisabled){
                         if ("unitEdit"==buttonId) {
+                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item3 bcg_green border_width border_style border_radius border_color_yellow");
+                        }
+                        if ("departmentEdit"==buttonId) {
                             $('#'+buttonId).parent().next().attr("class","cell row_items row_item3 bcg_green border_width border_style border_radius border_color_yellow");
                         }
                         if("expertBefore"==buttonId){
@@ -384,6 +413,7 @@
         $(obj).next().click();
     };
     function deleteAttach(attachObj,type,id,fileId,stSampleId) {
+        $.post('${basePath}/file/deleteAttach.do?fileId='+fileId);
         var obj=$(attachObj);
         if(type==1){
             obj.parent().prev().html('<span style="color: red">暂未上传</span>');

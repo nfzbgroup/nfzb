@@ -7,7 +7,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >专家论证 > </span>
+            <span >部门会签 > </span>
         </li>
         <li>
             <span >内容添加</span>
@@ -16,18 +16,12 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
-<form id="expertDemonstrationForm" class="form-horizontal"
+<form id="departmentDemonstrationForm" class="form-horizontal"
       novalidate="novalidate">
-    <input hidden name="stTaskId" id="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
+    <input hidden id="stTaskId" name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
     <input type="hidden" name="stDocId" value="${legislationProcessDoc.stDocId}">
     <input type="hidden" id="buttonId" value="${buttonId}">
     <div class="form-body">
-        <div class="form-group">
-            <label class="col-sm-3 control-label">论证会议题：</label>
-            <div class="col-sm-9">
-                <textarea class="form-control" name="stBakOne"><c:if test="${legislationProcessTask.stBakOne !=null}">${legislationProcessTask.stBakOne}</c:if></textarea>
-            </div>
-        </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">对应草案：</label>
             <label class="col-sm-4 control-label">${legislationProcessDoc.stDocName}</label>
@@ -40,25 +34,13 @@
             <label class="col-sm-5 control-label" style="color: red;text-align: left">*需修改法规规章草案名称请在此处填写</label>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">论证会地点：</label>
+            <label class="col-sm-3 control-label">部门会签说明：</label>
             <div class="col-sm-9">
-                <input type="text"  class="form-control" name="stBakTwo" <c:if test="${legislationProcessTask.stBakTwo !=null}">value="${legislationProcessTask.stBakTwo}" </c:if>>
+                <textarea class="form-control" name="stBakOne" ><c:if test="${legislationProcessTask.stBakOne !=null}">${legislationProcessTask.stBakOne}</c:if></textarea>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">论证会时间：</label>
-            <div class="col-sm-9">
-                <input type="text"  class="form-control" readonly id="dtBakDate" name="dtBakDate" <c:if test="${legislationProcessTask.dtBakDate !=null}">value="<fmt:formatDate value="${legislationProcessTask.dtBakDate}"/>" </c:if>>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">论证会人员：</label>
-            <div class="col-sm-9">
-                <textarea class="form-control" name="stComment2" ><c:if test="${legislationProcessTask.stComment2 !=null}">${legislationProcessTask.stComment2}</c:if></textarea>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label">专家论证<c:if test="${nodeId=='NOD_0000000150'}">前</c:if><c:if test="${nodeId=='NOD_0000000151'}">后</c:if>材料
+            <label class="control-label">部门会签材料
             </label>
         </div>
         <div class="form-group">
@@ -112,7 +94,7 @@
             </table>
         </div>
         <div class="form-group">
-            <label class="control-label">专家论证<c:if test="${nodeId=='NOD_0000000150'}">前</c:if><c:if test="${nodeId=='NOD_0000000151'}">后</c:if>其他材料
+            <label class="control-label">部门会签其他材料
             </label>
             <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
             </label>
@@ -152,53 +134,16 @@
         </div>
         <div class="form-group text-center">
             <input type="button" class="btn btn-w-m btn-success"
-                   name="btnSave"  value="保存" onclick="saveLegislationDemonstration()"> &nbsp;&nbsp;
+                   name="btnSave" onclick="saveLegislationDemonstration()" value="保存"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success"
-                   name="btnSave"  value="提交确认"
-                    <c:if test="${legislationProcessTask.stTaskId !=null}">
-                            onclick="confirmExpertReport('${stDocId}','${nodeId}','${buttonId}')"
-                    </c:if>
-                    <c:if test="${legislationProcessTask.stTaskId ==null}">
-                    disabled="disabled"
-                    </c:if>> &nbsp;&nbsp;
+                   name="btnSave" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="confirmDepartmentReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
+                   <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="发起征询"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
     </div>
 </form>
 </div>
 <script>
-    $(function () {
-        laydate.render({
-            elem: '#dtBakDate',
-            format:'yyyy-MM-dd',
-            calendar: true,
-        });
-    });
-    function saveLegislationDemonstration() {
-        var param=$('#expertDemonstrationForm').formToJson();
-        if(param.stBakOne==null||param.stBakOne==""){
-            Duang.error("提示","请输入论证会议题");
-        }else if(param.stBakTwo==null||param.stBakTwo==""){
-            Duang.error("提示","请输入论证会地点");
-        }else if(param.dtBakDate==null||param.dtBakDate==""){
-            Duang.error("提示","请选择论证会时间");
-        }else if(param.stComment2==null||param.stComment2==""){
-            Duang.error("提示","请输入论证会人员");
-        }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
-                if(data.success){
-                    $('#processIndexForm').modal('hide');
-                    var buttonId=$('#buttonId').val();
-                    if("expertBefore"==buttonId){
-                        $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t");
-                    }
-                    Duang.success("提示","操作成功");
-                }else{
-                    Duang.error("提示","操作失败");
-                }
-            });
-        }
-    };
     function uploadFile(id,type,stSampleId) {
         $.ajaxFileUpload({
             url: '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId='+stSampleId,
@@ -213,7 +158,7 @@
                     if(type==1){
                         var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
-                            +'<label  style="color: red" onclick="deleteAttach(this,1,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')" >删除</label>';
+                        +'<label  style="color: red" onclick="deleteAttach(this,1,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')" >删除</label>';
                         $("#"+id).parent().prev().html('<span>'+file.name+'</span>');
                         $("#"+id).parent().html(html);
                     }else{
@@ -236,24 +181,31 @@
             }
         });
     };
-    function confirmExpertReport(stDocId,nodeId,buttonId) {
-        var param=$('#expertDemonstrationForm').formToJson();
+    function saveLegislationDemonstration() {
+        var param=$('#departmentDemonstrationForm').formToJson();
         if(param.stBakOne==null||param.stBakOne==""){
-            Duang.error("提示","请输入论证会议题");
-        }else if(param.stBakTwo==null||param.stBakTwo==""){
-            Duang.error("提示","请输入论证会地点");
-        }else if(param.dtBakDate==null||param.dtBakDate==""){
-            Duang.error("提示","请选择论证会时间");
-        }else if(param.stComment2==null||param.stComment2==""){
-            Duang.error("提示","请输入论证会人员");
+            Duang.error("提示","请输入部门会签说明");
         }else {
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
                 if(data.success){
-                    if(nodeId=='NOD_0000000150'){
-                        uploadDemonstrationReport(stDocId,nodeId,buttonId);
-                    }else{
-                        uploadChildDemonstrationReport(stDocId,nodeId,buttonId);
-                    }
+                    $('#processIndexForm').modal('hide');
+                    var buttonId=$('#buttonId').val();
+                    $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t");
+                    Duang.success("提示","操作成功");
+                }else{
+                    Duang.error("提示","操作失败");
+                }
+            });
+        }
+    };
+    function confirmDepartmentReport(stDocId,nodeId,buttonId) {
+        var param=$('#departmentDemonstrationForm').formToJson();
+        if(param.stBakOne==null||param.stBakOne==""){
+            Duang.error("提示","请输入部门会签说明");
+        }else {
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration",param,function(data){
+                if(data.success){
+                    uploadDemonstrationReport(stDocId,nodeId,buttonId);
                 }else{
                     Duang.error("提示","操作失败");
                 }

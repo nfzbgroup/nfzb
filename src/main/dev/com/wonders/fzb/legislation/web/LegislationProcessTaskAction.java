@@ -557,10 +557,16 @@ public class LegislationProcessTaskAction extends BaseAction {
         String stNode = request.getParameter("stNode");
 
         Map<String, Object> condMap = new HashMap<>();
-        condMap.put("stNode", stNode);
+        if("NOD_0000000141".equals(stNode)){
+            condMap.put("stNode", "NOD_0000000140");
+        }else if("NOD_0000000151".equals(stNode)){
+            condMap.put("stNode", "NOD_0000000150");
+        }else{
+            condMap.put("stNode", stNode);
+        }
         condMap.put("stNeed", "NEED");
         List<LegislationExample> legislationExampleList = legislationExampleService.findByList(condMap, null);
-        List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='"+stNode+"'");
+        List<LegislationFiles> docList = legislationFilesService.findByHQL("from LegislationFiles t where 1=1 and t.stParentId ='"+stDocId+"' and t.stNodeId='"+stNode+"' and t.stFileType='NEED' ");
         if(docList.size()<legislationExampleList.size()){
             jsonObject.put("success",false);
 

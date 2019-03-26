@@ -7,7 +7,10 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span >单位意见征求</span>
+			<span ><c:if test="${nodeId=='NOD_0000000121'}">单位意见征求</c:if><c:if test="${nodeId=='NOD_0000000161'}">部门会签</c:if>  > </span>
+		</li>
+		<li>
+			<span >发送部门 </span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>

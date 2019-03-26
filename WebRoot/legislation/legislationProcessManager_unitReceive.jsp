@@ -7,7 +7,7 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span >单位意见征求 ></span>
+			<span ><c:if test="${nodeId=='NOD_0000000122'}">单位意见征求</c:if><c:if test="${nodeId=='NOD_0000000162'}">部门会签</c:if> ></span>
 		</li>
 		<li>
 			<span >接收情况</span>
@@ -82,7 +82,7 @@
     }
     function uploadFile(id) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/addOpinion.do?stTaskId='+id,
+            url: '${basePath}/file/addOpinion.do?stTaskId='+id+'&stNodeId=${nodeId}',
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,
