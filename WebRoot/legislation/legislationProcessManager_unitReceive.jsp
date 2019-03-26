@@ -60,7 +60,7 @@
 								已反馈
 							</td>
 							<td style="text-align: center">
-								2019-08-30 20:18:36
+								<fmt:formatDate value="${t.dtBakDate}"/>
 							</td>
 							<td style="text-align: center">
 								<a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${t.fileName}&url=${t.fileUrl}">${t.fileName}</a>
