@@ -3,6 +3,7 @@ package com.wonders.fzb.legislation.services.impl;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.legislation.beans.LegislationExample;
+import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.dao.LegislationExampleDao;
 import com.wonders.fzb.legislation.services.LegislationExampleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,25 +114,33 @@ public class LegislationExampleServiceImpl implements LegislationExampleService 
 		return legislationExampleList;
 	}
 
-	/**
-	 * 查询范本信息
-	 *
-	 * @param condMap
-	 * @param sortMap
-	 * @return
-	 */
 	@Override
-	public List<Map> queryLegislationExampleFiles(Map<String, Object> condMap, Map<String, String> sortMap) {
+	public List<Map> queryLegislationExampleFilesList(String stNodeId, List<LegislationFiles> legislationFilesList) {
+		List<Map> legislationExampleFilesList =new ArrayList<>();
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stNode", stNodeId);
+		sortMap.put("stExampleId", "ASC");
 		List<LegislationExample> legislationExampleList = findByList(condMap, sortMap);
-		List<Map> legislationExampleFilesList=new ArrayList<>();
 		legislationExampleList.forEach((LegislationExample legislationExample)->{
 			Map map=new HashMap();
 			map.put("stExampleId",legislationExample.getStExampleId());
 			map.put("stExampleName",legislationExample.getStExampleName());
 			map.put("stNeed",legislationExample.getStNeed());
-			map.put("fileId",null);
-			map.put("fileName",null);
-			map.put("fileUrl",null);
+			if(legislationFilesList!=null&&legislationFilesList.size()>0){
+				legislationFilesList.forEach((LegislationFiles legislationFiles)->{
+					if(null!=legislationFiles.getStSampleId()&&
+							legislationExample.getStExampleId().equals(legislationFiles.getStSampleId())){
+						map.put("fileId",legislationFiles.getStFileId());
+						map.put("fileName",legislationFiles.getStTitle());
+						map.put("fileUrl",legislationFiles.getStFileUrl());
+					}
+				});
+			}else{
+				map.put("fileId",null);
+				map.put("fileName",null);
+				map.put("fileUrl",null);
+			}
 			legislationExampleFilesList.add(map);
 		});
 		return legislationExampleFilesList;

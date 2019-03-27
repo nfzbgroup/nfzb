@@ -210,14 +210,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 			legislationProcessDealService.update(legislationProcessDeal);
 
 		}
-		Enumeration keys=request.getParameterNames();
-		while(keys.hasMoreElements()){
-			String key=(String)keys.nextElement();
-			String value=request.getParameter(key);
-			if(value.startsWith("FIL_")){
-				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+docId+"' where s.stFileId='"+value+"'");
-			}
-		}
+		legislationFilesService.updateParentIdById(request,docId);
 	}
 
 	/**
@@ -237,7 +230,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 		LegislationProcessDoc legislationProcessDoc=findById(stDocId);
 
 		//修改当前task状态，并生成下一个节点的task
-		List<LegislationProcessTask> list = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + legislationProcessDoc.getStDocId() + "' and t.stNodeId='NOD_0000000102' and t.stEnable is null ");
+		List<LegislationProcessTask> list = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,"NOD_0000000102");
 		for (LegislationProcessTask legislationProcessTask : list) {//修改当前task状态
 			SimpleDateFormat formatter = new SimpleDateFormat( "yyyy年MM月dd日");
 			legislationProcessTask.setStComment1(stComment1);
@@ -372,14 +365,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 
 
 		}
-		Enumeration keys=request.getParameterNames();
-		while(keys.hasMoreElements()){
-			String key=(String)keys.nextElement();
-			String value=request.getParameter(key);
-			if(value.startsWith("FIL_")){
-				legislationFilesService.executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stDocId+"' where s.stFileId='"+value+"'");
-			}
-		}
+		legislationFilesService.updateParentIdById(request,stDocId);
 		return stTaskId;
 	}
 }

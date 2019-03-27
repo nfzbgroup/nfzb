@@ -10,7 +10,7 @@
 				<div class="ibox-title">
 					<div class="row">
 						<div class="row_title">草案名称：${stDocName}
-							<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							<button style="padding-right: 5px" type="button" class="close" onclick="closeProcessIndex()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 						</div>
 						<div class="flowPic">
 							<!--<img src="flowPicNew.png" alt="">-->
@@ -64,7 +64,7 @@
 										</a>
 									</div>
 									<c:choose>
-										<c:when test="${nodeId=='NOD_0000000122'}">
+										<c:when test="${nodeId=='NOD_0000000122'||nodeId=='NOD_0000000162'}">
 											<div class="${unitReceiveClass}">
 												<a href="javaScript:void(0)" id="unitOpinion" <c:if test="${unitReceiveDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openUnitAddOpinionPage','${stDocId}','NOD_0000000122')">
 													<p class="font_color_black">部门征求意见</br>接受发聩</p>
@@ -230,7 +230,7 @@
 										</a>
 									</div>
 									<div class="${departmentSealClass}">
-										<a href="javaScript:void(0)" id="departmentSeal" onclick="changeUnitSeal(this.id)">
+										<a href="javaScript:void(0)" id="departmentSeal" <c:if test="${departmentSealDisabled}">handStatus="1" class="removeHand" </c:if> onclick="changeUnitSeal(this.id)">
 											<p class="font_color_black">部门会签盖章</p>
 											<span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
 										</a>
@@ -241,12 +241,24 @@
 											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">立</span>
 										</a>
 									</div>
-									<div class="${departmentReceiveClass}">
-										<a href="javaScript:void(0)" id="departmentReceive" <c:if test="${departmentReceiveDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openDepartmentReceivePage','${stDocId}','NOD_0000000162')">
-											<p class="font_color_black">部门会签结果</br>接收反馈</p>
-											<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">立</span>
-										</a>
-									</div>
+									<c:choose>
+										<c:when test="${nodeId=='NOD_0000000162'||nodeId=='NOD_0000000122'}">
+											<div class="${departmentReceiveClass}">
+												<a href="javaScript:void(0)" id="departmentOpinion" <c:if test="${departmentReceiveDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openDepartmentAddOpinionPage','${stDocId}','NOD_0000000162')">
+													<p class="font_color_black">部门会签结果</br>接收反馈</p>
+													<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">立</span>
+												</a>
+											</div>
+										</c:when>
+										<c:otherwise>
+											<div class="${departmentReceiveClass}">
+												<a href="javaScript:void(0)" id="departmentReceive" <c:if test="${departmentReceiveDisabled}">handStatus="1" class="removeHand" </c:if> onclick="openDemonstrationPage(this.id,'openDepartmentReceivePage','${stDocId}','NOD_0000000162')">
+													<p class="font_color_black">部门会签结果</br>接收反馈</p>
+													<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">立</span>
+												</a>
+											</div>
+										</c:otherwise>
+									</c:choose>
 								</div>
 							</div>
 						</div>
@@ -294,6 +306,7 @@
                     $('#processIndexForm').modal('hide');
                     if ("unitEdit"==buttonId) {
                         $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t");
+                        $('#'+buttonId).parent().next().attr("class","cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_yellow");
                     }
                     if("expertBefore"==buttonId){
                         $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t");
@@ -306,18 +319,13 @@
                     }
                     if ("departmentEdit"==buttonId) {
                         $('#'+buttonId).parent().attr("class","cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t");
+                        $('#'+buttonId).parent().next().attr("class","cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_yellow");
                     }
                     if(data.addDisabled){
                         $('#'+buttonId).attr("class","removeHand");
                         $('#'+buttonId).attr("handStatus","1");
                     }
                     if(data.removeDisabled){
-                        if ("unitEdit"==buttonId) {
-                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item3 bcg_green border_width border_style border_radius border_color_yellow");
-                        }
-                        if ("departmentEdit"==buttonId) {
-                            $('#'+buttonId).parent().next().attr("class","cell row_items row_item3 bcg_green border_width border_style border_radius border_color_yellow");
-                        }
                         if("expertBefore"==buttonId){
                             $('#'+buttonId).parent().next().attr("class","cell row_items row_item3 bcg_green border_width border_style border_radius border_color_t");
                         }
@@ -436,4 +444,8 @@
             $('#'+buttonId).attr("handStatus","1");
         }
     };
+    function closeProcessIndex() {
+        $('#legislationProcessForm').modal('hide');
+        submitForm(1);
+    }
 </script>

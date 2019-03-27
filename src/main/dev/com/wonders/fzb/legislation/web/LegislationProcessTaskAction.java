@@ -85,7 +85,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         @Action(value = "draft_check_meeting", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_deptopinion_start", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
         @Action(value = "draft_deal_deptopinion_send", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}),
-        @Action(value = "draft_deal_deptopinion_input", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
+        @Action(value = "draft_deal_deptsign_input", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")}), @Action(value = "draft_deal_deptopinion_input", results = {@Result(name = SUCCESS, location = "/legislation/legislationProcessManager_list.jsp"), @Result(name = "QueryTable", location = "/legislation/legislationProcessManager_table.jsp")})
     })
     public String listMethodManager() throws Exception {
         String methodStr = request.getParameter("method");
@@ -115,7 +115,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         if("NOD_0000000140".equals(request.getParameter("stNodeId"))||"NOD_0000000141".equals(request.getParameter("stNodeId"))
                 ||"NOD_0000000150".equals(request.getParameter("stNodeId"))||"NOD_0000000151".equals(request.getParameter("stNodeId"))){
             queryTaskDetail();
-        }else if("NOD_0000000120".equals(request.getParameter("stNodeId"))||"NOD_0000000121".equals(request.getParameter("stNodeId"))||"NOD_0000000122".equals(request.getParameter("stNodeId"))){
+        }else if("NOD_0000000120".equals(request.getParameter("stNodeId"))||"NOD_0000000121".equals(request.getParameter("stNodeId"))||"NOD_0000000122".equals(request.getParameter("stNodeId"))||"NOD_0000000162".equals(request.getParameter("stNodeId"))){
             queryUnitOpinion();
         }else if("NOD_0000000170".equals(request.getParameter("stNodeId"))){
             queryCheckMeeting();
@@ -244,7 +244,7 @@ public class LegislationProcessTaskAction extends BaseAction {
             baseSql += "and t.st_task_status = 'TODO' ";
         }
         baseSql += "and t.st_enable is null ";
-        if(stNodeId.equals("NOD_0000000122")){
+        if(stNodeId.equals("NOD_0000000122")||stNodeId.equals("NOD_0000000162")){
             baseSql += "and t.st_parent_Id = '" + session.getAttribute("unitCode") + "' ";
         }
 
@@ -454,9 +454,6 @@ public class LegislationProcessTaskAction extends BaseAction {
         UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
         String teamId=currentPerson.getTeamInfos().get(0).getId();
         Boolean removeDisabled=false;
-        if("unitEdit".equals(buttonId)&&"U_3_7".equals(teamId)){
-            removeDisabled=true;
-        }
         if("expertBefore".equals(buttonId)&&"U_3_7".equals(teamId)){
             removeDisabled=true;
         }

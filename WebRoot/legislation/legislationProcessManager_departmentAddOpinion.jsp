@@ -7,7 +7,7 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span >单位意见征求 > </span>
+			<span >部门会签 > </span>
 		</li>
 		<li>
 			<span>填写意见</span>
@@ -27,7 +27,7 @@
 		</tr>
 		<tr>
 			<td class="text-right tab-left">
-				<label style="white-space: nowrap">类型:</label>
+				<label style="white-space: nowrap">部门会签说明:</label>
 			</td>
 			<td class="text-center">
 				<label >${legislationProcessTask.stBakOne}</label>
@@ -35,15 +35,7 @@
 		</tr>
 		<tr>
 			<td class="text-right tab-left">
-				<label style="white-space: nowrap">渠道:</label>
-			</td>
-			<td class="text-center">
-				<label >${legislationProcessTask.stBakTwo}</label>
-			</td>
-		</tr>
-		<tr>
-			<td class="text-right tab-left">
-				<label style="white-space: nowrap">单位意见相关材料:</label>
+				<label style="white-space: nowrap">部门会签相关材料:</label>
 			</td>
 			<td class="text-center">
 				<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
@@ -57,7 +49,7 @@
 		</tr>
 		<tr>
 			<td class="text-right tab-left">
-				<label style="white-space: nowrap">单位意见其他材料:</label>
+				<label style="white-space: nowrap">部门会签其他材料:</label>
 			</td>
 			<td class="text-center">
 			<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">

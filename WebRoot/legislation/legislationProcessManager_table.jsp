@@ -40,6 +40,18 @@
 				</c:if>
 				<th class="text-center" data-field="set">操作</th>
 			</c:when>
+			<c:when test="${nodeId=='NOD_0000000162'}">
+				<th class="text-center" data-field="id">编号</th>
+				<th class="text-center" data-field="district_name">对应草案</th>
+				<th class="text-center" data-field="district_name">部门会签说明</th>
+				<c:if test="${buttonStatus=='TODO'}">
+					<th class="text-center" data-field="created_at">发起日期</th>
+				</c:if>
+				<c:if test="${buttonStatus=='DONE'}">
+					<th class="text-center" data-field="created_at">征询发起日期</th>
+				</c:if>
+				<th class="text-center" data-field="set">操作</th>
+			</c:when>
 			<c:when test="${nodeId=='NOD_0000000150'||nodeId=='NOD_0000000151'}">
 				<th class="text-center" data-field="id">编号</th>
 				<th class="text-center" data-field="district_name">对应草案</th>
@@ -235,12 +247,12 @@
 								<c:choose>
 									<c:when test="${buttonStatus=='TODO'}">
 										<td >
-											<a href="javaScript:void(0)" data-title="填写意见" onclick="openTaskPage('openUnitAddOpinionPage','${task.stTaskId}')" class="layer_full_link">填写意见</a>
+											<a href="javaScript:void(0)" data-title="填写意见" onclick="openProcessIndex('${task.stDocId}','${task.stFlowId}')" class="layer_full_link">填写意见</a>
 										</td>
 									</c:when>
 									<c:otherwise>
 										<td >
-											<a href="javaScript:void(0)" data-title="查看" onclick="openTaskPage('openUnitInfoPage','${task.stTaskId}')" class="layer_full_link">查看</a><br/>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openProcessIndex('${task.stDocId}','${task.stFlowId}')" class="layer_full_link">查看</a><br/>
 										</td>
 									</c:otherwise>
 								</c:choose>
@@ -249,6 +261,30 @@
 					</c:forEach>
 				</c:when>
 			</c:choose>
+		</c:when>
+		<c:when test="${nodeId=='NOD_0000000162'}">
+			<c:if test="${retPage.totalSize > 0}">
+				<c:forEach items="${retPage.result}" var="task">
+					<tr class="text-center">
+						<td >${task.stTaskId}</td>
+						<td >${task.stFlowId}</td>
+						<td >${task.stBakOne}</td>
+						<td ><c:if test="${buttonStatus=='TODO'}"><fmt:formatDate type="date" value="${task.dtOpenDate}" /></c:if><c:if test="${buttonStatus=='DONE'}"><fmt:formatDate type="date" value="${task.dtDealDate}" /></c:if></td>
+						<c:choose>
+							<c:when test="${buttonStatus=='TODO'}">
+								<td >
+									<a href="javaScript:void(0)" data-title="填写意见" onclick="openProcessIndex('${task.stDocId}','${task.stFlowId}')" class="layer_full_link">填写意见</a>
+								</td>
+							</c:when>
+							<c:otherwise>
+								<td >
+									<a href="javaScript:void(0)" data-title="查看" onclick="openProcessIndex('${task.stDocId}','${task.stFlowId}')" class="layer_full_link">查看</a>
+								</td>
+							</c:otherwise>
+						</c:choose>
+					</tr>
+				</c:forEach>
+			</c:if>
 		</c:when>
 		<c:when test="${nodeId=='NOD_0000000170'}">
 			<c:choose>

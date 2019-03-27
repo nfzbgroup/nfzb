@@ -30,7 +30,7 @@
 				<label style="white-space: nowrap">部门会签说明:</label>
 			</td>
 			<td class="text-center">
-				<label >${legislationProcessTask.stComment2}</label>
+				<label >${legislationProcessTask.stBakOne}</label>
 			</td>
 		</tr>
 		<tr>

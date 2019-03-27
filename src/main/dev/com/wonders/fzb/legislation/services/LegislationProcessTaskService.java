@@ -138,7 +138,7 @@ public interface LegislationProcessTaskService{
 														 int pageSize) throws ParseException;
 
 	/**
-	 *
+	 *发送部门
 	 * @param request
 	 * @param currentPerson
 	 * @param userRoleId
@@ -153,4 +153,10 @@ public interface LegislationProcessTaskService{
 	void dealFinish(HttpServletRequest request, HttpSession session);
 
 	void saveOnlineSummary(HttpServletRequest request);
+
+	List<LegislationProcessTask> findTaskByDocIdAndNodeId(String stDocId,String stNodeId);
+
+	String saveHandleDemonstration(HttpServletRequest request);
+
+	void saveAuditMeeting(HttpServletRequest request,HttpSession session) throws Exception;
 }

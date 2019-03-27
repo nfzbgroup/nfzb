@@ -4,6 +4,7 @@ import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -75,5 +76,12 @@ public interface LegislationFilesService{
 	public List<LegislationFiles> findByHQL(String hql);
 
 	public void executeSqlUpdate(String sql);
+
+	/**
+	 * 给附件关联相关流程
+	 * @param request
+	 * @param stParentId
+	 */
+	void updateParentIdById(HttpServletRequest request,String stParentId);
 
 }

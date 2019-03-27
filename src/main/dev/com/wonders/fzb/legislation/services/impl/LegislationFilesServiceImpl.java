@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -113,6 +115,18 @@ public class LegislationFilesServiceImpl implements LegislationFilesService {
 	@Override
 	public void executeSqlUpdate(String sql){
 		legislationFilesDao.executeSqlUpdate(sql);
+	}
+
+	@Override
+	public void updateParentIdById(HttpServletRequest request,String stParentId) {
+		Enumeration keys=request.getParameterNames();
+		while(keys.hasMoreElements()){
+			String key=(String)keys.nextElement();
+			String value=request.getParameter(key);
+			if(value.startsWith("FIL_")){
+				executeSqlUpdate("update LegislationFiles s set s.stParentId='"+stParentId+"' where s.stFileId='"+value+"'");
+			}
+		}
 	}
 
 }
