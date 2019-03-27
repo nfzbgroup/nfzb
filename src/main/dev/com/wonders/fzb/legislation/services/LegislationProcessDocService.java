@@ -6,6 +6,7 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +94,7 @@ public interface LegislationProcessDocService{
 	 * 提交分办
 	 * @param request
 	 */
-	void draft_dist_info(HttpServletRequest request);
+	void draft_dist_info(HttpServletRequest request) throws ParseException;
 
 	String saveLegislation(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole,String stNodeId,String stNodeName) throws Exception;
 }

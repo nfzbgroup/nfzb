@@ -111,7 +111,7 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 		return results;
 	}
 	
-	private LinkedList<LegislationProcessDoc> packageDocInfoBean(List<Object[]> results) {
+	private LinkedList<LegislationProcessDoc> packageDocInfoBean(List<Object[]> results) throws ParseException {
 		LinkedList<LegislationProcessDoc> docInfos = new LinkedList<LegislationProcessDoc>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		for (Object[] array : results) {
@@ -121,11 +121,8 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 			docInfo.setStDocName(array[1] == null ? "" : array[1].toString());
 			docInfo.setStNodeName(array[2] == null ? "" : array[2].toString());
 			docInfo.setStNodeId(array[3] == null ? "" : array[3].toString());
-			try {
-				docInfo.setDtCreateDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			docInfo.setDtCreateDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
+
 			docInfo.setStUserName(array[5] == null ? "" : array[5].toString());
 			docInfo.setStDocNo(array[6] == null ? "" : array[6].toString());
 
@@ -135,7 +132,7 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 	}
 	
 	@Override
-	public Page<LegislationProcessDoc> findTaskDocListByNodeId(String wheresql, int pageNo, int pageSize) {
+	public Page<LegislationProcessDoc> findTaskDocListByNodeId(String wheresql, int pageNo, int pageSize) throws ParseException {
 		String baseSql = " FROM LEGISLATION_PROCESS_DOC d ";
 		baseSql += " INNER JOIN LEGISLATION_PROCESS_TASK t ";
 		baseSql += " ON d.st_doc_id = t.st_doc_id ";
@@ -151,7 +148,7 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 	}
 
 	@Override
-	public Page<LegislationProcessTask> findTaskByNodeId(String wheresql, int pageNo, int pageSize) {
+	public Page<LegislationProcessTask> findTaskByNodeId(String wheresql, int pageNo, int pageSize) throws ParseException {
 		String baseSql = " FROM LEGISLATION_PROCESS_TASK t ";
 		baseSql += wheresql;
 		String propView = "SELECT t.st_task_id,t.st_doc_id,t.st_flow_id,t.st_bak_one,t.dt_bak_date,t.st_bak_two,t.st_node_id," +
@@ -166,7 +163,7 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 	}
 
 	@Override
-	public Page<LegislationProcessDoc> findCheckMeetingByNodeId(String wheresql, int pageNo, int pageSize) {
+	public Page<LegislationProcessDoc> findCheckMeetingByNodeId(String wheresql, int pageNo, int pageSize) throws ParseException {
 		String baseSql = " FROM LEGISLATION_PROCESS_DOC d ";
 		baseSql += " INNER JOIN LEGISLATION_PROCESS_TASK t ";
 		baseSql += " ON d.st_doc_id = t.st_doc_id ";
@@ -181,7 +178,7 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 		return new Page<LegislationProcessDoc>(Page.getStartOfAnyPage(pageNo, pageSize), users.size(), totalSize, pageSize, users);
 	}
 
-	private List<LegislationProcessDoc> packageCheckMeetingBean(List<Object[]> results) {
+	private List<LegislationProcessDoc> packageCheckMeetingBean(List<Object[]> results) throws ParseException {
 		LinkedList<LegislationProcessDoc> docInfos = new LinkedList<LegislationProcessDoc>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		for (Object[] array : results) {
@@ -191,11 +188,8 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 			docInfo.setStDocName(array[1] == null ? "" : array[1].toString());
 			docInfo.setStNodeName(array[2] == null ? "" : array[2].toString());
 			docInfo.setStNodeId(array[3] == null ? "" : array[3].toString());
-			try {
-				docInfo.setDtCreateDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			docInfo.setDtCreateDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
+
 			docInfo.setStComent(array[5] == null ? "" : array[5].toString());
 			docInfo.setStDocNo(array[6] == null ? "" : array[6].toString());
 			docInfo.setStDocSource(array[7] == null ? "" : array[7].toString());
@@ -205,7 +199,7 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 		return docInfos;
 	}
 
-	private LinkedList<LegislationProcessTask> packageTaskInfoBean(List<Object[]> results) {
+	private LinkedList<LegislationProcessTask> packageTaskInfoBean(List<Object[]> results) throws ParseException {
 		LinkedList<LegislationProcessTask> tasks = new LinkedList<LegislationProcessTask>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		for (Object[] array : results) {
@@ -218,13 +212,10 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 			taskInfo.setStBakTwo(array[5]== null ? "" : array[5].toString());
 			taskInfo.setStNodeId(array[6]== null ? "" : array[6].toString());
 			taskInfo.setStTeamName(array[8]== null ? "" : array[8].toString());
-			try {
-				taskInfo.setDtBakDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
-				taskInfo.setDtOpenDate(array[7] == null ? null : dateFormat.parse(array[7].toString()));
-				taskInfo.setDtDealDate(array[9] == null ? null : dateFormat.parse(array[9].toString()));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			taskInfo.setDtBakDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
+			taskInfo.setDtOpenDate(array[7] == null ? null : dateFormat.parse(array[7].toString()));
+			taskInfo.setDtDealDate(array[9] == null ? null : dateFormat.parse(array[9].toString()));
+
 
 			tasks.add(taskInfo);
 		}

@@ -86,7 +86,7 @@ public interface LegislationProcessTaskService{
 	public List<Map> findTaskListByNodeId(String stNodeId,String stUserId,String UnitId,String roleId);
 	
 	Page<LegislationProcessDoc> findTaskDocListByNodeId(String sql, int pageNo,
-			int pageSize);
+			int pageSize) throws ParseException;
 
 	/****************************************************************************************************/
 
@@ -125,7 +125,7 @@ public interface LegislationProcessTaskService{
 	 * @return
 	 */
 	Page<LegislationProcessTask> findTaskByNodeId(String sql, int pageNo,
-												  int pageSize);
+												  int pageSize) throws ParseException;
 
 	/**
 	 * 查询审核会议
@@ -135,7 +135,7 @@ public interface LegislationProcessTaskService{
 	 * @return
 	 */
 	Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo,
-														 int pageSize);
+														 int pageSize) throws ParseException;
 
 	/**
 	 *

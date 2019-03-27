@@ -138,13 +138,13 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 
 	@Override
 	public List<Map> findTaskListByNodeId(String stNodeId, String stUserId,
-			String UnitId, String roleId) {
-		return legislationProcessTaskDao.findTaskListByNodeId(stNodeId, stUserId, UnitId, roleId);
+			String unitId, String roleId) {
+		return legislationProcessTaskDao.findTaskListByNodeId(stNodeId, stUserId, unitId, roleId);
 	}
 
 	@Override
 	public Page<LegislationProcessDoc> findTaskDocListByNodeId(String sql,
-			int pageNo, int pageSize) {
+			int pageNo, int pageSize) throws ParseException {
 		return legislationProcessTaskDao.findTaskDocListByNodeId(sql, pageNo, pageSize);
 	}
 
@@ -159,7 +159,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 		List<LegislationProcessTask> list = legislationProcessTaskDao.findByHQL("from LegislationProcessTask t where 1=1 and t.stDocId ='" + stDocId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
 		for (LegislationProcessTask legislationProcessTask : list) {
 			if("NOD_0000000105".equals(stNodeId)){
-				if(legislationProcessTask.getStActive().equals("false")){
+				if("false".equals(legislationProcessTask.getStActive())){
 					legislationProcessTask.setStActive(null);
 					legislationProcessTask.setStTaskStatus("TODO");
 					legislationProcessTask.setDtOpenDate(new Date());
@@ -169,7 +169,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			}
 
 			legislationProcessTask.setStTaskStatus("DONE");
-			if(stNodeId.equals("NOD_0000000120")){
+			if("NOD_0000000120".equals(stNodeId)){
 				legislationProcessTask.setDtDealDate(new Date());
 			}
 			legislationProcessTaskDao.update(legislationProcessTask);
@@ -184,7 +184,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 				nextLegislationProcessTask.setStNodeId(nodeList.get(0).getStNextNode());
 				nextLegislationProcessTask.setStNodeName(wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + nodeList.get(0).getStNextNode() + "'").get(0).getStNodeName());
 				nextLegislationProcessTask.setStTaskStatus("TODO");
-				if (stNodeId.equals("NOD_0000000150")||stNodeId.equals("NOD_0000000104")||stNodeId.equals("NOD_0000000105")||stNodeId.equals("NOD_0000000106")) {
+				if ("NOD_0000000150".equals(stNodeId) || "NOD_0000000104".equals(stNodeId) || "NOD_0000000105".equals(stNodeId) || "NOD_0000000106".equals(stNodeId)) {
 					nextLegislationProcessTask.setStTeamId(legislationProcessTask.getStTeamId());
 					nextLegislationProcessTask.setStTeamName(legislationProcessTask.getStTeamName());
 
@@ -192,7 +192,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 				else {
 					nextLegislationProcessTask.setStTeamId("U_3_1");
 				}
-				if (stNodeId.equals("NOD_0000000120")) {
+				if ("NOD_0000000120".equals(stNodeId)) {
 					nextLegislationProcessTask.setDtOpenDate(legislationProcessTask.getDtOpenDate());
 					nextLegislationProcessTask.setDtDealDate(legislationProcessTask.getDtDealDate());
 					UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
@@ -210,7 +210,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 				legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeName='" + nextLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + nextLegislationProcessTask.getStDocId() + "'");
 			}
 
-			if(stNodeId.equals("NOD_0000000170")){
+			if("NOD_0000000170".equals(stNodeId)){
 				String[] legDocIdArray=legislationProcessDocService.findById(stDocId).getStDocSource().split("#");
 				for(String legDocId:legDocIdArray){
 					nextProcess(legDocId, "NOD_0000000105",session);
@@ -324,7 +324,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	 */
 	@Override
 	public Page<LegislationProcessTask> findTaskByNodeId(String sql, int pageNo,
-														 int pageSize) {
+														 int pageSize) throws ParseException {
 		return legislationProcessTaskDao.findTaskByNodeId(sql, pageNo, pageSize);
 	}
 
@@ -337,7 +337,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	 * @return
 	 */
 	@Override
-	public Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) {
+	public Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) throws ParseException {
 		return legislationProcessTaskDao.findCheckMeetingByNodeId(sql, pageNo, pageSize);
 	}
 
@@ -417,13 +417,13 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 		legislationProcessTaskdetail.setStTaskStatus(stTaskStatus);
 		legislationProcessTaskdetail.setStContent(stComent);
 
-		if(nodeId.equals("NOD_0000000104")){
+		if("NOD_0000000104".equals(nodeId)){
 			if("TODO".equals(stTaskStatus)){
 				legislationProcessTaskdetail.setStTitle("OA审核");
 			}else if("TODO-RETURN".equals(stTaskStatus)){
 				legislationProcessTaskdetail.setStTitle("OA审核结果");
 			}
-		}else if(nodeId.equals("NOD_0000000170")){
+		}else if("NOD_0000000170".equals(nodeId)){
 			if("TODO".equals(stTaskStatus)){
 				legislationProcessTaskdetail.setStTitle("会议发布");
 			}else if("TODO-RETURN".equals(stTaskStatus)){
@@ -441,7 +441,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			}
 		}
 
-		if(nodeId.equals("NOD_0000000131")){
+		if("NOD_0000000131".equals(nodeId)){
 			if("SEND".equals(stTaskStatus)){
 				String stComment1=request.getParameter("stComment1");
 				LegislationProcessTask legislationProcessTask=findById(stTaskId);
@@ -474,7 +474,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			String stNodeId = request.getParameter("stNodeId");
 			nextChildProcess(stDocId,stNodeId,userRoleId,userRole,currentPerson);
 		}
-		if(nodeId.equals("NOD_0000000170")&& "TODO".equals(stTaskStatus)){
+		if("NOD_0000000170".equals(nodeId) && "TODO".equals(stTaskStatus)){
 			String stDocId = request.getParameter("stDocId");
 			String[] legDocIdArray = legislationProcessDocService.findById(stDocId).getStDocSource().split("#");
 			for(String legDocId:legDocIdArray){

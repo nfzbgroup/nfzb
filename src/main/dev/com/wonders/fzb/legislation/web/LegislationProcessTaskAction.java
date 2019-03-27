@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +111,7 @@ public class LegislationProcessTaskAction extends BaseAction {
      *
      * @return
      */
-    private String queryTable() {
+    private String queryTable() throws ParseException {
         if("NOD_0000000140".equals(request.getParameter("stNodeId"))||"NOD_0000000141".equals(request.getParameter("stNodeId"))
                 ||"NOD_0000000150".equals(request.getParameter("stNodeId"))||"NOD_0000000151".equals(request.getParameter("stNodeId"))){
             queryTaskDetail();
@@ -124,7 +125,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         return "QueryTable";
     }
 
-    private void queryCheckMeeting() {
+    private void queryCheckMeeting() throws ParseException {
         String pageSize = request.getParameter("pageSize");
         String pageNo = request.getParameter("pageNo");
         String stNodeId = request.getParameter("stNodeId");
@@ -202,7 +203,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         request.setAttribute("nodeId", stNodeId);
     }
 
-    private void queryUnitOpinion(){
+    private void queryUnitOpinion() throws ParseException {
         String pageSize = request.getParameter("pageSize");
         String pageNo = request.getParameter("pageNo");
         String stNodeId = request.getParameter("stNodeId");
@@ -262,7 +263,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         request.setAttribute("nodeId", stNodeId);
     }
 
-    private void queryTaskDetail(){
+    private void queryTaskDetail() throws ParseException {
         String pageSize = request.getParameter("pageSize");
         String pageNo = request.getParameter("pageNo");
         String stNodeId = request.getParameter("stNodeId");
@@ -339,7 +340,7 @@ public class LegislationProcessTaskAction extends BaseAction {
         request.setAttribute("retPage", infoPage);
         request.setAttribute("nodeId", stNodeId);
     }
-    private void queryDoc(){
+    private void queryDoc() throws ParseException {
         boolean isZhc = (boolean) session.getAttribute("isZhc");
 
         String pageSize = request.getParameter("pageSize");

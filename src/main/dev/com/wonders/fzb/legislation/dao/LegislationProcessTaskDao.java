@@ -6,6 +6,7 @@ import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +32,9 @@ public abstract interface LegislationProcessTaskDao extends BaseDao {
 	public List<Map> findTaskListByNodeId(String stNodeId,String stUserId,String UnitId,String roleId);
 
 	Page<LegislationProcessDoc> findTaskDocListByNodeId(String sql, int pageNo,
-			int pageSize);
+			int pageSize) throws ParseException;
 
-    Page<LegislationProcessTask> findTaskByNodeId(String sql, int pageNo, int pageSize);
+    Page<LegislationProcessTask> findTaskByNodeId(String sql, int pageNo, int pageSize) throws ParseException;
 
-    Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize);
+    Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) throws ParseException;
 }

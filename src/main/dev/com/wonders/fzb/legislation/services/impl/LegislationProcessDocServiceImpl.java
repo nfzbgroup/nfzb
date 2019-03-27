@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -225,7 +226,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 	 * @param request
 	 */
 	@Override
-	public void draft_dist_info(HttpServletRequest request) {
+	public void draft_dist_info(HttpServletRequest request) throws ParseException {
 		String action=request.getParameter("action");
 		String stDocId=request.getParameter("stDocId");
 		String stComment1=request.getParameter("stComment1");//分办意见
@@ -241,11 +242,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 			SimpleDateFormat formatter = new SimpleDateFormat( "yyyy年MM月dd日");
 			legislationProcessTask.setStComment1(stComment1);
 			if(StringUtils.hasText(transactDate)&&transactDate.length()>3) {
-				try {
-					legislationProcessTask.setDtDeadDate(formatter.parse(transactDate));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				legislationProcessTask.setDtDeadDate(formatter.parse(transactDate));
 			}
 			if(StringUtils.hasText(stDealId)) {//有选中值的时候再赋值
 				legislationProcessTask.setStDealId(stDealId);
