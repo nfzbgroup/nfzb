@@ -21,7 +21,7 @@
 </head>
 
 <body class="gray-bg">
-<div class="wrapper wrapper-content animated fadeInRight" id="processIndex">
+<div class="wrapper animated fadeInRight" id="processIndex">
 	<div class="row">
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
@@ -307,19 +307,25 @@
 				</div>
 				</div>
 			</div>
-			<div class="modal inmodal fade" id="legislationProcessForm" data-backdrop tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+			<div class="modal inmodal fade" id="legislationProcessForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 					</div>
 				</div>
 			</div>
-			<div class="modal inmodal fade" id="processIndexForm" data-backdrop tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+			<div class="modal inmodal fade" id="processIndexRootForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+				<div class="modal-dialog" style="margin-top: 0px">
+					<div class="modal-content">
+					</div>
+				</div>
+			</div>
+			<div class="modal inmodal fade" id="processIndexForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 					</div>
 				</div>
 			</div>
-			<div class="modal inmodal fade" id="processIndexChildForm" data-backdrop tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+			<div class="modal inmodal fade" id="processIndexChildForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 					</div>
@@ -384,10 +390,28 @@
         $('body').on('hidden.bs.modal', '.modal', function () {
             $(this).removeData('bs.modal');
         });
-        $('body').on('show.bs.modal', function () {
-            $('.modal .modal-body').css('overflow-y', 'auto');
-            $('.modal .modal-body').css('height', $(window).height());
-			$('.modal .modal-dialog').css('width', $(window).width()*0.99);
+        $('#processIndexForm').on('hidden.bs.modal', function () {
+            $(document.body).addClass("modal-open");
+        });
+        $('#legislationProcessForm').on('show.bs.modal', function () {
+            $('#legislationProcessForm .modal-body').css('overflow', 'auto');
+            $('#legislationProcessForm .modal-body').css('height', $(window).height());
+			$('#legislationProcessForm .modal-dialog').css('width', $(window).width()*0.96);
+        });
+        $('#processIndexRootForm').on('show.bs.modal', function () {
+            $('#processIndexRootForm .wrapper').css('overflow', 'auto');
+            $('#processIndexRootForm .wrapper').css('height', $(window).height());
+            $('#processIndexRootForm .modal-dialog').css('width', $(window).width());
+        });
+        $('#processIndexChildForm').on('show.bs.modal', function () {
+            $('#processIndexChildForm .modal-body').css('overflow', 'auto');
+            $('#processIndexChildForm .modal-body').css('height', $(window).height());
+            $('#processIndexChildForm .modal-dialog').css('width', $(window).width()*0.9);
+        });
+        $('#processIndexForm').on('show.bs.modal', function () {
+            $('#processIndexForm .modal-body').css('overflow', 'auto');
+            $('#processIndexForm .modal-body').css('height', $(window).height());
+            $('#processIndexForm .modal-dialog').css('width', $(window).width()*0.9);
         });
 	});
 	function openPage(method,stDocId) {
@@ -426,7 +450,7 @@
         });
     };
     function openProcessIndex(stDocId,stDocName) {
-		$("#legislationProcessForm").modal({
+		$("#processIndexRootForm").modal({
 			remote:  '${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method=openProcessIndexPage&stDocId='+stDocId+'&stDocName='+stDocName
 		});
     }

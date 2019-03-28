@@ -3,14 +3,14 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <link href="${basePath}/legislation/assets/css/demo.css" rel="stylesheet">
-<div class="modal-body">
-	<div class="wrapper wrapper-content animated fadeInRight">
+<%--<div class="modal-body">--%>
+	<div class="wrapper">
 		<div class="row">
 			<div class="ibox float-e-margins">
+                <button style="padding-right: 5px" type="button" class="close" onclick="closeProcessIndex()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 				<div class="ibox-title">
 					<div class="row">
 						<div class="row_title">草案名称：${stDocName}
-							<button style="padding-right: 5px" type="button" class="close" onclick="closeProcessIndex()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 						</div>
 						<div class="flowPic">
 							<!--<img src="flowPicNew.png" alt="">-->
@@ -267,7 +267,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+<%--</div>--%>
 <script>
     function openDemonstrationPage(buttonId,method,stDocId,stNodeId) {
         if($('#'+buttonId).attr("handStatus")==undefined){
@@ -445,7 +445,11 @@
         }
     };
     function closeProcessIndex() {
-        $('#legislationProcessForm').modal('hide');
-        submitForm(1);
+        $('#processIndexRootForm').modal('hide');
+        if(${nodeId=='NOD_0000000103'}){
+            changeType('DOING');
+        }else{
+            submitForm(1);
+        }
     }
 </script>
