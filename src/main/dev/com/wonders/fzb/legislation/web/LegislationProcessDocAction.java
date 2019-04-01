@@ -183,23 +183,25 @@ public class LegislationProcessDocAction extends BaseAction {
 		String stDocName=request.getParameter("stDocName");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String teamId=currentPerson.getTeamInfos().get(0).getId();
+		Boolean isLfc= (Boolean) session.getAttribute("isLfc");
+		Boolean isZhc= (Boolean) session.getAttribute("isZhc");
 		String stNodeId="NOD_0000000120";
 		List<LegislationProcessTask> unitEditList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		if(unitEditList.size()>0){
 			if("TODO".equals(unitEditList.get(0).getStTaskStatus())){
-				if("U_3_7".equals(teamId)){
+				if(isLfc){
 					unitEditClass="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t";
 					unitEditDisabled=false;
 				}
 			}else{
 				unitEditClass="cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t";
 				unitSealClass="cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_yellow";
-				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
+				if(isLfc||isZhc){
 					unitEditDisabled=false;
 				}
 			}
 		}else {
-			if("U_3_7".equals(teamId)){
+			if(isLfc){
 				unitEditClass="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t";
 				unitEditDisabled=false;
 			}
@@ -208,13 +210,13 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> unitSendList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		if(unitSendList.size()>0){
 			if("TODO".equals(unitSendList.get(0).getStTaskStatus())){
-				if("U_3_1".equals(teamId)){
+				if(isZhc){
 					unitSendClass="cell row_items row_item4 bcg_green border_width border_style border_radius border_color_red";
 					unitSendDisabled=false;
 				}
 			}else {
 				unitSendClass="cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_red";
-				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
+				if(isLfc||isZhc){
 					unitReceiveDisabled=false;
 				}
 			}
@@ -224,7 +226,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> unitReceiveFinishList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null and t.stComment2 is null");
 		if(unitReceiveList.size()>0){
 			if(unitReceiveFinishList.size()>0){
-				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
+				if(isLfc||isZhc){
 					unitReceiveClass="cell row_items row_item5 bcg_green border_width border_style border_radius border_color_red";
 				}
 			}else {
@@ -245,17 +247,17 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> expertBeforeList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		if(expertBeforeList.size()>0){
 			if("TODO".equals(expertBeforeList.get(0).getStTaskStatus())){
-				if("U_3_7".equals(teamId)){
+				if(isLfc){
 					expertBeforeClass="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t";
 				}
 			}else{
 				expertBeforeClass="cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t";
 			}
-			if("U_3_7".equals(teamId)){
+			if(isLfc){
 				expertBeforeDisabled=false;
 			}
 		}else {
-			if("U_3_7".equals(teamId)){
+			if(isLfc){
 				expertBeforeDisabled=false;
 			}
 		}
@@ -263,13 +265,13 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> expertAfterList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		if(expertAfterList.size()>0){
 			if("TODO".equals(expertAfterList.get(0).getStTaskStatus())){
-				if("U_3_7".equals(teamId)){
+				if(isLfc){
 					expertAfterClass="cell row_items row_item3 bcg_green border_width border_style border_radius border_color_t";
 				}
 			}else{
 				expertAfterClass="cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_t";
 			}
-			if("U_3_7".equals(teamId)){
+			if(isLfc){
 				expertAfterDisabled=false;
 			}
 		}
@@ -277,18 +279,18 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> legislationEditList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		if(legislationEditList.size()>0){
 			if("TODO".equals(legislationEditList.get(0).getStTaskStatus())){
-				if("U_3_7".equals(teamId)){
+				if(isLfc){
 					legislationEditClass="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t";
 					legislationEditDisabled=false;
 				}
 			}else{
 				legislationEditClass="cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t";
-				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
+				if(isLfc||isZhc){
 					legislationEditDisabled=false;
 				}
 			}
 		}else {
-			if("U_3_7".equals(teamId)){
+			if(isLfc){
 				legislationEditDisabled=false;
 			}
 		}
@@ -297,21 +299,21 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(legislationReceiveList.size()>0){
 			String stTaskStatus=legislationReceiveList.get(0).getStTaskStatus();
 			if("TODO".equals(stTaskStatus)){
-				if("U_3_1".equals(teamId)){
+				if(isZhc){
 					legislationReceiveClass="cell row_items row_item3 bcg_green border_width border_style border_radius border_color_red";
 					legislationReceiveDisabled=false;
 				}
 			}else{
 				legislationReceiveClass="cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_red";
 				if("SEND".equals(stTaskStatus)){
-					if("U_3_1".equals(teamId)){
+					if(isZhc){
 						legislationCensorshipClass="cell row_items row_item4 bcg_green border_width border_style border_radius border_color_yellow";
 						legislationCensorshipDisabled=false;
 					}
 				}else{
 					legislationCensorshipClass="cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_yellow";
 					if ("PUBLISH".equals(stTaskStatus)) {
-						if("U_3_1".equals(teamId)){
+						if(isZhc){
 							legislationReleaseClass="cell row_items row_item5 bcg_green border_width border_style border_radius border_color_purple";
 							legislationReleaseDisabled=false;
 							legislationCensorshipDisabled=false;
@@ -319,7 +321,7 @@ public class LegislationProcessDocAction extends BaseAction {
 					} else {
 						legislationReleaseClass="cell row_items row_item5 bcg_blue border_width border_style border_radius border_color_purple";
 						if ("GATHER".equals(stTaskStatus)) {
-							if ("U_3_1".equals(teamId)) {
+							if (isZhc) {
 								legislationRegistrationClass="cell row_items row_item6 bcg_green border_width border_style border_radius border_color_purple";
 								legislationRegistrationDisabled=false;
 								legislationCensorshipDisabled=false;
@@ -328,7 +330,7 @@ public class LegislationProcessDocAction extends BaseAction {
 						} else {
 							legislationRegistrationClass="cell row_items row_item6 bcg_blue border_width border_style border_radius border_color_purple";
 							if ("RESULT".equals(stTaskStatus)) {
-								if ("U_3_1".equals(teamId)) {
+								if (isZhc) {
 									legislationFileClass="cell row_items row_item7 bcg_green border_width border_style border_radius border_color_t";
 									legislationFileDisabled=false;
 									legislationRegistrationDisabled=false;
@@ -337,13 +339,13 @@ public class LegislationProcessDocAction extends BaseAction {
 								}
 							} else {
 								legislationFileClass="cell row_items row_item7 bcg_blue border_width border_style border_radius border_color_t";
-								if ("U_3_1".equals(teamId)) {
+								if (isZhc) {
 									legislationFileDisabled=false;
 									legislationRegistrationDisabled=false;
 									legislationCensorshipDisabled=false;
 									legislationReleaseDisabled=false;
 								}
-								if("U_3_7".equals(teamId)){
+								if(isLfc){
 									legislationFileDisabled=false;
 								}
 							}
@@ -356,18 +358,18 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> onlineEditList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		if(onlineEditList.size()>0){
 			if("TODO".equals(onlineEditList.get(0).getStTaskStatus())){
-				if("U_3_7".equals(teamId)){
+				if(isLfc){
 					onlineEditClass="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t";
 					onlineEditDisabled=false;
 				}
 			}else{
 				onlineEditClass="cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t";
-				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
+				if(isLfc||isZhc){
 					onlineEditDisabled=false;
 				}
 			}
 		}else {
-			if("U_3_7".equals(teamId)){
+			if(isLfc){
 				onlineEditDisabled=false;
 			}
 		}
@@ -376,21 +378,21 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(onlineSealList.size()>0){
 			String stTaskStatus=onlineSealList.get(0).getStTaskStatus();
 			if("TODO".equals(stTaskStatus)){
-				if("U_3_1".equals(teamId)){
+				if(isZhc){
 					onlineSealClass="cell row_items row_item3 bcg_green border_width border_style border_radius border_color_red";
 					onlineSealDisabled=false;
 				}
 			}else{
 				onlineSealClass="cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_red";
 				if("SEND".equals(stTaskStatus)){
-					if("U_3_1".equals(teamId)){
+					if(isZhc){
 						onlineCensorshipClass="cell row_items row_item4 bcg_green border_width border_style border_radius border_color_yellow";
 						onlineCensorshipDisabled=false;
 					}
 				}else{
 					onlineCensorshipClass="cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_yellow";
 					if ("PUBLISH".equals(stTaskStatus)) {
-						if("U_3_1".equals(teamId)){
+						if(isZhc){
 							onlineReleaseClass="cell row_items row_item5 bcg_green border_width border_style border_radius border_color_purple";
 							onlineReleaseDisabled=false;
 							onlineCensorshipDisabled=false;
@@ -398,7 +400,7 @@ public class LegislationProcessDocAction extends BaseAction {
 					} else {
 						onlineReleaseClass="cell row_items row_item5 bcg_blue border_width border_style border_radius border_color_purple";
 						if ("GATHER".equals(stTaskStatus)) {
-							if ("U_3_1".equals(teamId)) {
+							if (isZhc) {
 								onlineSummaryClass="cell row_items row_item6 bcg_green border_width border_style border_radius border_color_purple";
 								onlineSummaryDisabled=false;
 								onlineCensorshipDisabled=false;
@@ -407,7 +409,7 @@ public class LegislationProcessDocAction extends BaseAction {
 						} else {
 							onlineSummaryClass="cell row_items row_item6 bcg_blue border_width border_style border_radius border_color_purple";
 							if ("RESULT".equals(stTaskStatus)) {
-								if ("U_3_1".equals(teamId)) {
+								if (isZhc) {
 									onlinePublishClass="cell row_items row_item7 bcg_green border_width border_style border_radius border_color_purple";
 									onlinePublishDisabled=false;
 									onlineSummaryDisabled=false;
@@ -416,13 +418,13 @@ public class LegislationProcessDocAction extends BaseAction {
 								}
 							} else {
 								onlinePublishClass="cell row_items row_item7 bcg_blue border_width border_style border_radius border_color_purple";
-								if ("U_3_1".equals(teamId)) {
+								if (isZhc) {
 									onlinePublishDisabled=false;
 									onlineSummaryDisabled=false;
 									onlineCensorshipDisabled=false;
 									onlineReleaseDisabled=false;
 								}
-								if("U_3_7".equals(teamId)){
+								if(isLfc){
 									onlinePublishDisabled=false;
 								}
 							}
@@ -435,19 +437,19 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> departmentEditList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		if(departmentEditList.size()>0){
 			if("TODO".equals(departmentEditList.get(0).getStTaskStatus())){
-				if("U_3_7".equals(teamId)){
+				if(isLfc){
 					departmentEditClass="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_t";
 					departmentEditDisabled=false;
 				}
 			}else{
 				departmentEditClass="cell row_items row_item2 bcg_blue border_width border_style border_radius border_color_t";
 				departmentSealClass="cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_yellow";
-				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
+				if(isLfc||isZhc){
 					departmentEditDisabled=false;
 				}
 			}
 		}else {
-			if("U_3_7".equals(teamId)){
+			if(isLfc){
 				departmentEditClass="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t";
 				departmentEditDisabled=false;
 			}
@@ -456,13 +458,13 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> departmentSendList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		if(departmentSendList.size()>0){
 			if("TODO".equals(departmentSendList.get(0).getStTaskStatus())){
-				if("U_3_1".equals(teamId)){
+				if(isZhc){
 					departmentSendClass="cell row_items row_item4 bcg_green border_width border_style border_radius border_color_red";
 					departmentSendDisabled=false;
 				}
 			}else {
 				departmentSendClass="cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_red";
-				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
+				if(isLfc||isZhc){
 					departmentReceiveDisabled=false;
 				}
 			}
@@ -472,7 +474,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> departmentReceiveFinishList=legislationProcessTaskService.findByHQL("from LegislationProcessTask t where t.stDocId='"+stDocId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null and t.stComment2 is null");
 		if(departmentReceiveList.size()>0){
 			if(departmentReceiveFinishList.size()>0){
-				if("U_3_7".equals(teamId)||"U_3_1".equals(teamId)){
+				if(isLfc||isZhc){
 					departmentReceiveClass="cell row_items row_item5 bcg_green border_width border_style border_radius border_color_red";
 				}
 			}else {
