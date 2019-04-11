@@ -149,13 +149,15 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	}
 
 	/**
-	 * 大节点扭转
+	 * 大节点流转
 	 *
 	 * @param stDocId
 	 * @param stNodeId
 	 */
 	@Override
-	public void nextProcess(String stDocId, String stNodeId,HttpSession session) {
+	public WegovSimpleNode nextProcess(String stDocId, String stNodeId,HttpSession session) {
+		WegovSimpleNode wegovSimpleNode=null;
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		List<LegislationProcessTask> list = findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		for (LegislationProcessTask legislationProcessTask : list) {
 			if("NOD_0000000105".equals(stNodeId)){
@@ -164,7 +166,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 					legislationProcessTask.setStTaskStatus("TODO");
 					legislationProcessTask.setDtOpenDate(new Date());
 					legislationProcessTaskDao.saveOrUpdate(legislationProcessTask);
-					return;
+					return wegovSimpleNode;
 				}
 			}
 
@@ -180,9 +182,9 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'");
 
 			if(!"END".equals(nodeList.get(0).getStNextNode())) {
-
-				nextLegislationProcessTask.setStNodeId(nodeList.get(0).getStNextNode());
-				nextLegislationProcessTask.setStNodeName(wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + nodeList.get(0).getStNextNode() + "'").get(0).getStNodeName());
+				WegovSimpleNode nextNode=wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + nodeList.get(0).getStNextNode() + "'").get(0);
+				nextLegislationProcessTask.setStNodeId(nextNode.getStNodeId());
+				nextLegislationProcessTask.setStNodeName(nextNode.getStNodeName());
 				nextLegislationProcessTask.setStTaskStatus("TODO");
 				if ("NOD_0000000150".equals(stNodeId) || "NOD_0000000104".equals(stNodeId) || "NOD_0000000105".equals(stNodeId) || "NOD_0000000106".equals(stNodeId)) {
 					nextLegislationProcessTask.setStTeamId(legislationProcessTask.getStTeamId());
@@ -192,21 +194,36 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 				else {
 					nextLegislationProcessTask.setStTeamId("U_3_1");
 				}
-				if (stNodeId.equals("NOD_0000000120")||stNodeId.equals("NOD_0000000160")) {
+				if (stNodeId.equals("NOD_0000000120") || stNodeId.equals("NOD_0000000160")) {
 					nextLegislationProcessTask.setDtOpenDate(legislationProcessTask.getDtOpenDate());
 					nextLegislationProcessTask.setDtDealDate(legislationProcessTask.getDtDealDate());
-					UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-					nextLegislationProcessTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
-					nextLegislationProcessTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
-				} else {
+					if (stNodeId.equals("NOD_0000000160")) {
+						nextLegislationProcessTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
+						nextLegislationProcessTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
+					} else {
+						nextLegislationProcessTask.setStTeamName("综合业务处");
+					}
+
+				}else {
 					nextLegislationProcessTask.setDtOpenDate(new Date());
 				}
-				nextLegislationProcessTask.setStBakOne(legislationProcessTask.getStBakOne());
-				nextLegislationProcessTask.setStBakTwo(legislationProcessTask.getStBakTwo());
-				nextLegislationProcessTask.setDtBakDate(legislationProcessTask.getDtBakDate());
-				nextLegislationProcessTask.setStComment2(legislationProcessTask.getStComment2());
+				if (stNodeId.equals("NOD_0000000123")) {
+					nextLegislationProcessTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
+					nextLegislationProcessTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
+				}
+				if (stNodeId.equals("NOD_0000000121")) {
+					nextLegislationProcessTask.setStTeamId("U_3_7");
+					nextLegislationProcessTask.setStTeamName("社会法规处");
+				}
+				if (!(stNodeId.equals("NOD_0000000120") || stNodeId.equals("NOD_0000000121") || stNodeId.equals("NOD_0000000123"))) {
+					nextLegislationProcessTask.setStBakOne(legislationProcessTask.getStBakOne());
+					nextLegislationProcessTask.setStBakTwo(legislationProcessTask.getStBakTwo());
+					nextLegislationProcessTask.setDtBakDate(legislationProcessTask.getDtBakDate());
+					nextLegislationProcessTask.setStComment2(legislationProcessTask.getStComment2());
+				}
 
 				legislationProcessTaskDao.save(nextLegislationProcessTask);
+				wegovSimpleNode=nextNode;
 				legislationProcessDocService.executeSqlUpdate("update LegislationProcessDoc s set s.stNodeName='" + nextLegislationProcessTask.getStNodeName() + "' where s.stDocId='" + nextLegislationProcessTask.getStDocId() + "'");
 			}
 
@@ -217,6 +234,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 				}
 			}
 		}
+		return wegovSimpleNode;
 	}
 
 	/**
@@ -282,7 +300,9 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	 * @param currentPerson
 	 */
 	@Override
-	public void nextChildProcess(String stDocId, String stNodeId, String userRoleId, String userRole, UserInfo currentPerson) {
+	public String nextChildProcess(String stDocId, String stNodeId, String userRoleId, String userRole, UserInfo currentPerson) {
+		String returnStatus="";
+//		String nextChildNodeId="";
 		String userId = currentPerson.getUserId();
 		String userName = currentPerson.getName();
 		String unitId = currentPerson.getTeamInfos().get(0).getId();
@@ -295,6 +315,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			for (int i = 0; i < stTaskStatusArray.length; i++) {
 				if (curStTaskStatus.equals(stTaskStatusArray[i])) {
 					legislationProcessTask.setStTaskStatus(stTaskStatusArray[i + 1]);
+					returnStatus=stTaskStatusArray[i + 1];
 					break;
 				}
 			}
@@ -312,6 +333,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			}
 			update(legislationProcessTask);
 		}
+		return returnStatus;
 
 	}
 
@@ -339,44 +361,6 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	@Override
 	public Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) throws ParseException {
 		return legislationProcessTaskDao.findCheckMeetingByNodeId(sql, pageNo, pageSize);
-	}
-
-	@Override
-	public void sendUnit(HttpServletRequest request, UserInfo currentPerson,String userRoleId,String userRole) {
-		String teamId = request.getParameter("teamId");
-		String stNodeId = request.getParameter("stNodeId");
-		String stTaskId=request.getParameter("stTaskId");
-		LegislationProcessTask legislationProcessTask=findById(stTaskId);
-		legislationProcessTask.setStTaskStatus("DONE");
-		update(legislationProcessTask);
-		String[] teamIdArray=teamId.split(",");
-		WegovSimpleNode node=wegovSimpleNodeService.findById(stNodeId);
-		WegovSimpleNode nextNode=wegovSimpleNodeService.findById(node.getStNextNode());
-
-		String userId = currentPerson.getUserId();
-		String userName = currentPerson.getName();
-		for (int i = 0; i < teamIdArray.length; i++) {
-			TeamInfo teamInfo=teamInfoService.findTeamInfoByTeamId("MODULE_LEGISLATE",teamIdArray[i]);
-			LegislationProcessTask newTask= new LegislationProcessTask();
-			newTask.setStDocId(legislationProcessTask.getStDocId());
-			newTask.setStFlowId(legislationProcessTask.getStFlowId());
-			newTask.setStBakOne(legislationProcessTask.getStBakOne());
-			newTask.setStBakTwo(legislationProcessTask.getStBakTwo());
-			newTask.setStNodeId(nextNode.getStNodeId());
-			newTask.setStNodeName(nextNode.getStNodeName());
-			newTask.setStTaskStatus("TODO");
-			newTask.setDtOpenDate(legislationProcessTask.getDtOpenDate());
-			newTask.setDtDealDate(legislationProcessTask.getDtDealDate());
-			newTask.setStUserId(userId);
-			newTask.setStUserName(userName);
-			newTask.setStRoleId(userRoleId);
-			newTask.setStRoleName(userRole);
-//			newTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
-//			newTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
-			newTask.setStParentId(teamInfo.getId());
-			newTask.setStComment1(teamInfo.getTeamName());
-			add(newTask);
-		}
 	}
 
 	@Override
@@ -627,4 +611,103 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 		}
 		legislationFilesService.updateParentIdById(request,stDocId);
 	}
+
+	@Override
+	public LegislationProcessTask getTaskByDocNode(String stDocId, String stNodeId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String saveSendMayorDatum(String stTaskId, String stComent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String saveMayorDatumCheck(String stTaskId, String stExchangeRange, String stTitle, String stDocumentNo, Date dtSendTime, String stContent, String stSituation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String nextMayorDatumCheck(String stTaskId, String stExchangeRange, String stTitle, String stDocumentNo, Date dtSendTime, String stContent, String stSituation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String saveDraftReport(String stTaskId, String stExchangeRange, String stTitle, String stDocumentNo, Date dtSendTime, String stContent, String stSituation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WegovSimpleNode sendUnit(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole) {
+		String teamId = request.getParameter("teamId");
+		String stNodeId = request.getParameter("stNodeId");
+		String stTaskId = request.getParameter("stTaskId");
+		LegislationProcessTask legislationProcessTask = findById(stTaskId);
+		legislationProcessTask.setStTaskStatus("DONE");
+		update(legislationProcessTask);
+		String[] teamIdArray = teamId.split(",");
+		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
+		WegovSimpleNode nextNode = wegovSimpleNodeService.findById(node.getStNextNode());
+
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
+		for (int i = 0; i < teamIdArray.length; i++) {
+			TeamInfo teamInfo = teamInfoService.findTeamInfoByTeamId("MODULE_LEGISLATE", teamIdArray[i]);
+			LegislationProcessTask newTask = new LegislationProcessTask();
+			newTask.setStDocId(legislationProcessTask.getStDocId());
+			newTask.setStFlowId(legislationProcessTask.getStFlowId());
+			newTask.setStBakOne(legislationProcessTask.getStBakOne());
+			newTask.setStBakTwo(legislationProcessTask.getStBakTwo());
+			newTask.setStNodeId(nextNode.getStNodeId());
+			newTask.setStNodeName(nextNode.getStNodeName());
+			newTask.setStTaskStatus("TODO");
+			newTask.setDtOpenDate(legislationProcessTask.getDtOpenDate());
+			//newTask.setDtDealDate(legislationProcessTask.getDtDealDate());
+			newTask.setDtDealDate(new Date());
+			//newTask.setStUserId(userId);
+			//newTask.setStUserName(userName);
+			//newTask.setStRoleId(userRoleId);
+			//newTask.setStRoleName(userRole);
+			newTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
+			newTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
+			newTask.setStParentId(teamInfo.getId());
+			newTask.setStComment1(teamInfo.getTeamName());
+			add(newTask);
+		}
+		return nextNode;
+	}
+
+	@Override
+	public LegislationProcessTask confirm(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole) {
+		String stTaskId = request.getParameter("stTaskId");
+		String stDocId = request.getParameter("stDocId");
+		String stNodeId = request.getParameter("stNodeId");
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
+		// 产生处理记录
+		LegislationProcessDeal legislationProcessDeal = new LegislationProcessDeal();
+		legislationProcessDeal.setStDocId(stDocId);
+		legislationProcessDeal.setStActionId(stNodeId);
+		legislationProcessDeal.setStActionName("部门意见录入");
+		legislationProcessDeal.setStUserId(userId);
+		legislationProcessDeal.setStUserName(userName);
+		Date date = new Date();
+		legislationProcessDeal.setDtDealDate(date);
+		legislationProcessDealService.add(legislationProcessDeal);
+		// 状态改为DONE
+		LegislationProcessTask legislationProcessTask = findById(stTaskId);
+		legislationProcessTask.setStTaskStatus("DONE");
+		legislationProcessTask.setDtDealDate(date);
+		update(legislationProcessTask);
+		return legislationProcessTask;
+	}
+	
+ 
+	
+	
 }

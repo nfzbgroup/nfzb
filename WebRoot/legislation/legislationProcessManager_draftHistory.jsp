@@ -31,7 +31,7 @@
 				</td>
 				<td>
 					<s:iterator value="#deal.docList" var="files">
-						<span><a target="_blank" href="${basePath}/file/downloadAttach.do?name=${files.stTitle}&url=${files.stFileUrl}">${files.stTitle}</a></span></br>
+						<span><a target="_blank" href="${basePath}/file/downloadAttach.do?name=${files.stTitle}&url=${files.stFileId}">${files.stTitle}</a></span></br>
 					</s:iterator>
 				</td>
 				<td>

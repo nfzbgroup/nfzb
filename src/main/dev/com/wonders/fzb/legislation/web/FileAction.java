@@ -6,6 +6,7 @@ import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.*;
 import com.wonders.fzb.legislation.services.*;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.struts2.convention.annotation.Action;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
 import java.io.*;
 import java.util.Date;
 import java.util.List;
@@ -82,12 +84,10 @@ public class FileAction extends BaseAction {
     @Action(value = "upload")
     public void upload() throws FzbDaoException, IOException {
         JSONObject jsonObject=new JSONObject();
-        String path =filePath;
-        String fileName=getCode()+"."+uploadFileName.substring(uploadFileName.lastIndexOf(".") + 1);
-        File file = new File(path, fileName);
-        FileUtils.copyFile(upload, file);
-
-
+//        String path =filePath;
+//        String fileName=getCode()+"."+uploadFileName.substring(uploadFileName.lastIndexOf(".") + 1);
+//        File file = new File(path, fileName);
+//        FileUtils.copyFile(upload, file);
 
         UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
         String userId = currentPerson.getUserId();
@@ -95,13 +95,16 @@ public class FileAction extends BaseAction {
         String stSampleId=request.getParameter("stSampleId");
 
         LegislationFiles legislationFiles = new LegislationFiles();
-        legislationFiles.setStFileUrl(path+"/"+fileName);
+//        legislationFiles.setStFileUrl(path+"/"+fileName);
         legislationFiles.setStFormat(uploadFileName.substring(uploadFileName.lastIndexOf(".") + 1));
         legislationFiles.setStOwnerId(userId);
         legislationFiles.setStOwnerName(userName);
         legislationFiles.setDtPubDate(new Date());
         legislationFiles.setStTitle(uploadFileName);
         legislationFiles.setStNodeId(request.getParameter("stNodeId"));
+        
+        legislationFiles.setBlContent(FileUtils.readFileToByteArray(upload));//文件内容uploadfile2Byte()
+        
         if(null!=stSampleId&&!"null".equals(stSampleId)){
             LegislationExample legislationExample = legislationExampleService.findById(stSampleId);
             legislationFiles.setStFileType(legislationExample.getStNeed());
@@ -110,9 +113,9 @@ public class FileAction extends BaseAction {
 
         String fileId = legislationFilesService.addObj(legislationFiles);
 
-        jsonObject.put("url",path+"/"+fileName);
+        jsonObject.put("url",fileId);
         jsonObject.put("name",uploadFileName);
-        jsonObject.put("fileName",fileName);
+//        jsonObject.put("fileName",fileName);
         jsonObject.put("fileId",fileId);
         jsonObject.put("success",true);
         response.setContentType("application/json; charset=UTF-8");
@@ -186,14 +189,15 @@ public class FileAction extends BaseAction {
     @Action(value = "downloadAttach")
     public void downloadAttach() throws Exception{
         String name=request.getParameter("name");
-        String url=request.getParameter("url");
+        String fileId=request.getParameter("url");
         request.setCharacterEncoding("UTF-8");
         //第一步：设置响应类型
         response.setContentType("application/force-download");//应用程序强制下载
         //第二读取文件
-        InputStream in = new FileInputStream(url);
+        LegislationFiles legislationFiles=legislationFilesService.findById(fileId);
+        InputStream in = new ByteArrayInputStream(legislationFiles.getBlContent());
         //设置响应头，对文件进行url编码
-        name = new String(name.getBytes("UTF-8"),"ISO-8859-1");
+        name = new String(legislationFiles.getStTitle().getBytes("UTF-8"),"ISO-8859-1");
         response.setHeader("Content-Disposition",  String.format("attachment; filename=\"%s\"", name));
         response.setContentLength(in.available());
         response.setCharacterEncoding("UTF-8");
@@ -227,5 +231,32 @@ public class FileAction extends BaseAction {
         }
         return fourRandom;
     }
+    
+    
+	protected byte[] uploadfile2Byte() {
+		// 不是空文件
+		if (null != upload && upload.length() > 0) {
+			FileInputStream fis = null;
+			byte[] bFile = null;
+			try {
+				bFile = new byte[(int) upload.length()];
+				fis = new FileInputStream(upload);
+				fis.read(bFile);
+				// System.out.println(uploadFile.length() + "," + bFile.length);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					fis.close();
+					bFile.clone();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return bFile;
+		}
+		return null;
+	}
 
 }

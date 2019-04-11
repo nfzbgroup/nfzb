@@ -15,20 +15,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * WegovSimpleNode service实现
  * 
  * @author scalffold created by lj
  */
- 
+
 @Service("wegovSimpleNodeService")
 @Transactional
 public class WegovSimpleNodeServiceImpl implements WegovSimpleNodeService {
 
 	@Autowired
 	private WegovSimpleNodeDao wegovSimpleNodeDao;
-	
+
 	/**
 	 * 添加实体对象
 	 */
@@ -44,7 +43,7 @@ public class WegovSimpleNodeServiceImpl implements WegovSimpleNodeService {
 	public String addObj(WegovSimpleNode info) {
 		return wegovSimpleNodeDao.saveObj(info);
 	}
-	
+
 	/**
 	 * 更新实体对象
 	 */
@@ -72,14 +71,10 @@ public class WegovSimpleNodeServiceImpl implements WegovSimpleNodeService {
 	/**
 	 * 根据Map中过滤条件、排序条件和分页参数进行分页查询.
 	 * 
-	 * @param condMap
-	 *            过滤条件<propertyName,properyValue>
-	 * @param sortMap
-	 *            排序条件<propertyName,properyValue>
-	 * @param pageNo
-	 *            当前页码
-	 * @param pageSize
-	 *            每页显示记录数.
+	 * @param condMap  过滤条件<propertyName,properyValue>
+	 * @param sortMap  排序条件<propertyName,properyValue>
+	 * @param pageNo   当前页码
+	 * @param pageSize 每页显示记录数.
 	 * @return
 	 * @throws FzbDaoException
 	 */
@@ -91,10 +86,8 @@ public class WegovSimpleNodeServiceImpl implements WegovSimpleNodeService {
 	/**
 	 * 根据Map中过滤条件、排序条件进行查询.
 	 * 
-	 * @param condMap
-	 *            过滤条件<propertyName,properyValue>
-	 * @param sortMap
-	 *            排序条件<propertyName,properyValue>
+	 * @param condMap 过滤条件<propertyName,properyValue>
+	 * @param sortMap 排序条件<propertyName,properyValue>
 	 * @return
 	 */
 	@Override
@@ -106,7 +99,6 @@ public class WegovSimpleNodeServiceImpl implements WegovSimpleNodeService {
 	public void saveOrUpdate(WegovSimpleNode info) {
 		wegovSimpleNodeDao.saveOrUpdate(info);
 	}
-
 
 	@Override
 	public List<WegovSimpleNode> findByHQL(String hql) {
@@ -144,5 +136,53 @@ public class WegovSimpleNodeServiceImpl implements WegovSimpleNodeService {
 			}
 		}
 		return buttonNameList;
+	}
+
+	@Override
+	public WegovSimpleNode findByNodeId(String stNodeId) {
+		List<WegovSimpleNode> wegovSimpleNodeList = new ArrayList<WegovSimpleNode>();
+		WegovSimpleNode wegovSimpleNode = new WegovSimpleNode();
+		Map<String, Object> condMap = new HashMap<String, Object>();
+		Map<String, String> sortMap = new HashMap<String, String>();
+		if (!"".equals(stNodeId)) {
+			condMap.put("stNodeId", stNodeId);
+		}
+		sortMap.put("id", "desc");
+		wegovSimpleNodeList = wegovSimpleNodeDao.findByList(condMap, sortMap);
+		if (wegovSimpleNodeList.size() > 0) {
+			wegovSimpleNode = wegovSimpleNodeList.get(0);
+		}
+		return wegovSimpleNode;
+	}
+
+	@Override
+	public HashMap<String, String> getDoneNameNext(String stNodeId, String stDoneName) {
+		List<WegovSimpleNode> wegovSimpleNodeList = new ArrayList<WegovSimpleNode>();
+		HashMap<String, String> nextMap = new HashMap<String, String>();
+		WegovSimpleNode wegovSimpleNode = new WegovSimpleNode();
+		Map<String, Object> condMap = new HashMap<String, Object>();
+		Map<String, String> sortMap = new HashMap<String, String>();
+		String stRtDoneName = "";
+		String stRtTodoName = "";
+		if (!"".equals(stNodeId)) {
+			condMap.put("stNodeId", stNodeId);
+		}
+		sortMap.put("id", "desc");
+		wegovSimpleNodeList = wegovSimpleNodeDao.findByList(condMap, sortMap);
+		if (wegovSimpleNodeList.size() > 0) {
+			wegovSimpleNode = wegovSimpleNodeList.get(0);
+		}
+		String[] stTodoNameArray = wegovSimpleNode.getStTodoName().split("#");
+		String[] stDoneNameArray = wegovSimpleNode.getStDoneName().split("#");
+		//不需要查询最后位置 如果是最后一位直接返回空
+		for (int i = 0; i < stDoneNameArray.length - 1; i++) {
+			String stDoneNameCode = stDoneNameArray[i];
+			if (stDoneNameCode.equals(stDoneName)) {
+				stRtDoneName = stDoneNameArray[i + 1];
+				stRtTodoName = stTodoNameArray[i + 1];
+			}
+		}
+		nextMap.put(stRtDoneName, stRtTodoName);
+		return nextMap;
 	}
 }

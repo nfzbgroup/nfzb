@@ -12,7 +12,6 @@
 	<meta name="renderer" content="webkit">
 	<meta http-equiv="Cache-Control" content="no-siteapp" />
 	<title>上海市政府立法平台</title>
-	
 	<link href="${basePath}/legislation/assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
 	<link href="${basePath}/legislation/assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
 	<link href="${basePath}/legislation/assets/css/animate.min.css" rel="stylesheet">
@@ -40,17 +39,17 @@
 								<span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-								<li><a href="${basePath}/legislation/login.jsp" style="border-radius:0;">安全退出</a></li>
+								<li><a href="${basePath}/legislation/login.do" style="border-radius:0;">安全退出</a></li>
 							</ul>
 						</div>
 					</li>
 				</ul>
 			</nav>
 		</div>
-		<div class="row topline">
+		<div class="row topline" style="height: 50px">
 			<a class="navbar-minimalize sidebar-toggle btn btn-success" href="#"><i class="fa fa-bars"></i></a>
 			<ul class="nav-line">
-				<li role="presentation" class="active" data-target="default"><a href="javascript:;"></a></li>				
+				<li role="presentation" class="active" data-target="default"></li>				
 			</ul>
 		</div>
 		<div class="row content-new">
@@ -63,35 +62,118 @@
 					
 						<!--示例导航开始-->
 						<!-- li标签里添加class="active" 会打开菜单 -->
-				          <li  cat="default" >
+				          <li  cat="default" class="">
 							<a href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">立法计划管理</span>
 								<span class="fa arrow"></span>
 							</a>
-							
+							<ul class="nav nav-second-level">
+								<s:iterator value="#request.planNodeList" var="task">
+									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+								</s:iterator>
+							</ul>
 						</li> 
+						
+						
+				          <li  cat="default" class="active">
+							<a href="/">
+								<i class="fa fa-database"></i>
+								<span class="nav-label">立法过程处理</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<c:if test="${isZhc}">
+									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=NOD_0000000103">立法办理</a></li>
+								</c:if>
+								<s:iterator value="#request.draftNodeList" var="task">
+									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+								</s:iterator>
+							</ul>
+						</li> 
+						
+						
+				          <li  cat="default" class="">
+							<a href="/">
+								<i class="fa fa-database"></i>
+								<span class="nav-label">立法后评估</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<s:iterator value="#request.assessNodeList" var="task">
+									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+								</s:iterator>
+							</ul>
+						</li> 
+						
+						
+				          <li  cat="default" class="">
+							<a href="/">
+								<i class="fa fa-database"></i>
+								<span class="nav-label">审核会议</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<s:iterator value="#request.checkMeetingNodeList" var="task">
+									<li>
+										<c:choose>
+											<c:when test="${task.stNodeId=='NOD_0000000170'}">
+												<a class="J_menuItem" href="../legislationCheckmeetingTask/checkmeeting_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											</c:when>
+											<c:otherwise>
+												<a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											</c:otherwise>
+									</c:choose>
+									</li>
+								</s:iterator>
+							</ul>
+						</li> 
+						
+				          <li  cat="default" class="">
+							<a href="/">
+								<i class="fa fa-database"></i>
+								<span class="nav-label">常务会议</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<s:iterator value="#request.cityMeetingNodeList" var="task">
+									<li><a class="J_menuItem" href="../legislationCitymeetingTask/citymeeting_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+								</s:iterator>
+							</ul>
+						</li> 
+						
+				          <li  cat="default" class="">
+							<a href="/">
+								<i class="fa fa-database"></i>
+								<span class="nav-label">报签(签报)</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level">
+								<s:iterator value="#request.reportNodeList" var="task">
+									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+								</s:iterator>
+							</ul>
+						</li> 
+						
+						
 						<li  cat="default" >
 							<a href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">范本库</span>
 								<span class="fa arrow"></span>
 							</a>
-							
 						</li> 
+						
 						
 				          <li  cat="default" class="active">
 							<a href="/">
 								<i class="fa fa-database"></i>
-								<span class="nav-label">规章草案处理</span>
+								<span class="nav-label">专项清理</span>
 								<span class="fa arrow"></span>
 							</a>
 							<ul class="nav nav-second-level">
-								<c:if test="${isZhc}">
-									<li><a class="J_menuItem" href="../legislationProcessTask/draft_deal_info.do?stNodeId=NOD_0000000103">立法办理</a></li>
-								</c:if>
-								<s:iterator value="#request.nodeList" var="task">
-									<li><a class="J_menuItem" href="../legislationProcessTask/${task.stInfoUrl}?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+								<s:iterator value="#request.cleanNodeList" var="task">
+									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
 								</s:iterator>
 							</ul>
 						</li> 
@@ -105,7 +187,7 @@
 					</button>
 					<nav class="page-tabs J_menuTabs">
 						<div class="page-tabs-content">
-							<a href="javascript:;" class="active J_menuTab" data-id="home.html"></a>
+							<a href="javascript:;" class="active J_menuTab" data-id="indexPage.jsp">首页</a>
 						</div>
 					</nav>
 					<button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
@@ -124,7 +206,7 @@
 					</div>
 				</div>
 				<div class="row J_mainContent" id="content-main">
-					<iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="" frameborder="0" data-id="home.html" seamless></iframe>
+					<iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="indexPage.jsp" frameborder="0" data-id="indexPage.jsp" seamless></iframe>
 				</div>
 			</div>
 		</div>

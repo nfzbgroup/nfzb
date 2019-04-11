@@ -32,11 +32,11 @@
 			</div>
 			<div class="form-group text-center">
 					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
-						   name="btnSave" onclick="saveLegislationProcessDoc()" value="提交"> &nbsp;&nbsp;
+						   name="btnSave" onclick="saveLegislationProcessDoc()" value="提交"> &nbsp;&nbsp;1111
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 			<div class="form-group">
-				<label class="control-label">起草材料
+				<label class="control-label">起草材料DDDDDDDDDDDDDDDDDDD
 				</label>
 			</div>
             <div class="form-group">

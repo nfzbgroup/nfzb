@@ -8,19 +8,33 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * LEGISLATION_PROCESS_TASKDETAIL Bean (操作业务实体) 
- * autoCreated by liujun
+ * LEGISLATION_PROCESS_TASKDETAIL Bean (操作业务实体) autoCreated by liujun
  */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "LEGISLATION_PROCESS_TASKDETAIL")
 public class LegislationProcessTaskdetail implements Serializable {
 
-  public static final String LegislationProcessTaskdetail = "LEGISLATION_PROCESS_TASKDETAIL";
+	public static final String LegislationProcessTaskdetail = "LEGISLATION_PROCESS_TASKDETAIL";
+
+	public LegislationProcessTaskdetail() {
+	}
+
+	/**
+	 * ST_BAK6
+	 */
+	@Column(name = "ST_BAK6")
+	private String stBak6;
+
 	
-  public LegislationProcessTaskdetail()
-  {
-  }
+	
+	public String getStBak6() {
+		return stBak6;
+	}
+
+	public void setStBak6(String stBak6) {
+		this.stBak6 = stBak6;
+	}
 
 	/**
 	 * ST_ADDRESS
@@ -31,14 +45,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_ADDRESS
 	 */
-	public String getStAddress(){
+	public String getStAddress() {
 		return stAddress;
 	}
 
 	/**
 	 * ST_ADDRESS
 	 */
-	public void setStAddress (String stAddress){
+	public void setStAddress(String stAddress) {
 		this.stAddress = stAddress;
 	}
 
@@ -51,14 +65,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_TASK_ID
 	 */
-	public String getStTaskId(){
+	public String getStTaskId() {
 		return stTaskId;
 	}
 
 	/**
 	 * ST_TASK_ID
 	 */
-	public void setStTaskId (String stTaskId){
+	public void setStTaskId(String stTaskId) {
 		this.stTaskId = stTaskId;
 	}
 
@@ -71,14 +85,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * DT_DEAD_DATE
 	 */
-	public Date getDtDeadDate(){
+	public Date getDtDeadDate() {
 		return dtDeadDate;
 	}
 
 	/**
 	 * DT_DEAD_DATE
 	 */
-	public void setDtDeadDate (Date dtDeadDate){
+	public void setDtDeadDate(Date dtDeadDate) {
 		this.dtDeadDate = dtDeadDate;
 	}
 
@@ -91,14 +105,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * DT_BAK1
 	 */
-	public Date getDtBak1(){
+	public Date getDtBak1() {
 		return dtBak1;
 	}
 
 	/**
 	 * DT_BAK1
 	 */
-	public void setDtBak1 (Date dtBak1){
+	public void setDtBak1(Date dtBak1) {
 		this.dtBak1 = dtBak1;
 	}
 
@@ -111,14 +125,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_CONTENT
 	 */
-	public String getStContent(){
+	public String getStContent() {
 		return stContent;
 	}
 
 	/**
 	 * ST_CONTENT
 	 */
-	public void setStContent (String stContent){
+	public void setStContent(String stContent) {
 		this.stContent = stContent;
 	}
 
@@ -131,14 +145,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * DT_BAK2
 	 */
-	public Date getDtBak2(){
+	public Date getDtBak2() {
 		return dtBak2;
 	}
 
 	/**
 	 * DT_BAK2
 	 */
-	public void setDtBak2 (Date dtBak2){
+	public void setDtBak2(Date dtBak2) {
 		this.dtBak2 = dtBak2;
 	}
 
@@ -151,14 +165,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * DT_OPEN_DATE
 	 */
-	public Date getDtOpenDate(){
+	public Date getDtOpenDate() {
 		return dtOpenDate;
 	}
 
 	/**
 	 * DT_OPEN_DATE
 	 */
-	public void setDtOpenDate (Date dtOpenDate){
+	public void setDtOpenDate(Date dtOpenDate) {
 		this.dtOpenDate = dtOpenDate;
 	}
 
@@ -171,14 +185,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_PERSON_ID
 	 */
-	public String getStPersonId(){
+	public String getStPersonId() {
 		return stPersonId;
 	}
 
 	/**
 	 * ST_PERSON_ID
 	 */
-	public void setStPersonId (String stPersonId){
+	public void setStPersonId(String stPersonId) {
 		this.stPersonId = stPersonId;
 	}
 
@@ -191,14 +205,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_BAK4
 	 */
-	public String getStBak4(){
+	public String getStBak4() {
 		return stBak4;
 	}
 
 	/**
 	 * ST_BAK4
 	 */
-	public void setStBak4 (String stBak4){
+	public void setStBak4(String stBak4) {
 		this.stBak4 = stBak4;
 	}
 
@@ -211,14 +225,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_TITLE
 	 */
-	public String getStTitle(){
+	public String getStTitle() {
 		return stTitle;
 	}
 
 	/**
 	 * ST_TITLE
 	 */
-	public void setStTitle (String stTitle){
+	public void setStTitle(String stTitle) {
 		this.stTitle = stTitle;
 	}
 
@@ -231,14 +245,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_BAK5
 	 */
-	public String getStBak5(){
+	public String getStBak5() {
 		return stBak5;
 	}
 
 	/**
 	 * ST_BAK5
 	 */
-	public void setStBak5 (String stBak5){
+	public void setStBak5(String stBak5) {
 		this.stBak5 = stBak5;
 	}
 
@@ -251,14 +265,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_TASK_STATUS
 	 */
-	public String getStTaskStatus(){
+	public String getStTaskStatus() {
 		return stTaskStatus;
 	}
 
 	/**
 	 * ST_TASK_STATUS
 	 */
-	public void setStTaskStatus (String stTaskStatus){
+	public void setStTaskStatus(String stTaskStatus) {
 		this.stTaskStatus = stTaskStatus;
 	}
 
@@ -271,14 +285,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_BAK2
 	 */
-	public String getStBak2(){
+	public String getStBak2() {
 		return stBak2;
 	}
 
 	/**
 	 * ST_BAK2
 	 */
-	public void setStBak2 (String stBak2){
+	public void setStBak2(String stBak2) {
 		this.stBak2 = stBak2;
 	}
 
@@ -291,14 +305,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_BAK3
 	 */
-	public String getStBak3(){
+	public String getStBak3() {
 		return stBak3;
 	}
 
 	/**
 	 * ST_BAK3
 	 */
-	public void setStBak3 (String stBak3){
+	public void setStBak3(String stBak3) {
 		this.stBak3 = stBak3;
 	}
 
@@ -311,14 +325,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_BAK1
 	 */
-	public String getStBak1(){
+	public String getStBak1() {
 		return stBak1;
 	}
 
 	/**
 	 * ST_BAK1
 	 */
-	public void setStBak1 (String stBak1){
+	public void setStBak1(String stBak1) {
 		this.stBak1 = stBak1;
 	}
 
@@ -326,22 +340,22 @@ public class LegislationProcessTaskdetail implements Serializable {
 	 * ST_TASKDETAIL_ID
 	 */
 	@Id
-    @GenericGenerator(name = "id", strategy = "assigned") 
-    @GeneratedValue(generator = "id")  
+	@GenericGenerator(name = "id", strategy = "assigned")
+	@GeneratedValue(generator = "id")
 	@Column(name = "ST_TASKDETAIL_ID")
 	private String stTaskdetailId;
 
 	/**
 	 * ST_TASKDETAIL_ID
 	 */
-	public String getStTaskdetailId(){
+	public String getStTaskdetailId() {
 		return stTaskdetailId;
 	}
 
 	/**
 	 * ST_TASKDETAIL_ID
 	 */
-	public void setStTaskdetailId (String stTaskdetailId){
+	public void setStTaskdetailId(String stTaskdetailId) {
 		this.stTaskdetailId = stTaskdetailId;
 	}
 
@@ -354,14 +368,14 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * DT_CLOSE_DATE
 	 */
-	public Date getDtCloseDate(){
+	public Date getDtCloseDate() {
 		return dtCloseDate;
 	}
 
 	/**
 	 * DT_CLOSE_DATE
 	 */
-	public void setDtCloseDate (Date dtCloseDate){
+	public void setDtCloseDate(Date dtCloseDate) {
 		this.dtCloseDate = dtCloseDate;
 	}
 
@@ -374,16 +388,37 @@ public class LegislationProcessTaskdetail implements Serializable {
 	/**
 	 * ST_PERSON_NAME
 	 */
-	public String getStPersonName(){
+	public String getStPersonName() {
 		return stPersonName;
 	}
 
 	/**
 	 * ST_PERSON_NAME
 	 */
-	public void setStPersonName (String stPersonName){
+	public void setStPersonName(String stPersonName) {
 		this.stPersonName = stPersonName;
 	}
+	
+	/**
+	 * ST_NODE_ID
+	 */
+	@Column(name = "ST_NODE_ID")
+	private String stNodeId;
+
+	/**
+	 * ST_NODE_ID
+	 */
+	public String getStNodeId(){
+		return stNodeId;
+	}
+
+	/**
+	 * ST_NODE_ID
+	 */
+	public void setStNodeId (String stNodeId){
+		this.stNodeId = stNodeId;
+	}
+
 	@Transient
 	private List<LegislationFiles> filesList;
 
@@ -399,3 +434,11 @@ public class LegislationProcessTaskdetail implements Serializable {
 		this.filesList = filesList;
 	}
 }
+
+
+
+
+
+
+
+

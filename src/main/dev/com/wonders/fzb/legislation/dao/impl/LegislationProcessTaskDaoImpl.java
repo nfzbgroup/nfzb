@@ -222,5 +222,9 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 		return tasks;
 	}
 
+	@Override
+	public LegislationProcessTask findById(String id) {
+		return (LegislationProcessTask) super.load(id);
+	}
 
 }

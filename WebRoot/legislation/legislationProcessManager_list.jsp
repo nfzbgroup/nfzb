@@ -419,6 +419,15 @@
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId
         });
     };
+    
+	function openReportPage(stDocId) {
+        $("#legislationProcessForm").modal({
+            remote: "${basePath}/legislationReport/openDraftReportPage.do?stNodeId=${nodeId}&stDocId="+stDocId
+        });
+    };
+    
+    
+    
 
     function openLeaderIdeaPage(method,stDocId,stNodeId) {
         $.post("../legislationProcessTask/checkDealInfo.do?stDocId="+stDocId,

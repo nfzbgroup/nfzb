@@ -116,8 +116,11 @@
                 </div>
             </div>
 			<div class="form-group text-center">
-					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
-						   name="btnSave" onclick="saveAuditMeeting()" value="提交"> &nbsp;&nbsp;
+			<input type="hidden" id="op" name="op">
+			<input type="button" class="btn btn-w-m btn-success" id="btnSave"
+						   name="btnSave" onclick="saveAuditMeeting1('save')" value="保存"> &nbsp;&nbsp;
+					<input type="button" class="btn btn-w-m btn-success" id="btnSubmit"
+						   name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="提交"> &nbsp;&nbsp;
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 			<div class="form-group">
@@ -278,7 +281,8 @@
             obj.parent().parent().remove();
         }
     };
-    function saveAuditMeeting() {
+    function saveAuditMeeting1(operation) {
+    	$('#op').val(operation);
         var param=$('#auditMeetingForm').formToJson();
         var stDocSource="";
         var checkedNum=0;
@@ -302,7 +306,7 @@
         }else if(param.stComent==null||param.stComent==""){
             Duang.error("提示","请输入会议人员");
         }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveAuditMeeting&stTaskStatus=${stTaskStatus}",param,function(data){
+            $.post("${requestUrl}?stNodeId=${nodeId}&method=saveAuditMeeting&stTaskStatus=${stTaskStatus}",param,function(data){
                 $('#legislationProcessForm').modal('hide');
                 submitForm(1);
             });

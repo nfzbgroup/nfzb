@@ -1,5 +1,5 @@
 <%@page import="com.wonders.fzb.base.beans.Page"%>
-<%@ page language="java" contentType="text/html;charset=utf-8"%>
+<%@ page language="java" contentType="text/html;charset=UTF-8"%>
 <%@taglib prefix="s" uri="/struts-tags" %>
 
 <!DOCTYPE html>
@@ -20,33 +20,40 @@
 </head>
 
 <body>
-	<div class="ibox-content" id="divAdd"><!-- style="display: none" 隐藏div -->
 			<div class="ibox-tools">
 				<input type="button"
-					class="btn btn-w-m btn-white" id="btnAdd" name="btnAdd" value="添加草案">
+					class="btn btn-w-m btn-white" id="btnAdd" name="btnAdd" value="添加">
 			</div>
-	</div>
 	<div class="ibox-content">
+	<div class="ibox-content" id="divAdd">
 
+	</div>
 		<table class="table table-bordered">
 			<thead>
 				<tr>
 					<th>id</th>
 					<th>草案名称</th>
-					<th>操作</th>
+					<th>操  作</th>
 				</tr>
 			</thead>
 			<tbody>
-				<s:iterator value="infoPage.result" var="task">
+				<s:iterator value="#request.infoPage.result" var="task">
 					<tr>
 						<td><s:property value="#task.stDocId" /></td>
 						<td><s:property value="#task.stDocName" /></td>
-						<td><a href="${basePath}/legislation/legislationProcess_add.jsp?action=edit&stDocId=${task.stDocId}&stDocName=${task.stDocName}&stComent=${task.stComent}">处理</a></td>
+						<td><a href="${basePath}/legislationProcessDoc/${request.nodeInfo.stInfoUrl}?action=edit&docId=${task.stDocId}&stNodeId=${request.nodeInfo.stNodeId}&taskId=${task.stDocSource}" target="_blank">处理</a></td>
 					</tr>
 				</s:iterator>
 			</tbody>
 		</table>
-
+                <div class = "contentBox-paging">
+                <%
+	                Page retPage= (Page)request.getAttribute("retPage");
+	                int pageSize = (null == request.getParameter("pageSize") || "".equals(request.getParameter("pageSize")))?10:Integer.parseInt(request.getParameter("pageSize"));
+	                int pageNo = (null == request.getParameter("pageNo") || "".equals(request.getParameter("pageNo")))?1:Integer.parseInt(request.getParameter("pageNo"));
+                %>
+                <%@include file="/platform/include/pagelinks.jsp" %>
+                </div>
 	</div>
 
 	<script src="${basePath}/legislation/assets/js/jquery.min.js?v=2.1.4"></script>
@@ -66,8 +73,7 @@
 	//添加草案
     $('#btnAdd').click(function () {
     	var stNodeId='${request.nodeInfo.stNodeId}';
-    	var stNodeName='${request.nodeInfo.stNodeName}';
-    	window.open ('${basePath}/legislation/legislationProcess_add.jsp?action=add&stNodeId='+stNodeId+'&stNodeName='+stNodeName, 'newwindow', 'height=400, width=1080, top=200, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no') ;
+    	window.open ('${basePath}/legislationProcessDoc/draft_create_info.do?action=add&stNodeId='+stNodeId, 'newwindow', 'height=400, width=1080, top=200, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no') ;
     	
     });
 	

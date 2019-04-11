@@ -1,5 +1,6 @@
 package com.wonders.fzb.legislation.services.impl;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,20 +16,19 @@ import com.wonders.fzb.legislation.beans.*;
 import com.wonders.fzb.legislation.dao.*;
 import com.wonders.fzb.legislation.services.*;
 
-
 /**
  * LegislationProcessTaskdetail service实现
  * 
  * @author scalffold created by lj
  */
- 
+
 @Service("legislationProcessTaskdetailService")
 @Transactional
 public class LegislationProcessTaskdetailServiceImpl implements LegislationProcessTaskdetailService {
 
 	@Autowired
 	private LegislationProcessTaskdetailDao legislationProcessTaskdetailDao;
-	
+
 	/**
 	 * 添加实体对象
 	 */
@@ -44,7 +44,7 @@ public class LegislationProcessTaskdetailServiceImpl implements LegislationProce
 	public String addObj(LegislationProcessTaskdetail info) {
 		return legislationProcessTaskdetailDao.saveObj(info);
 	}
-	
+
 	/**
 	 * 更新实体对象
 	 */
@@ -72,14 +72,10 @@ public class LegislationProcessTaskdetailServiceImpl implements LegislationProce
 	/**
 	 * 根据Map中过滤条件、排序条件和分页参数进行分页查询.
 	 * 
-	 * @param condMap
-	 *            过滤条件<propertyName,properyValue>
-	 * @param sortMap
-	 *            排序条件<propertyName,properyValue>
-	 * @param pageNo
-	 *            当前页码
-	 * @param pageSize
-	 *            每页显示记录数.
+	 * @param condMap  过滤条件<propertyName,properyValue>
+	 * @param sortMap  排序条件<propertyName,properyValue>
+	 * @param pageNo   当前页码
+	 * @param pageSize 每页显示记录数.
 	 * @return
 	 * @throws FzbDaoException
 	 */
@@ -91,10 +87,8 @@ public class LegislationProcessTaskdetailServiceImpl implements LegislationProce
 	/**
 	 * 根据Map中过滤条件、排序条件进行查询.
 	 * 
-	 * @param condMap
-	 *            过滤条件<propertyName,properyValue>
-	 * @param sortMap
-	 *            排序条件<propertyName,properyValue>
+	 * @param condMap 过滤条件<propertyName,properyValue>
+	 * @param sortMap 排序条件<propertyName,properyValue>
 	 * @return
 	 */
 	@Override
@@ -107,10 +101,28 @@ public class LegislationProcessTaskdetailServiceImpl implements LegislationProce
 		legislationProcessTaskdetailDao.saveOrUpdate(info);
 	}
 
-
 	@Override
 	public List<LegislationProcessTaskdetail> findByHQL(String hql) {
 		List<LegislationProcessTaskdetail> legislationProcessTaskdetailList = legislationProcessTaskdetailDao.findByHQL(hql);
 		return legislationProcessTaskdetailList;
+	}
+
+	@Override
+	public LegislationProcessTaskdetail findByTaskId(String stTaskId) {
+		LegislationProcessTaskdetail legislationProcessTaskdetail = new LegislationProcessTaskdetail();
+		try {
+			Map<String, Object> condMap = new HashMap<String, Object>();
+			Map<String, String> sortMap = new HashMap<String, String>();
+			condMap.put("stTaskId", stTaskId);
+			sortMap.put("stTaskId", "desc");
+			List<LegislationProcessTaskdetail> legislationProcessTaskdetailList = legislationProcessTaskdetailDao.findByList(condMap, sortMap);
+			if (legislationProcessTaskdetailList.size() > 0) {
+				legislationProcessTaskdetail = legislationProcessTaskdetailList.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return legislationProcessTaskdetail;
+
 	}
 }
