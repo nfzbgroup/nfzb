@@ -216,6 +216,40 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
+									<c:when test="${nodeId=='NOD_0000000201'}">
+										<div class="col-md-5">
+											<div class="form-group">
+												<label class="col-md-3 control-label">发起时间:</label>
+												<div class="col-md-9">
+													<div class="input-group input-large">
+														<input type="text" class="form-control" readonly id="startTime" name="startTime">
+														<span class="input-group-addon"> - </span>
+														<input type="text" class="form-control" readonly id="endTime" name="endTime">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-group">
+												<label class="col-md-5 control-label">计划名称:</label>
+												<div class="col-md-7">
+													<input type="text"  class="form-control" id="stPlanName">
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-group">
+												<label class="col-md-5 control-label">发起人:</label>
+												<div class="col-md-7">
+													<input type="text"  class="form-control" id="stUserName">
+												</div>
+											</div>
+										</div>
+										<div class="col-md-12">
+										</div>
+										<div class="col-md-5">
+										</div>
+									</c:when>
 									<c:otherwise>
 										<div class="col-md-5">
 											<div class="form-group">
@@ -293,6 +327,11 @@
 									<c:when test="${nodeId=='NOD_0000000101'}">
 										<div class="pull-right">
 											<label class="btn btn-w-m btn-success" id="add" onclick="openPage('openAddPage',null)">草案发起</label>
+										</div>
+									</c:when>
+									<c:when test="${nodeId=='NOD_0000000201'}">
+										<div class="pull-right">
+											<label class="btn btn-w-m btn-success" id="addPlan" onclick="openPlanPage('openPlanAddPage',null)">项目发起</label>
 										</div>
 									</c:when>
 								</c:choose>
@@ -417,6 +456,12 @@
 	function openPage(method,stDocId) {
         $("#legislationProcessForm").modal({
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId
+        });
+    };
+
+    function openPlanPage(method,stTaskId) {
+        $("#legislationProcessForm").modal({
+            remote: "${basePath}/legislationPlan/draft_plan_info.do?stNodeId=${nodeId}&method="+method+"&stTaskId="+stTaskId
         });
     };
     

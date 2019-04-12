@@ -11,6 +11,9 @@ import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.services.*;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.services.LegislationPlanService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
@@ -64,6 +67,12 @@ public class LegislationProcessTaskAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationProcessTaskdetailService")
 	private LegislationProcessTaskdetailService legislationProcessTaskdetailService;
+	@Autowired
+	@Qualifier("legislationPlanService")
+	private LegislationPlanService legislationPlanService;
+	@Autowired
+	@Qualifier("legislationPlanTaskService")
+	private LegislationPlanTaskService legislationPlanTaskService;
 
 	Page<LegislationProcessDoc> infoPage;
 
@@ -98,13 +107,15 @@ public class LegislationProcessTaskAction extends BaseAction {
 	 *
 	 * @return
 	 */
-	private String queryTable() throws ParseException {
+	private String queryTable() throws ParseException, FzbDaoException {
 		if ("NOD_0000000140".equals(request.getParameter("stNodeId")) || "NOD_0000000141".equals(request.getParameter("stNodeId")) || "NOD_0000000150".equals(request.getParameter("stNodeId")) || "NOD_0000000151".equals(request.getParameter("stNodeId"))) {
 			queryTaskDetail();
 		} else if ("NOD_0000000120".equals(request.getParameter("stNodeId")) || "NOD_0000000121".equals(request.getParameter("stNodeId")) || "NOD_0000000122".equals(request.getParameter("stNodeId")) || "NOD_0000000162".equals(request.getParameter("stNodeId"))) {
 			queryUnitOpinion();
 		} else if ("NOD_0000000170".equals(request.getParameter("stNodeId"))) {
 			queryCheckMeeting();
+		}  else if ("NOD_0000000201".equals(request.getParameter("stNodeId"))) {
+			queryPlanList();
 		} else {
 			queryDoc();
 		}
@@ -419,6 +430,63 @@ public class LegislationProcessTaskAction extends BaseAction {
 			}
 		}
 		request.setAttribute("isZhc", isZhc);
+		request.setAttribute("nodeInfo", nodeInfo);
+		request.setAttribute("pageNo", pageNo);
+		request.setAttribute("pageSize", pageSize);
+		request.setAttribute("retPage", infoPage);
+		request.setAttribute("nodeId", stNodeId);
+	}
+
+	private void queryPlanList() throws ParseException, FzbDaoException {
+		String pageSize = request.getParameter("pageSize");
+		String pageNo = request.getParameter("pageNo");
+		String stNodeId = request.getParameter("stNodeId");
+		String stUserName = request.getParameter("stUserName");
+		String stTaskStatus = request.getParameter("taskStatus");
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
+		String stPlanName = request.getParameter("stPlanName");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+
+		if (null == pageSize || "".equals(pageSize)) {
+			pageSize = "10";
+		}
+		if (null == pageNo || "".equals(pageNo)) {
+			pageNo = "1";
+		}
+
+		WegovSimpleNode nodeInfo = wegovSimpleNodeService.findById(stNodeId);
+
+		if (StringUtil.isNotEmpty(stNodeId)) {
+			condMap.put("stNodeId",stNodeId);
+		}
+		if (StringUtil.isNotEmpty(startTime)) {
+			condMap.put("dtOpenDateGe",startTime);
+		}
+		if (StringUtil.isNotEmpty(endTime)) {
+			condMap.put("dtOpenDateLe",endTime);
+		}
+		if (StringUtil.isNotEmpty(stUserName)) {
+			condMap.put("stUserNameLike",stUserName);
+		}
+		if (StringUtil.isNotEmpty(stPlanName)) {
+			condMap.put("stPlanNameLike",stPlanName);
+		}
+		if (StringUtil.isNotEmpty(stTaskStatus)) {
+			condMap.put("stTaskStatus",stTaskStatus);
+		} else {
+			condMap.put("stTaskStatus","TODO");
+		}
+		condMap.put("stEnableIsNull","null");
+		sortMap.put("dtOpenDate", "DESC");
+		Page<LegislationPlanTask> infoPage = legislationPlanTaskService.findByPage(condMap,sortMap, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+
+		if (StringUtil.isEmpty(stTaskStatus)) {
+			request.setAttribute("buttonStatus", "TODO");
+		} else {
+			request.setAttribute("buttonStatus", stTaskStatus);
+		}
 		request.setAttribute("nodeInfo", nodeInfo);
 		request.setAttribute("pageNo", pageNo);
 		request.setAttribute("pageSize", pageSize);
