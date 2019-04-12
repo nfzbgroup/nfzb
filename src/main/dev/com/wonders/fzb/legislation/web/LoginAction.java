@@ -121,17 +121,91 @@ public class LoginAction extends BaseAction {
 					session.setAttribute("userRole", userRole);//
 
 					//---当前人的菜单列表--
-					Map<String, String> paramMap = new HashMap<String, String>();
 					Map<String, Object> condMap = new HashMap<String, Object>();
 					Map<String, String> sortMap = new LinkedHashMap<String, String>();
+                    condMap.put("stSubmitRoleLike", userRole);
+                    condMap.put("stFlowName", "立法计划");
+					condMap.put("stMenu", "YES");
+					sortMap.put("stNodeId", "ASC");
+					List<WegovSimpleNode> planNodeList = wegovSimpleNodeService.findByList(
+							condMap, sortMap);
+					System.out.println("查询到的节点个数：" + planNodeList.size());
+					request.setAttribute("planNodeList", planNodeList);
+					
+					
+					condMap.clear();
+					sortMap.clear();
                     condMap.put("stSubmitRoleLike", userRole);
                     condMap.put("stFlowName", "立法过程");
 					condMap.put("stMenu", "YES");
 					sortMap.put("stNodeId", "ASC");
-					List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByList(
+					List<WegovSimpleNode> draftNodeList = wegovSimpleNodeService.findByList(
 							condMap, sortMap);
-					System.out.println("查询到的节点个数：" + nodeList.size());
-					request.setAttribute("nodeList", nodeList);
+					System.out.println("查询到的节点个数：" + draftNodeList.size());
+					request.setAttribute("draftNodeList", draftNodeList);
+					
+					condMap.clear();
+					sortMap.clear();
+                    condMap.put("stSubmitRoleLike", userRole);
+                    condMap.put("stFlowName", "立法评估");
+					condMap.put("stMenu", "YES");
+					sortMap.put("stNodeId", "ASC");
+					List<WegovSimpleNode> assessNodeList = wegovSimpleNodeService.findByList(
+							condMap, sortMap);
+					System.out.println("查询到的节点个数：" + assessNodeList.size());
+					request.setAttribute("assessNodeList", assessNodeList);
+					
+					condMap.clear();
+					sortMap.clear();
+                    condMap.put("stSubmitRoleLike", userRole);
+                    condMap.put("stFlowName", "立法清理");
+					condMap.put("stMenu", "YES");
+					sortMap.put("stNodeId", "ASC");
+					List<WegovSimpleNode> cleanNodeList = wegovSimpleNodeService.findByList(
+							condMap, sortMap);
+					System.out.println("查询到的节点个数：" + cleanNodeList.size());
+					request.setAttribute("cleanNodeList", cleanNodeList);
+					
+					condMap.clear();
+					sortMap.clear();
+                    condMap.put("stSubmitRoleLike", userRole);
+                    condMap.put("stFlowName", "审核会议");
+					condMap.put("stMenu", "YES");
+					sortMap.put("stNodeId", "ASC");
+					List<WegovSimpleNode> checkMeetingNodeList = wegovSimpleNodeService.findByList(
+							condMap, sortMap);
+					System.out.println("查询到的节点个数：" + checkMeetingNodeList.size());
+					request.setAttribute("checkMeetingNodeList", checkMeetingNodeList);
+					
+					
+					condMap.clear();
+					sortMap.clear();
+                    condMap.put("stSubmitRoleLike", userRole);
+                    condMap.put("stFlowName", "常务会议");
+					condMap.put("stMenu", "YES");
+					sortMap.put("stNodeId", "ASC");
+					List<WegovSimpleNode> cityMeetingNodeList = wegovSimpleNodeService.findByList(
+							condMap, sortMap);
+					System.out.println("查询到的节点个数：" + cityMeetingNodeList.size());
+					request.setAttribute("cityMeetingNodeList", cityMeetingNodeList);
+					
+					
+					condMap.clear();
+					sortMap.clear();
+                    condMap.put("stSubmitRoleLike", userRole);
+                    condMap.put("stFlowName", "报签(签报)");
+					condMap.put("stMenu", "YES");
+					sortMap.put("stNodeId", "ASC");
+					List<WegovSimpleNode> reportNodeList = wegovSimpleNodeService.findByList(
+							condMap, sortMap);
+					System.out.println("查询到的节点个数：" + reportNodeList.size());
+					request.setAttribute("reportNodeList", reportNodeList);
+					
+					
+					
+
+					
+					
 					request.setAttribute("isZhc",isZhc);
 					
 					return SUCCESS;
