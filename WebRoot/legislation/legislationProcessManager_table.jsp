@@ -64,12 +64,26 @@
 					<th class="text-center" data-field="district_name">会议时间</th>
 					<th class="text-center" data-field="set">操作</th>
 				</c:when>
-				<c:when test="${nodeId='NOD_0000000201'}">
+				<c:when test="${nodeId=='NOD_0000000201'}">
+					<th class="text-center" data-field="id">通知编号</th>
+					<th class="text-center" data-field="district_name">通知名称</th>
+					<th class="text-center" data-field="district_name">处理环节</th>
+					<th class="text-center" data-field="created_at">发起人</th>
+					<th class="text-center" data-field="district_name">发起时间</th>
+					<c:if test="${buttonStatus=='DONE'}">
+						<th class="text-center" data-field="district_name">处理时间</th>
+					</c:if>
+					<th class="text-center" data-field="set">操作</th>
+				</c:when>
+				<c:when test="${nodeId=='NOD_0000000202'}">
 					<th class="text-center" data-field="id">计划编号</th>
 					<th class="text-center" data-field="district_name">立法项目发起名称</th>
 					<th class="text-center" data-field="district_name">处理环节</th>
 					<th class="text-center" data-field="created_at">发起人</th>
 					<th class="text-center" data-field="district_name">发起时间</th>
+					<c:if test="${buttonStatus=='DONE'}">
+						<th class="text-center" data-field="district_name">处理时间</th>
+					</c:if>
 					<th class="text-center" data-field="set">操作</th>
 				</c:when>
 				<c:otherwise>
@@ -426,12 +440,49 @@
 								<c:choose>
 									<c:when test="${buttonStatus=='TODO'}">
 										<td>
-											<a href="javaScript:void(0)" data-title="编辑" onclick="openPlanPage('openPlanEditPage','${plan.stTaskId}')" class="layer_full_link">修改</a>
+											<a href="javaScript:void(0)" data-title="编辑" onclick="openPlanPage('openNoticeEditPage','${plan.stTaskId}')" class="layer_full_link">修改</a>
 											<br>
-											<a href="javaScript:void(0)" data-title="上报" onclick="uploadReport('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">上报</a>
+											<a href="javaScript:void(0)" data-title="发布" onclick="nextPlanProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">发布</a>
 										</td>
 									</c:when>
 									<c:otherwise>
+										<td>
+											<fmt:formatDate type="date" value="${plan.dtDealDate}" />
+										</td>
+										<td>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+										</td>
+									</c:otherwise>
+								</c:choose>
+							</tr>
+						</c:forEach>
+					</c:when>
+				</c:choose>
+			</c:when>
+			<c:when test="${nodeId=='NOD_0000000202'}">
+				<c:choose>
+					<c:when test="${retPage.totalSize > 0}">
+						<c:forEach items="${retPage.result}" var="plan">
+							<tr class="text-center">
+								<td>${plan.stParentId}</td>
+								<td>${plan.stFlowId}</td>
+								<td>${plan.stNodeName}</td>
+								<td>${plan.stUserName}</td>
+								<td>
+									<fmt:formatDate type="date" value="${plan.dtOpenDate}" />
+								</td>
+								<c:choose>
+									<c:when test="${buttonStatus=='TODO'}">
+										<td>
+											<a href="javaScript:void(0)" data-title="编辑" onclick="openPlanPage('openPlanEditPage','${plan.stTaskId}')" class="layer_full_link">修改</a>
+											<br>
+											<a href="javaScript:void(0)" data-title="上报" onclick="nextPlanProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">上报</a>
+										</td>
+									</c:when>
+									<c:otherwise>
+										<td>
+											<fmt:formatDate type="date" value="${plan.dtDealDate}" />
+										</td>
 										<td>
 											<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
 										</td>
@@ -671,6 +722,14 @@
         layer.confirm('请确认操作！',function(index){
             layer.close(layer.index);
 			$.post("../"+$('#requestUrl').val()+"?stDocId="+stDocId+"&stNodeId="+stNodeId+"&method="+method);
+            submitForm(1);
+        });
+    }
+
+    function nextPlanProcess(stTaskId,stNodeId) {
+        layer.confirm('请确认操作！',function(index){
+            layer.close(layer.index);
+            $.post("../"+$('#requestUrl').val()+"?stTaskId="+stTaskId+"&stNodeId="+stNodeId+"&method=nextPlanProcess");
             submitForm(1);
         });
     }

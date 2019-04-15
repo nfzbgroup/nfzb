@@ -1,9 +1,14 @@
 package com.wonders.fzb.plan.services.impl;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +19,10 @@ import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.plan.beans.*;
 import com.wonders.fzb.plan.dao.*;
 import com.wonders.fzb.plan.services.*;
+import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -28,7 +37,19 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 
 	@Autowired
 	private LegislationPlanItemDao legislationPlanItemDao;
-	
+
+	@Autowired
+	private LegislationPlanDealService legislationPlanDealService;
+
+	@Autowired
+	private LegislationFilesService legislationFilesService;
+
+	@Autowired
+	private WegovSimpleNodeService wegovSimpleNodeService;
+
+	@Autowired
+	private LegislationPlanTaskService legislationPlanTaskService;
+
 	/**
 	 * 添加实体对象
 	 */
@@ -112,5 +133,102 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 	public List<LegislationPlanItem> findByHQL(String hql) {
 		List<LegislationPlanItem> legislationPlanItemList = legislationPlanItemDao.findByHQL(hql);
 		return legislationPlanItemList;
+	}
+
+	@Override
+	public void saveLegislationPlan(HttpServletRequest request, HttpSession session) {
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String unitId = currentPerson.getTeamInfos().get(0).getId();
+		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
+		String teamId=currentPerson.getTeamInfos().get(0).getId();
+		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
+		String userId=currentPerson.getUserId();
+		String userName=currentPerson.getName();
+		String userRoleId = session.getAttribute("userRoleId").toString();
+		String userRole = session.getAttribute("userRole").toString();
+		String stTaskId=request.getParameter("stTaskId");
+		String stPlanId=request.getParameter("stPlanId");
+		String stItemName=request.getParameter("stItemName");
+		String stTypeName=request.getParameter("stTypeName");
+		String stContent=request.getParameter("stContent");
+		String stStatus=request.getParameter("stStatus");
+		String stBak=request.getParameter("stBak");
+		String stNodeId=request.getParameter("stNodeId");
+		String stItemId;
+		if(StringUtils.isEmpty(stTaskId)){
+			//添加立法计划
+			LegislationPlanItem legislationPlanItem=new LegislationPlanItem();
+			legislationPlanItem.setStPlanId(stPlanId);
+			legislationPlanItem.setDtCreateDate(new Date());
+			legislationPlanItem.setStBak(stBak);
+			legislationPlanItem.setStContent(stContent);
+			legislationPlanItem.setStItemName(stItemName);
+			legislationPlanItem.setStStatus(stStatus);
+			legislationPlanItem.setStTypeName(stTypeName);
+			legislationPlanItem.setStUnitId(unitId);
+			legislationPlanItem.setStUnitName(unitName);
+			legislationPlanItem.setStUserId(userId);
+			legislationPlanItem.setStUserName(userName);
+			stItemId=addObj(legislationPlanItem);
+
+			WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
+			//添加立法计划任务
+			LegislationPlanTask legislationPlanTask=new LegislationPlanTask();
+			legislationPlanTask.setStFlowId(stItemName);
+			legislationPlanTask.setStPlanId(stPlanId);
+			legislationPlanTask.setStParentId(stItemId);
+			legislationPlanTask.setStRoleId(userRoleId);
+			legislationPlanTask.setStRoleName(userRole);
+			legislationPlanTask.setStNodeId(stNodeId);
+			legislationPlanTask.setStNodeName(node.getStNodeName());
+			legislationPlanTask.setStTaskStatus("TODO");
+			legislationPlanTask.setDtOpenDate(new Date());
+			legislationPlanTask.setStUserId(userId);
+			legislationPlanTask.setStUserName(userName);
+			legislationPlanTask.setStTeamId(teamId);
+			legislationPlanTask.setStTeamName(teamName);
+			legislationPlanTaskService.add(legislationPlanTask);
+
+			//添加一条操作记录
+			LegislationPlanDeal legislationPlanDeal=new LegislationPlanDeal();
+			legislationPlanDeal.setStActionId(stNodeId);
+			legislationPlanDeal.setStActionName(node.getStNodeName());
+			legislationPlanDeal.setStPlanId(stItemId);
+			legislationPlanDeal.setStUserId(userId);
+			legislationPlanDeal.setStUserName(userName);
+			legislationPlanDeal.setDtDealDate(new Date());
+			legislationPlanDeal.setStBakOne(stItemName);
+			legislationPlanDeal.setStBakTwo(stBak);
+			legislationPlanDealService.add(legislationPlanDeal);
+
+		}else{
+			//修改征集通知任务
+			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+			legislationPlanTask.setStFlowId(stItemName);
+			legislationPlanTask.setStPlanId(stPlanId);
+			legislationPlanTaskService.update(legislationPlanTask);
+
+			LegislationPlanItem legislationPlanItem=findById(legislationPlanTask.getStParentId());
+			legislationPlanItem.setStPlanId(stPlanId);
+			legislationPlanItem.setStBak(stBak);
+			legislationPlanItem.setStContent(stContent);
+			legislationPlanItem.setStItemName(stItemName);
+			legislationPlanItem.setStStatus(stStatus);
+			legislationPlanItem.setStTypeName(stTypeName);
+			update(legislationPlanItem);
+			stItemId=legislationPlanItem.getStItemId();
+
+			//修改操作记录
+			LegislationPlanDeal legislationPlanDeal=legislationPlanDealService.findByHQL("from LegislationPlanDeal t where 1=1 and t.stPlanId='"+stItemId+"' and t.stActionId='"+stNodeId+"'").get(0);
+			legislationPlanDeal.setStUserId(userId);
+			legislationPlanDeal.setStUserName(userName);
+			legislationPlanDeal.setDtDealDate(new Date());
+			legislationPlanDeal.setStBakOne(stItemName);
+			legislationPlanDeal.setStBakTwo(stBak);
+			legislationPlanDealService.update(legislationPlanDeal);
+		}
+
+		// 处理附件内容
+		legislationFilesService.updateParentIdById(request, stItemId);
 	}
 }

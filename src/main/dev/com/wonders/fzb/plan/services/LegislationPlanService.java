@@ -7,6 +7,9 @@ import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.plan.beans.LegislationPlan;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 
 /**
  * LegislationPlan service接口
@@ -73,6 +76,13 @@ public interface LegislationPlanService{
 	 * 根据HQL进行查询.
 	 */
 	public List<LegislationPlan> findByHQL(String hql);
+
+	/**
+	 * 征集通知保存
+	 * @param request
+	 * @param session
+	 */
+	void saveLegislationNotice(HttpServletRequest request, HttpSession session);
 
 
 }

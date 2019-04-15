@@ -19,6 +19,7 @@ import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
 import dm.jdbc.util.StringUtil;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -114,8 +115,8 @@ public class LegislationProcessTaskAction extends BaseAction {
 			queryUnitOpinion();
 		} else if ("NOD_0000000170".equals(request.getParameter("stNodeId"))) {
 			queryCheckMeeting();
-		}  else if ("NOD_0000000201".equals(request.getParameter("stNodeId"))) {
-			queryPlanList();
+		}  else if ("NOD_0000000201".equals(request.getParameter("stNodeId"))||"NOD_0000000202".equals(request.getParameter("stNodeId"))) {
+			queryNoticeList();
 		} else {
 			queryDoc();
 		}
@@ -437,7 +438,7 @@ public class LegislationProcessTaskAction extends BaseAction {
 		request.setAttribute("nodeId", stNodeId);
 	}
 
-	private void queryPlanList() throws ParseException, FzbDaoException {
+	private void queryNoticeList() throws ParseException, FzbDaoException {
 		String pageSize = request.getParameter("pageSize");
 		String pageNo = request.getParameter("pageNo");
 		String stNodeId = request.getParameter("stNodeId");
@@ -462,16 +463,16 @@ public class LegislationProcessTaskAction extends BaseAction {
 			condMap.put("stNodeId",stNodeId);
 		}
 		if (StringUtil.isNotEmpty(startTime)) {
-			condMap.put("dtOpenDateGe",startTime);
+			condMap.put("dtOpenDateGe",DateUtils.parseDate(startTime,"yyyy-MM-dd"));
 		}
 		if (StringUtil.isNotEmpty(endTime)) {
-			condMap.put("dtOpenDateLe",endTime);
+			condMap.put("dtOpenDateLe",DateUtils.parseDate(endTime,"yyyy-MM-dd"));
 		}
 		if (StringUtil.isNotEmpty(stUserName)) {
 			condMap.put("stUserNameLike",stUserName);
 		}
 		if (StringUtil.isNotEmpty(stPlanName)) {
-			condMap.put("stPlanNameLike",stPlanName);
+			condMap.put("stFlowIdLike",stPlanName);
 		}
 		if (StringUtil.isNotEmpty(stTaskStatus)) {
 			condMap.put("stTaskStatus",stTaskStatus);
@@ -557,6 +558,11 @@ public class LegislationProcessTaskAction extends BaseAction {
 
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().print(jsonObject);
+		return null;
+	}
+
+	private String nextPlanProcess(){
+		legislationPlanTaskService.nextPlanProcess(request,session);
 		return null;
 	}
 

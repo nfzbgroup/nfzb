@@ -1,9 +1,13 @@
 package com.wonders.fzb.plan.services.impl;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +18,9 @@ import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.plan.beans.*;
 import com.wonders.fzb.plan.dao.*;
 import com.wonders.fzb.plan.services.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -28,6 +35,9 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 
 	@Autowired
 	private LegislationPlanTaskDao legislationPlanTaskDao;
+
+	@Autowired
+	private WegovSimpleNodeService wegovSimpleNodeService;
 	
 	/**
 	 * 添加实体对象
@@ -112,5 +122,44 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 	public List<LegislationPlanTask> findByHQL(String hql) {
 		List<LegislationPlanTask> legislationPlanTaskList = legislationPlanTaskDao.findByHQL(hql);
 		return legislationPlanTaskList;
+	}
+
+	@Override
+	public void nextPlanProcess(HttpServletRequest request, HttpSession session) {
+		String stTaskId = request.getParameter("stTaskId");
+		String stNodeId = request.getParameter("stNodeId");
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String unitId = currentPerson.getTeamInfos().get(0).getId();
+		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
+		String teamId=currentPerson.getTeamInfos().get(0).getId();
+		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
+		String userId=currentPerson.getUserId();
+		String userName=currentPerson.getName();
+		String userRoleId = session.getAttribute("userRoleId").toString();
+		String userRole = session.getAttribute("userRole").toString();
+		LegislationPlanTask legislationPlanTask=findById(stTaskId);
+		legislationPlanTask.setStTaskStatus("DONE");
+		legislationPlanTask.setDtDealDate(new Date());
+		legislationPlanTask.setStDealId(userId);
+		legislationPlanTask.setStDealName(userName);
+		update(legislationPlanTask);
+
+		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
+		if(!"END".equals(node.getStNextNode())){
+			WegovSimpleNode nextNode=wegovSimpleNodeService.findById(node.getStNextNode());
+			LegislationPlanTask newLegislationPlanTask=new LegislationPlanTask();
+			newLegislationPlanTask.setStFlowId(legislationPlanTask.getStFlowId());
+			newLegislationPlanTask.setStTaskStatus("TODO");
+			newLegislationPlanTask.setDtOpenDate(legislationPlanTask.getDtOpenDate());
+			newLegislationPlanTask.setStNodeId(nextNode.getStNodeId());
+			newLegislationPlanTask.setStNodeName(nextNode.getStNodeName());
+			newLegislationPlanTask.setStPlanId(legislationPlanTask.getStPlanId());
+			newLegislationPlanTask.setStTeamId(teamId);
+			newLegislationPlanTask.setStTeamName(teamName);
+			newLegislationPlanTask.setStRoleId(userRoleId);
+			newLegislationPlanTask.setStRoleName(userRole);
+			newLegislationPlanTask.setStParentId(legislationPlanTask.getStParentId());
+			addObj(newLegislationPlanTask);
+		}
 	}
 }

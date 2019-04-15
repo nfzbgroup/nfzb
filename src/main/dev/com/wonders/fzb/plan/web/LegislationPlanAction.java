@@ -41,6 +41,9 @@ public class LegislationPlanAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationFilesService")
 	private LegislationFilesService legislationFilesService;
+	@Autowired
+	@Qualifier("legislationPlanItemService")
+	private LegislationPlanItemService legislationPlanItemService;
 
 	private int pageNo = 1;
 	private int pageSize = 10;
@@ -59,7 +62,10 @@ public class LegislationPlanAction extends BaseAction {
 
 	@Action(value = "draft_plan_info", results = { @Result(name = "openPlanAddPage", location = "/plan/legislationPlan_form.jsp"),
 			@Result(name = "openPlanEditPage", location = "/plan/legislationPlan_form.jsp"),
-			@Result(name = "openPlanInfoPage", location = "/plan/legislationPlan_form.jsp") })
+			@Result(name = "openPlanInfoPage", location = "/plan/legislationPlan_form.jsp"),
+			@Result(name = "openNoticeAddPage", location = "/plan/legislationNotice_form.jsp"),
+			@Result(name = "openNoticeEditPage", location = "/plan/legislationNotice_form.jsp"),
+			@Result(name = "openNoticeInfoPage", location = "/plan/legislationNotice_form.jsp")})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -93,7 +99,9 @@ public class LegislationPlanAction extends BaseAction {
 	 * @return
 	 */
 	private String openPlanAddPage(){
-		request.setAttribute("legislationPlan",new LegislationPlan());
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 order by t.dtCreateDate desc");
+		request.setAttribute("legislationPlanList",legislationPlanList);
+		request.setAttribute("legislationPlanItem",new LegislationPlanItem());
 		request.setAttribute("legislationPlanTask",new LegislationPlanTask());
 		return pageController();
 	}
@@ -103,6 +111,56 @@ public class LegislationPlanAction extends BaseAction {
 	 * @return
 	 */
 	private String openPlanEditPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		String stNodeId=request.getParameter("stNodeId");
+		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+		LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId", legislationPlanItem.getStItemId());
+		condMap.put("stNodeId", stNodeId);
+		sortMap.put("dtPubDate", "ASC");
+		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 order by t.dtCreateDate desc");
+		request.setAttribute("legislationPlanList",legislationPlanList);
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("legislationPlanItem",legislationPlanItem);
+		request.setAttribute("legislationPlanTask",legislationPlanTask);
+		return pageController();
+	}
+
+	/**
+	 * 立法项目详情
+	 * @return
+	 */
+	private String openPlanInfoPage(){
+		return openPlanEditPage();
+	}
+
+	/**
+	 * 保存立法计划
+	 * @return
+	 */
+	private String saveLegislationPlan(){
+		legislationPlanItemService.saveLegislationPlan(request,session);
+		return null;
+	}
+
+	/**
+	 * 征集通知发起
+	 * @return
+	 */
+	private String openNoticeAddPage(){
+		request.setAttribute("legislationPlan",new LegislationPlan());
+		request.setAttribute("legislationPlanTask",new LegislationPlanTask());
+		return pageController();
+	}
+
+	/**
+	 * 征集通知修改
+	 * @return
+	 */
+	private String openNoticeEditPage(){
 		String stTaskId=request.getParameter("stTaskId");
 		String stNodeId=request.getParameter("stNodeId");
 		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
@@ -120,15 +178,19 @@ public class LegislationPlanAction extends BaseAction {
 	}
 
 	/**
-	 * 立法项目详情
+	 * 征集通知详情
 	 * @return
 	 */
-	private String openPlanInfoPage(){
-		return openPlanEditPage();
+	private String openNoticeInfoPage(){
+		return openNoticeEditPage();
 	}
 
-	private String saveLegislationPlan(){
-
+	/**
+	 * 保存征集通知
+	 * @return
+	 */
+	private String saveLegislationNotice(){
+		legislationPlanService.saveLegislationNotice(request,session);
 		return null;
 	}
 }

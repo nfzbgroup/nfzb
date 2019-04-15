@@ -7,7 +7,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >立法项目 > </span>
+            <span >征集通知 > </span>
         </li>
         <li>
             <span ><c:choose><c:when test="${legislationPlanTask.stTaskId !=null}"><c:if test="${legislationPlanTask.stTaskStatus=='TODO'}">编辑</c:if><c:if test="${legislationPlanTask.stTaskStatus=='DONE'}">详情</c:if></c:when><c:otherwise>发起</c:otherwise></c:choose> </span>
@@ -16,67 +16,30 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
-	<form id="legislationPlanForm" class="form-horizontal"
+	<form id="legislationNoticeForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden name="stTaskId" <c:if test="${legislationPlanTask.stTaskId !=null}">value="${legislationPlanTask.stTaskId}" </c:if>>
         <div class="form-body">
             <div class="form-group">
-                <label class="col-sm-3 control-label">立法项目名称：</label>
+                <label class="col-sm-3 control-label">通知名称：</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" name="stItemName" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> <c:if test="${legislationPlanItem.stItemName !=null}">value="${legislationPlanItem.stItemName}" </c:if>>
+                    <input type="text" class="form-control" name="stPlanName" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> <c:if test="${legislationPlan.stPlanName !=null}">value="${legislationPlan.stPlanName}" </c:if>>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-3 control-label">征集通知：</label>
+                <label class="col-sm-3 control-label">通知详情：</label>
                 <div class="col-sm-9">
-                    <select class="form-control" name="stPlanId" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if>>
-                       <c:if test="${legislationPlanList!=null&&fn:length(legislationPlanList)>0}">
-                           <c:forEach var="plan" items="${legislationPlanList}">
-                               <option value="${plan.stPlanId}" <c:if test="${legislationPlanItem.stPlanId !=null&&legislationPlanItem.stPlanId ==plan.stPlanId}">selected</c:if>>${plan.stPlanName}</option>
-                           </c:forEach>
-                       </c:if>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">立法项目类型：</label>
-                <div class="col-sm-9">
-                    <select class="form-control" name="stTypeName" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if>>
-                        <option value="立" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='立'}">selected</c:if>>立</option>
-                        <option value="改" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='改'}">selected</c:if>>改</option>
-                        <option value="修" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='修'}">selected</c:if>>修</option>
-                        <option value="正式" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='正式'}">selected</c:if>>正式</option>
-                        <option value="预备" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='预备'}">selected</c:if>>预备</option>
-                        <option value="修订" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='修订'}">selected</c:if>>修订</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">建议立项理由：</label>
-                <div class="col-sm-9">
-                    <textarea class="form-control" name="stContent" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlanItem.stContent !=null}">${legislationPlanItem.stContent}</c:if></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">目前进展情况：</label>
-                <div class="col-sm-9">
-                    <textarea class="form-control" name="stStatus" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlanItem.stStatus !=null}">${legislationPlanItem.stStatus}</c:if></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">备注：</label>
-                <div class="col-sm-9">
-                    <textarea class="form-control" name="stBak" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlanItem.stBak !=null}">${legislationPlanItem.stBak}</c:if></textarea>
+                    <textarea class="form-control" name="stRemark" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlan.stRemark !=null}">${legislationPlan.stRemark}</c:if></textarea>
                 </div>
             </div>
 			<div class="form-group text-center">
                 <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
-                    <input type="button" class="btn btn-w-m btn-success"  value="提交" onclick="saveLegislationPlan()"> &nbsp;&nbsp;
+                    <input type="button" class="btn btn-w-m btn-success"  value="提交" onclick="saveLegislationNotice()"> &nbsp;&nbsp;
                 </c:if>
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
             <div class="form-group">
-                <label class="control-label">计划材料
+                <label class="control-label">通知材料
                 </label>
                 <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
                     <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
@@ -104,7 +67,7 @@
                             <c:forEach var="file" items="${legislationFilesList}">
                                 <c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
                                     <tr class="text-center">'
-                                        <td class="text-left">计划材料</td>
+                                        <td class="text-left">通知材料</td>
                                         <td>${file.stTitle}</td>
                                         <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
                                             <td>
@@ -125,22 +88,14 @@
 
 </div>
 <script>
-    function saveLegislationPlan() {
-        var param=$('#legislationPlanForm').formToJson();
-        if(param.stItemName==null||param.stItemName==""){
-            Duang.error("提示","请输入立法项目名称");
-        }else if(param.stPlanId==null||param.stPlanId==""){
-            Duang.error("提示","请选择征集通知");
-        }else if(param.stTypeName==null||param.stTypeName==""){
-            Duang.error("提示","请选择立法项目类型");
-        }else if(param.stContent==null||param.stContent==""){
-            Duang.error("提示","请输入建议立项理由");
-        }else if(param.stStatus==null||param.stStatus==""){
-            Duang.error("提示","请输入目前进展情况");
-        }else if(param.stBak==null||param.stBak==""){
-            Duang.error("提示","请输入备注");
+    function saveLegislationNotice() {
+        var param=$('#legislationNoticeForm').formToJson();
+        if(param.stPlanName==null||param.stPlanName==""){
+            Duang.error("提示","请输入通知名称");
+        }else if(param.stRemark==null||param.stRemark==""){
+            Duang.error("提示","请输入通知详情");
         }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationPlan",param,function(data){
+            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationNotice",param,function(data){
                 $('#legislationProcessForm').modal('hide');
                 submitForm(1);
             });
