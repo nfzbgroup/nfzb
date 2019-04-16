@@ -51,5 +51,5 @@
                 submitForm(1);
             });
         }
-    };
+    }
 </script>
