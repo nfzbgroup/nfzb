@@ -115,7 +115,7 @@ public class LegislationProcessTaskAction extends BaseAction {
 			queryUnitOpinion();
 		} else if ("NOD_0000000170".equals(request.getParameter("stNodeId"))) {
 			queryCheckMeeting();
-		}  else if ("NOD_0000000201".equals(request.getParameter("stNodeId"))||"NOD_0000000202".equals(request.getParameter("stNodeId"))) {
+		}  else if ("NOD_0000000201".equals(request.getParameter("stNodeId"))||"NOD_0000000202".equals(request.getParameter("stNodeId"))||"NOD_0000000203".equals(request.getParameter("stNodeId"))||"NOD_0000000204".equals(request.getParameter("stNodeId"))) {
 			queryNoticeList();
 		} else {
 			queryDoc();
@@ -461,6 +461,9 @@ public class LegislationProcessTaskAction extends BaseAction {
 
 		if (StringUtil.isNotEmpty(stNodeId)) {
 			condMap.put("stNodeId",stNodeId);
+			if("NOD_0000000205".equals(stNodeId)){
+				condMap.put("stTeamId",session.getAttribute("unitCode"));
+			}
 		}
 		if (StringUtil.isNotEmpty(startTime)) {
 			condMap.put("dtOpenDateGe",DateUtils.parseDate(startTime,"yyyy-MM-dd"));

@@ -188,19 +188,6 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 			legislationPlanTask.setStTeamId(teamId);
 			legislationPlanTask.setStTeamName(teamName);
 			legislationPlanTaskService.add(legislationPlanTask);
-
-			//添加一条操作记录
-			LegislationPlanDeal legislationPlanDeal=new LegislationPlanDeal();
-			legislationPlanDeal.setStActionId(stNodeId);
-			legislationPlanDeal.setStActionName(node.getStNodeName());
-			legislationPlanDeal.setStPlanId(stItemId);
-			legislationPlanDeal.setStUserId(userId);
-			legislationPlanDeal.setStUserName(userName);
-			legislationPlanDeal.setDtDealDate(new Date());
-			legislationPlanDeal.setStBakOne(stItemName);
-			legislationPlanDeal.setStBakTwo(stBak);
-			legislationPlanDealService.add(legislationPlanDeal);
-
 		}else{
 			//修改征集通知任务
 			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
@@ -218,14 +205,6 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 			update(legislationPlanItem);
 			stItemId=legislationPlanItem.getStItemId();
 
-			//修改操作记录
-			LegislationPlanDeal legislationPlanDeal=legislationPlanDealService.findByHQL("from LegislationPlanDeal t where 1=1 and t.stPlanId='"+stItemId+"' and t.stActionId='"+stNodeId+"'").get(0);
-			legislationPlanDeal.setStUserId(userId);
-			legislationPlanDeal.setStUserName(userName);
-			legislationPlanDeal.setDtDealDate(new Date());
-			legislationPlanDeal.setStBakOne(stItemName);
-			legislationPlanDeal.setStBakTwo(stBak);
-			legislationPlanDealService.update(legislationPlanDeal);
 		}
 
 		// 处理附件内容

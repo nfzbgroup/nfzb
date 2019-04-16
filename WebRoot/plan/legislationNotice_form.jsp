@@ -123,7 +123,7 @@
                         $("#"+id).parent().html(html);
                     }else{
                         var html='<tr class="text-center">'
-                            +'<td class="text-left">需要报送的其他材料</td>'
+                            +'<td class="text-left">通知材料</td>'
                             +'<td>'+file.name+'</td>'
                             +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
                             +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'

@@ -44,7 +44,7 @@
                     <select class="form-control" name="stTypeName" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if>>
                         <option value="立" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='立'}">selected</c:if>>立</option>
                         <option value="改" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='改'}">selected</c:if>>改</option>
-                        <option value="修" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='修'}">selected</c:if>>修</option>
+                        <option value="废" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='废'}">selected</c:if>>废</option>
                         <option value="正式" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='正式'}">selected</c:if>>正式</option>
                         <option value="预备" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='预备'}">selected</c:if>>预备</option>
                         <option value="修订" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='修订'}">selected</c:if>>修订</option>
@@ -168,7 +168,7 @@
                         $("#"+id).parent().html(html);
                     }else{
                         var html='<tr class="text-center">'
-                            +'<td class="text-left">需要报送的其他材料</td>'
+                            +'<td class="text-left">计划材料</td>'
                             +'<td>'+file.name+'</td>'
                             +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
                             +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'

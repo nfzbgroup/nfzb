@@ -84,5 +84,4 @@ public interface LegislationPlanTaskService{
 	 */
 	void nextPlanProcess(HttpServletRequest request, HttpSession session);
 
-
 }

@@ -38,7 +38,15 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 
 	@Autowired
 	private WegovSimpleNodeService wegovSimpleNodeService;
-	
+
+	@Autowired
+	private LegislationPlanDealService legislationPlanDealService;
+
+	@Autowired
+	private LegislationPlanService legislationPlanService;
+
+	@Autowired
+	private LegislationPlanItemService legislationPlanItemService;
 	/**
 	 * 添加实体对象
 	 */
@@ -129,8 +137,6 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		String stTaskId = request.getParameter("stTaskId");
 		String stNodeId = request.getParameter("stNodeId");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-		String unitId = currentPerson.getTeamInfos().get(0).getId();
-		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
 		String teamId=currentPerson.getTeamInfos().get(0).getId();
 		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
 		String userId=currentPerson.getUserId();
@@ -142,6 +148,10 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanTask.setDtDealDate(new Date());
 		legislationPlanTask.setStDealId(userId);
 		legislationPlanTask.setStDealName(userName);
+		legislationPlanTask.setStRoleId(userRoleId);
+		legislationPlanTask.setStRoleName(userRole);
+		legislationPlanTask.setStTeamId(teamId);
+		legislationPlanTask.setStTeamName(teamName);
 		update(legislationPlanTask);
 
 		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
@@ -154,12 +164,33 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 			newLegislationPlanTask.setStNodeId(nextNode.getStNodeId());
 			newLegislationPlanTask.setStNodeName(nextNode.getStNodeName());
 			newLegislationPlanTask.setStPlanId(legislationPlanTask.getStPlanId());
-			newLegislationPlanTask.setStTeamId(teamId);
-			newLegislationPlanTask.setStTeamName(teamName);
-			newLegislationPlanTask.setStRoleId(userRoleId);
-			newLegislationPlanTask.setStRoleName(userRole);
+			newLegislationPlanTask.setStUserId(legislationPlanTask.getStUserId());
+			newLegislationPlanTask.setStUserName(legislationPlanTask.getStUserName());
 			newLegislationPlanTask.setStParentId(legislationPlanTask.getStParentId());
+			if("NOD_0000000204".equals(stNodeId)){
+				String stTeamId=request.getParameter("stTeamId");
+				newLegislationPlanTask.setStTeamId(stTeamId);
+			}
 			addObj(newLegislationPlanTask);
 		}
+		//添加一条操作记录
+		LegislationPlanDeal legislationPlanDeal=new LegislationPlanDeal();
+		legislationPlanDeal.setStActionId(stNodeId);
+		legislationPlanDeal.setStActionName(node.getStNodeName());
+		legislationPlanDeal.setStUserId(userId);
+		legislationPlanDeal.setStUserName(userName);
+		legislationPlanDeal.setDtDealDate(new Date());
+		if("NOD_0000000201".equals(stNodeId)){
+			LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
+			legislationPlanDeal.setStPlanId(legislationPlan.getStPlanId());
+			legislationPlanDeal.setStBakOne(legislationPlan.getStPlanName());
+			legislationPlanDeal.setStBakTwo(legislationPlan.getStRemark());
+		}else {
+			LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
+			legislationPlanDeal.setStPlanId(legislationPlanItem.getStItemId());
+			legislationPlanDeal.setStBakOne(legislationPlanItem.getStItemName());
+			legislationPlanDeal.setStBakTwo(legislationPlanItem.getStBak());
+		}
+		legislationPlanDealService.add(legislationPlanDeal);
 	}
 }

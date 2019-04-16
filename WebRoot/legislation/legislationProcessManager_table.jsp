@@ -75,7 +75,7 @@
 					</c:if>
 					<th class="text-center" data-field="set">操作</th>
 				</c:when>
-				<c:when test="${nodeId=='NOD_0000000202'}">
+				<c:when test="${nodeId=='NOD_0000000202'||nodeId=='NOD_0000000203'||nodeId=='NOD_0000000204'}">
 					<th class="text-center" data-field="id">计划编号</th>
 					<th class="text-center" data-field="district_name">立法项目发起名称</th>
 					<th class="text-center" data-field="district_name">处理环节</th>
@@ -459,7 +459,7 @@
 					</c:when>
 				</c:choose>
 			</c:when>
-			<c:when test="${nodeId=='NOD_0000000202'}">
+			<c:when test="${nodeId=='NOD_0000000202'||nodeId=='NOD_0000000203'||nodeId=='NOD_0000000204'}">
 				<c:choose>
 					<c:when test="${retPage.totalSize > 0}">
 						<c:forEach items="${retPage.result}" var="plan">
@@ -474,9 +474,21 @@
 								<c:choose>
 									<c:when test="${buttonStatus=='TODO'}">
 										<td>
-											<a href="javaScript:void(0)" data-title="编辑" onclick="openPlanPage('openPlanEditPage','${plan.stTaskId}')" class="layer_full_link">修改</a>
-											<br>
-											<a href="javaScript:void(0)" data-title="上报" onclick="nextPlanProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">上报</a>
+											<c:if test="${nodeId=='NOD_0000000202'}">
+												<a href="javaScript:void(0)" data-title="编辑" onclick="openPlanPage('openPlanEditPage','${plan.stTaskId}')" class="layer_full_link">修改</a>
+												<br>
+												<a href="javaScript:void(0)" data-title="上报" onclick="nextPlanProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">上报</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000203'}">
+												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<br>
+												<a href="javaScript:void(0)" data-title="接收" onclick="nextPlanProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">接收</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000204'}">
+												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<br>
+												<a href="javaScript:void(0)" data-title="分办" onclick="openPlanPage('openPlanSeparatePage','${plan.stTaskId}')" class="layer_full_link">分办</a>
+											</c:if>
 										</td>
 									</c:when>
 									<c:otherwise>

@@ -148,9 +148,6 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 		String userRole = session.getAttribute("userRole").toString();
 		String stTaskId=request.getParameter("stTaskId");
 		String stPlanName=request.getParameter("stPlanName");
-		String stPlanType=request.getParameter("stPlanType");
-		String stReason=request.getParameter("stReason");
-		String stProgress=request.getParameter("stProgress");
 		String stRemark=request.getParameter("stRemark");
 		String stNodeId=request.getParameter("stNodeId");
 		String stPlanId;
@@ -183,17 +180,6 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 			legislationPlanTask.setStTeamName(teamName);
 			legislationPlanTaskService.add(legislationPlanTask);
 
-			//添加一条操作记录
-			LegislationPlanDeal legislationPlanDeal=new LegislationPlanDeal();
-			legislationPlanDeal.setStActionId(stNodeId);
-			legislationPlanDeal.setStActionName(node.getStNodeName());
-			legislationPlanDeal.setStPlanId(stPlanId);
-			legislationPlanDeal.setStUserId(userId);
-			legislationPlanDeal.setStUserName(userName);
-			legislationPlanDeal.setDtDealDate(new Date());
-			legislationPlanDeal.setStBakOne(stPlanName);
-			legislationPlanDeal.setStBakTwo(stRemark);
-			legislationPlanDealService.add(legislationPlanDeal);
 		}else{
 			//修改征集通知任务
 			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
@@ -207,14 +193,6 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 			update(legislationPlan);
 			stPlanId=legislationPlan.getStPlanId();
 
-			//修改操作记录
-			LegislationPlanDeal legislationPlanDeal=legislationPlanDealService.findByHQL("from LegislationPlanDeal t where 1=1 and t.stPlanId='"+stPlanId+"' and t.stActionId='"+stNodeId+"'").get(0);
-			legislationPlanDeal.setStUserId(userId);
-			legislationPlanDeal.setStUserName(userName);
-			legislationPlanDeal.setDtDealDate(new Date());
-			legislationPlanDeal.setStBakOne(stPlanName);
-			legislationPlanDeal.setStBakTwo(stRemark);
-			legislationPlanDealService.update(legislationPlanDeal);
 		}
 		// 处理附件内容
 		legislationFilesService.updateParentIdById(request, stPlanId);
