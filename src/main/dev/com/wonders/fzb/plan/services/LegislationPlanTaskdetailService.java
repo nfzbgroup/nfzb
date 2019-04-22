@@ -5,46 +5,43 @@ import java.util.Map;
 
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.plan.beans.LegislationPlanTask;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import com.wonders.fzb.plan.beans.LegislationPlanTaskdetail;
 
 
 /**
- * LegislationPlanTask service接口
+ * LegislationPlanTaskdetail service接口
  * @author scalffold created by lj
  */
-public interface LegislationPlanTaskService{
+public interface LegislationPlanTaskdetailService{
 	/**
 	 * 添加或修改实体对象
 	 */
-	public void saveOrUpdate(LegislationPlanTask info);
+	public void saveOrUpdate(LegislationPlanTaskdetail info);
 	
 	/**
 	 * 添加实体对象
 	 */
-	public void add(LegislationPlanTask info);
+	public void add(LegislationPlanTaskdetail info);
 	
 	/**
 	 * 添加实体对象并返回主键ID
 	 */
-	public String addObj(LegislationPlanTask info);
+	public String addObj(LegislationPlanTaskdetail info);
 	
 	/**
 	 * 更新实体对象
 	 */
-	public void update(LegislationPlanTask info);
+	public void update(LegislationPlanTaskdetail info);
 	
 	/**
 	 * 删除实体对象
 	 */
-	public void delete(LegislationPlanTask info);
+	public void delete(LegislationPlanTaskdetail info);
 	
 	/**
 	 * 通过ID装载相应的对象实例，如果对应的实体不存在，返回null
 	 */
-	public LegislationPlanTask findById(String id);
+	public LegislationPlanTaskdetail findById(String id);
 	
 	/**
 	 * 根据Map中过滤条件、排序条件和分页参数进行分页查询.
@@ -70,24 +67,12 @@ public interface LegislationPlanTaskService{
 	 *            排序条件<propertyName,properyValue>
 	 * @return
 	 */
-	public List<LegislationPlanTask> findByList(Map<String, Object> condMap, Map<String, String> sortMap);
+	public List<LegislationPlanTaskdetail> findByList(Map<String, Object> condMap, Map<String, String> sortMap);
 
 	/**
 	 * 根据HQL进行查询.
 	 */
-	public List<LegislationPlanTask> findByHQL(String hql);
+	public List<LegislationPlanTaskdetail> findByHQL(String hql);
 
-	/**
-	 * 立法计划大节点流转
-	 * @param request
-	 * @param session
-	 */
-	void nextPlanProcess(HttpServletRequest request, HttpSession session);
 
-	/**
-	 * 立法计划小节点流转
-	 * @param request
-	 * @param session
-	 */
-	void nextPlanChildProcess(HttpServletRequest request, HttpSession session);
 }

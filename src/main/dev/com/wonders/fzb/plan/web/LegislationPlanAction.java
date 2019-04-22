@@ -77,7 +77,8 @@ public class LegislationPlanAction extends BaseAction {
             @Result(name = "openPlanAuditPage", location = "/plan/legislationPlan_audit.jsp"),
 			@Result(name = "openNoticeProjectInfoPage", location = "/plan/legislationNotice_projectInfo.jsp"),
 			@Result(name = "openNoticeExplainPage", location = "/plan/legislationNotice_explain.jsp"),
-			@Result(name = "openNoticeExplainInfoPage", location = "/plan/legislationNotice_explain.jsp")})
+			@Result(name = "openNoticeExplainInfoPage", location = "/plan/legislationNotice_explain.jsp"),
+			@Result(name = "openPlanCheckExplainPage", location = "/plan/legislationPlan_checkExplain.jsp")})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -111,7 +112,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * @return
 	 */
 	private String openPlanAddPage(){
-		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 order by t.dtCreateDate desc");
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
 		request.setAttribute("legislationPlanItem",new LegislationPlanItem());
 		request.setAttribute("legislationPlanTask",new LegislationPlanTask());
@@ -124,15 +125,20 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	private String openPlanEditPage(){
 		String stTaskId=request.getParameter("stTaskId");
+		String stNodeId=request.getParameter("stNodeId");
 		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
 		LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();
 		condMap.put("stParentId", legislationPlanItem.getStItemId());
-		condMap.put("stNodeId", "NOD_0000000202");
+		if("NOD_0000000207".equals(stNodeId)){
+			condMap.put("stNodeId", stNodeId);
+		}else{
+			condMap.put("stNodeId", "NOD_0000000202");
+		}
 		sortMap.put("dtPubDate", "ASC");
 		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 order by t.dtCreateDate desc");
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
 		request.setAttribute("legislationFilesList",legislationFilesList);
 		request.setAttribute("legislationPlanItem",legislationPlanItem);
@@ -296,5 +302,21 @@ public class LegislationPlanAction extends BaseAction {
 		}
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().print(jsonObject);
+	}
+
+	/**
+	 * 跳转计划外立项审核说明页面
+	 * @return
+	 */
+	private String openPlanCheckExplainPage(){
+		return pageController();
+	}
+
+	/**
+	 * 保存计划外立项说明
+	 */
+	private String savePlanTaskCheck(){
+		legislationPlanTaskService.nextPlanChildProcess(request,session);
+		return null;
 	}
 }

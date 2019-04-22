@@ -68,12 +68,6 @@ public class LegislationProcessTaskAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationProcessTaskdetailService")
 	private LegislationProcessTaskdetailService legislationProcessTaskdetailService;
-	@Autowired
-	@Qualifier("legislationPlanService")
-	private LegislationPlanService legislationPlanService;
-	@Autowired
-	@Qualifier("legislationPlanTaskService")
-	private LegislationPlanTaskService legislationPlanTaskService;
 
 	Page<LegislationProcessDoc> infoPage;
 
@@ -115,8 +109,6 @@ public class LegislationProcessTaskAction extends BaseAction {
 			queryUnitOpinion();
 		} else if ("NOD_0000000170".equals(request.getParameter("stNodeId"))) {
 			queryCheckMeeting();
-		}  else if ("NOD_0000000201".equals(request.getParameter("stNodeId"))||"NOD_0000000208".equals(request.getParameter("stNodeId"))||"NOD_0000000209".equals(request.getParameter("stNodeId"))||"NOD_0000000202".equals(request.getParameter("stNodeId"))||"NOD_0000000203".equals(request.getParameter("stNodeId"))||"NOD_0000000204".equals(request.getParameter("stNodeId"))||"NOD_0000000205".equals(request.getParameter("stNodeId"))) {
-			queryNoticeList();
 		} else {
 			queryDoc();
 		}
@@ -438,65 +430,6 @@ public class LegislationProcessTaskAction extends BaseAction {
 		request.setAttribute("nodeId", stNodeId);
 	}
 
-	private void queryNoticeList() throws ParseException, FzbDaoException {
-		String pageSize = request.getParameter("pageSize");
-		String pageNo = request.getParameter("pageNo");
-		String stNodeId = request.getParameter("stNodeId");
-		String stUserName = request.getParameter("stUserName");
-		String stTaskStatus = request.getParameter("taskStatus");
-		String startTime = request.getParameter("startTime");
-		String endTime = request.getParameter("endTime");
-		String stPlanName = request.getParameter("stPlanName");
-		Map<String, Object> condMap = new HashMap<>();
-		Map<String, String> sortMap = new HashMap<>();
-
-		if (null == pageSize || "".equals(pageSize)) {
-			pageSize = "10";
-		}
-		if (null == pageNo || "".equals(pageNo)) {
-			pageNo = "1";
-		}
-
-		WegovSimpleNode nodeInfo = wegovSimpleNodeService.findById(stNodeId);
-
-		if (StringUtil.isNotEmpty(stNodeId)) {
-			condMap.put("stNodeId",stNodeId);
-			if("NOD_0000000205".equals(stNodeId)){
-				condMap.put("stTeamId",session.getAttribute("unitCode"));
-			}
-		}
-		if (StringUtil.isNotEmpty(startTime)) {
-			condMap.put("dtOpenDateGe",DateUtils.parseDate(startTime,"yyyy-MM-dd"));
-		}
-		if (StringUtil.isNotEmpty(endTime)) {
-			condMap.put("dtOpenDateLe",DateUtils.parseDate(endTime,"yyyy-MM-dd"));
-		}
-		if (StringUtil.isNotEmpty(stUserName)) {
-			condMap.put("stUserNameLike",stUserName);
-		}
-		if (StringUtil.isNotEmpty(stPlanName)) {
-			condMap.put("stFlowIdLike",stPlanName);
-		}
-		if (StringUtil.isNotEmpty(stTaskStatus)) {
-			condMap.put("stTaskStatus",stTaskStatus);
-		} else {
-			condMap.put("stTaskStatus","TODO");
-		}
-		condMap.put("stEnableIsNull","null");
-		sortMap.put("dtOpenDate", "DESC");
-		Page<LegislationPlanTask> infoPage = legislationPlanTaskService.findByPage(condMap,sortMap, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
-
-		if (StringUtil.isEmpty(stTaskStatus)) {
-			request.setAttribute("buttonStatus", "TODO");
-		} else {
-			request.setAttribute("buttonStatus", stTaskStatus);
-		}
-		request.setAttribute("nodeInfo", nodeInfo);
-		request.setAttribute("pageNo", pageNo);
-		request.setAttribute("pageSize", pageSize);
-		request.setAttribute("retPage", infoPage);
-		request.setAttribute("nodeId", stNodeId);
-	}
 
 	/**
 	 * 主节点流转（共用）
@@ -564,14 +497,6 @@ public class LegislationProcessTaskAction extends BaseAction {
 		return null;
 	}
 
-	/**
-	 * 立法计划大节点流转
-	 * @return
-	 */
-	private String nextPlanProcess(){
-		legislationPlanTaskService.nextPlanProcess(request,session);
-		return null;
-	}
 
 	/**
 	 * 退回（共用）

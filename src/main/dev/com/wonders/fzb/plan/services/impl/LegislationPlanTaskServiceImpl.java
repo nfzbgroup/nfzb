@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,12 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 
 	@Autowired
 	private LegislationPlanItemService legislationPlanItemService;
+
+	@Autowired
+	private LegislationPlanTaskdetailService legislationPlanTaskdetailService;
+
+	@Autowired
+	private LegislationFilesService legislationFilesService;
 	/**
 	 * 添加实体对象
 	 */
@@ -188,7 +195,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanDeal.setStUserId(userId);
 		legislationPlanDeal.setStUserName(userName);
 		legislationPlanDeal.setDtDealDate(new Date());
-		if("NOD_0000000201".equals(stNodeId)||"NOD_0000000208".equals(stNodeId)||"NOD_0000000209".equals(stNodeId)){
+		if("NOD_0000000201".equals(stNodeId)||"NOD_0000000208".equals(stNodeId)||"NOD_0000000209".equals(stNodeId)||"NOD_0000000211".equals(stNodeId)){
 			LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
 			legislationPlanDeal.setStPlanId(legislationPlan.getStPlanId());
 			legislationPlanDeal.setStBakOne(legislationPlan.getStPlanName());
@@ -210,5 +217,49 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 			}
 		}
 		legislationPlanDealService.add(legislationPlanDeal);
+	}
+
+	@Override
+	public void nextPlanChildProcess(HttpServletRequest request, HttpSession session) {
+		String stTaskId = request.getParameter("stTaskId");
+		String stNodeId = request.getParameter("stNodeId");
+		String stContent = request.getParameter("stContent");
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String teamId=currentPerson.getTeamInfos().get(0).getId();
+		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
+		String userId=currentPerson.getUserId();
+		String userName=currentPerson.getName();
+		String userRoleId = session.getAttribute("userRoleId").toString();
+		String userRole = session.getAttribute("userRole").toString();
+		LegislationPlanTask legislationPlanTask=findById(stTaskId);
+
+		LegislationPlanTaskdetail legislationPlanTaskdetail=new LegislationPlanTaskdetail();
+		if("TODO".equals(legislationPlanTask.getStTaskStatus())){
+			legislationPlanTaskdetail.setStTitle("OA审核");
+		}else{
+			legislationPlanTaskdetail.setStTitle("审核意见");
+		}
+		legislationPlanTaskdetail.setStContent(stContent);
+		legislationPlanTaskdetail.setStTaskStatus(legislationPlanTask.getStTaskStatus());
+		legislationPlanTaskdetail.setStTaskId(stTaskId);
+		legislationPlanTaskdetail.setStNodeId(stNodeId);
+		legislationPlanTaskdetail.setStPersonId(userId);
+		legislationPlanTaskdetail.setStPersonName(userName);
+		legislationPlanTaskdetail.setDtOpenDate(new Date());
+		String taskdetailId = legislationPlanTaskdetailService.addObj(legislationPlanTaskdetail);
+		legislationFilesService.updateParentIdById(request,taskdetailId);
+
+		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
+		String[] statusArray=node.getStDoneName().split("#");
+		for (int i = 0; i < statusArray.length; i++) {
+			if (legislationPlanTask.getStTaskStatus().equals(statusArray[i])) {
+				legislationPlanTask.setStTaskStatus(statusArray[i + 1]);
+				break;
+			}
+		}
+		legislationPlanTask.setDtDealDate(new Date());
+		legislationPlanTask.setStDealId(userId);
+		legislationPlanTask.setStDealName(userName);
+		update(legislationPlanTask);
 	}
 }

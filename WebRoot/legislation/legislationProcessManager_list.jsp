@@ -216,7 +216,7 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
-									<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'}">
+									<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'}">
 										<div class="col-md-5">
 											<div class="form-group">
 												<label class="col-md-3 control-label">发起时间:</label>
@@ -250,7 +250,7 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
-									<c:when test="${nodeId=='NOD_0000000202'||nodeId=='NOD_0000000203'||nodeId=='NOD_0000000204'||nodeId=='NOD_0000000205'}">
+									<c:when test="${nodeId=='NOD_0000000202'||nodeId=='NOD_0000000203'||nodeId=='NOD_0000000204'||nodeId=='NOD_0000000205'||nodeId=='NOD_0000000207'}">
 										<div class="col-md-5">
 											<div class="form-group">
 												<label class="col-md-3 control-label">发起时间:</label>
@@ -265,7 +265,7 @@
 										</div>
 										<div class="col-md-3">
 											<div class="form-group">
-												<label class="col-md-5 control-label">计划名称:</label>
+												<label class="col-md-5 control-label">项目名称:</label>
 												<div class="col-md-7">
 													<input type="text"  class="form-control" id="stPlanName">
 												</div>
@@ -361,16 +361,6 @@
 									<c:when test="${nodeId=='NOD_0000000101'}">
 										<div class="pull-right">
 											<label class="btn btn-w-m btn-success" id="add" onclick="openPage('openAddPage',null)">草案发起</label>
-										</div>
-									</c:when>
-									<c:when test="${nodeId=='NOD_0000000201'}">
-										<div class="pull-right">
-											<label class="btn btn-w-m btn-success" id="addNotice" onclick="openPlanPage('openNoticeAddPage',null)">征集通知发起</label>
-										</div>
-									</c:when>
-									<c:when test="${nodeId=='NOD_0000000202'}">
-										<div class="pull-right">
-											<label class="btn btn-w-m btn-success" id="addPlan" onclick="openPlanPage('openPlanAddPage',null)">项目发起</label>
 										</div>
 									</c:when>
 								</c:choose>
@@ -498,21 +488,12 @@
         });
     };
 
-    function openPlanPage(method,stTaskId) {
-        $("#legislationProcessForm").modal({
-            remote: "${basePath}/legislationPlan/draft_plan_info.do?stNodeId=${nodeId}&method="+method+"&stTaskId="+stTaskId
-        });
-    };
-    
 	function openReportPage(stDocId) {
         $("#legislationProcessForm").modal({
             remote: "${basePath}/legislationReport/openDraftReportPage.do?stNodeId=${nodeId}&stDocId="+stDocId
         });
     };
     
-    
-    
-
     function openLeaderIdeaPage(method,stDocId,stNodeId) {
         $.post("../legislationProcessTask/checkDealInfo.do?stDocId="+stDocId,
             function (data) {

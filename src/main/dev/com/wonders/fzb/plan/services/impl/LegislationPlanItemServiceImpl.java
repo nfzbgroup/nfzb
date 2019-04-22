@@ -43,6 +43,9 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 	@Autowired
 	private LegislationPlanTaskService legislationPlanTaskService;
 
+	@Autowired
+	private LegislationPlanDealService legislationPlanDealService;
+
 	/**
 	 * 添加实体对象
 	 */
@@ -183,6 +186,19 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 			legislationPlanTask.setStTeamId(teamId);
 			legislationPlanTask.setStTeamName(teamName);
 			legislationPlanTaskService.add(legislationPlanTask);
+
+			if("NOD_0000000207".equals(stNodeId)){
+				LegislationPlanDeal legislationPlanDeal=new LegislationPlanDeal();
+				legislationPlanDeal.setStActionId(stNodeId);
+				legislationPlanDeal.setStActionName(node.getStNodeName());
+				legislationPlanDeal.setStUserId(userId);
+				legislationPlanDeal.setStUserName(userName);
+				legislationPlanDeal.setDtDealDate(new Date());
+				legislationPlanDeal.setStPlanId(stItemId);
+				legislationPlanDeal.setStBakOne(stItemName);
+				legislationPlanDeal.setStBakTwo(stBak);
+				legislationPlanDealService.add(legislationPlanDeal);
+			}
 		}else{
 			//修改征集通知任务
 			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
@@ -200,6 +216,16 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 			update(legislationPlanItem);
 			stItemId=legislationPlanItem.getStItemId();
 
+			if("NOD_0000000207".equals(stNodeId)){
+				LegislationPlanDeal legislationPlanDeal=legislationPlanDealService.findByHQL("from LegislationPlanDeal t where 1=1 and t.stPlanId='"+stItemId+"' and t.stActionId = '"+stNodeId+"' ").get(0);
+				legislationPlanDeal.setStUserId(userId);
+				legislationPlanDeal.setStUserName(userName);
+				legislationPlanDeal.setDtDealDate(new Date());
+				legislationPlanDeal.setStPlanId(stItemId);
+				legislationPlanDeal.setStBakOne(stItemName);
+				legislationPlanDeal.setStBakTwo(stBak);
+				legislationPlanDealService.update(legislationPlanDeal);
+			}
 		}
 
 		// 处理附件内容
