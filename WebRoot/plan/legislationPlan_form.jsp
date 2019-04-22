@@ -10,7 +10,7 @@
             <span >立法项目 > </span>
         </li>
         <li>
-            <span ><c:choose><c:when test="${legislationPlanTask.stTaskId !=null}"><c:if test="${legislationPlanTask.stTaskStatus=='TODO'}">编辑</c:if><c:if test="${legislationPlanTask.stTaskStatus=='DONE'}">详情</c:if></c:when><c:otherwise>发起</c:otherwise></c:choose> </span>
+            <span ><c:if test="${nodeId=='NOD_0000000202'}"><c:choose><c:when test="${legislationPlanTask.stTaskId !=null}"><c:if test="${legislationPlanTask.stTaskStatus=='TODO'}">编辑</c:if><c:if test="${legislationPlanTask.stTaskStatus=='DONE'}">详情</c:if></c:when><c:otherwise>发起</c:otherwise></c:choose> </c:if><c:if test="${nodeId!='NOD_0000000202'}">详情</c:if></span>
         </li>
     </ul>
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -23,13 +23,13 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">立法项目名称：</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" name="stItemName" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> <c:if test="${legislationPlanItem.stItemName !=null}">value="${legislationPlanItem.stItemName}" </c:if>>
+                    <input type="text" class="form-control" name="stItemName" <c:if test="${nodeId!='NOD_0000000202'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> <c:if test="${legislationPlanItem.stItemName !=null}">value="${legislationPlanItem.stItemName}" </c:if>>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">征集通知：</label>
                 <div class="col-sm-9">
-                    <select class="form-control" name="stPlanId" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if>>
+                    <select class="form-control" name="stPlanId" <c:if test="${nodeId!='NOD_0000000202'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if>>
                        <c:if test="${legislationPlanList!=null&&fn:length(legislationPlanList)>0}">
                            <c:forEach var="plan" items="${legislationPlanList}">
                                <option value="${plan.stPlanId}" <c:if test="${legislationPlanItem.stPlanId !=null&&legislationPlanItem.stPlanId ==plan.stPlanId}">selected</c:if>>${plan.stPlanName}</option>
@@ -41,7 +41,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">立法项目类型：</label>
                 <div class="col-sm-9">
-                    <select class="form-control" name="stTypeName" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if>>
+                    <select class="form-control" name="stTypeName" <c:if test="${nodeId!='NOD_0000000202'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if>>
                         <option value="立" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='立'}">selected</c:if>>立</option>
                         <option value="改" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='改'}">selected</c:if>>改</option>
                         <option value="废" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='废'}">selected</c:if>>废</option>
@@ -54,31 +54,31 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">建议立项理由：</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" name="stContent" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlanItem.stContent !=null}">${legislationPlanItem.stContent}</c:if></textarea>
+                    <textarea class="form-control" name="stContent" <c:if test="${nodeId!='NOD_0000000202'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> ><c:if test="${legislationPlanItem.stContent !=null}">${legislationPlanItem.stContent}</c:if></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">目前进展情况：</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" name="stStatus" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlanItem.stStatus !=null}">${legislationPlanItem.stStatus}</c:if></textarea>
+                    <textarea class="form-control" name="stStatus" <c:if test="${nodeId!='NOD_0000000202'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> ><c:if test="${legislationPlanItem.stStatus !=null}">${legislationPlanItem.stStatus}</c:if></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">备注：</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" name="stBak" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlanItem.stBak !=null}">${legislationPlanItem.stBak}</c:if></textarea>
+                    <textarea class="form-control" name="stBak" <c:if test="${nodeId!='NOD_0000000202'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> ><c:if test="${legislationPlanItem.stBak !=null}">${legislationPlanItem.stBak}</c:if></textarea>
                 </div>
             </div>
 			<div class="form-group text-center">
-                <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
+                <c:if test="${nodeId=='NOD_0000000202'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
                     <input type="button" class="btn btn-w-m btn-success"  value="提交" onclick="saveLegislationPlan()"> &nbsp;&nbsp;
                 </c:if>
-					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
+					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
             <div class="form-group">
-                <label class="control-label">计划材料
+                <label class="control-label">立法项目材料
                 </label>
-                <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
+                <c:if test="${nodeId=='NOD_0000000202'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
                     <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                     </label>
                     <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
@@ -94,25 +94,24 @@
                     <tr class="text-center">
                         <th class="text-center" data-field="id">文件类型</th>
                         <th class="text-center" data-field="district_name">文件名称</th>
-                        <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
-                            <th class="text-center" data-field="set">操作</th>
-                        </c:if>
+                        <th class="text-center" data-field="set">操作</th>
                     </tr>
                     </thead>
                     <tbody id="otherMaterial">
                         <c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
                             <c:forEach var="file" items="${legislationFilesList}">
                                 <c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
-                                    <tr class="text-center">'
-                                        <td class="text-left">计划材料</td>
+                                    <tr class="text-center">
+                                        <td>立法项目材料</td>
                                         <td>${file.stTitle}</td>
-                                        <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
-                                            <td>
-                                                <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>&nbsp;&nbsp;
-                                                <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
-                                                <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">
-                                            </td>
-                                        </c:if>
+                                        <td>
+                                            <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
+                                           <c:if test="${nodeId=='NOD_0000000202'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
+                                             &nbsp;&nbsp;
+                                            <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
+                                            <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">
+                                           </c:if>
+                                        </td>
                                     </tr>
                                 </c:if>
                             </c:forEach>
@@ -168,7 +167,7 @@
                         $("#"+id).parent().html(html);
                     }else{
                         var html='<tr class="text-center">'
-                            +'<td class="text-left">计划材料</td>'
+                            +'<td>立法项目材料</td>'
                             +'<td>'+file.name+'</td>'
                             +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
                             +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'

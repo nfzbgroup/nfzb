@@ -7,10 +7,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >征集通知 > </span>
-        </li>
-        <li>
-            <span ><c:if test="${nodeId=='NOD_0000000201'}"><c:choose><c:when test="${legislationPlanTask.stTaskId !=null}"><c:if test="${legislationPlanTask.stTaskStatus=='TODO'}">编辑</c:if><c:if test="${legislationPlanTask.stTaskStatus=='DONE'}">详情</c:if></c:when><c:otherwise>发起</c:otherwise></c:choose></c:if> <c:if test="${nodeId!='NOD_0000000201'}">详情</c:if></span>
+            <span >立法计划草案及说明</span>
         </li>
     </ul>
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -23,25 +20,37 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">通知名称：</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" name="stPlanName" <c:if test="${nodeId!='NOD_0000000201'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> <c:if test="${legislationPlan.stPlanName !=null}">value="${legislationPlan.stPlanName}" </c:if>>
+                    <label class="form-control">${legislationPlan.stPlanName}</label>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">通知说明：</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" name="stReason" <c:if test="${nodeId!='NOD_0000000201'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> ><c:if test="${legislationPlan.stReason !=null}">${legislationPlan.stReason}</c:if></textarea>
+                    <label class="form-control">${legislationPlan.stReason}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">计划名称：</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="stProgress" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> <c:if test="${legislationPlan.stProgress !=null}">value="${legislationPlan.stProgress}" </c:if>>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">计划说明：</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" name="stRemark" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlan.stRemark !=null}">${legislationPlan.stRemark}</c:if></textarea>
                 </div>
             </div>
 			<div class="form-group text-center">
-                <c:if test="${nodeId=='NOD_0000000201'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
+                <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
                     <input type="button" class="btn btn-w-m btn-success"  value="提交" onclick="saveLegislationNotice()"> &nbsp;&nbsp;
                 </c:if>
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
             <div class="form-group">
-                <label class="control-label">通知材料
+                <label class="control-label">计划材料
                 </label>
-                <c:if test="${nodeId=='NOD_0000000201'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
+                <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
                     <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                     </label>
                     <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
@@ -65,11 +74,11 @@
                             <c:forEach var="file" items="${legislationFilesList}">
                                 <c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
                                     <tr class="text-center">
-                                        <td>通知材料</td>
+                                        <td>计划材料</td>
                                         <td>${file.stTitle}</td>
                                         <td>
                                             <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
-                                            <c:if test="${nodeId=='NOD_0000000201'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
+                                            <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
                                                 &nbsp;&nbsp;
                                                 <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
                                                 <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">
@@ -89,10 +98,10 @@
 <script>
     function saveLegislationNotice() {
         var param=$('#legislationNoticeForm').formToJson();
-        if(param.stPlanName==null||param.stPlanName==""){
-            Duang.error("提示","请输入通知名称");
-        }else if(param.stReason==null||param.stReason==""){
-            Duang.error("提示","请输入通知说明");
+        if(param.stProgress==null||param.stProgress==""){
+            Duang.error("提示","请输入计划名称");
+        }else if(param.stRemark==null||param.stRemark==""){
+            Duang.error("提示","请输入计划说明");
         }else {
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationNotice",param,function(data){
                 $('#legislationProcessForm').modal('hide');
@@ -122,7 +131,7 @@
                         $("#"+id).parent().html(html);
                     }else{
                         var html='<tr class="text-center">'
-                            +'<td>通知材料</td>'
+                            +'<td>计划材料</td>'
                             +'<td>'+file.name+'</td>'
                             +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
                             +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'

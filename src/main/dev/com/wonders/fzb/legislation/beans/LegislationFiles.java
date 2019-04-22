@@ -112,6 +112,26 @@ public class LegislationFiles implements Serializable {
 	}
 
 	/**
+	 * ST_NODE_STATUS
+	 */
+	@Column(name = "ST_NODE_STATUS")
+	private String stNodeStatus;
+
+	/**
+	 * ST_NODE_STATUS
+	 */
+	public String getStNodeStatus(){
+		return stNodeStatus;
+	}
+
+	/**
+	 * ST_NODE_STATUS
+	 */
+	public void setStNodeStatus (String stNodeStatus){
+		this.stNodeStatus = stNodeStatus;
+	}
+
+	/**
 	 * ST_FILE_URL
 	 */
 	@Column(name = "ST_FILE_URL")

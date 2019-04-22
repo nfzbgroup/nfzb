@@ -216,7 +216,7 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
-									<c:when test="${nodeId=='NOD_0000000201'}">
+									<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'}">
 										<div class="col-md-5">
 											<div class="form-group">
 												<label class="col-md-3 control-label">发起时间:</label>
@@ -250,7 +250,7 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
-									<c:when test="${nodeId=='NOD_0000000202'||nodeId=='NOD_0000000203'||nodeId=='NOD_0000000204'}">
+									<c:when test="${nodeId=='NOD_0000000202'||nodeId=='NOD_0000000203'||nodeId=='NOD_0000000204'||nodeId=='NOD_0000000205'}">
 										<div class="col-md-5">
 											<div class="form-group">
 												<label class="col-md-3 control-label">发起时间:</label>

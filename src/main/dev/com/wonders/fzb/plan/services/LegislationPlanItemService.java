@@ -84,5 +84,5 @@ public interface LegislationPlanItemService{
 	 */
 	void saveLegislationPlan(HttpServletRequest request, HttpSession session);
 
-
+	List<Map<String,Object>> queryProjectByPlanId(String stPlanId);
 }

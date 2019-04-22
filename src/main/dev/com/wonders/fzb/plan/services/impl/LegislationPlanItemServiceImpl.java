@@ -1,9 +1,6 @@
 package com.wonders.fzb.plan.services.impl;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
@@ -14,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.plan.beans.*;
 import com.wonders.fzb.plan.dao.*;
@@ -37,9 +33,6 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 
 	@Autowired
 	private LegislationPlanItemDao legislationPlanItemDao;
-
-	@Autowired
-	private LegislationPlanDealService legislationPlanDealService;
 
 	@Autowired
 	private LegislationFilesService legislationFilesService;
@@ -156,6 +149,7 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 		String stNodeId=request.getParameter("stNodeId");
 		String stItemId;
 		if(StringUtils.isEmpty(stTaskId)){
+			WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
 			//添加立法计划
 			LegislationPlanItem legislationPlanItem=new LegislationPlanItem();
 			legislationPlanItem.setStPlanId(stPlanId);
@@ -169,9 +163,10 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 			legislationPlanItem.setStUnitName(unitName);
 			legislationPlanItem.setStUserId(userId);
 			legislationPlanItem.setStUserName(userName);
+			legislationPlanItem.setStNodeId(stNodeId);
+			legislationPlanItem.setStNodeName(node.getStNodeName());
 			stItemId=addObj(legislationPlanItem);
 
-			WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
 			//添加立法计划任务
 			LegislationPlanTask legislationPlanTask=new LegislationPlanTask();
 			legislationPlanTask.setStFlowId(stItemName);
@@ -209,5 +204,28 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 
 		// 处理附件内容
 		legislationFilesService.updateParentIdById(request, stItemId);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryProjectByPlanId(String stPlanId) {
+		List<Map<String, Object>> result=new ArrayList<>();
+		List<LegislationPlanItem> legislationPlanItemList=findByHQL("from LegislationPlanItem t where 1=1 and t.stPlanId='"+stPlanId+"'");
+		legislationPlanItemList.forEach((LegislationPlanItem legislationPlanItem)->{
+			Map<String, Object> map=new HashMap<>();
+			map.put("stItemId",legislationPlanItem.getStItemId());
+			map.put("stItemName",legislationPlanItem.getStItemName());
+			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findByHQL("from LegislationPlanTask t where 1=1 and t.stParentId='"+legislationPlanItem.getStItemId()+"' and t.stNodeId='"+legislationPlanItem.getStNodeId()+"' and t.stEnable is null").get(0);
+			String stStatus=legislationPlanTask.getStNodeName();
+			if("TODO".equals(legislationPlanTask.getStTaskStatus())){
+				stStatus=stStatus+"待处理";
+			}else{
+				stStatus=stStatus+"已处理";
+			}
+			map.put("stStatus",stStatus);
+			map.put("stUserName",legislationPlanItem.getStUserName());
+			map.put("dtCreateDate",legislationPlanItem.getDtCreateDate());
+			result.add(map);
+		});
+		return result;
 	}
 }

@@ -148,6 +148,8 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 		String userRole = session.getAttribute("userRole").toString();
 		String stTaskId=request.getParameter("stTaskId");
 		String stPlanName=request.getParameter("stPlanName");
+		String stReason=request.getParameter("stReason");
+		String stProgress=request.getParameter("stProgress");
 		String stRemark=request.getParameter("stRemark");
 		String stNodeId=request.getParameter("stNodeId");
 		String stPlanId;
@@ -155,7 +157,7 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 			//添加征集通知
 			LegislationPlan legislationPlan=new LegislationPlan();
 			legislationPlan.setStPlanName(stPlanName);
-			legislationPlan.setStRemark(stRemark);
+			legislationPlan.setStReason(stReason);
 			legislationPlan.setDtCreateDate(new Date());
 			legislationPlan.setStCreatorId(userId);
 			legislationPlan.setStCreatorName(userName);
@@ -181,15 +183,24 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 			legislationPlanTaskService.add(legislationPlanTask);
 
 		}else{
-			//修改征集通知任务
 			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
-			legislationPlanTask.setStFlowId(stPlanName);
-			legislationPlanTaskService.update(legislationPlanTask);
-
-			//修改征集通知
 			LegislationPlan legislationPlan=findById(legislationPlanTask.getStPlanId());
-			legislationPlan.setStPlanName(stPlanName);
-			legislationPlan.setStRemark(stRemark);
+			if("NOD_0000000201".equals(stNodeId)){
+				//修改征集通知任务
+				legislationPlanTask.setStFlowId(stPlanName);
+				legislationPlanTaskService.update(legislationPlanTask);
+
+				//修改征集通知
+				legislationPlan.setStPlanName(stPlanName);
+				legislationPlan.setStReason(stReason);
+			}else{
+				//计划说明
+				legislationPlan.setStProgress(stProgress);
+				legislationPlan.setStRemark(stRemark);
+				if(null==legislationPlan.getDtGatherDate()){
+					legislationPlan.setDtGatherDate(new Date());
+				}
+			}
 			update(legislationPlan);
 			stPlanId=legislationPlan.getStPlanId();
 

@@ -152,11 +152,18 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanTask.setStRoleName(userRole);
 		legislationPlanTask.setStTeamId(teamId);
 		legislationPlanTask.setStTeamName(teamName);
+		if("NOD_0000000205".equals(stNodeId)){
+			String stActive = request.getParameter("stActive");
+			String stComment1 = request.getParameter("stComment1");
+			legislationPlanTask.setStActive(stActive);
+			legislationPlanTask.setStComment1(stComment1);
+		}
+
 		update(legislationPlanTask);
 
 		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
+		WegovSimpleNode nextNode=wegovSimpleNodeService.findById(node.getStNextNode());
 		if(!"END".equals(node.getStNextNode())){
-			WegovSimpleNode nextNode=wegovSimpleNodeService.findById(node.getStNextNode());
 			LegislationPlanTask newLegislationPlanTask=new LegislationPlanTask();
 			newLegislationPlanTask.setStFlowId(legislationPlanTask.getStFlowId());
 			newLegislationPlanTask.setStTaskStatus("TODO");
@@ -173,6 +180,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 			}
 			addObj(newLegislationPlanTask);
 		}
+
 		//添加一条操作记录
 		LegislationPlanDeal legislationPlanDeal=new LegislationPlanDeal();
 		legislationPlanDeal.setStActionId(stNodeId);
@@ -180,16 +188,26 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanDeal.setStUserId(userId);
 		legislationPlanDeal.setStUserName(userName);
 		legislationPlanDeal.setDtDealDate(new Date());
-		if("NOD_0000000201".equals(stNodeId)){
+		if("NOD_0000000201".equals(stNodeId)||"NOD_0000000208".equals(stNodeId)||"NOD_0000000209".equals(stNodeId)){
 			LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
 			legislationPlanDeal.setStPlanId(legislationPlan.getStPlanId());
 			legislationPlanDeal.setStBakOne(legislationPlan.getStPlanName());
 			legislationPlanDeal.setStBakTwo(legislationPlan.getStRemark());
+			if(!"END".equals(node.getStNextNode())){
+				legislationPlan.setStNodeId(nextNode.getStNodeId());
+				legislationPlan.setStNodeName(nextNode.getStNodeName());
+				legislationPlanService.update(legislationPlan);
+			}
 		}else {
 			LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
 			legislationPlanDeal.setStPlanId(legislationPlanItem.getStItemId());
 			legislationPlanDeal.setStBakOne(legislationPlanItem.getStItemName());
 			legislationPlanDeal.setStBakTwo(legislationPlanItem.getStBak());
+			if(!"END".equals(node.getStNextNode())){
+				legislationPlanItem.setStNodeId(nextNode.getStNodeId());
+				legislationPlanItem.setStNodeName(nextNode.getStNodeName());
+				legislationPlanItemService.update(legislationPlanItem);
+			}
 		}
 		legislationPlanDealService.add(legislationPlanDeal);
 	}

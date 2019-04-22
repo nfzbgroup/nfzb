@@ -115,7 +115,7 @@ public class LegislationProcessTaskAction extends BaseAction {
 			queryUnitOpinion();
 		} else if ("NOD_0000000170".equals(request.getParameter("stNodeId"))) {
 			queryCheckMeeting();
-		}  else if ("NOD_0000000201".equals(request.getParameter("stNodeId"))||"NOD_0000000202".equals(request.getParameter("stNodeId"))||"NOD_0000000203".equals(request.getParameter("stNodeId"))||"NOD_0000000204".equals(request.getParameter("stNodeId"))) {
+		}  else if ("NOD_0000000201".equals(request.getParameter("stNodeId"))||"NOD_0000000208".equals(request.getParameter("stNodeId"))||"NOD_0000000209".equals(request.getParameter("stNodeId"))||"NOD_0000000202".equals(request.getParameter("stNodeId"))||"NOD_0000000203".equals(request.getParameter("stNodeId"))||"NOD_0000000204".equals(request.getParameter("stNodeId"))||"NOD_0000000205".equals(request.getParameter("stNodeId"))) {
 			queryNoticeList();
 		} else {
 			queryDoc();
@@ -564,6 +564,10 @@ public class LegislationProcessTaskAction extends BaseAction {
 		return null;
 	}
 
+	/**
+	 * 立法计划大节点流转
+	 * @return
+	 */
 	private String nextPlanProcess(){
 		legislationPlanTaskService.nextPlanProcess(request,session);
 		return null;

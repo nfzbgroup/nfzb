@@ -1,10 +1,17 @@
 package com.wonders.fzb.legislation.beans;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * LEGISLATION_EXAMPLE Bean (操作业务实体) 
@@ -119,6 +126,26 @@ public class LegislationExample implements Serializable {
 	 */
 	public void setStCreateName (String stCreateName){
 		this.stCreateName = stCreateName;
+	}
+
+	/**
+	 * ST_NODE_STATUS
+	 */
+	@Column(name = "ST_NODE_STATUS")
+	private String stNodeStatus;
+
+	/**
+	 * ST_NODE_STATUS
+	 */
+	public String getStNodeStatus(){
+		return stNodeStatus;
+	}
+
+	/**
+	 * ST_NODE_STATUS
+	 */
+	public void setStNodeStatus (String stNodeStatus){
+		this.stNodeStatus = stNodeStatus;
 	}
 
 	/**

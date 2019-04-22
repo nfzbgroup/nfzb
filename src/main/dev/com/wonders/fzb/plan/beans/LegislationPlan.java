@@ -49,6 +49,26 @@ public class LegislationPlan implements Serializable {
 	}
 
 	/**
+	 * DT_GATHER_DATE
+	 */
+	@Column(name = "DT_GATHER_DATE")
+	private Date dtGatherDate;
+
+	/**
+	 * DT_GATHER_DATE
+	 */
+	public Date getDtGatherDate(){
+		return dtGatherDate;
+	}
+
+	/**
+	 * DT_GATHER_DATE
+	 */
+	public void setDtGatherDate (Date dtGatherDate){
+		this.dtGatherDate = dtGatherDate;
+	}
+
+	/**
 	 * ST_CREATOR_ID
 	 */
 	@Column(name = "ST_CREATOR_ID")
@@ -66,6 +86,26 @@ public class LegislationPlan implements Serializable {
 	 */
 	public void setStCreatorId (String stCreatorId){
 		this.stCreatorId = stCreatorId;
+	}
+
+	/**
+	 * ST_NODE_NAME
+	 */
+	@Column(name = "ST_NODE_NAME")
+	private String stNodeName;
+
+	/**
+	 * ST_NODE_NAME
+	 */
+	public String getStNodeName(){
+		return stNodeName;
+	}
+
+	/**
+	 * ST_NODE_NAME
+	 */
+	public void setStNodeName (String stNodeName){
+		this.stNodeName = stNodeName;
 	}
 
 	/**
@@ -189,6 +229,46 @@ public class LegislationPlan implements Serializable {
 	}
 
 	/**
+	 * DT_BEGIN_DATE
+	 */
+	@Column(name = "DT_BEGIN_DATE")
+	private Date dtBeginDate;
+
+	/**
+	 * DT_BEGIN_DATE
+	 */
+	public Date getDtBeginDate(){
+		return dtBeginDate;
+	}
+
+	/**
+	 * DT_BEGIN_DATE
+	 */
+	public void setDtBeginDate (Date dtBeginDate){
+		this.dtBeginDate = dtBeginDate;
+	}
+
+	/**
+	 * DT_END_DATE
+	 */
+	@Column(name = "DT_END_DATE")
+	private Date dtEndDate;
+
+	/**
+	 * DT_END_DATE
+	 */
+	public Date getDtEndDate(){
+		return dtEndDate;
+	}
+
+	/**
+	 * DT_END_DATE
+	 */
+	public void setDtEndDate (Date dtEndDate){
+		this.dtEndDate = dtEndDate;
+	}
+
+	/**
 	 * ST_REASON
 	 */
 	@Column(name = "ST_REASON")
@@ -252,6 +332,26 @@ public class LegislationPlan implements Serializable {
 	}
 
 	/**
+	 * ST_NODE_ID
+	 */
+	@Column(name = "ST_NODE_ID")
+	private String stNodeId;
+
+	/**
+	 * ST_NODE_ID
+	 */
+	public String getStNodeId(){
+		return stNodeId;
+	}
+
+	/**
+	 * ST_NODE_ID
+	 */
+	public void setStNodeId (String stNodeId){
+		this.stNodeId = stNodeId;
+	}
+
+	/**
 	 * ST_REMARK
 	 */
 	@Column(name = "ST_REMARK")
@@ -269,6 +369,26 @@ public class LegislationPlan implements Serializable {
 	 */
 	public void setStRemark (String stRemark){
 		this.stRemark = stRemark;
+	}
+
+	/**
+	 * DT_PUBLISH_DATE
+	 */
+	@Column(name = "DT_PUBLISH_DATE")
+	private Date dtPublishDate;
+
+	/**
+	 * DT_PUBLISH_DATE
+	 */
+	public Date getDtPublishDate(){
+		return dtPublishDate;
+	}
+
+	/**
+	 * DT_PUBLISH_DATE
+	 */
+	public void setDtPublishDate (Date dtPublishDate){
+		this.dtPublishDate = dtPublishDate;
 	}
 
 }

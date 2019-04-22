@@ -1,11 +1,13 @@
 package com.wonders.fzb.plan.web;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.framework.beans.TeamInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
@@ -71,7 +73,11 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "openNoticeAddPage", location = "/plan/legislationNotice_form.jsp"),
 			@Result(name = "openNoticeEditPage", location = "/plan/legislationNotice_form.jsp"),
 			@Result(name = "openNoticeInfoPage", location = "/plan/legislationNotice_form.jsp"),
-			@Result(name = "openPlanSeparatePage", location = "/plan/legislationPlan_separate.jsp")})
+			@Result(name = "openPlanSeparatePage", location = "/plan/legislationPlan_separate.jsp"),
+            @Result(name = "openPlanAuditPage", location = "/plan/legislationPlan_audit.jsp"),
+			@Result(name = "openNoticeProjectInfoPage", location = "/plan/legislationNotice_projectInfo.jsp"),
+			@Result(name = "openNoticeExplainPage", location = "/plan/legislationNotice_explain.jsp"),
+			@Result(name = "openNoticeExplainInfoPage", location = "/plan/legislationNotice_explain.jsp")})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -215,11 +221,80 @@ public class LegislationPlanAction extends BaseAction {
 	}
 
 	/**
-	 * 保存分办
+	 * 保存分办/审核
 	 * @return
 	 */
 	private String saveLegislationPlanSeparate(){
 		legislationPlanTaskService.nextPlanProcess(request,session);
 		return null;
+	}
+
+    /**
+     * 跳转审核意见页面
+     * @return
+     */
+	private String openPlanAuditPage(){
+        String stTaskId=request.getParameter("stTaskId");
+        LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+        request.setAttribute("legislationPlanTask",legislationPlanTask);
+	    return pageController();
+    }
+
+	/**
+	 * 跳转汇总项目详情列表页
+	 * @return
+	 */
+	private String openNoticeProjectInfoPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+		List<Map<String, Object>> legislationPlanItemList=legislationPlanItemService.queryProjectByPlanId(legislationPlanTask.getStPlanId());
+		request.setAttribute("legislationPlanItemList",legislationPlanItemList);
+		return pageController();
+	}
+
+	/**
+	 * 跳转立法计划说明编辑页
+	 * @return
+	 */
+	private String openNoticeExplainPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+		LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId", legislationPlan.getStPlanId());
+		condMap.put("stNodeId", "NOD_0000000209");
+		sortMap.put("dtPubDate", "ASC");
+		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("legislationPlan",legislationPlan);
+		request.setAttribute("legislationPlanTask",legislationPlanTask);
+		return pageController();
+	}
+
+	/**
+	 * 跳转立法计划说明详情页
+	 * @return
+	 */
+	private String openNoticeExplainInfoPage(){
+		return openNoticeExplainPage();
+	}
+
+	/**
+	 *检查征集通知是否已添加计划说明
+	 */
+	@Action(value = "checkPlanExplain")
+	public void checkPlanExplain() throws IOException {
+		JSONObject jsonObject = new JSONObject();
+		String stTaskId = request.getParameter("stTaskId");
+		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+		LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
+		if(legislationPlan.getDtGatherDate()!=null){
+			jsonObject.put("success",true);
+		}else{
+			jsonObject.put("success",false);
+		}
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jsonObject);
 	}
 }
