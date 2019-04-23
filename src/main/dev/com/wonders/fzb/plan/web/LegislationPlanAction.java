@@ -51,6 +51,9 @@ public class LegislationPlanAction extends BaseAction {
 	@Autowired
 	@Qualifier("teamInfoService")
 	private TeamInfoService teamInfoService;
+	@Autowired
+	@Qualifier("legislationPlanTaskdetailService")
+	private LegislationPlanTaskdetailService legislationPlanTaskdetailService;
 
 	private int pageNo = 1;
 	private int pageSize = 10;
@@ -78,7 +81,8 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "openNoticeProjectInfoPage", location = "/plan/legislationNotice_projectInfo.jsp"),
 			@Result(name = "openNoticeExplainPage", location = "/plan/legislationNotice_explain.jsp"),
 			@Result(name = "openNoticeExplainInfoPage", location = "/plan/legislationNotice_explain.jsp"),
-			@Result(name = "openPlanCheckExplainPage", location = "/plan/legislationPlan_checkExplain.jsp")})
+			@Result(name = "openPlanCheckExplainPage", location = "/plan/legislationPlan_checkExplain.jsp"),
+			@Result(name = "openPlanCheckInfoPage", location = "/plan/legislationPlan_checkInfo.jsp")})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -318,5 +322,31 @@ public class LegislationPlanAction extends BaseAction {
 	private String savePlanTaskCheck(){
 		legislationPlanTaskService.nextPlanChildProcess(request,session);
 		return null;
+	}
+
+	/**
+	 * 跳转立法计划外立项审核记录页面
+	 * @return
+	 */
+	private String openPlanCheckInfoPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		String stNodeId=request.getParameter("stNodeId");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stTaskId", stTaskId);
+		condMap.put("stNodeId", stNodeId);
+		sortMap.put("stTaskdetailId", "ASC");
+		List<LegislationPlanTaskdetail> legislationPlanTaskdetailList=legislationPlanTaskdetailService.findByList(condMap,sortMap);
+		legislationPlanTaskdetailList.forEach((LegislationPlanTaskdetail legislationPlanTaskdetail)->{
+			condMap.clear();
+			sortMap.clear();
+			condMap.put("stParentId", legislationPlanTaskdetail.getStTaskdetailId());
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			legislationPlanTaskdetail.setFilesList(legislationFilesList);
+		});
+		request.setAttribute("legislationPlanTaskdetailList",legislationPlanTaskdetailList);
+		return pageController();
 	}
 }

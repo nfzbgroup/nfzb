@@ -139,6 +139,8 @@
 											<td>
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
 												<br>
+												<a href="javaScript:void(0)" data-title="审核记录" onclick="openPlanPage('openPlanCheckInfoPage','${plan.stTaskId}')" class="layer_full_link">审核记录</a>
+												<br>
 												<a href="javaScript:void(0)" data-title="下一步" onclick="openPlanPage('openPlanCheckExplainPage','${plan.stTaskId}')" class="layer_full_link">下一步</a>
 											</td>
 										</c:if>
@@ -149,6 +151,10 @@
 										</td>
 										<td>
 											<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+											<c:if test="${nodeId=='NOD_0000000207'}">
+											<br>
+											<a href="javaScript:void(0)" data-title="审核记录" onclick="openPlanPage('openPlanCheckInfoPage','${plan.stTaskId}')" class="layer_full_link">审核记录</a>
+											</c:if>
 										</td>
 									</c:otherwise>
 								</c:choose>

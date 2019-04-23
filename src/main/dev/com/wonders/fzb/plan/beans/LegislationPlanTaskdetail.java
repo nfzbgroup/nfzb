@@ -3,14 +3,11 @@ package com.wonders.fzb.plan.beans;
 import java.io.Serializable;
 import java.sql.Blob;
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.wonders.fzb.legislation.beans.LegislationFiles;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -431,4 +428,14 @@ public class LegislationPlanTaskdetail implements Serializable {
 		this.stPersonName = stPersonName;
 	}
 
+	@Transient
+	private List<LegislationFiles> filesList;
+
+	public List<LegislationFiles> getFilesList() {
+		return filesList;
+	}
+
+	public void setFilesList(List<LegislationFiles> filesList) {
+		this.filesList = filesList;
+	}
 }

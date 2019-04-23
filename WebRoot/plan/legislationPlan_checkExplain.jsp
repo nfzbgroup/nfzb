@@ -74,7 +74,7 @@
     }
     function uploadFile(id) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do?stNodeId=${stNodeId}',
+            url: '${basePath}/file/upload.do?stNodeId=${nodeId}',
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,
