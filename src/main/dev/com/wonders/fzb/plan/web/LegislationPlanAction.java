@@ -82,7 +82,8 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "openNoticeExplainPage", location = "/plan/legislationNotice_explain.jsp"),
 			@Result(name = "openNoticeExplainInfoPage", location = "/plan/legislationNotice_explain.jsp"),
 			@Result(name = "openPlanCheckExplainPage", location = "/plan/legislationPlan_checkExplain.jsp"),
-			@Result(name = "openPlanCheckInfoPage", location = "/plan/legislationPlan_checkInfo.jsp")})
+			@Result(name = "openPlanCheckInfoPage", location = "/plan/legislationPlan_checkInfo.jsp"),
+            @Result(name = "openProjectAscriptionPage", location = "/plan/legislationPlan_projectAscription.jsp")})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -259,6 +260,7 @@ public class LegislationPlanAction extends BaseAction {
 		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
 		List<Map<String, Object>> legislationPlanItemList=legislationPlanItemService.queryProjectByPlanId(legislationPlanTask.getStPlanId());
 		request.setAttribute("legislationPlanItemList",legislationPlanItemList);
+		request.setAttribute("status",legislationPlanTask.getStTaskStatus());
 		return pageController();
 	}
 
@@ -349,4 +351,26 @@ public class LegislationPlanAction extends BaseAction {
 		request.setAttribute("legislationPlanTaskdetailList",legislationPlanTaskdetailList);
 		return pageController();
 	}
+
+    /**
+     * 项目归属页面
+     * @return
+     */
+	private String openProjectAscriptionPage(){
+        String stItemId=request.getParameter("stItemId");
+        LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(stItemId);
+        request.setAttribute("legislationPlanItem",legislationPlanItem);
+	    return pageController();
+    }
+
+    /**
+     * 保存项目归属
+     * @return
+     */
+    private String saveLegislationProjectAscription() throws IOException {
+        JSONObject jsonObject =legislationPlanItemService.saveLegislationProjectAscription(request,session);
+        response.setContentType("application/json; charset=UTF-8");
+        response.getWriter().print(jsonObject);
+	    return null;
+    }
 }

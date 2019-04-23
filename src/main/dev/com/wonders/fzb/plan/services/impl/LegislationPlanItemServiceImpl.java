@@ -2,6 +2,7 @@ package com.wonders.fzb.plan.services.impl;
 
 import java.util.*;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
@@ -243,15 +244,36 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findByHQL("from LegislationPlanTask t where 1=1 and t.stParentId='"+legislationPlanItem.getStItemId()+"' and t.stNodeId='"+legislationPlanItem.getStNodeId()+"' and t.stEnable is null").get(0);
 			String stStatus=legislationPlanTask.getStNodeName();
 			if("TODO".equals(legislationPlanTask.getStTaskStatus())){
-				stStatus=stStatus+"待处理";
+				if("NOD_0000000207".equals(legislationPlanTask.getStNodeId())){
+					stStatus=stStatus+"待OA审核";
+				}else{
+					stStatus=stStatus+"待处理";
+				}
+			}else if("DOING".equals(legislationPlanTask.getStTaskStatus())){
+				stStatus=stStatus+"审核意见";
 			}else{
 				stStatus=stStatus+"已处理";
 			}
 			map.put("stStatus",stStatus);
+			map.put("stSuggest",legislationPlanItem.getStSuggest());
 			map.put("stUserName",legislationPlanItem.getStUserName());
 			map.put("dtCreateDate",legislationPlanItem.getDtCreateDate());
 			result.add(map);
 		});
 		return result;
+	}
+
+	@Override
+	public JSONObject saveLegislationProjectAscription(HttpServletRequest request, HttpSession session) {
+		JSONObject jsonObject=new JSONObject();
+		String stItemId=request.getParameter("stItemId");
+		String stSuggest=request.getParameter("stSuggest");
+		LegislationPlanItem legislationPlanItem=findById(stItemId);
+		legislationPlanItem.setStSuggest(stSuggest);
+		update(legislationPlanItem);
+		jsonObject.put("success",true);
+		jsonObject.put("stSuggest",stSuggest);
+		jsonObject.put("stItemId",stItemId);
+		return jsonObject;
 	}
 }

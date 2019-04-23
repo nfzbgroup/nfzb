@@ -195,7 +195,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanDeal.setStUserId(userId);
 		legislationPlanDeal.setStUserName(userName);
 		legislationPlanDeal.setDtDealDate(new Date());
-		if("NOD_0000000201".equals(stNodeId)||"NOD_0000000208".equals(stNodeId)||"NOD_0000000209".equals(stNodeId)||"NOD_0000000211".equals(stNodeId)){
+		if("NOD_0000000201".equals(stNodeId)||"NOD_0000000208".equals(stNodeId)||"NOD_0000000209".equals(stNodeId)||"NOD_0000000211".equals(stNodeId)||"NOD_0000000215".equals(stNodeId)){
 			LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
 			legislationPlanDeal.setStPlanId(legislationPlan.getStPlanId());
 			legislationPlanDeal.setStBakOne(legislationPlan.getStPlanName());

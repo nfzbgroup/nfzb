@@ -67,7 +67,7 @@ public class LegislationPlanItemAction extends BaseAction {
 		Map<String, String> sortMap = new HashMap<>();
 		condMap.put("stPlanId", legislationPlanTask.getStPlanId());
 		List<LegislationPlanItem> legislationPlanItemList=legislationPlanItemService.findByList(condMap,sortMap);
-		condMap.put("stNodeId","NOD_0000000205");
+		condMap.put("stNodeIdGe","NOD_0000000205");
 		condMap.put("stTaskStatus","DONE");
 		condMap.put("stEnableIsNull","null");
 		List<LegislationPlanTask> legislationPlanTaskList=legislationPlanTaskService.findByList(condMap,sortMap);
@@ -75,6 +75,29 @@ public class LegislationPlanItemAction extends BaseAction {
 			jsonObject.put("success",true);
 		}else{
 			jsonObject.put("success",false);
+		}
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jsonObject);
+	}
+
+	/**
+	 * 检查征集通知所属项目是否都有归属
+	 * @throws IOException
+	 */
+	@Action(value = "checkProjectAscription")
+	public void checkProjectAscription() throws IOException {
+		JSONObject jsonObject = new JSONObject();
+		String stTaskId = request.getParameter("stTaskId");
+		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stPlanId", legislationPlanTask.getStPlanId());
+		condMap.put("stSuggestIsNull", "");
+		List<LegislationPlanItem> legislationPlanItemList=legislationPlanItemService.findByList(condMap,sortMap);
+		if(legislationPlanItemList.size()>0){
+			jsonObject.put("success",false);
+		}else{
+			jsonObject.put("success",true);
 		}
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().print(jsonObject);

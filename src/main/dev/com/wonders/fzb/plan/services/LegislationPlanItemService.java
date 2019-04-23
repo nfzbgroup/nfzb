@@ -3,6 +3,7 @@ package com.wonders.fzb.plan.services;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.plan.beans.LegislationPlanItem;
@@ -85,4 +86,11 @@ public interface LegislationPlanItemService{
 	void saveLegislationPlan(HttpServletRequest request, HttpSession session);
 
 	List<Map<String,Object>> queryProjectByPlanId(String stPlanId);
+
+	/**
+	 * 保存项目归属
+	 * @param request
+	 * @param session
+	 */
+	JSONObject saveLegislationProjectAscription(HttpServletRequest request, HttpSession session);
 }
