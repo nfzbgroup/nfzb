@@ -195,7 +195,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanDeal.setStUserId(userId);
 		legislationPlanDeal.setStUserName(userName);
 		legislationPlanDeal.setDtDealDate(new Date());
-		if("NOD_0000000201".equals(stNodeId)||"NOD_0000000208".equals(stNodeId)||"NOD_0000000209".equals(stNodeId)||"NOD_0000000211".equals(stNodeId)||"NOD_0000000215".equals(stNodeId)){
+		if("NOD_0000000201".equals(stNodeId)||"NOD_0000000208".equals(stNodeId)||"NOD_0000000209".equals(stNodeId)||"NOD_0000000211".equals(stNodeId)||"NOD_0000000215".equals(stNodeId)||"NOD_0000000213".equals(stNodeId)){
 			LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
 			legislationPlanDeal.setStPlanId(legislationPlan.getStPlanId());
 			legislationPlanDeal.setStBakOne(legislationPlan.getStPlanName());
@@ -225,12 +225,8 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		String stNodeId = request.getParameter("stNodeId");
 		String stContent = request.getParameter("stContent");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
-		String teamId=currentPerson.getTeamInfos().get(0).getId();
-		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
 		String userId=currentPerson.getUserId();
 		String userName=currentPerson.getName();
-		String userRoleId = session.getAttribute("userRoleId").toString();
-		String userRole = session.getAttribute("userRole").toString();
 		LegislationPlanTask legislationPlanTask=findById(stTaskId);
 
 		LegislationPlanTaskdetail legislationPlanTaskdetail=new LegislationPlanTaskdetail();
@@ -261,5 +257,31 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanTask.setStDealId(userId);
 		legislationPlanTask.setStDealName(userName);
 		update(legislationPlanTask);
+	}
+
+	@Override
+	public void savePlanTaskCheck(HttpServletRequest request, HttpSession session) {
+		String stNodeId = request.getParameter("stNodeId");
+		if("NOD_0000000213".equals(stNodeId)){
+			String stTaskId = request.getParameter("stTaskId");
+			String stContent = request.getParameter("stContent");
+			UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+			String userId=currentPerson.getUserId();
+			String userName=currentPerson.getName();
+			LegislationPlanTaskdetail legislationPlanTaskdetail=new LegislationPlanTaskdetail();
+			legislationPlanTaskdetail.setStTitle("送审");
+			legislationPlanTaskdetail.setStContent(stContent);
+			legislationPlanTaskdetail.setStTaskStatus("TODO");
+			legislationPlanTaskdetail.setStTaskId(stTaskId);
+			legislationPlanTaskdetail.setStNodeId(stNodeId);
+			legislationPlanTaskdetail.setStPersonId(userId);
+			legislationPlanTaskdetail.setStPersonName(userName);
+			legislationPlanTaskdetail.setDtOpenDate(new Date());
+			String taskdetailId = legislationPlanTaskdetailService.addObj(legislationPlanTaskdetail);
+			legislationFilesService.updateParentIdById(request,taskdetailId);
+			nextPlanProcess(request,session);
+		}else{
+			nextPlanChildProcess(request,session);
+		}
 	}
 }

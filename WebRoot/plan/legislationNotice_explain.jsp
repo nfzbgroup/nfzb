@@ -32,17 +32,17 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">计划名称：</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" name="stProgress" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> <c:if test="${legislationPlan.stProgress !=null}">value="${legislationPlan.stProgress}" </c:if>>
+                    <input type="text" class="form-control" name="stProgress" <c:if test="${nodeId=='NOD_0000000213'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> <c:if test="${legislationPlan.stProgress !=null}">value="${legislationPlan.stProgress}" </c:if>>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">计划说明：</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" name="stRemark" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlan.stRemark !=null}">${legislationPlan.stRemark}</c:if></textarea>
+                    <textarea class="form-control" name="stRemark" <c:if test="${nodeId=='NOD_0000000213'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> ><c:if test="${legislationPlan.stRemark !=null}">${legislationPlan.stRemark}</c:if></textarea>
                 </div>
             </div>
 			<div class="form-group text-center">
-                <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
+                <c:if test="${nodeId!='NOD_0000000213'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
                     <input type="button" class="btn btn-w-m btn-success"  value="提交" onclick="saveLegislationNotice()"> &nbsp;&nbsp;
                 </c:if>
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
@@ -50,7 +50,7 @@
             <div class="form-group">
                 <label class="control-label">计划材料
                 </label>
-                <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
+                <c:if test="${nodeId!='NOD_0000000213'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
                     <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                     </label>
                     <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
@@ -78,7 +78,7 @@
                                         <td>${file.stTitle}</td>
                                         <td>
                                             <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
-                                            <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
+                                            <c:if test="${nodeId!='NOD_0000000213'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
                                                 &nbsp;&nbsp;
                                                 <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
                                                 <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">

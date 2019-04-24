@@ -311,7 +311,7 @@ public class LegislationPlanAction extends BaseAction {
 	}
 
 	/**
-	 * 跳转计划外立项审核说明页面
+	 * 跳转计划外立项审核说明页面/送审说明页面
 	 * @return
 	 */
 	private String openPlanCheckExplainPage(){
@@ -319,10 +319,10 @@ public class LegislationPlanAction extends BaseAction {
 	}
 
 	/**
-	 * 保存计划外立项说明
+	 * 保存计划外立项说明/送审说明
 	 */
 	private String savePlanTaskCheck(){
-		legislationPlanTaskService.nextPlanChildProcess(request,session);
+		legislationPlanTaskService.savePlanTaskCheck(request,session);
 		return null;
 	}
 

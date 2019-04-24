@@ -69,6 +69,20 @@
                     <textarea class="form-control" name="stBak" <c:if test="${(nodeId!='NOD_0000000202'&&nodeId!='NOD_0000000207')||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus !='TODO')}">disabled</c:if> ><c:if test="${legislationPlanItem.stBak !=null}">${legislationPlanItem.stBak}</c:if></textarea>
                 </div>
             </div>
+            <c:if test="${nodeId=='NOD_0000000205'&&legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus !='TODO'}">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">审核意见：</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" disabled>${legislationPlanTask.stActive}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">审核备注：</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" disabled>${legislationPlanTask.stComment1}</textarea>
+                    </div>
+                </div>
+            </c:if>
 			<div class="form-group text-center">
                 <c:if test="${(nodeId=='NOD_0000000202'||nodeId=='NOD_0000000207')&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
                     <input type="button" class="btn btn-w-m btn-success"  value="提交" onclick="saveLegislationPlan()"> &nbsp;&nbsp;
