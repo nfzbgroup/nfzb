@@ -38,7 +38,15 @@
                 <tr class="text-center">
                     <td>${planItem.stItemId}</td>
                     <td>${planItem.stItemName}</td>
-                    <td>${planItem.stStatus}</td>
+                    <td>
+                    	 <c:set var="theString" value='${planItem.stStatus}' />
+	                   	 <c:if test="${fn:contains(theString,'已处理')}" var="flag" scope="session">
+							 <p>a<c:out value="${planItem.stStatus}"/><p>
+						 </c:if>
+					 	 <c:if test="${not flag}">
+						 	  <p> <span style="color:red;"><c:out value="${planItem.stStatus}" /></span>	 <p>
+						 </c:if>
+                    </td>
                     <c:if test="${nodeId=='NOD_0000000215'}">
                         <td id="${planItem.stItemId}">${planItem.stSuggest}</td>
                     </c:if>
@@ -55,6 +63,13 @@
     <div class="form-group text-center">
         <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
     </div>
+	<div class="modal inmodal fade" id="legislationProcessChildForm"
+		data-backdrop keyboard tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content"></div>
+		</div>
+	</div>
 </div>
 <script>
     function openProjectPage(method,stItemId) {

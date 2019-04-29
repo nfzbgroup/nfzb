@@ -1,17 +1,12 @@
 package com.wonders.fzb.plan.web;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
-import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
-import dm.jdbc.util.StringUtil;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
@@ -25,8 +20,15 @@ import org.springframework.stereotype.Controller;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.plan.beans.*;
-import com.wonders.fzb.plan.services.*;
+import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
+import com.wonders.fzb.plan.beans.LegislationPlan;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.services.LegislationPlanService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+
+import dm.jdbc.util.StringUtil;
 
 /**
  * LegislationPlanTask action接口
@@ -47,22 +49,48 @@ public class LegislationPlanTaskAction extends BaseAction {
 	@Qualifier("wegovSimpleNodeService")
 	private WegovSimpleNodeService wegovSimpleNodeService;
 
-	private int pageNo = 1;
-	private int pageSize = 10;
+	@Autowired
+	@Qualifier("legislationPlanService")
+	private LegislationPlanService legislationPlanService;
+//	private int pageNo = 1;
+//	private int pageSize = 10;
 
 
 	//LegislationPlanTask的修改
-	@Action(value = "legislationPlanTask_add", results = {@Result(name = SUCCESS, location = "/LegislationPlanTask.jsp"), @Result(name = "List", location = "/legislationPlanTask_list.jsp")})
+	@Action(value = "legislationPlanTask_add", results = {
+			@Result(name = SUCCESS, location = "/LegislationPlanTask.jsp"),
+			@Result(name = "List", location = "/legislationPlanTask_list.jsp") })
 	public String legislationPlanTask_add() throws FzbDaoException {
 //		System.out.println("Begin....");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		List<LegislationPlanTask> legislationPlanTaskList = new ArrayList<LegislationPlanTask>();
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//		List<LegislationPlanTask> legislationPlanTaskList = new ArrayList<LegislationPlanTask>();
 		LegislationPlanTask legislationPlanTask = new LegislationPlanTask();
 		legislationPlanTaskService.add(legislationPlanTask);
 		return SUCCESS;
 	}
+	
+	//页面后台加载获取未处理完成的立法计划数据
+	@Action(value = "query_doc_info1")
+	public void query_doc_info1() throws IOException {
+		PrintWriter out = response.getWriter(); 
+		net.sf.json.JSONArray array=new net.sf.json.JSONArray();
+		List<LegislationPlan> docList = legislationPlanService.findByHQL("select t \r\n" + 
+            		"  from LegislationPlanTask d left join LegislationPlan t\r\n" + 
+            		"  on d.stPlanId=t.stPlanId where " + 
+            		"  d.stTaskStatus='TODO'");
+		if (docList.size() > 0) {
+			 for (LegislationPlan doc : docList) {
+					array.add(net.sf.json.JSONObject.fromObject(doc));
+			   }
+			out.write(array.toString());
+		} else {
+			out.write("");
+		}
+	}
 
-	@Actions({ @Action(value = "plan_task_list", results = { @Result(name = SUCCESS, location = "/plan/legislationPlan_list.jsp"), @Result(name = "QueryTable", location = "/plan/legislationPlan_table.jsp") }) })
+	@Actions({ @Action(value = "plan_task_list", results = {
+			@Result(name = SUCCESS, location = "/plan/legislationPlan_list.jsp"),
+			@Result(name = "QueryTable", location = "/plan/legislationPlan_table.jsp") }) })
 	public String listMethodManager() throws Exception {
 		String methodStr = request.getParameter("method");
 		if (StringUtil.isEmpty(methodStr)) {
@@ -85,6 +113,7 @@ public class LegislationPlanTaskAction extends BaseAction {
 	 *
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String queryTable() throws ParseException, FzbDaoException {
 		queryNoticeList();
 		return "QueryTable";
@@ -136,6 +165,7 @@ public class LegislationPlanTaskAction extends BaseAction {
 		}
 		condMap.put("stEnableIsNull","null");
 		sortMap.put("dtOpenDate", "DESC");
+		@SuppressWarnings("unchecked")
 		Page<LegislationPlanTask> infoPage = legislationPlanTaskService.findByPage(condMap,sortMap, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
 
 		if (StringUtil.isEmpty(stTaskStatus)) {
@@ -154,6 +184,7 @@ public class LegislationPlanTaskAction extends BaseAction {
 	 * 立法计划大节点流转
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String nextPlanProcess(){
 		legislationPlanTaskService.nextPlanProcess(request,session);
 		return null;

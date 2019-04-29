@@ -17,6 +17,8 @@ import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import dm.jdbc.util.StringUtil;
 import org.apache.commons.lang3.time.DateUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,6 +132,14 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocDao.findByHQL(hql);
 		return legislationProcessDocList;
 	}
+	
+	@Override
+	public List<Map> findMapByHQL(String hql){
+		List<Map> findMapByHQL = legislationProcessDocDao.findMapByHQL(hql);
+		return findMapByHQL;
+	}
+	
+	
 
 	@Override
 	public void executeSqlUpdate(String sql) {
@@ -273,7 +283,8 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 		String stBakOne = request.getParameter("stBakOne");
 		String stDocId = request.getParameter("stDocId");
 		String stBakTwo = request.getParameter("stBakTwo");
-		String dtBakDate = request.getParameter("dtBakDate");
+		String dtBakDate = request.getParameter("dtBakDate");  
+		String stComment1 = request.getParameter("stComment1");
 		String stComment2 = request.getParameter("stComment2");
 		String newDocName = request.getParameter("newDocName");
 		String nodeStatus = request.getParameter("nodeStatus");// 可能有状态过来
@@ -309,6 +320,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 			} else {
 				newTask.setDtBakDate(null);
 			}
+			newTask.setStComment1(stComment1);
 			newTask.setStComment2(stComment2);
 			newTask.setStNodeId(stNodeId);
 			newTask.setStNodeName(stNodeName);
@@ -361,16 +373,18 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 					// return stTaskId;
 				}
 			} else {
-				// 如果没有状态，就保存在原来的task中
-				if (!"NOD_0000000121".equals(stNodeId)) {
-					// 保留送OA字段不被修改
 					legislationProcessTask.setStBakOne(stBakOne);
-				}
-				legislationProcessTask.setStBakTwo(stBakTwo);
+					legislationProcessTask.setStBakTwo(stBakTwo);
+					
 				if (StringUtil.isNotEmpty(dtBakDate)) {
 					legislationProcessTask.setDtBakDate(DateUtils.parseDate(dtBakDate, "yyyy-MM-dd"));
 				} else {
 					legislationProcessTask.setDtBakDate(null);
+				}
+				if("NOD_0000000121".equals(stNodeId)&&(legislationProcessTask.getStComment1()!=null||StringUtil.isNotEmpty(legislationProcessTask.getStComment1()))) {
+					//部门意见征求-已发送OA 
+				}else {
+					legislationProcessTask.setStComment1(stComment1);
 				}
 				legislationProcessTask.setStComment2(stComment2);
 				legislationProcessTaskService.update(legislationProcessTask);

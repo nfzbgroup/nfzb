@@ -332,6 +332,26 @@ public class LegislationPlanTask implements Serializable {
 	}
 
 	/**
+	 * ST_TOPIC_ID
+	 */
+	@Column(name = "ST_TOPIC_ID")
+	private String stTopicId;
+
+	/**
+	 * ST_TOPIC_ID
+	 */
+	public String getStTopicId(){
+		return stTopicId;
+	}
+
+	/**
+	 * ST_TOPIC_ID
+	 */
+	public void setStTopicId (String stTopicId){
+		this.stTopicId = stTopicId;
+	}
+
+	/**
 	 * ST_FLOW_ID
 	 */
 	@Column(name = "ST_FLOW_ID")

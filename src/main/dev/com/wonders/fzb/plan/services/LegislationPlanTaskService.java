@@ -90,11 +90,4 @@ public interface LegislationPlanTaskService{
 	 * @param session
 	 */
 	void nextPlanChildProcess(HttpServletRequest request, HttpSession session);
-
-	/**
-	 * 保存计划外立项说明/送审说明
-	 * @param request
-	 * @param session
-	 */
-	void savePlanTaskCheck(HttpServletRequest request, HttpSession session);
 }

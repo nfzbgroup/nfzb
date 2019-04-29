@@ -7,7 +7,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >领导批示 </span>
+            <span >正式文本说明</span>
         </li>
     </ul>
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -19,14 +19,30 @@
 
         <div class="form-body">
 
-			<div class="form-group">
-				<label class="col-sm-2 control-label text-left">领导批示：</label>
+		<%-- 	<div class="form-group">
+			      <div class="form-group text-center">
+					<label class="col-sm-3 control-label text-center">法规规章草案：</label>
+					<label class="col-sm-6 control-label" style="text-align: left;">
+						<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
+					</label>
+				   </div>
+				<label class="col-sm-2 control-label text-left">正式文本说明：</label>
 				<div class="col-sm-10">
 					<textarea id="stComent" name="stComent" class="form-control"></textarea>
 				</div>
-			</div>
-
-
+			</div>  --%> <div class="form-group">
+							<div class="form-group text-center">
+									<label class="col-sm-3 control-label text-left">法规规章草案：</label>
+									<label class="col-sm-6 control-label" style="text-align: left;">
+										<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
+									</label>
+							</div>
+							<label class="col-sm-3 control-label text-left">正式文本说明：</label>
+							<div class="col-sm-7">
+									<textarea id="stComent" name="stComent" class="form-control form_control"></textarea>
+							</div>
+						    </div>
+                         
             <div class="form-group">
                 <label class="control-label">附件上传
                 </label>
@@ -51,7 +67,7 @@
                 </table>
             </div>
             <div class="form-group text-center">
-                <input type="button" class="btn btn-w-m btn-success" id="btnSave"
+                <input ${strDisplay} type="button"  class="btn btn-w-m btn-success" id="btnSave"
                        name="btnSave" onclick="saveTaskCheck('${buttonStatus}')" value="提交"> &nbsp;&nbsp;
                 <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
             </div>
@@ -63,7 +79,7 @@
     function saveTaskCheck() {
         var param=$('#legislationTaskCheckForm').formToJson();
         if(param.stComent==null||param.stComent==""){
-            Duang.error("提示","请输入领导批示！");
+            Duang.error("提示","请输入正式文本说明！");
         }else {
                 $.post("../${requestUrl}?stTaskId=${stTaskId}&method=dealFinish",param,function(data){
                 $('#legislationProcessForm').modal('hide');

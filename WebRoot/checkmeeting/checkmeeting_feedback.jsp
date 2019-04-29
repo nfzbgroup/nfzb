@@ -19,105 +19,116 @@
 	</button>
 </div>
 <div class="modal-body">
-	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议-参加情况反馈</h2>
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">参会情况反馈</h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
 		<input type="hidden" name="allPersonFeedBack" id="allPersonFeedBack" value="">
 		<input type="hidden" name="allPersonFeedBackTime" id="allPersonFeedBackTime" value="">
-		<div class="form-body">
-			<div class="form-group">
-				<label class="col-sm-3 control-label">会议名称：</label>
-				<div class="col-sm-9 control-label" style="text-align: left">${legislationCheckmeeting.stMeetingName}</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">会议类型：</label>
-				<div class="col-sm-9 control-label" style="text-align: left">${legislationCheckmeeting.stType}</div>
-			</div>
-
-			<div class="form-group">
-				<label class="col-sm-3 control-label">会议地点：</label>
-				<div class="col-sm-9 control-label" style="text-align: left">${legislationCheckmeeting.stAddress}</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">会议时间：</label>
-				<div class="col-sm-9 control-label" style="text-align: left">
-					<fmt:formatDate value="${legislationCheckmeeting.dtBeginDate}" pattern="yyyy-MM-dd" />
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">对应草案：</label>
-				<div class="col-sm-6">
-					<table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
+		<div class="form-body" align="center">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+				<tr class="text-center">
+					<td class="text-right" width="20%">
+						<label>会议名称：</label>
+					</td>
+					<td>${legislationCheckmeeting.stMeetingName}</td>
+				</tr>
+				<tr class="text-center">
+					<td class="text-right">
+						<label>会议类型：</label>
+					</td>
+					<td>${legislationCheckmeeting.stType}</td>
+				</tr>
+				<tr class="text-center">
+					<td class="text-right">
+						<label>会议地点：</label>
+					</td>
+					<td>${legislationCheckmeeting.stAddress}</td>
+				</tr>
+				<tr class="text-center">
+					<td class="text-right">
+						<label>会议时间：</label>
+					</td>
+					<td>
+						<fmt:formatDate value="${legislationCheckmeeting.dtBeginDate}" pattern="yyyy-MM-dd" />
+					</td>
+				</tr>
+				<tr class="text-center">
+					<td class="text-right">
+						<label>对应草案：</label>
+					</td>
+					<td>
 						<c:forEach items="${legislationProcessDocList}" var="doc" varStatus="status">
-							<tr>
-								<td>${status.index + 1}、${doc.stDocName}&nbsp;&nbsp;</td>
-							</tr>
+						 ${status.index + 1}、${doc.stDocName}&nbsp;&nbsp;<br>
 						</c:forEach>
-					</table>
-				</div>
-			</div>
+					</td>
+				</tr>
+				<tr class="text-center">
+					<td class="text-right">
+						<label>对应计划：</label>
+					</td>
+					<td>
+						<c:forEach items="${legislationPlanList}" var="plan" varStatus="status">
+						 ${status.index + 1}、${plan.stPlanName}&nbsp;&nbsp;<br>
+						</c:forEach>
+					</td>
+				</tr>
+			</table>
 
 			<br>
-			<div class="form-group">
-				<label class="col-sm-3 control-label text-left">通知回执：</label>
-				<div class="col-sm-6">
-					<table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-						<thead>
-							<th class="text-center" width="20%">人员</th>
-							<th class="text-center" width="50%">反馈信息</th>
-							<th class="text-center" width="30%">反馈时间</th>
-						</thead>
-						<tbody>
-							<c:forEach items="${mapListJson}" var="person" varStatus="status">
-								<tr class="text-center">
-									<td>
-										<label>${person.name}</label>
+			<br>
+			<div class="form-body" align="center">
+				<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+					<thead>
+						<th class="text-center" width="20%">参会人员</th>
+						<th class="text-center" width="50%">反馈信息</th>
+						<th class="text-center" width="30%">反馈时间</th>
+					</thead>
+					<tbody>
+						<c:forEach items="${mapListJson}" var="person" varStatus="status">
+							<tr class="text-right">
+								<td class="text-right">
+									<label>${person.name}</label>
+								</td>
+								<td>
+									<input type="text" class="form-control" id="personFeedBack${status.index}" value="${person.feedBack}">
+								</td>
+
+								<td>
+									<input type="text" class="form-control" id="feedTime${status.index}" value="${person.feedBackT}">
+								</td>
+							</tr>
+						</c:forEach>
+						<c:if test="${mapListJson==null}">
+							<c:forEach items="${stPersonList}" var="person" varStatus="status">
+								<tr class="text-right">
+									<td class="text-right">
+										<label>${person}</label>
 									</td>
 									<td>
-										<input type="text" class="form-control" id="personFeedBack${status.index}" value="${person.feedBack}">
+										<input type="text" class="form-control" id="personFeedBack${status.index}" value="">
 									</td>
 
 									<td>
-										<input type="text" class="form-control" id="feedTime${status.index}" value="${person.feedBackT}">
+										<input type="text" class="form-control" id="feedTime${status.index}" value="">
 									</td>
 								</tr>
 							</c:forEach>
-							<c:if test="${mapListJson==null}">
-								<c:forEach items="${stPersonList}" var="person" varStatus="status">
-									<tr class="text-center">
-										<td>
-											<label>${person}</label>
-										</td>
-										<td>
-											<input type="text" class="form-control" id="personFeedBack${status.index}" value="">
-										</td>
+						</c:if>
+					</tbody>
+				</table>
 
-										<td>
-											<input type="text" class="form-control" id="feedTime${status.index}" value="">
-										</td>
-									</tr>
-								</c:forEach>
-							</c:if>
-						</tbody>
-					</table>
-
-				</div>
 			</div>
+		</div>
 
-
-
-			<div class="form-group text-center">
-				<input type="hidden" id="op" name="op">
-				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
-				&nbsp;&nbsp;
-				<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="提交">
-				&nbsp;&nbsp;
-				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
-			</div>
-
+		<div class="form-group text-center">
+			<input type="hidden" id="op" name="op">
+			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
+			&nbsp;&nbsp;
+			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="提交">
+			&nbsp;&nbsp;
+			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 		</div>
 	</form>
-
 </div>
 <script>
 	$(function() {
@@ -196,34 +207,52 @@
 			console.info(val);
 			allPersonFeedBack += val + "#";
 		});
-		console.info("allPersonFeedBack---" + allPersonFeedBack);
+		//console.info("allPersonFeedBack---" + allPersonFeedBack);
 		$('#allPersonFeedBack').val(allPersonFeedBack);
 		$("[id^=feedTime]").each(function(index, item) {
 			var val = $(this).val(); //获取value值
 			console.info(val);
 			allPersonFeedBackTime += val + "#";
 		});
-		console.info("allPersonFeedBackTime---" + allPersonFeedBackTime);
+		//console.info("allPersonFeedBackTime---" + allPersonFeedBackTime);
 		$('#allPersonFeedBackTime').val(allPersonFeedBackTime);
 		//[{"website":"America","create_time":"123"},{"website":"china","create_time":"234"}]
 
 		var param = $('#auditMeetingForm').formToJson();
-		console.info("param-------" + param);
+		//console.info("param-------" + param);
 		//if (param.stComment1 == null || param.stComment1 == "") {
 		//	Duang.error("提示", "请输入会议人员的反馈");
 		//} else {
-		$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
-			//console.log(JSON.stringify(data));
-			if (data.success) {
-				if (operation == 'submit') {
-					$('#legislationProcessForm').modal('hide');
-					submitForm(1);
+
+		if (operation == 'submit') {
+			layer.confirm('请确认操作！', function(index) {
+				layer.close(layer.index);
+				$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
+					//console.log(JSON.stringify(data));
+					if (data.success) {
+						if (operation == 'submit') {
+							$('#legislationProcessForm').modal('hide');
+							submitForm(1);
+						}
+						Duang.success("提示", "操作成功");
+					} else {
+						Duang.error("提示", "操作失败");
+					}
+				});
+			});
+		} else {
+			$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
+				//console.log(JSON.stringify(data));
+				if (data.success) {
+					if (operation == 'submit') {
+						submitForm(1);
+					}
+					Duang.success("提示", "操作成功");
+				} else {
+					Duang.error("提示", "操作失败");
 				}
-				Duang.success("提示", "操作成功");
-			} else {
-				Duang.error("提示", "操作失败");
-			}
-		});
+			});
+		}
 		//}
 	}
 

@@ -11,15 +11,11 @@ import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.services.*;
-import com.wonders.fzb.plan.beans.LegislationPlanTask;
-import com.wonders.fzb.plan.services.LegislationPlanService;
-import com.wonders.fzb.plan.services.LegislationPlanTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
 import dm.jdbc.util.StringUtil;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -102,7 +98,7 @@ public class LegislationProcessTaskAction extends BaseAction {
 	 *
 	 * @return
 	 */
-	private String queryTable() throws ParseException, FzbDaoException {
+	private String queryTable() throws ParseException {
 		if ("NOD_0000000140".equals(request.getParameter("stNodeId")) || "NOD_0000000141".equals(request.getParameter("stNodeId")) || "NOD_0000000150".equals(request.getParameter("stNodeId")) || "NOD_0000000151".equals(request.getParameter("stNodeId"))) {
 			queryTaskDetail();
 		} else if ("NOD_0000000120".equals(request.getParameter("stNodeId")) || "NOD_0000000121".equals(request.getParameter("stNodeId")) || "NOD_0000000122".equals(request.getParameter("stNodeId")) || "NOD_0000000162".equals(request.getParameter("stNodeId"))) {
@@ -380,7 +376,7 @@ public class LegislationProcessTaskAction extends BaseAction {
 				baseSql += "and t.st_task_status = 'TODO' ";
 			}
 		}
-//		baseSql += "and d.st_node_Id = 'NOD_0000000101' ";
+		// baseSql += "and d.st_node_Id = 'NOD_0000000101' ";
 		baseSql += "and t.st_enable is null ";
 		if ("NOD_0000000101".equals(stNodeId)) {
 			baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
@@ -390,6 +386,13 @@ public class LegislationProcessTaskAction extends BaseAction {
 				baseSql += "and t.st_deal_Id = '" + session.getAttribute("unitCode") + "' ";
 			}
 		}
+
+//		// 如果是审核会议后反馈
+//		if ("NOD_0000000109".equals(stNodeId)) {
+//
+//			baseSql += "and t.st_node_Id = '" + stNodeId + "' ";
+//
+//		}
 
 		String orderSql = " order by d.dt_create_date DESC";
 		infoPage = legislationProcessTaskService.findTaskDocListByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
@@ -430,7 +433,6 @@ public class LegislationProcessTaskAction extends BaseAction {
 		request.setAttribute("nodeId", stNodeId);
 	}
 
-
 	/**
 	 * 主节点流转（共用）
 	 *
@@ -446,13 +448,13 @@ public class LegislationProcessTaskAction extends BaseAction {
 		String roleName = currentPerson.getTeamInfos().get(0).getTeamName();
 		String userRoleId = session.getAttribute("userRoleId").toString();
 		String userRole = (String) session.getAttribute("userRole");
-		WegovSimpleNode wegovSimpleNode=null;
-		if("NOD_0000000123".equals(stNodeId)) {
-	         //发送部门
-	         wegovSimpleNode=legislationProcessTaskService.sendUnit(request, currentPerson, userRoleId, userRole);
-	    }else {
-	    	 wegovSimpleNode=legislationProcessTaskService.nextProcess(stDocId,stNodeId,session);
-	    }
+		WegovSimpleNode wegovSimpleNode = null;
+		if ("NOD_0000000123".equals(stNodeId)) {
+			// 发送部门
+			wegovSimpleNode = legislationProcessTaskService.sendUnit(request, currentPerson, userRoleId, userRole);
+		} else {
+			wegovSimpleNode = legislationProcessTaskService.nextProcess(stDocId, stNodeId, session);
+		}
 		Boolean removeDisabled = false;
 		if ("expertBefore".equals(buttonId) && "U_3_7".equals(teamId)) {
 			removeDisabled = true;
@@ -474,16 +476,14 @@ public class LegislationProcessTaskAction extends BaseAction {
 			nodeChange2.put("colorSet", "bcg_green");
 
 			// 这里我们要判断下权限问题 如果当前用户所在处室 是node表里的 用户传值 如果不是 则不传值
-			if (wegovSimpleNode.getStSubmitRole() != null && (wegovSimpleNode.getStSubmitRole().indexOf(userRole) >= 0))
-			{
+			if (wegovSimpleNode.getStSubmitRole() != null && (wegovSimpleNode.getStSubmitRole().indexOf(userRole) >= 0)) {
 				nodeChange2.put("nodeHref", wegovSimpleNode.getStInfoUrl() + "__TODO");
 			}
 
 		} else {
 			nodeChange2.put("node", wegovSimpleNode.getStNodeId());
 			nodeChange2.put("colorSet", "bcg_green");
-			if (wegovSimpleNode.getStSubmitRole() != null && (wegovSimpleNode.getStSubmitRole().indexOf(userRole) >= 0))
-			{
+			if (wegovSimpleNode.getStSubmitRole() != null && (wegovSimpleNode.getStSubmitRole().indexOf(userRole) >= 0)) {
 				nodeChange2.put("nodeHref", wegovSimpleNode.getStInfoUrl());
 			}
 		}
@@ -496,7 +496,6 @@ public class LegislationProcessTaskAction extends BaseAction {
 		response.getWriter().print(jsonObject);
 		return null;
 	}
-
 
 	/**
 	 * 退回（共用）
@@ -628,5 +627,12 @@ public class LegislationProcessTaskAction extends BaseAction {
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().print(jsonObject);
 	}
+	
+	
+	
 
+	@Actions({ @Action(value = "simple_type_list", results = { @Result(name = SUCCESS, location = "/legislation/sample_list.jsp") }) })
+	public String simple_type_list() throws Exception {
+		return SUCCESS;
+	}
 }

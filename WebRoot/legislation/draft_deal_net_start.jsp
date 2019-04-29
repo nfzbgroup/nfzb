@@ -7,7 +7,7 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span>网上征求意见</span>
+			<span>公开征求意见</span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
@@ -16,20 +16,23 @@
 	</button>
 </div>
 <div class="modal-body">
-<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">网上征求意见</h2>
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">公开征求意见</h2>
 	<form id="onlineDemonstrationForm" class="form-horizontal" novalidate="novalidate">
-		<input hidden name="stTaskId" id="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
+		<input type="hidden" name="stTaskId" id="stTaskId" value="${legislationProcessTask.stTaskId}">
 		<input type="hidden" name="stDocId" value="${legislationProcessDoc.stDocId}">
 		<input type="hidden" id="buttonId" value="${buttonId}">
 		<div class="form-body">
 			<div class="form-group">
 				<label class="col-sm-3 control-label">法规规章草案：</label>
-				<label class="col-sm-4 control-label">${legislationProcessDoc.stDocName}</label>
+
+				<label class="col-sm-9 control-label" style="text-align: left;">
+					<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
+				</label>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">征求意见说明：</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" name="stComment2"><c:if test="${legislationProcessTask.stComment2 !=null}">${legislationProcessTask.stComment2}</c:if></textarea>
+					<textarea class="form-control" name="stComment2">${legislationProcessTask.stComment2}</textarea>
 				</div>
 			</div>
 			<div class="form-group">
@@ -100,8 +103,7 @@
 							<c:forEach var="file" items="${legislationFilesList}">
 								<c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
 									<tr class="text-center">
-										'
-										<td class="text-left">需要报送的其他材料</td>
+										<td class="text-center">需要报送的其他材料</td>
 										<td>${file.stTitle}</td>
 										<td>
 											<a target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
@@ -119,7 +121,7 @@
 			<div class="form-group text-center">
 				<input ${stStyle} type="button" class="btn btn-w-m btn-success" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
 				&nbsp;&nbsp;
-				<input ${stStyle} type="button" class="btn btn-w-m btn-success" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="confirmOnlineReport('${stDocId}','${nodeId}','${buttonId}')"</c:if> <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="上报">
+				<input ${stStyle} type="button" class="btn btn-w-m btn-success" onclick="confirmOnlineReport('${stDocId}','${nodeId}','${buttonId}')" value="提交">
 				&nbsp;&nbsp;
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>

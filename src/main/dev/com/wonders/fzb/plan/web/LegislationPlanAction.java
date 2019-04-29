@@ -1,17 +1,11 @@
 package com.wonders.fzb.plan.web;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
-import com.wonders.fzb.framework.beans.TeamInfo;
-import com.wonders.fzb.framework.services.TeamInfoService;
-import com.wonders.fzb.legislation.beans.LegislationFiles;
-import com.wonders.fzb.legislation.services.LegislationFilesService;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -19,11 +13,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.plan.beans.*;
-import com.wonders.fzb.plan.services.*;
+import com.wonders.fzb.citymeeting.beans.LegislationCitymeeting;
+import com.wonders.fzb.citymeeting.beans.LegislationCitymeetingTask;
+import com.wonders.fzb.citymeeting.services.LegislationCitymeetingService;
+import com.wonders.fzb.citymeeting.services.LegislationCitymeetingTaskService;
+import com.wonders.fzb.framework.beans.TeamInfo;
+import com.wonders.fzb.framework.services.TeamInfoService;
+import com.wonders.fzb.legislation.beans.LegislationFiles;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.plan.beans.LegislationPlan;
+import com.wonders.fzb.plan.beans.LegislationPlanItem;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.services.LegislationPlanItemService;
+import com.wonders.fzb.plan.services.LegislationPlanService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+
+import dm.jdbc.util.StringUtil;
 
 /**
  * LegislationPlan action接口
@@ -52,19 +62,21 @@ public class LegislationPlanAction extends BaseAction {
 	@Qualifier("teamInfoService")
 	private TeamInfoService teamInfoService;
 	@Autowired
-	@Qualifier("legislationPlanTaskdetailService")
-	private LegislationPlanTaskdetailService legislationPlanTaskdetailService;
-
-	private int pageNo = 1;
-	private int pageSize = 10;
+	@Qualifier("legislationCitymeetingService")
+	private LegislationCitymeetingService legislationCitymeetingService;
+	@Autowired
+	@Qualifier("legislationCitymeetingTaskService")
+	private LegislationCitymeetingTaskService legislationCitymeetingTaskService;
+//	private int pageNo = 1;
+//	private int pageSize = 10;
 
 
 	//LegislationPlan的修改
 	@Action(value = "legislationPlan_add", results = {@Result(name = SUCCESS, location = "/LegislationPlan.jsp"), @Result(name = "List", location = "/legislationPlan_list.jsp")})
 	public String legislationPlan_add() throws FzbDaoException {
 //		System.out.println("Begin....");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		List<LegislationPlan> legislationPlanList = new ArrayList<LegislationPlan>();
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//		List<LegislationPlan> legislationPlanList = new ArrayList<LegislationPlan>();
 		LegislationPlan legislationPlan = new LegislationPlan();
 		legislationPlanService.add(legislationPlan);
 		return SUCCESS;
@@ -81,9 +93,12 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "openNoticeProjectInfoPage", location = "/plan/legislationNotice_projectInfo.jsp"),
 			@Result(name = "openNoticeExplainPage", location = "/plan/legislationNotice_explain.jsp"),
 			@Result(name = "openNoticeExplainInfoPage", location = "/plan/legislationNotice_explain.jsp"),
+			@Result(name = "openNoticeDraftPage", location = "/plan/legislationNotice_draft.jsp"),
+			@Result(name = "openNoticeDraftInfoPage", location = "/plan/legislationNotice_draft.jsp"),
 			@Result(name = "openPlanCheckExplainPage", location = "/plan/legislationPlan_checkExplain.jsp"),
-			@Result(name = "openPlanCheckInfoPage", location = "/plan/legislationPlan_checkInfo.jsp"),
-            @Result(name = "openProjectAscriptionPage", location = "/plan/legislationPlan_projectAscription.jsp")})
+			@Result(name = "openProjectAscriptionPage", location = "/plan/legislationPlan_projectAscription.jsp"),
+			@Result(name = "flowDealPage", location = "/plan/flowDealPage.jsp")
+	})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -98,11 +113,8 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	private String pageController() {
 		String stPlanId = request.getParameter("stPlanId");
-
 		String methodStr = request.getParameter("method");
-
 		String stNodeId = request.getParameter("stNodeId");
-
 		String stTaskId = request.getParameter("stTaskId");
 
 		request.setAttribute("nodeId", stNodeId);
@@ -116,6 +128,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * 跳转立法项目发起
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String openPlanAddPage(){
 		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
@@ -143,7 +156,7 @@ public class LegislationPlanAction extends BaseAction {
 		}
 		sortMap.put("dtPubDate", "ASC");
 		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1  order by t.dtCreateDate desc");
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
 		request.setAttribute("legislationFilesList",legislationFilesList);
 		request.setAttribute("legislationPlanItem",legislationPlanItem);
@@ -155,6 +168,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * 跳转立法项目详情
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String openPlanInfoPage(){
 		return openPlanEditPage();
 	}
@@ -163,6 +177,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * 保存立法计划
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String saveLegislationPlan(){
 		legislationPlanItemService.saveLegislationPlan(request,session);
 		return null;
@@ -172,6 +187,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * 跳转征集通知发起
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String openNoticeAddPage(){
 		request.setAttribute("legislationPlan",new LegislationPlan());
 		request.setAttribute("legislationPlanTask",new LegislationPlanTask());
@@ -202,6 +218,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * 跳转征集通知详情
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String openNoticeInfoPage(){
 		return openNoticeEditPage();
 	}
@@ -210,6 +227,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * 保存征集通知
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String saveLegislationNotice(){
 		legislationPlanService.saveLegislationNotice(request,session);
 		return null;
@@ -219,6 +237,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * 跳转立法计划分办页
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String openPlanSeparatePage(){
 		// 查询分办处
 		Map<String, Object> condMap = new HashMap<>();
@@ -235,6 +254,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * 保存分办/审核
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String saveLegislationPlanSeparate(){
 		legislationPlanTaskService.nextPlanProcess(request,session);
 		return null;
@@ -244,6 +264,7 @@ public class LegislationPlanAction extends BaseAction {
      * 跳转审核意见页面
      * @return
      */
+	@SuppressWarnings("unused")
 	private String openPlanAuditPage(){
         String stTaskId=request.getParameter("stTaskId");
         LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
@@ -255,6 +276,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * 跳转汇总项目详情列表页
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String openNoticeProjectInfoPage(){
 		String stTaskId=request.getParameter("stTaskId");
 		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
@@ -283,15 +305,69 @@ public class LegislationPlanAction extends BaseAction {
 		request.setAttribute("legislationPlanTask",legislationPlanTask);
 		return pageController();
 	}
-
 	/**
 	 * 跳转立法计划说明详情页
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String openNoticeExplainInfoPage(){
 		return openNoticeExplainPage();
 	}
 
+	
+	/**
+	 * 跳转立法计划草案送审稿
+	 */
+	private String openNoticeDraftPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		
+		LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+		LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
+		if(null!=legislationPlanTask.getStTopicId()&&StringUtil.isNotEmpty(legislationPlanTask.getStTopicId())) {
+			//已选常务会议议题名称
+			String checkmeetingTaskId=legislationPlanTask.getStTopicId();
+			LegislationCitymeeting legislationCitymeeting = legislationCitymeetingService.findById(checkmeetingTaskId);
+			request.setAttribute("checkmeetingTaskId",legislationCitymeeting.getStTopicName());
+		}
+		//常务会议立法
+		condMap.put("stTaskStatus", "AFFIRM");
+		sortMap.put("dtDeadDate", "ASC");
+		List<LegislationCitymeetingTask> legislationCitymeetingTaskList = legislationCitymeetingTaskService.findByList(condMap , sortMap);
+		condMap.clear();
+		sortMap.clear();
+		List<String> checkmeetingIds=new ArrayList<String>();
+		if(legislationCitymeetingTaskList.size()>0) {
+			for(LegislationCitymeetingTask legislationCitymeetingTask: legislationCitymeetingTaskList) {
+				checkmeetingIds.add(legislationCitymeetingTask.getStTopicId());
+			}
+		}
+		//获得常务会议实体
+		condMap.put("stTopicId"+"List", checkmeetingIds);
+		List<LegislationCitymeeting> legislationCitymeetingList = legislationCitymeetingService.findByList(condMap , sortMap);
+		condMap.clear();
+		sortMap.clear();
+		condMap.put("stParentId", legislationPlan.getStPlanId());
+		condMap.put("stNodeId", "NOD_0000000209");
+		sortMap.put("dtPubDate", "ASC");
+		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+		
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("legislationPlan",legislationPlan);
+		request.setAttribute("legislationPlanTask",legislationPlanTask);
+		request.setAttribute("legislationCitymeetingTaskList", legislationCitymeetingTaskList);
+		request.setAttribute("legislationCitymeetingList", legislationCitymeetingList);
+		return pageController();
+	}
+	/**
+	 * 跳转立法计划草案送审稿详情
+	 */
+	@SuppressWarnings("unused")
+	private String openNoticeDraftInfoPage(){
+		return openNoticeDraftPage();
+	}
+	
 	/**
 	 *检查征集通知是否已添加计划说明
 	 */
@@ -311,66 +387,48 @@ public class LegislationPlanAction extends BaseAction {
 	}
 
 	/**
-	 * 跳转计划外立项审核说明页面/送审说明页面
+	 * 跳转计划外立项审核说明页面
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String openPlanCheckExplainPage(){
 		return pageController();
 	}
 
 	/**
-	 * 保存计划外立项说明/送审说明
+	 * 保存计划外立项说明
 	 */
+	@SuppressWarnings("unused")
 	private String savePlanTaskCheck(){
-		legislationPlanTaskService.savePlanTaskCheck(request,session);
+		legislationPlanTaskService.nextPlanChildProcess(request,session);
 		return null;
 	}
-
-	/**
-	 * 跳转立法计划外立项审核记录页面
-	 * @return
-	 */
-	private String openPlanCheckInfoPage(){
-		String stTaskId=request.getParameter("stTaskId");
-		String stNodeId=request.getParameter("stNodeId");
-		Map<String, Object> condMap = new HashMap<>();
-		Map<String, String> sortMap = new HashMap<>();
-		condMap.put("stTaskId", stTaskId);
-		condMap.put("stNodeId", stNodeId);
-		sortMap.put("stTaskdetailId", "ASC");
-		List<LegislationPlanTaskdetail> legislationPlanTaskdetailList=legislationPlanTaskdetailService.findByList(condMap,sortMap);
-		legislationPlanTaskdetailList.forEach((LegislationPlanTaskdetail legislationPlanTaskdetail)->{
-			condMap.clear();
-			sortMap.clear();
-			condMap.put("stParentId", legislationPlanTaskdetail.getStTaskdetailId());
-			condMap.put("stNodeId", stNodeId);
-			sortMap.put("dtPubDate", "ASC");
-			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-			legislationPlanTaskdetail.setFilesList(legislationFilesList);
-		});
-		request.setAttribute("legislationPlanTaskdetailList",legislationPlanTaskdetailList);
-		return pageController();
-	}
-
     /**
      * 项目归属页面
      * @return
      */
+	@SuppressWarnings("unused")
 	private String openProjectAscriptionPage(){
         String stItemId=request.getParameter("stItemId");
         LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(stItemId);
         request.setAttribute("legislationPlanItem",legislationPlanItem);
 	    return pageController();
     }
-
-    /**
+	/**
      * 保存项目归属
      * @return
      */
-    private String saveLegislationProjectAscription() throws IOException {
+    @SuppressWarnings("unused")
+	private String saveLegislationProjectAscription() throws IOException {
         JSONObject jsonObject =legislationPlanItemService.saveLegislationProjectAscription(request,session);
         response.setContentType("application/json; charset=UTF-8");
         response.getWriter().print(jsonObject);
 	    return null;
     }
+    
+    //流程图展示
+	private String flowDealPage(){
+		return pageController();
+	}
+    
 }

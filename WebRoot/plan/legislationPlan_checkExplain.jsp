@@ -19,7 +19,7 @@
         <div class="form-body">
 
 			<div class="form-group">
-				<label class="col-sm-3 control-label text-left">情况说明：</label>
+				<label class="col-sm-3 control-label text-left">领导意见：</label>
 				<div class="col-sm-9">
 					<textarea  name="stContent" class="form-control"></textarea>
 				</div>
@@ -74,7 +74,7 @@
     }
     function uploadFile(id) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do?stNodeId=${nodeId}',
+            url: '${basePath}/file/upload.do?stNodeId=${stNodeId}',
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,

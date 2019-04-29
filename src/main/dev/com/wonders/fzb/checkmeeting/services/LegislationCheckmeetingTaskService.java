@@ -135,5 +135,14 @@ public interface LegislationCheckmeetingTaskService {
 	 */
 	void nextChildCheckmeeting(String stMeetingId, String stNodeId, String userRoleId, String userRole, UserInfo currentPerson);
 
-	void saveAuditMeeting(HttpServletRequest request, HttpSession session) throws Exception;
+	/**
+	 * 保存
+	 * 
+	 * @param request
+	 * @param session
+	 * @return
+	 * @throws Exception
+	 * @author sy
+	 */
+	String saveAuditMeeting(HttpServletRequest request, HttpSession session) throws Exception;
 }

@@ -26,8 +26,8 @@ public class SystemRoutersAction extends BaseAction {
 	})
 	public String routing(){
 		session.setAttribute("modulePath", "/"+request.getParameter("module") + "/" + request.getParameter("module"));
-		System.out.println("/"+request.getParameter("module")+"/index.html");
-		System.out.println(request.getParameter("module"));
+		//System.out.println("/"+request.getParameter("module")+"/index.html");
+		//System.out.println(request.getParameter("module"));
 		return request.getParameter("module");
 	}
 }

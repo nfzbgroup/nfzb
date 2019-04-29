@@ -19,8 +19,111 @@
 	</button>
 </div>
 <div class="modal-body">
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">反馈情况</h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
+		<div class="form-body" align="center">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+				<tr class="text-center">
+					<td class="text-right" width="20%">
+						<label>会议名称：</label>
+					</td>
+					<td>${legislationCheckmeeting.stMeetingName}</td>
+				</tr>
+				<tr class="text-center">
+					<td class="text-right">
+						<label>会议类型：</label>
+					</td>
+					<td>${legislationCheckmeeting.stType}</td>
+				</tr>
+				<tr class="text-center">
+					<td class="text-right">
+						<label>会议地点：</label>
+					</td>
+					<td>${legislationCheckmeeting.stAddress}</td>
+				</tr>
+				<tr class="text-center">
+					<td class="text-right">
+						<label>会议时间：</label>
+					</td>
+					<td>
+						<fmt:formatDate value="${legislationCheckmeeting.dtBeginDate}" pattern="yyyy-MM-dd" />
+					</td>
+				</tr>
+
+				<tr class="text-center">
+					<td class="text-right">
+						<label>参会人员：</label>
+					</td>
+					<td>${legislationCheckmeeting.stPersons}</td>
+				</tr>
+				<tr class="text-center">
+					<td class="text-right">
+						<label>会议内容概述</label>
+					</td>
+					<td>${legislationCheckmeetingTask.stSummary}</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="form-body" align="center">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+				<tbody class="text-center" align="center">
+					<tr class="text-right" align="center">
+						<th class="text-right" width="20%">
+							草案文本:
+							<span style="color: red"></span>
+							<span style="color: dodgerblue"></span>
+						</th>
+						<td class="text-center" width="80%">
+							<span style="color: red">暂未上传</span>
+						</td>
+					</tr>
+					<tr class="text-center">
+						<th class="text-right">
+							起草说明/审查报告:
+							<span style="color: red"></span>
+							<span style="color: dodgerblue"></span>
+						</th>
+						<td>
+							<span style="color: red">暂未上传</span>
+						</td>
+					</tr>
+					<tr class="text-center">
+						<th class="text-right">
+							会议纪要:
+							<span style="color: red"></span>
+							<span style="color: dodgerblue"></span>
+						</th>
+						<td>
+							<span style="color: red">暂未上传</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="form-body" align="center">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+				<tbody class="text-center" align="center">
+					<tr class="text-center">
+						<th class="text-right" width="20%">草案名称</th>
+						<th class="text-center">草案答复反馈信息</th>
+					</tr>
+					<c:forEach items="${legislationProcessDocAll}" var="doc">
+						<tr class="text-center">
+							<th class="text-right" width="20%">${doc.stDocName}</th>
+							<td class="text-center">${legislationProcessTaskMap.get(doc.stDocId).stComment1}</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
+
+
+
+		<!-- 
+
 		<div class="form-body">
 			<div class="form-group">
 				<label class="col-sm-3 control-label">会议名称：</label>
@@ -30,7 +133,7 @@
 			</div>
 
 			<div class="form-group">
-				<label class="col-sm-3 control-label">对应草案：11</label>
+				<label class="col-sm-3 control-label">对应草案：</label>
 				<div class="col-sm-9">
 					<table class="table table-bordered table-hover">
 						<thead>
@@ -62,15 +165,16 @@
 					</table>
 				</div>
 			</div>
-				<div class="form-group text-center">
-				<input type="hidden" id="op" name="op">
-				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
-				&nbsp;&nbsp;
-				<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="提交">
-				&nbsp;&nbsp;
-				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
-			</div>
-			<div class="form-group">
+			-->
+		<div class="form-group text-center">
+			<input type="hidden" id="op" name="op">
+			<!--<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存"> -->
+			&nbsp;&nbsp;
+			<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="会议关闭完成">
+			&nbsp;&nbsp;
+			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
+		</div>
+		<!-- <div class="form-group">
 				<label class="control-label">反馈材料 </label>
 			</div>
 			<div class="form-group">
@@ -153,7 +257,7 @@
 					</tbody>
 				</table>
 			</div>
-		</div>
+</div> -->
 	</form>
 
 </div>
@@ -213,16 +317,31 @@
 	function saveAuditMeeting1(operation) {
 		$('#op').val(operation);
 		var param = $('#auditMeetingForm').formToJson();
-		$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
-			console.log(JSON.stringify(data));
-			if (data.success) {
-				$('#legislationProcessForm').modal('hide');
-				submitForm(1);
-				Duang.success("提示", "操作成功");
-			} else {
-				Duang.error("提示", "操作失败");
-			}
-		});
+		if (operation == 'submit') {
+			layer.confirm('请确认操作！', function(index) {
+				layer.close(layer.index);
+				$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
+					console.log(JSON.stringify(data));
+					if (data.success) {
+						$('#legislationProcessForm').modal('hide');
+						submitForm(1);
+						Duang.success("提示", "操作成功");
+					} else {
+						Duang.error("提示", "操作失败");
+					}
+				});
+			});
+		} else {
+			$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
+				console.log(JSON.stringify(data));
+				if (data.success) {
+					submitForm(1);
+					Duang.success("提示", "操作成功");
+				} else {
+					Duang.error("提示", "操作失败");
+				}
+			});
+		}
 	}
 
 	

@@ -86,11 +86,6 @@ public interface LegislationPlanItemService{
 	void saveLegislationPlan(HttpServletRequest request, HttpSession session);
 
 	List<Map<String,Object>> queryProjectByPlanId(String stPlanId);
-
-	/**
-	 * 保存项目归属
-	 * @param request
-	 * @param session
-	 */
-	JSONObject saveLegislationProjectAscription(HttpServletRequest request, HttpSession session);
+	
+	public JSONObject saveLegislationProjectAscription(HttpServletRequest request, HttpSession session);
 }

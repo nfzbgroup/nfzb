@@ -12,6 +12,7 @@
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核记录</h2>
 	<table class="table table-border table-bordered table-bg table-hover">
 		<thead>
 			<th class="text-center">环节</th>

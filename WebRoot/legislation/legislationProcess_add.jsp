@@ -51,7 +51,7 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">备注：</label>
 				<div class="col-sm-8">
-					<textarea id="stComent" name="stComent" class="form-control"
+					<textarea id="stComment1" name="stComment1" class="form-control"
 						></textarea>
 				</div>
 			</div>
@@ -80,11 +80,11 @@
 	$(function () {
 		if("${param.action}"=="edit"){
 			 document.getElementById('docName').value="${param.stDocName}";
-			 var beizhu="${param.stComent}";
+			 var beizhu="${param.stComment1}";
 			 if(beizhu==""){
-				 document.getElementById('stComent').value="kongde";
+				 document.getElementById('stComment1').value="kongde";
 			 }else{
-				 document.getElementById('stComent').value="${param.stComent}";
+				 document.getElementById('stComment1').value="${param.stComment1}";
 			 }
 			 
 		}
@@ -102,7 +102,7 @@
     	 		"type":"POST",
     	 		"dataType":"json",
     	 		"url":"${basePath}/legislationProcessDoc/draft_create_info.do",
-    	 		"data":{"action":'${param.action}',"docId":'${param.stDocId}',"stNodeId":'${param.stNodeId}',"stNodeName":'${param.stNodeName}',"docName":$('#docName').val(),"stComent":$('#stComent').val()},
+    	 		"data":{"action":'${param.action}',"docId":'${param.stDocId}',"stNodeId":'${param.stNodeId}',"stNodeName":'${param.stNodeName}',"docName":$('#docName').val(),"stComment1":$('#stComment1').val()},
     	 		"success":function(data){
     	 			if(data.code==200){
     	 				alert(data.message);

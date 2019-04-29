@@ -34,7 +34,7 @@
             </div>
 			<div class="form-group text-center">
                 <c:if test="${nodeId=='NOD_0000000201'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
-                    <input type="button" class="btn btn-w-m btn-success"  value="提交" onclick="saveLegislationNotice()"> &nbsp;&nbsp;
+                    <input type="button" class="btn btn-w-m btn-success"  value="保存" onclick="saveLegislationNotice()"> &nbsp;&nbsp;
                 </c:if>
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>

@@ -39,7 +39,7 @@
                 </div>
             </div>
 			<div class="form-group text-center">
-                    <input type="button" class="btn btn-w-m btn-success"  value="保存" onclick="saveLegislationPlanAudit()"> &nbsp;&nbsp;
+                    <input type="button" class="btn btn-w-m btn-success"  value="提交" onclick="saveLegislationPlanAudit()"> &nbsp;&nbsp;
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 		</div>
@@ -54,10 +54,15 @@
         }else if(param.stComment1==null||param.stComment1==""){
             Duang.error("提示","请输入备注");
         }else {
+        	layer.close(layer.index);
+        	layer.confirm('是否提交！', function(index) {
+				layer.close(layer.index);
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationPlanSeparate",param,function(data){
                 $('#legislationProcessForm').modal('hide');
                 submitForm(1);
             });
+        	});
+            
         }
     };
 </script>

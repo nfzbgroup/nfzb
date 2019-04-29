@@ -7,7 +7,11 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >立法计划草案及说明</span>
+        	<c:choose>
+    			<c:when test="${nodeId=='NOD_0000000209'}"><span >编辑立法计划草案及说明</span></c:when>
+    			<c:when test="${nodeId=='NOD_0000000211'}"><span >编辑草案修改说明</span></c:when>
+    			<c:when test="${nodeId=='NOD_0000000213'}"><span >编辑草案送审稿说明</span></c:when>
+    	    </c:choose>
         </li>
     </ul>
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -17,6 +21,7 @@
 		  novalidate="novalidate">
         <input hidden name="stTaskId" <c:if test="${legislationPlanTask.stTaskId !=null}">value="${legislationPlanTask.stTaskId}" </c:if>>
         <div class="form-body">
+        	<!-- 公用数据显示 -->
             <div class="form-group">
                 <label class="col-sm-3 control-label">通知名称：</label>
                 <div class="col-sm-9">
@@ -29,28 +34,59 @@
                     <label class="form-control">${legislationPlan.stReason}</label>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">计划名称：</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" name="stProgress" <c:if test="${nodeId=='NOD_0000000213'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> <c:if test="${legislationPlan.stProgress !=null}">value="${legislationPlan.stProgress}" </c:if>>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">计划说明：</label>
-                <div class="col-sm-9">
-                    <textarea class="form-control" name="stRemark" <c:if test="${nodeId=='NOD_0000000213'||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE')}">disabled</c:if> ><c:if test="${legislationPlan.stRemark !=null}">${legislationPlan.stRemark}</c:if></textarea>
-                </div>
-            </div>
+			
+			
+			<c:choose>
+    			<c:when test="${nodeId=='NOD_0000000209'}">
+		            <div class="form-group">
+		                <label class="col-sm-3 control-label">计划名称：</label>
+		                <div class="col-sm-9">
+		                    <input type="text" class="form-control" name="stProgress" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> <c:if test="${legislationPlan.stProgress !=null}">value="${legislationPlan.stProgress}" </c:if>>
+		                </div>
+		            </div>
+		            <div class="form-group">
+		                <label class="col-sm-3 control-label">计划说明：</label>
+		                <div class="col-sm-9">
+		                    <textarea class="form-control" name="stRemark" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlan.stRemark !=null}">${legislationPlan.stRemark}</c:if></textarea>
+		                </div>
+		            </div>
+    			</c:when>
+    			<c:when test="${nodeId=='NOD_0000000211'}">
+    			<div class="form-group">
+		                <label class="col-sm-3 control-label">计划名称：</label>
+		                <div class="col-sm-9">
+		                    <label class="form-control" name="stProgress">${legislationPlan.stProgress}</label>
+		                </div>
+		            </div>
+		            <div class="form-group">
+		                <label class="col-sm-3 control-label">计划说明：</label>
+		                <div class="col-sm-9">
+		                    <label class="form-control" name="stRemark">${legislationPlan.stRemark}</label>
+		                </div>
+		            </div>
+		             <div class="form-group">
+		                <label class="col-sm-3 control-label">计划草案修改说明：</label>
+		                <div class="col-sm-9">
+		                    <textarea class="form-control" name="stComment1" <c:if test="${legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus=='DONE'}">disabled</c:if> ><c:if test="${legislationPlanTask.stComment1 !=null}">${legislationPlanTask.stComment1}</c:if></textarea>
+		                </div>
+		            </div>
+    			</c:when>
+    			<c:when test="${nodeId=='NOD_0000000213'}">
+    				
+    			</c:when>
+    	    </c:choose>
 			<div class="form-group text-center">
-                <c:if test="${nodeId!='NOD_0000000213'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
-                    <input type="button" class="btn btn-w-m btn-success"  value="提交" onclick="saveLegislationNotice()"> &nbsp;&nbsp;
+                <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
+                    <input type="button" class="btn btn-w-m btn-success"  value="保存" onclick="saveLegislationNotice()"> &nbsp;&nbsp;
                 </c:if>
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
+			
+			<!-- 公用数据显示块 -->
             <div class="form-group">
                 <label class="control-label">计划材料
                 </label>
-                <c:if test="${nodeId!='NOD_0000000213'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
+                <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
                     <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                     </label>
                     <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
@@ -78,7 +114,7 @@
                                         <td>${file.stTitle}</td>
                                         <td>
                                             <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
-                                            <c:if test="${nodeId!='NOD_0000000213'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
+                                            <c:if test="${legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO'}">
                                                 &nbsp;&nbsp;
                                                 <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
                                                 <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">
@@ -93,20 +129,30 @@
             </div>
 		</div>
 	</form>
-
 </div>
 <script>
     function saveLegislationNotice() {
         var param=$('#legislationNoticeForm').formToJson();
-        if(param.stProgress==null||param.stProgress==""){
-            Duang.error("提示","请输入计划名称");
-        }else if(param.stRemark==null||param.stRemark==""){
-            Duang.error("提示","请输入计划说明");
-        }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationNotice",param,function(data){
-                $('#legislationProcessForm').modal('hide');
-                submitForm(1);
-            });
+        if('${nodeId}'=='NOD_0000000209'){
+        	if(param.stProgress==null||param.stProgress==""){
+                Duang.error("提示","请输入计划名称");
+            }else if(param.stRemark==null||param.stRemark==""){
+                Duang.error("提示","请输入计划说明");
+            }else {
+                $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationNotice",param,function(data){
+                    $('#legislationProcessForm').modal('hide');
+                    submitForm(1);
+                });
+            }
+        }else if('${nodeId}'=='NOD_0000000211'){
+        	if(param.stComment1==null||param.stComment1==""){
+                Duang.error("提示","计划草案修改说明");
+            }else {
+                $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationNotice",param,function(data){
+                    $('#legislationProcessForm').modal('hide');
+                    submitForm(1);
+                });
+            }
         }
     };
     function toUploadFile(obj) {

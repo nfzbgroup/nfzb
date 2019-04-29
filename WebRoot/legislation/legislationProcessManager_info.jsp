@@ -17,11 +17,13 @@
 <div class="modal-body">
 	<div class="row" style="margin-bottom: 20px;">
 		<div class="col-md-12">
-			<label class="btn btn-w-m btn-success"  onclick="changeInfoTab(this,'openInfoTabPage','${nodeId}','${stDocId}')">草案信息列表</label>
-			<label class="btn btn-w-m btn-default"  onclick="changeInfoTab(this,'openSeparateTabPage','${nodeId}','${stDocId}')">分办单</label>
-			<label class="btn btn-w-m btn-default"  onclick="changeInfoTab(this,'openOnlineTabPage','${nodeId}','${stDocId}')">网上征求意见</label>
+			  <label class="btn btn-w-m btn-success"  onclick="changeInfoTab(this,'openInfoTabPage','${nodeId}','${stDocId}')">草案信息列表</label>
+			<c:if test="${nodeId!='NOD_0000000101'}">
+			  <label class="btn btn-w-m btn-default"  onclick="changeInfoTab(this,'openSeparateTabPage','${nodeId}','${stDocId}')">分办单</label>
+			</c:if>
+			<!-- <label class="btn btn-w-m btn-default"  onclick="changeInfoTab(this,'openOnlineTabPage','${nodeId}','${stDocId}')">网上征求意见</label>
 			<label class="btn btn-w-m btn-default"  onclick="changeInfoTab(this,'openUnitTabPage','${nodeId}','${stDocId}')">单位意见</label>
-			<label class="btn btn-w-m btn-default"  onclick="changeInfoTab(this,'openAuditMeetingTabPage','${nodeId}','${stDocId}')">审核会议</label>
+			<label class="btn btn-w-m btn-default"  onclick="changeInfoTab(this,'openAuditMeetingTabPage','${nodeId}','${stDocId}')">审核会议</label> -->
 		</div>
 	</div>
 	<div id="legislationProcessInfoTab">

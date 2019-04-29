@@ -14,7 +14,7 @@
 <div class="modal-body">
 	<table class="table table-border table-bordered table-bg table-hover">
 		<thead>
-			<th class="text-center">环节</th>
+			<th class="text-center">环节</th> 
 			<th class="text-center">草案名称</th>
 			<th class="text-center">草案文本</th>
 			<th class="text-center">上传人</th>
@@ -38,7 +38,8 @@
 					<span>${deal.stUserName}</span>
 				</td>
 				<td>
-					<span><span>${deal.dtDealDate}</span>
+					<span><fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
+            value="${deal.dtDealDate}" /></span>
 				</td>
 			</tr>
 		</s:iterator>

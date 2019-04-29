@@ -151,9 +151,9 @@ public class LegislationCitymeetingTaskAction extends BaseAction {
         if (null != stUserName && !"".equals(stUserName)) {
             baseSql += "and d.ST_USER_NAME like '%" + stUserName + "%' ";
         }
-        if (null != stDocName && !"".equals(stDocName)) {
+       /* if (null != stDocName && !"".equals(stDocName)) {
             baseSql += "and d.st_doc_name like '%" + stDocName + "%' ";
-        }
+        }*/
         if (null != taskStatus && !"".equals(taskStatus)) {
             baseSql += "and t.st_task_status = '" + taskStatus + "' ";
         } else {
@@ -167,8 +167,8 @@ public class LegislationCitymeetingTaskAction extends BaseAction {
                 baseSql += "and t.st_task_status = 'TODO' ";
             }
         }
-        baseSql += "and d.st_node_Id = 'NOD_0000000101' ";
-        baseSql += "and t.st_enable is null ";
+        //baseSql += "and d.st_node_Id = 'NOD_0000000101' ";
+        //baseSql += "and t.st_enable is null ";
         if ("NOD_0000000101".equals(stNodeId)) {
             baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
         }

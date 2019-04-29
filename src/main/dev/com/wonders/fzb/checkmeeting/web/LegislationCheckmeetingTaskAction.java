@@ -79,7 +79,8 @@ public class LegislationCheckmeetingTaskAction extends BaseAction {
 	}
 
 	// 所有模块的所有菜单的列表，统一一下请求，请不要改动。根据nodeid返回默认状态的任务列表。 lj
-	@Actions({ @Action(value = "checkmeeting_task_list", results = { @Result(name = SUCCESS, location = "/checkmeeting/meeting_list.jsp"), @Result(name = "QueryTable", location = "/checkmeeting/meeting_table.jsp") }) })
+	@Actions({ @Action(value = "checkmeeting_task_list", results = { @Result(name = SUCCESS, location = "/checkmeeting/meeting_list.jsp"), 
+			@Result(name = "QueryTable", location = "/checkmeeting/meeting_table.jsp") }) })
 	public String listMethodManager() throws Exception {
 		String methodStr = request.getParameter("method");
 		if (StringUtil.isEmpty(methodStr)) {
@@ -159,7 +160,7 @@ public class LegislationCheckmeetingTaskAction extends BaseAction {
 
 		String orderSql = " order by c.dt_create_date DESC";
 		orderSql = "";
-		System.out.println("baseSql + orderSql------------" + baseSql + orderSql);
+		//System.out.println("baseSql + orderSql------------" + baseSql + orderSql);
 		infoPage = legislationCheckmeetingTaskService.findCheckMeetingByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
  
  

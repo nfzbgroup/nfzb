@@ -47,7 +47,7 @@
 								<th class="text-center">选择草案</th>
 							</c:if>
 							<th class="text-center">草案名称</th>
-							<th class="text-center">新草案名称</th>
+							<!-- <th class="text-center">新草案名称</th> -->
 							<c:if test="${stTaskStatus=='INPUT'}">
 								<th class="text-center">审核结果</th>
 							</c:if>
@@ -60,14 +60,64 @@
 											<input type="checkbox" name="stDocSourceCheck" value="${doc.stDocId}" <c:if test="${legislationCheckmeeting.stDocSource.indexOf(doc.stDocId)>=0 }">checked</c:if>>
 										</td>
 										<td class="text-center">${doc.stDocName}</td>
-										<td class="text-center">
+										<!-- <td class="text-center">
 											<input type="text" name="${doc.stDocId}" placeholder="需修改法规规章草案名称请在此处填写">
-										</td>
+										</td> -->
 										<c:if test="${stTaskStatus=='INPUT'}">
 											<td class="text-center">
 												<select name="stActive${doc.stDocId}">
 													<c:choose>
 														<c:when test="${doc.stActive=='true'}">
+															<option value="true" selected>成功</option>
+															<option value="false">失败</option>
+														</c:when>
+														<c:otherwise>
+															<option value="true">成功</option>
+															<option value="false" selected>失败</option>
+														</c:otherwise>
+													</c:choose>
+												</select>
+											</td>
+										</c:if>
+									</tr>
+								</c:forEach>
+							</c:if>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">对应计划：</label>
+				<div class="col-sm-9">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<c:if test="${legislationCheckmeeting.stMeetingId==null}">
+								<th class="text-center">选择计划</th>
+							</c:if>
+							<th class="text-center">计划名称</th>
+							<!-- <th class="text-center">新草案名称</th> -->
+							<c:if test="${stTaskStatus=='INPUT'}">
+								<th class="text-center">审核结果</th>
+							</c:if>
+						</thead>
+						<tbody>
+							<c:if test="${legislationPlanList !=null&&fn:length(legislationPlanList)>0}">
+								<c:forEach items="${legislationPlanList}" var="plan">
+									<tr>
+										<td class="text-center">
+											<input type="checkbox" name="stPlanSourceCheck" value="${plan.stPlanId}" <c:if test="${legislationCheckmeeting.stPlanSource.indexOf(plan.stPlanId)>=0 }">checked</c:if>>
+										</td>
+										<td class="text-center">${plan.stPlanName}</td>
+										<!-- <td class="text-center">
+											<input type="text" name="${doc.stDocId}" placeholder="需修改法规规章草案名称请在此处填写">
+										</td> -->
+										<c:if test="${stTaskStatus=='INPUT'}">
+											<td class="text-center">
+												<select name="stActive${plan.stPlanId}">
+													<c:choose>
+														<c:when test="${plan.stActive=='true'}">
 															<option value="true" selected>成功</option>
 															<option value="false">失败</option>
 														</c:when>
@@ -174,16 +224,15 @@
 									<input id="upload" name="upload" type="file" style="display: none">
 								</td>
 							</tr>
-
 						</tbody>
 					</table>
 				</div>
 			</div>
 			<div class="form-group text-center">
-				<input type="hidden" id="op" name="op">
-				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
+				<input  type="hidden" id="op" name="op">
+				<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
 				&nbsp;&nbsp;
-				<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="发送通知">
+				<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="发送通知">
 				&nbsp;&nbsp;
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
@@ -243,17 +292,28 @@
 		}
 	};
 	function saveAuditMeeting1(operation) {
+
+		layer.close(layer.index);
 		$('#op').val(operation);
 		var param = $('#auditMeetingForm').formToJson();
 		var stDocSource = "";
+		var stPlanSource="";
 		var checkedNum = 0;
+		var checkedNum1 = 0;
 		$('[name="stDocSourceCheck"]:checked').each(function() {
 			stDocSource = stDocSource + "#" + this.value;
 			checkedNum++;
 		});
+		$('[name="stPlanSourceCheck"]:checked').each(function() {
+			stPlanSource = stPlanSource + "#" + this.value;
+			checkedNum1++;
+		});
 		console.log(stDocSource);
 		if (checkedNum > 0) {
 			param.stDocSource = stDocSource.substring(1);
+		}
+		if (checkedNum1 > 0) {
+			param.stPlanSource = stPlanSource.substring(1);
 		}
 		if (param.stMeetingName == null || param.stMeetingName == "") {
 			Duang.error("提示", "请输入会议名称");
@@ -268,18 +328,34 @@
 		} else if (param.stPersons == null || param.stPersons == "") {
 			Duang.error("提示", "请输入会议人员");
 		} else {
-			$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
-				console.log(JSON.stringify(data));
-				if (data.success) {
-					if (operation == 'submit') {
+			if (operation == 'submit') {
+				layer.confirm('请确认操作！', function(index) {
+					layer.close(layer.index);
+					$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
+						console.log(JSON.stringify(data));
+						if (data.success) {
+							if (operation == 'submit') {
+								$('#legislationProcessForm').modal('hide');
+							}
+							submitForm(1);
+							Duang.success("提示", "操作成功");
+						} else {
+							Duang.error("提示", "操作失败");
+						}
+					});
+				});
+			} else {
+				$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
+					console.log(JSON.stringify(data));
+					if (data.success) {
 						$('#legislationProcessForm').modal('hide');
 						submitForm(1);
+						Duang.success("提示", "操作成功");
+					} else {
+						Duang.error("提示", "操作失败");
 					}
-					Duang.success("提示", "操作成功");
-				} else {
-					Duang.error("提示", "操作失败");
-				}
-			});
+				});
+			}
 		}
 	}
 

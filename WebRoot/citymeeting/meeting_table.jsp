@@ -11,11 +11,10 @@
 	<thead>
 	<tr class="text-center">
 
-				<th class="text-center" data-field="id">编号</th>
-				<th class="text-center" data-field="district_name">会议名称</th>
-				<th class="text-center" data-field="district_name">对应草案</th>
-				<th class="text-center" data-field="created_at">会议类型</th>
-				<th class="text-center" data-field="district_name">会议时间</th>
+				<th class="text-center" data-field="id">议题编号</th>
+				<th class="text-center" data-field="district_name">议题名称</th>
+				<th class="text-center" data-field="created_at">类型</th>
+				<th class="text-center" data-field="district_name">时间</th>
 				<th class="text-center" data-field="set">操作</th>
 
 
@@ -27,10 +26,9 @@
 				<c:when test="${retPage.totalSize > 0}">
 					<c:forEach items="${retPage.result}" var="task">
 						<tr class="text-center">
-							<td >${task.stTopic}</td>
+							<td >${task.stTopicId}</td>
 							<td >${task.stTopicName}</td>
 							<td >${task.stNodeName}</td>
-							<td >${task.stUserName}</td>
 							<td ><fmt:formatDate type="date" value="${task.dtCreateDate}" /></td>
 							<c:choose>
 								<c:when test="${nodeId=='NOD_0000000101'}">
@@ -113,6 +111,36 @@
 									</c:choose>
 
 								</c:when>
+								<c:when test="${nodeId=='NOD_0000000180'}">
+								<!-- 常务议题 -->
+								<c:choose>
+									<c:when test="${buttonStatus=='TODO'}">
+										<td>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openCitymeetingPage('city_meeting__TODO','${task.stTopicId}')" class="layer_full_link">编辑</a>
+										</td>
+									</c:when>
+									<c:when test="${buttonStatus=='RESULT'}">
+										<td>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openCitymeetingPage('city_meeting__RESULT','${task.stTopicId}')" class="layer_full_link">编辑</a>
+										</td>
+									</c:when>
+									<c:when test="${buttonStatus=='AFFIRM'}">
+										<td>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openCitymeetingPage('city_meeting__AFFIRM','${task.stTopicId}')" class="layer_full_link">编辑</a>
+										</td>
+									</c:when>
+									<c:when test="${buttonStatus=='INPUT'}">
+										<td>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openCitymeetingPage('city_meeting__INPUT','${task.stTopicId}')" class="layer_full_link">编辑</a>
+										</td>
+									</c:when>
+									<c:when test="${buttonStatus=='DONE'}">
+										<td>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openCitymeetingPage('city_meeting__DONE','${task.stTopicId}')" class="layer_full_link">查看</a>
+										</td>
+									</c:when>
+								</c:choose>
+							</c:when>
 								<c:otherwise>
 									<c:choose>
 										<c:when test="${buttonStatus=='TODO'}">

@@ -2,7 +2,6 @@ package com.wonders.fzb.plan.services.impl;
 
 import java.util.*;
 
-import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.plan.beans.*;
@@ -101,6 +101,7 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 	 * @return
 	 * @throws FzbDaoException
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Page findByPage(Map<String, Object> condMap, Map<String, String> sortMap, int pageNo, int pageSize) throws FzbDaoException {
 		return legislationPlanItemDao.findByPage(condMap, sortMap, pageNo, pageSize);
@@ -244,25 +245,18 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findByHQL("from LegislationPlanTask t where 1=1 and t.stParentId='"+legislationPlanItem.getStItemId()+"' and t.stNodeId='"+legislationPlanItem.getStNodeId()+"' and t.stEnable is null").get(0);
 			String stStatus=legislationPlanTask.getStNodeName();
 			if("TODO".equals(legislationPlanTask.getStTaskStatus())){
-				if("NOD_0000000207".equals(legislationPlanTask.getStNodeId())){
-					stStatus=stStatus+"待OA审核";
-				}else{
-					stStatus=stStatus+"待处理";
-				}
-			}else if("DOING".equals(legislationPlanTask.getStTaskStatus())){
-				stStatus=stStatus+"审核意见";
+				stStatus=stStatus+"(待处理)";
 			}else{
-				stStatus=stStatus+"已处理";
+				stStatus=stStatus+"(已处理)";
 			}
 			map.put("stStatus",stStatus);
-			map.put("stSuggest",legislationPlanItem.getStSuggest());
 			map.put("stUserName",legislationPlanItem.getStUserName());
 			map.put("dtCreateDate",legislationPlanItem.getDtCreateDate());
 			result.add(map);
 		});
 		return result;
 	}
-
+	
 	@Override
 	public JSONObject saveLegislationProjectAscription(HttpServletRequest request, HttpSession session) {
 		JSONObject jsonObject=new JSONObject();

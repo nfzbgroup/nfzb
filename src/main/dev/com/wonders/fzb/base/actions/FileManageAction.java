@@ -101,7 +101,7 @@ public class FileManageAction extends BaseAction {
 						bFile = new byte[(int) uploads.get(i).length()];
 						fis = new FileInputStream(uploads.get(i));
 						fis.read(bFile);
-						System.out.println(uploads.get(i).length() + "," + bFile.length);
+						//System.out.println(uploads.get(i).length() + "," + bFile.length);
 						bFiles.add(bFile);
 					} catch (Exception e) {
 						e.printStackTrace();

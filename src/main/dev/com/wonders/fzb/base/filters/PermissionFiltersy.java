@@ -11,6 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.platform.beans.FzbUserInfo;
 
 //import com.wonders.drs.modules.core.beans.OrgInfo;
@@ -31,14 +32,14 @@ public class PermissionFiltersy implements Filter {
 		// System.out.println("是否是允许页面1aaaaaa" + request.getRequestURI().indexOf("log_loading.jsp"));
 		// System.out.println("是否是允许页面2aaaaaaleft.jsp" + request.getRequestURI().indexOf("moduleth.html"));
 		// 如果不是登录页面
-		if (request.getRequestURI().indexOf("log_loading.jsp") < 0 && request.getRequestURI().indexOf("log.jsp") < 0 && request.getRequestURI().indexOf("normaldoc_opinion_iframe.do") < 0 && request.getRequestURI().indexOf("shLaw_list.do") < 0 && request.getRequestURI().indexOf("SHLaw_iframe.do") < 0) {
+		if (request.getRequestURI().indexOf("login.jsp") < 0 && request.getRequestURI().indexOf("login.do") < 0) {
 			// 如果是.do结尾
 			if (request.getRequestURI().indexOf(".do") != -1 || request.getRequestURI().indexOf("left.jsp") != -1 || request.getRequestURI().indexOf("moduleo.html") != -1 || request.getRequestURI().indexOf("moduleth.html") != -1) {
-				FzbUserInfo fzbPerson = (FzbUserInfo) request.getSession().getAttribute("fzbPerson");
+				UserInfo fzbPerson = (UserInfo) request.getSession().getAttribute("currentPerson");
 				if (null == fzbPerson) {
 					String path = request.getContextPath();
 					String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
-					response.sendRedirect(basePath + "/execlaw/index.html");
+					response.sendRedirect(basePath + "/legislation/login.jsp");
 					return;
 				}
 			}

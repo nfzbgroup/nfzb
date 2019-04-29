@@ -16,7 +16,7 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
-<!-- <h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">征求意见单</h2> -->
+<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">意见盖章</h2>
 <form id="unitDemonstrationForm" class="form-horizontal"
       novalidate="novalidate">
     <input hidden id="stTaskId" name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
@@ -35,7 +35,7 @@
 					<textarea id="stComment2" name="stComment2" class="form-control"
 					><c:if test="${legislationProcessTask.stComment2 !=null}">${legislationProcessTask.stComment2}</c:if></textarea>
 				</div>
-			</div>
+		</div>
         <div class="form-group">
             <label class="control-label">材料：
             </label>
@@ -195,10 +195,10 @@
                    name="btnSave" onclick="saveLegislationDemonstration()" value="保存"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSend" <c:if test="${legislationProcessTask.stTaskId !=null &&( legislationProcessTask.stComment1==null|| empty legislationProcessTask.stComment1)}"> onclick="sendOA()"</c:if>
-                   <c:if test="${legislationProcessTask.stTaskId ==null ||(legislationProcessTask.stComment1!=null||not empty legislationProcessTask.stComment1)}"> disabled="disabled"</c:if> value="发送OA"> &nbsp;&nbsp;
+                   <c:if test="${legislationProcessTask.stTaskId ==null ||(legislationProcessTask.stComment1!=null||not empty legislationProcessTask.stComment1)}"> disabled="disabled"</c:if> value="发OA盖章"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSave" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="confirmReport('${stDocId}','${nodeId}','${buttonId}')"</c:if>
-                   <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="发送部门"> &nbsp;&nbsp;
+                   <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="送立法处"> &nbsp;&nbsp;
           </c:if>
             <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
         </div>
@@ -265,7 +265,7 @@
         }else {
         	layer.confirm('请确认操作！',function(index){
         	  layer.close(layer.index);
-        		$.post("../${requestUrl}?stNodeId=${nodeId}&method=sendOA",param,function(data){
+        		$.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration&stComment1=OAsend",param,function(data){
                     if(data.success){
                     	$("input[name='btnSend']").attr("disabled","disabled");
                         Duang.success("提示","操作成功");

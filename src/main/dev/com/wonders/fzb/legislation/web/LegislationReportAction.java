@@ -8,9 +8,15 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.*;
 import com.wonders.fzb.legislation.services.*;
+import com.wonders.fzb.report.beans.LegislationReport;
+import com.wonders.fzb.report.beans.LegislationReportTask;
+import com.wonders.fzb.report.services.LegislationReportService;
+import com.wonders.fzb.report.services.LegislationReportTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+
 import dm.jdbc.util.StringUtil;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -52,6 +58,16 @@ public class LegislationReportAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationProcessTaskdetailService")
 	private LegislationProcessTaskdetailService legislationProcessTaskdetailService;
+	
+	
+	@Autowired
+	@Qualifier("legislationReportService")
+	private LegislationReportService legislationReportService;
+	
+	@Autowired
+	@Qualifier("legislationReportTaskService")
+	private LegislationReportTaskService legislationReportTaskService;
+	
 
 	String stDocId = "";
 	String stNodeId = "";
@@ -93,7 +109,43 @@ public class LegislationReportAction extends BaseAction {
 
 		stDocId = request.getParameter("stDocId") == null ? "" : request.getParameter("stDocId");
 		stNodeId = request.getParameter("stNodeId") == null ? "" : request.getParameter("stNodeId");
+		String state = request.getParameter("state") == null ? "" : request.getParameter("state");
+		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
+		if (legislationProcessTaskList.size() > 0) {
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", stDocId);
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
+				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			} else {
+				String stStyle = "style ='display: none;'";
+				request.setAttribute("strDisplay", stStyle);
+			}
+			if("banli".equals(state)) {
+				//办理页面打开正在处理中的任务
+				String stStyle = "style ='display: none;'";
+				request.setAttribute("strDisplay", stStyle);
+				request.setAttribute("isbanli", "banli");//提示用户在对应模块中进行操作
+			}
+			request.setAttribute("legislationFilesList", legislationFilesList);
+			request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+		} else {
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, null);
+			request.setAttribute("legislationProcessTask", new LegislationProcessTask());
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+		}
 
+		request.setAttribute("nodeId", stNodeId);
+		request.setAttribute("stDocId", stDocId);
+		request.setAttribute("buttonId", request.getParameter("buttonId"));
+		request.setAttribute("requestUrl", request.getRequestURI());
+		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
+		
 		return SUCCESS;
 	}
 
@@ -118,5 +170,57 @@ public class LegislationReportAction extends BaseAction {
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().print(jsonObject);
 	}
+	
+	
+	
+	//保存签报任务，可能提交
+	@Action(value = "saveSendMayorDatum")
+	public void saveSendMayorDatum() throws Exception {
+		JSONObject jsonObject = new JSONObject();
+		stDocId = request.getParameter("stDocId") == null ? "" : request.getParameter("stDocId");
+		stNodeId = request.getParameter("stNodeId") == null ? "" : request.getParameter("stNodeId");
+		String op = request.getParameter("op") == null ? "" : request.getParameter("op");
+		
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String userRoleId = session.getAttribute("userRoleId").toString();
+		String userRole = session.getAttribute("userRole").toString();
+		WegovSimpleNode node = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where t.stNodeId='"+stNodeId+"'").get(0);
+		String stTaskId = legislationProcessDocService.saveLegislation(request, currentPerson, userRoleId, userRole, stNodeId, node.getStNodeName());
+
+		//提交
+		if ("submit".equals(op)) {
+			WegovSimpleNode nextNode=legislationProcessTaskService.nextProcess(stDocId,stNodeId,session);
+			//产生190报签的主表与任务表
+			Date nowDate=new Date();
+			LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+			WegovSimpleNode nodeReport = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where t.stNodeId='NOD_0000000190'").get(0);
+			LegislationReport legislationReport=new LegislationReport();
+			legislationReport.setStReportName(legislationProcessDoc.getStDocName());
+			legislationReport.setStSourceDoc(legislationProcessDoc.getStDocId());
+			legislationReport.setStNodeId("NOD_0000000190");
+			legislationReport.setStNodeName(nodeReport.getStNodeName());
+			legislationReport.setDtCreateDate(nowDate);
+			legislationReport.setStType(stNodeId);//来源于草案的节点，一般一个草案两次签报
+			String reportId=legislationReportService.addObj(legislationReport);
+			
+			LegislationReportTask reportTask=new LegislationReportTask();
+			reportTask.setStReportId(reportId);
+			reportTask.setStNodeId(nodeReport.getStNodeId());
+			reportTask.setStNodeName(nodeReport.getStNodeName());
+			reportTask.setStRoleId(nodeReport.getStSubmitRole());
+			reportTask.setDtOpenDate(nowDate);
+			reportTask.setStTaskStatus("TODO");
+			legislationReportTaskService.addObj(reportTask);
+		}
+
+		jsonObject.put("stTaskId", stTaskId);
+		jsonObject.put("success", true);
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jsonObject);
+	}
+	
+	
+	
+
 
 }

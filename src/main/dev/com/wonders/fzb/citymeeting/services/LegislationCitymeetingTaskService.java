@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.citymeeting.beans.LegislationCitymeeting;
@@ -87,4 +90,6 @@ public interface LegislationCitymeetingTaskService{
 	 */
 	Page<LegislationCitymeeting> findTaskByNodeId(String sql, int pageNo,
 												  int pageSize) throws ParseException;
+
+	public String saveCitymeeting(HttpServletRequest request, HttpSession session) throws Exception;
 }

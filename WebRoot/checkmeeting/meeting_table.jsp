@@ -170,7 +170,7 @@
 									</c:when>
 									<c:when test="${buttonStatus=='DONE'}">
 										<td>
-											<a href="javaScript:void(0)" data-title="查看" onclick="openPage('checkmeeting_add','${task.stMeetingId}')" class="layer_full_link">编辑</a>
+											<a href="javaScript:void(0)" data-title="查看" onclick="openPage('checkmeeting_end','${task.stMeetingId}')" class="layer_full_link">查看</a>
 										</td>
 									</c:when>
 								</c:choose>

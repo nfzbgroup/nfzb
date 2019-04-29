@@ -28,4 +28,6 @@ public abstract interface LegislationProcessDocDao extends BaseDao {
 	public List<LegislationProcessDoc> findByHQL(String hql);
 
 	void executeSqlUpdate(String sql);
+	
+	public List<Map> findMapByHQL(String hql);
 }

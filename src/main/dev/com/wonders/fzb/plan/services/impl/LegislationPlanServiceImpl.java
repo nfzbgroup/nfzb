@@ -1,28 +1,29 @@
 package com.wonders.fzb.plan.services.impl;
 
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.wonders.fzb.framework.beans.UserInfo;
-import com.wonders.fzb.legislation.services.LegislationFilesService;
-import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
-import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.plan.beans.*;
-import com.wonders.fzb.plan.dao.*;
-import com.wonders.fzb.plan.services.*;
 import org.springframework.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.plan.beans.LegislationPlan;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.dao.LegislationPlanDao;
+import com.wonders.fzb.plan.services.LegislationPlanDealService;
+import com.wonders.fzb.plan.services.LegislationPlanService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
 
 /**
@@ -44,11 +45,14 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 	@Autowired
 	private LegislationPlanTaskService legislationPlanTaskService;
 
+	@SuppressWarnings("unused")
 	@Autowired
 	private LegislationPlanDealService legislationPlanDealService;
 
 	@Autowired
 	private LegislationFilesService legislationFilesService;
+	
+	
 
 	/**
 	 * 添加实体对象
@@ -104,6 +108,7 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 	 * @return
 	 * @throws FzbDaoException
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Page findByPage(Map<String, Object> condMap, Map<String, String> sortMap, int pageNo, int pageSize) throws FzbDaoException {
 		return legislationPlanDao.findByPage(condMap, sortMap, pageNo, pageSize);
@@ -151,7 +156,9 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 		String stReason=request.getParameter("stReason");
 		String stProgress=request.getParameter("stProgress");
 		String stRemark=request.getParameter("stRemark");
+		String stComment1=request.getParameter("stComment1");
 		String stNodeId=request.getParameter("stNodeId");
+		String stTopicId=request.getParameter("checkmeetingTaskId");
 		String stPlanId;
 		if(StringUtils.isEmpty(stTaskId)){
 			//添加征集通知
@@ -189,10 +196,16 @@ public class LegislationPlanServiceImpl implements LegislationPlanService {
 				//修改征集通知任务
 				legislationPlanTask.setStFlowId(stPlanName);
 				legislationPlanTaskService.update(legislationPlanTask);
-
 				//修改征集通知
 				legislationPlan.setStPlanName(stPlanName);
 				legislationPlan.setStReason(stReason);
+			}else if("NOD_0000000213".equals(stNodeId)) {//编辑草案送审稿
+				legislationPlanTask.setStComment1(stComment1);
+				legislationPlanTask.setStTopicId(stTopicId);
+				legislationPlanTaskService.update(legislationPlanTask);
+			}else if("NOD_0000000211".equals(stNodeId)) {//编辑计划草案修改
+				legislationPlanTask.setStComment1(stComment1);
+				legislationPlanTaskService.update(legislationPlanTask);
 			}else{
 				//计划说明
 				legislationPlan.setStProgress(stProgress);

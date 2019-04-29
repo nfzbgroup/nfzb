@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
@@ -56,7 +57,7 @@ public class LegislationCitymeetingTask implements Serializable {
     @GeneratedValue(generator = "id")  
 	@Column(name = "ST_TASK_ID")
 	private String stTaskId;
-
+	
 	/**
 	 * ST_TASK_ID
 	 */
@@ -591,4 +592,7 @@ public class LegislationCitymeetingTask implements Serializable {
 		this.dtCloseDate = dtCloseDate;
 	}
 
+//	@OneToOne(mappedBy = "card",cascade = CascadeType.ALL)
+//    private People people;
+	
 }

@@ -13,30 +13,33 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
+    <h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议意见反馈</h2>
 	<form id="legislationProcessDocForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden id="stDocId" name="stDocId" value="${stDocId}">
-			
-				<c:choose>
-					<c:when test="${legislationProcessTask.stTaskStatus=='TODO'}">
-						<div class="form-group">
-							<label class="col-sm-3 control-label text-left">修改说明：</label>
-							<div class="col-sm-9">
-								<textarea id="stComent" name="stComent" class="form-control"
-								><c:if test="${legislationProcessTask.stComment1 !=null}">${legislationProcessTask.stComment1	}</c:if></textarea>
-							</div>
-						</div>
-						
-					</c:when>
-				
-				</c:choose>
-			
+                <div class="form-group">
+					<label class="col-sm-3 control-label text-left">会议名称：</label>
+					<label class="col-sm-5 control-label" style="text-align:left"><c:if test="${legislationCheckmeeting.stMeetingName !=null}">${legislationCheckmeeting.stMeetingName}</c:if></label>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label text-left">草案名称：</label>
+					<label class="col-sm-5 control-label" style="text-align:left">${legislationProcessDoc.stDocName}</label>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label text-left">修改说明：</label>
+					<div class="col-sm-9">
+						<textarea id="stComent" name="stComent" class="form-control">
+						<c:if test="${legislationProcessTask.stComment1 !=null}">${legislationProcessTask.stComment1}</c:if></textarea>
+					</div>
+				</div>
 			<div class="form-group text-center">
+			    <c:if test="${legislationProcessTask.stTaskStatus=='TODO'}">
 					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
 						   name="btnSave" onclick="saveLegislationProcessDoc('save')" value="保存"> &nbsp;&nbsp;
 						   <input type="button" class="btn btn-w-m btn-success" id="btnSubmit"
 						   name="btnSubmit" onclick="saveLegislationProcessDoc('submit')" value="提交"> &nbsp;&nbsp;
-					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
+			    </c:if>
+			    <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 			
             <div class="form-group">

@@ -17,11 +17,26 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
 import com.wonders.fzb.citymeeting.beans.*;
 import com.wonders.fzb.citymeeting.services.*;
+import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
+import com.wonders.fzb.legislation.services.LegislationExampleService;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.legislation.services.LegislationProcessDocService;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import com.wonders.fzb.report.beans.LegislationReport;
+import com.wonders.fzb.report.beans.LegislationReportTask;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+
+import dm.jdbc.util.StringUtil;
 
 /**
  * LegislationCitymeeting action接口
@@ -37,6 +52,30 @@ public class LegislationCitymeetingAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationCitymeetingService")
 	private LegislationCitymeetingService legislationCitymeetingService;
+	
+	@Autowired
+	@Qualifier("legislationCitymeetingTaskService")
+	private LegislationCitymeetingTaskService legislationCitymeetingTaskService;
+	
+	@Autowired
+	@Qualifier("wegovSimpleNodeService")
+	private WegovSimpleNodeService wegovSimpleNodeService;
+
+	@Autowired
+	@Qualifier("legislationFilesService")
+	private LegislationFilesService legislationFilesService;
+
+	@Autowired
+	@Qualifier("legislationExampleService")
+	private LegislationExampleService legislationExampleService;
+	
+	@Autowired
+	@Qualifier("legislationProcessDocService")
+	private LegislationProcessDocService legislationProcessDocService;
+	
+	@Autowired
+	@Qualifier("legislationPlanTaskService")
+	private LegislationPlanTaskService legislationPlanTaskService;
 
 	private int pageNo = 1;
 	private int pageSize = 10;
@@ -52,5 +91,215 @@ public class LegislationCitymeetingAction extends BaseAction {
 		legislationCitymeetingService.add(legislationCitymeeting);
 		return SUCCESS;
 	}
+	
+	
+	
+	@Action(value = "city_meeting_info", results = {
+			@Result(name = "city_meeting__TODO", location = "/citymeeting/city_meeting__TODO.jsp"), 
+			@Result(name = "city_meeting__RESULT", location = "/citymeeting/city_meeting__RESULT.jsp"), 
+			@Result(name = "city_meeting__AFFIRM", location = "/citymeeting/city_meeting__AFFIRM.jsp"),
+			@Result(name = "city_meeting__INPUT", location = "/citymeeting/city_meeting__INPUT.jsp"),
+			@Result(name = "city_meeting__DONE", location = "/citymeeting/city_meeting__DONE.jsp")
+	})
+	public String city_meeting_info() throws Exception {
+		String methodStr = request.getParameter("method");
+		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
+		Object object = method.invoke(this);
+		return object == null ? null : object.toString();
+	}
 
+	/**
+	 * 打开常务会议议题添加页面（发起时，已经生成了todo180）
+	 * 
+	 * @return
+	 */
+	private String city_meeting__TODO() {
+		String stNodeId = request.getParameter("stNodeId");
+		request.setAttribute("LegislationExampleList", legislationExampleService.queryLegislationExampleFilesList(stNodeId, null));
+		// 可选择的草案
+		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
+		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+
+		String stTopicId = request.getParameter("stTaskStatus");
+		if (StringUtil.isEmpty(stTopicId)) {
+			request.setAttribute("legislationCitymeeting", new LegislationCitymeeting());
+		} else {
+			LegislationCitymeeting auditMeeting = legislationCitymeetingService.findById(stTopicId);
+			request.setAttribute("legislationCitymeeting", auditMeeting);
+			
+		}
+		if("TODO".equals(stTopicId)){
+			request.setAttribute("legislationCitymeetingTask", new LegislationCitymeetingTask());
+		}else{
+			LegislationCitymeetingTask legislationCitymeetingTask = legislationCitymeetingTaskService.findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
+			request.setAttribute("legislationCitymeetingTask", legislationCitymeetingTask);
+		}
+		
+		request.setAttribute("stTaskStatus", "TODO");
+		return pageController();
+	}
+	/**
+	 * 打开常务会议议题结果（发起时，已经生成了todo180）
+	 * 
+	 * @return
+	 */
+	private String city_meeting__RESULT() {
+		String stNodeId = request.getParameter("stNodeId");
+		request.setAttribute("LegislationExampleList", legislationExampleService.queryLegislationExampleFilesList(stNodeId, null));
+		// 可选择的草案
+		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
+		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+		
+		String stTopicId = request.getParameter("stTaskStatus");
+		if (StringUtil.isEmpty(stTopicId)) {
+			request.setAttribute("legislationCitymeeting", new LegislationCitymeeting());
+		} else {
+			LegislationCitymeeting auditMeeting = legislationCitymeetingService.findById(stTopicId);
+			request.setAttribute("legislationCitymeeting", auditMeeting);
+		}
+		LegislationCitymeetingTask legislationCitymeetingTask = legislationCitymeetingTaskService.findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
+		request.setAttribute("legislationCitymeetingTask", legislationCitymeetingTask);
+		request.setAttribute("stTaskStatus", legislationCitymeetingTask.getStTaskStatus());
+		return pageController();
+	}
+	/**
+	 * 打开常务会议材料确认
+	 * 
+	 * @return
+	 */
+	private String city_meeting__AFFIRM() {
+		String stNodeId = request.getParameter("stNodeId");
+		String stTopicId = request.getParameter("stTaskStatus");
+		request.setAttribute("LegislationExampleList", legislationExampleService.queryLegislationExampleFilesList(stNodeId, null));
+		// 可选择的草案
+		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000110' and t.stTaskStatus='DONE' and t.stComment2='"+stTopicId+"' and t.stEnable is null order by d.dtCreateDate desc");
+		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+		
+		List<LegislationPlanTask> legislationPlanTaskList = legislationPlanTaskService.findByHQL("from LegislationPlanTask t where t.stNodeId='NOD_0000000214' and t.stTaskStatus='TODO' and t.stTopicId='"+stTopicId+"' order by t.dtOpenDate desc");
+		if(legislationPlanTaskList.size()>0){
+			request.setAttribute("legislationPlanTaskList", legislationPlanTaskList);
+		}
+		if (StringUtil.isEmpty(stTopicId)) {
+			request.setAttribute("legislationCitymeeting", new LegislationCitymeeting());
+		} else {
+			LegislationCitymeeting auditMeeting = legislationCitymeetingService.findById(stTopicId);
+			request.setAttribute("legislationCitymeeting", auditMeeting);
+		}
+		LegislationCitymeetingTask legislationCitymeetingTask = legislationCitymeetingTaskService.findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
+		request.setAttribute("legislationCitymeetingTask", legislationCitymeetingTask);
+		request.setAttribute("stTaskStatus", legislationCitymeetingTask.getStTaskStatus());
+		return pageController();
+	}
+	/**
+	 * 打开常务会议会议会议记要
+	 * 
+	 * @return
+	 */
+	private String city_meeting__INPUT() {
+		String stNodeId = request.getParameter("stNodeId");
+		request.setAttribute("LegislationExampleList", legislationExampleService.queryLegislationExampleFilesList(stNodeId, null));
+		// 可选择的草案
+		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
+		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+		
+		String stTopicId = request.getParameter("stTaskStatus");
+		
+		List<LegislationPlanTask> legislationPlanTaskList = legislationPlanTaskService.findByHQL("from LegislationPlanTask t where t.stNodeId='NOD_0000000214' and t.stTaskStatus='DOING' and t.stTopicId='"+stTopicId+"' order by t.dtOpenDate desc");
+		if(legislationPlanTaskList.size()>0){
+			request.setAttribute("legislationPlanTaskList", legislationPlanTaskList);
+		}
+		if (StringUtil.isEmpty(stTopicId)) {
+			request.setAttribute("legislationCitymeeting", new LegislationCitymeeting());
+		} else {
+			LegislationCitymeeting auditMeeting = legislationCitymeetingService.findById(stTopicId);
+			request.setAttribute("legislationCitymeeting", auditMeeting);
+		}
+		LegislationCitymeetingTask legislationCitymeetingTask = legislationCitymeetingTaskService.findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
+		request.setAttribute("legislationCitymeetingTask", legislationCitymeetingTask);
+		request.setAttribute("stTaskStatus", legislationCitymeetingTask.getStTaskStatus());
+		return pageController();
+	}
+	/**
+	 * 打开常务会完成查看
+	 * 
+	 * @return
+	 */
+	private String city_meeting__DONE() {
+		String stNodeId = request.getParameter("stNodeId");
+		request.setAttribute("LegislationExampleList", legislationExampleService.queryLegislationExampleFilesList(stNodeId, null));
+		// 可选择的草案
+		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
+		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+		
+		String stTopicId = request.getParameter("stTaskStatus");
+		
+		List<LegislationPlanTask> legislationPlanTaskList = legislationPlanTaskService.findByHQL("from LegislationPlanTask t where t.stNodeId='NOD_0000000214' and t.stTaskStatus='DOING' and t.stTopicId='"+stTopicId+"' order by t.dtOpenDate desc");
+		if(legislationPlanTaskList.size()>0){
+			request.setAttribute("legislationPlanTaskList", legislationPlanTaskList);
+		}
+		if (StringUtil.isEmpty(stTopicId)) {
+			request.setAttribute("legislationCitymeeting", new LegislationCitymeeting());
+		} else {
+			LegislationCitymeeting auditMeeting = legislationCitymeetingService.findById(stTopicId);
+			request.setAttribute("legislationCitymeeting", auditMeeting);
+		}
+		LegislationCitymeetingTask legislationCitymeetingTask = legislationCitymeetingTaskService.findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
+		request.setAttribute("legislationCitymeetingTask", legislationCitymeetingTask);
+		request.setAttribute("stTaskStatus", legislationCitymeetingTask.getStTaskStatus());
+		return pageController();
+	}
+	
+	
+	private String saveLegislation(String stNodeId, String string) {
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String userRoleId = session.getAttribute("userRoleId").toString();
+		String userRole = session.getAttribute("userRole").toString();
+		String stNodeName = request.getParameter("stNodeName");  
+		String stComment1 = request.getParameter("stComment1");
+		LegislationCitymeetingTask legislationCitymeetingTask = new LegislationCitymeetingTask();
+		legislationCitymeetingTask.setStNodeName(stNodeName);
+		legislationCitymeetingTask.setStComment1(stComment1);
+		
+		legislationCitymeetingTaskService.add(legislationCitymeetingTask);
+		return null;
+	}
+
+
+
+	/**
+	 * 保存常务会议信息
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private String saveCitymeeting() throws Exception {
+		legislationCitymeetingTaskService.saveCitymeeting(request, session);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("success", true);
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jsonObject);
+		return null;
+	}
+	
+
+	/**
+	 * 页面控制
+	 * 
+	 * @return
+	 */
+	private String pageController() {
+		String stReportId = request.getParameter("stReportId");
+
+		String methodStr = request.getParameter("method");
+
+		String stNodeId = request.getParameter("stNodeId");
+
+		String stTaskId = request.getParameter("stTaskId");
+
+		request.setAttribute("nodeId", stNodeId);
+		request.setAttribute("stReportId", stReportId);
+		request.setAttribute("stTaskId", stTaskId);
+		request.setAttribute("requestUrl", request.getRequestURI());
+		return methodStr;
+	}
 }

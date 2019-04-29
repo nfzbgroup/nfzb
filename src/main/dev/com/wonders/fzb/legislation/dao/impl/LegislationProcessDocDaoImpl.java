@@ -71,5 +71,14 @@ public class LegislationProcessDocDaoImpl extends BaseSupportDao implements Legi
 		session.flush();
 		return result;
 	}
+	
+	@Override
+	public List<Map> findMapByHQL(String hql){
+		Session session = getSession();
+		Query query = session.createQuery(hql);		
+		List<Map> list = query.list();
+		session.flush();
+		return list;
+	}
 
 }

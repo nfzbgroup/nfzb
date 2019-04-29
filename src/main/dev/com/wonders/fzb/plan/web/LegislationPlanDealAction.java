@@ -1,14 +1,5 @@
 package com.wonders.fzb.plan.web;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -18,10 +9,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.wonders.fzb.base.actions.BaseAction;
-import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.plan.beans.*;
-import com.wonders.fzb.plan.services.*;
+import com.wonders.fzb.plan.beans.LegislationPlanDeal;
+import com.wonders.fzb.plan.services.LegislationPlanDealService;
 
 /**
  * LegislationPlanDeal action接口
@@ -38,16 +28,18 @@ public class LegislationPlanDealAction extends BaseAction {
 	@Qualifier("legislationPlanDealService")
 	private LegislationPlanDealService legislationPlanDealService;
 
-	private int pageNo = 1;
-	private int pageSize = 10;
+//	private int pageNo = 1;
+//	private int pageSize = 10;
 
 
 	//LegislationPlanDeal的修改
-	@Action(value = "legislationPlanDeal_add", results = {@Result(name = SUCCESS, location = "/LegislationPlanDeal.jsp"), @Result(name = "List", location = "/legislationPlanDeal_list.jsp")})
+	@Action(value = "legislationPlanDeal_add", results = {
+			@Result(name = SUCCESS, location = "/LegislationPlanDeal.jsp"),
+			@Result(name = "List", location = "/legislationPlanDeal_list.jsp") })
 	public String legislationPlanDeal_add() throws FzbDaoException {
-//		System.out.println("Begin....");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		List<LegislationPlanDeal> legislationPlanDealList = new ArrayList<LegislationPlanDeal>();
+		// System.out.println("Begin....");
+		// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		// List<LegislationPlanDeal> legislationPlanDealList = new  ArrayList<LegislationPlanDeal>();
 		LegislationPlanDeal legislationPlanDeal = new LegislationPlanDeal();
 		legislationPlanDealService.add(legislationPlanDeal);
 		return SUCCESS;

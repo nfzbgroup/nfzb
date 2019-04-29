@@ -24,14 +24,14 @@
 		<div class="form-body">
 			<br>
 			<div class="form-group text-center">
-				<label class="col-sm-3 control-label"></label>
-				<label class="col-sm-4 control-label">
+				<label class="col-sm-3 control-label text-left">法规规章草案：</label>
+				<label class="col-sm-9 control-label" style="text-align: left;">
 					<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 				</label>
 			</div>
 			<br>
 			<div class="form-group">
-				<label class="col-sm-2 control-label text-left">送审说明:</label>
+				<label class="col-sm-3 control-label text-left">送审说明:</label>
 				<div class="col-sm-9">
 					<textarea id="stComment2" name="stComment2" class="form-control">${legislationProcessTaskdetail.stBak1}</textarea>
 				</div>
@@ -118,4 +118,6 @@
 			});
 		}
 	}
+
+	
 </script>

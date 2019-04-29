@@ -7,7 +7,7 @@
 	<thead>
 		<tr class="text-center">
 			<c:choose>
-				<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000215'||nodeId=='NOD_0000000213'}">
+				<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000213'||nodeId=='NOD_0000000215'}">
 					<th class="text-center" data-field="id">通知编号</th>
 					<th class="text-center" data-field="district_name">通知名称</th>
 					<c:if test="${nodeId=='NOD_0000000201'}">
@@ -36,7 +36,7 @@
 	</thead>
 	<tbody>
 		<c:choose>
-			<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000215'||nodeId=='NOD_0000000213'}">
+			<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000213'||nodeId=='NOD_0000000215'}">
 				<c:choose>
 					<c:when test="${retPage.totalSize > 0}">
 						<c:forEach items="${retPage.result}" var="plan">
@@ -65,26 +65,33 @@
 												<br>
 												<a href="javaScript:void(0)" data-title="处理" onclick="checkPlanItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">处理</a>
 											</c:if>
-											<c:if test="${nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'}">
-												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
-												<br>
-												<a href="javaScript:void(0)" data-title="编辑计划说明" onclick="openPlanPage('openNoticeExplainPage','${plan.stTaskId}')" class="layer_full_link">编辑计划说明</a>
-												<br>
-												<a href="javaScript:void(0)" data-title="处理" onclick="checkPlanExplain('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">处理</a>
-											</c:if>
 											<c:if test="${nodeId=='NOD_0000000213'}">
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
 												<br>
-												<a href="javaScript:void(0)" data-title="查看计划说明" onclick="openPlanPage('openNoticeExplainPage','${plan.stTaskId}')" class="layer_full_link">查看计划说明</a>
+												<a href="javaScript:void(0)" data-title="编辑草案送审稿说明" onclick="openPlanPage('openNoticeDraftPage','${plan.stTaskId}')" class="layer_full_link">编辑草案送审稿说明</a>
 												<br>
-												<a href="javaScript:void(0)" data-title="送审" onclick="openPlanPage('openPlanCheckExplainPage','${plan.stTaskId}')" class="layer_full_link">送审</a>
+												<a href="javaScript:void(0)" data-title="送常务会议" onclick="checkPlanItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">送常务会议</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000215'}">
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
 												<br>
 												<a href="javaScript:void(0)" data-title="项目详情" onclick="openPlanPage('openNoticeProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
 												<br>
-												<a href="javaScript:void(0)" data-title="发布" onclick="checkProjectAscription('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">发布</a>
+												<a href="javaScript:void(0)" data-title="发布" onclick="checkPlanItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">处理</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000211'}">
+												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<br>
+												<a href="javaScript:void(0)" data-title="编辑草案修改说明" onclick="openPlanPage('openNoticeExplainPage','${plan.stTaskId}')" class="layer_full_link">编辑草案修改说明</a>
+												<br>
+												<a href="javaScript:void(0)" data-title="报签 " onclick="checkPlanExplain('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">报签 </a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000209'}">
+												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<br>
+												<a href="javaScript:void(0)" data-title="编辑计划说明" onclick="openPlanPage('openNoticeExplainPage','${plan.stTaskId}')" class="layer_full_link">编辑计划说明</a>
+												<br>
+												<a href="javaScript:void(0)" data-title="送审核会议" onclick="checkPlanExplain('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">送审核会议</a>
 											</c:if>
 										</td>
 									</c:when>
@@ -94,17 +101,9 @@
 										</td>
 										<td>
 											<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
-											<c:if test="${nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000213'}">
+											<c:if test="${nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'}">
 											<br>
 											<a href="javaScript:void(0)" data-title="查看计划说明" onclick="openPlanPage('openNoticeExplainInfoPage','${plan.stTaskId}')" class="layer_full_link">查看计划说明</a>
-											</c:if>
-											<c:if test="${nodeId=='NOD_0000000208'||nodeId=='NOD_0000000215'}">
-												<br>
-												<a href="javaScript:void(0)" data-title="项目详情" onclick="openPlanPage('openNoticeProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
-											</c:if>
-											<c:if test="${nodeId=='NOD_0000000213'}">
-												<br>
-												<a href="javaScript:void(0)" data-title="审核记录" onclick="openPlanPage('openPlanCheckInfoPage','${plan.stTaskId}')" class="layer_full_link">审核记录</a>
 											</c:if>
 										</td>
 									</c:otherwise>
@@ -150,9 +149,9 @@
 												<a href="javaScript:void(0)" data-title="审核" onclick="openPlanPage('openPlanAuditPage','${plan.stTaskId}')" class="layer_full_link">审核</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000207'}">
-												<a href="javaScript:void(0)" data-title="编辑" onclick="openPlanPage('openPlanEditPage','${plan.stTaskId}')" class="layer_full_link">编辑</a>
+												<a href="javaScript:void(0)" data-title="编辑" onclick="openPlanPage('openPlanEditPage','${plan.stTaskId}')" class="layer_full_link">编辑项目</a>
 												<br>
-												<a href="javaScript:void(0)" data-title="下一步" onclick="openPlanPage('openPlanCheckExplainPage','${plan.stTaskId}')" class="layer_full_link">下一步</a>
+												<a href="javaScript:void(0)" data-title="下一步" onclick="openPlanPage('openPlanCheckExplainPage','${plan.stTaskId}')" class="layer_full_link">送审</a>
 											</c:if>
 										</td>
 									</c:when>
@@ -161,9 +160,7 @@
 											<td>
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
 												<br>
-												<a href="javaScript:void(0)" data-title="审核记录" onclick="openPlanPage('openPlanCheckInfoPage','${plan.stTaskId}')" class="layer_full_link">审核记录</a>
-												<br>
-												<a href="javaScript:void(0)" data-title="下一步" onclick="openPlanPage('openPlanCheckExplainPage','${plan.stTaskId}')" class="layer_full_link">下一步</a>
+												<a href="javaScript:void(0)" data-title="下一步" onclick="openPlanPage('openPlanCheckExplainPage','${plan.stTaskId}')" class="layer_full_link">录入意见</a>
 											</td>
 										</c:if>
 									</c:when>
@@ -173,10 +170,6 @@
 										</td>
 										<td>
 											<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
-											<c:if test="${nodeId=='NOD_0000000207'}">
-											<br>
-											<a href="javaScript:void(0)" data-title="审核记录" onclick="openPlanPage('openPlanCheckInfoPage','${plan.stTaskId}')" class="layer_full_link">审核记录</a>
-											</c:if>
 										</td>
 									</c:otherwise>
 								</c:choose>
@@ -203,24 +196,12 @@
     }
 
     function checkPlanItem(stTaskId,stNodeId) {
-        $.post("../legislationPlanItem/checkPlanItem.do?stTaskId="+stTaskId,
+        $.post("../legislationPlanItem/checkPlanItem.do?stTaskId="+stTaskId+"&stNode="+stNodeId,
             function (data) {
                 if(data.success) {
                     nextPlanProcess(stTaskId,stNodeId);
                 }else{
                     Duang.error("提示", "请将所有项目都审核完！");
-                }
-            },
-            "json")
-    }
-
-    function checkProjectAscription(stTaskId,stNodeId) {
-        $.post("../legislationPlanItem/checkProjectAscription.do?stTaskId="+stTaskId+"&stNode="+stNodeId,
-            function (data) {
-                if(data.success) {
-                    nextPlanProcess(stTaskId,stNodeId);
-                }else{
-                    Duang.error("提示", "请确定各项目的归属！");
                 }
             },
             "json")

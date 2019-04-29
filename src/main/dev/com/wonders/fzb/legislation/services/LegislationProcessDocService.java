@@ -97,4 +97,6 @@ public interface LegislationProcessDocService{
 	void draft_dist_info(HttpServletRequest request) throws ParseException;
 
 	String saveLegislation(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole,String stNodeId,String stNodeName) throws Exception;
+
+	public List<Map> findMapByHQL(String hql);
 }

@@ -254,8 +254,8 @@
 
 								<div class="col-md-4">
 									<label class="btn btn-w-m btn-success" onclick="submitForm(1)"> 查询</label>
-									<c:if test="${nodeId=='NOD_0000000120'}">
-										<label class="btn btn-w-m btn-success" onclick="openTaskPage('openUnitAddPage',null)">添加</label>
+									<c:if test="${nodeId=='NOD_0000000180'}">
+										<label class="btn btn-w-m btn-success" onclick="openCitymeetingPage('city_meeting__TODO','TODO')">添加常务会议</label>
 									</c:if>
 								</div>
 								<div class="col-md-8 padding0 order-btn">
@@ -433,11 +433,14 @@
             },
             "json")
     };
-    function openProMeetPage(method,stDocId,buttonStatus) {
+    function openCitymeetingPage(method,stTopicId) {
         $("#legislationProcessForm").modal({
-            remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId+"&stTaskStatus="+buttonStatus
+            remote: "${basePath}/legislationCitymeeting/city_meeting_info.do?stNodeId=${nodeId}&method="+method+"&stTaskStatus="+stTopicId
         });
     };
+    
+    
+    
 
     function openTaskPage(method,stTaskId) {
         $("#legislationProcessForm").modal({

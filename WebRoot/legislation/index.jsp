@@ -59,7 +59,6 @@
 			<nav class="navbar-default navbar-static-side" role="navigation" id="left-menu">
 				<div class="sidebar-collapse">
 					<ul class="nav" id="side-menu">
-					
 						<!--示例导航开始-->
 						<!-- li标签里添加class="active" 会打开菜单 -->
 				          <li  cat="default" class="">
@@ -74,7 +73,6 @@
 								</s:iterator>
 							</ul>
 						</li> 
-						
 						
 				          <li  cat="default" class="active">
 							<a href="/">
@@ -92,7 +90,6 @@
 							</ul>
 						</li> 
 						
-						
 				          <li  cat="default" class="">
 							<a href="/">
 								<i class="fa fa-database"></i>
@@ -106,7 +103,7 @@
 							</ul>
 						</li> 
 						
-						
+						<%if(!"部门工作人员".equals(session.getAttribute("userRole"))){%>
 				          <li  cat="default" class="">
 							<a href="/">
 								<i class="fa fa-database"></i>
@@ -137,7 +134,16 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<s:iterator value="#request.cityMeetingNodeList" var="task">
-									<li><a class="J_menuItem" href="../legislationCitymeetingTask/citymeeting_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+									<li>
+									<c:choose>
+											<c:when test="${task.stNodeId=='NOD_0000000180'}">
+												<a class="J_menuItem" href="../legislationCitymeetingTask/citymeeting_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											</c:when>
+											<c:otherwise>
+												<a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											</c:otherwise>
+									</c:choose>
+									</li>
 								</s:iterator>
 							</ul>
 						</li> 
@@ -150,7 +156,16 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<s:iterator value="#request.reportNodeList" var="task">
-									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+									<li>
+									<c:choose>
+											<c:when test="${task.stNodeId=='NOD_0000000106' or task.stNodeId=='NOD_0000000112'}">
+									            <a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+									        </c:when>
+									        <c:otherwise>
+												<a class="J_menuItem" href="../legislationReportTask/report_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											</c:otherwise>
+									</c:choose>
+									</li>
 								</s:iterator>
 							</ul>
 						</li> 
@@ -162,8 +177,13 @@
 								<span class="nav-label">范本库</span>
 								<span class="fa arrow"></span>
 							</a>
+							<ul class="nav nav-second-level">
+									<li>
+										<a class="J_menuItem" href="../legislationProcessTask/simple_type_list.do"><s:property value="样本列表"/>样本列表</a>
+									</li>
+							</ul>
 						</li> 
-						
+						<%}%>
 						
 				          <li  cat="default" class="active">
 							<a href="/">

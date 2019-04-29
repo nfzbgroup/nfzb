@@ -32,7 +32,7 @@
 								<input type="hidden" id="stNodeId" value="${nodeId}">
 								<input type="hidden" id="requestUrl" value="${requestUrl}">
 								<c:choose>
-									<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000215'||nodeId=='NOD_0000000213'}">
+									<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000213'||nodeId=='NOD_0000000215'}">
 										<div class="col-md-5">
 											<div class="form-group">
 												<label class="col-md-3 control-label">发起时间:</label>
@@ -140,12 +140,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="modal inmodal fade" id="legislationProcessChildForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 </div>
@@ -205,15 +199,13 @@
         $('body').on('hidden.bs.modal', '.modal', function () {
             $(this).removeData('bs.modal');
         });
+        $('#processIndexForm').on('hidden.bs.modal', function () {
+            $(document.body).addClass("modal-open");
+        });
         $('#legislationProcessForm').on('show.bs.modal', function () {
             $('#legislationProcessForm .modal-body').css('overflow', 'auto');
             $('#legislationProcessForm .modal-body').css('height', $(window).height());
 			$('#legislationProcessForm .modal-dialog').css('width', $(window).width()*0.96);
-        });
-        $('#legislationProcessChildForm').on('show.bs.modal', function () {
-            $('#legislationProcessForm .modal-body').css('overflow', 'auto');
-            $('#legislationProcessForm .modal-body').css('height', $(window).height());
-            $('#legislationProcessForm .modal-dialog').css('width', $(window).width()*0.9);
         });
 	});
     function openPlanPage(method,stTaskId) {

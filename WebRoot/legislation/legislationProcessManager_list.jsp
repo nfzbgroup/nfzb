@@ -115,8 +115,6 @@
 												</div>
 											</div>
 										</div>
-
-
 										<div class="col-md-12">
 										</div>
 										<div class="col-md-5">
@@ -216,11 +214,11 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
-									<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'}">
+									<c:when test="${nodeId=='NOD_0000000105'}">
 										<div class="col-md-5">
 											<div class="form-group">
 												<label class="col-md-3 control-label">发起时间:</label>
-												<div class="col-md-9">
+												<div class="col-md-8">
 													<div class="input-group input-large">
 														<input type="text" class="form-control" readonly id="startTime" name="startTime">
 														<span class="input-group-addon"> - </span>
@@ -229,31 +227,40 @@
 												</div>
 											</div>
 										</div>
+										<div class="col-md-7">
+											<div class="form-group">
+												<label class="col-md-2 control-label">事项:</label>
+												<div class="col-md-4">
+												  <select class="form-control">
+												    <option>立法计划</option>
+												    <option>法律规章草案</option>
+												    <option>规范性文件</option>
+												    <option>其他事项</option>
+												  </select>
+											    </div>
+											</div>
+										</div> 
 										<div class="col-md-3">
 											<div class="form-group">
-												<label class="col-md-5 control-label">通知名称:</label>
+												<label class="col-md-5 control-label">草案名称:</label>
 												<div class="col-md-7">
-													<input type="text"  class="form-control" id="stPlanName">
+													<input type="text"  class="form-control" id="stDocName">
 												</div>
 											</div>
 										</div>
 										<div class="col-md-4">
 											<div class="form-group">
-												<label class="col-md-5 control-label">发起人:</label>
+												<label class="col-md-3 control-label">发起人:</label>
 												<div class="col-md-7">
 													<input type="text"  class="form-control" id="stUserName">
 												</div>
 											</div>
-										</div>
-										<div class="col-md-12">
-										</div>
-										<div class="col-md-5">
 										</div>
 									</c:when>
-									<c:when test="${nodeId=='NOD_0000000202'||nodeId=='NOD_0000000203'||nodeId=='NOD_0000000204'||nodeId=='NOD_0000000205'||nodeId=='NOD_0000000207'}">
-										<div class="col-md-5">
+									<c:when test="${nodeId=='NOD_0000000106' or nodeId=='NOD_0000000112'}">
+										<div class="col-md-6">
 											<div class="form-group">
-												<label class="col-md-3 control-label">发起时间:</label>
+												<label class="col-md-3 control-label">时间:</label>
 												<div class="col-md-9">
 													<div class="input-group input-large">
 														<input type="text" class="form-control" readonly id="startTime" name="startTime">
@@ -263,26 +270,16 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-md-3">
+										<div class="col-md-6">
 											<div class="form-group">
-												<label class="col-md-5 control-label">项目名称:</label>
+												<label class="col-md-5 control-label">名称:</label>
 												<div class="col-md-7">
-													<input type="text"  class="form-control" id="stPlanName">
+													<input type="text" class="form-control" id="stMeetingName">
 												</div>
 											</div>
 										</div>
-										<div class="col-md-4">
-											<div class="form-group">
-												<label class="col-md-5 control-label">发起人:</label>
-												<div class="col-md-7">
-													<input type="text"  class="form-control" id="stUserName">
-												</div>
-											</div>
-										</div>
-										<div class="col-md-12">
-										</div>
-										<div class="col-md-5">
-										</div>
+										<div class="col-md-12"></div>
+										<div class="col-md-5"></div>
 									</c:when>
 									<c:otherwise>
 										<div class="col-md-5">
@@ -324,6 +321,9 @@
 									<label class="btn btn-w-m btn-success" onclick="submitForm(1)"> 查询</label>
 									<c:if test="${nodeId=='NOD_0000000120'}">
 										<label class="btn btn-w-m btn-success" onclick="openTaskPage('openUnitAddPage',null)">添加</label>
+									</c:if>
+									<c:if test="${nodeId=='NOD_0000000105'}">
+										<label class="btn btn-w-m btn-success" onclick="openTaskPage('openUnitAddPage',null)">添加事项</label>
 									</c:if>
 								</div>
 								<div class="col-md-8 padding0 order-btn">
@@ -487,13 +487,22 @@
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId
         });
     };
-
-	function openReportPage(stDocId) {
+    
+	function openReportPage(stDocId,stNodeId,state) {
         $("#legislationProcessForm").modal({
-            remote: "${basePath}/legislationReport/openDraftReportPage.do?stNodeId=${nodeId}&stDocId="+stDocId
+            remote: "${basePath}/legislationReport/openDraftReportPage.do?stNodeId="+stNodeId+"&stDocId="+stDocId+"&state="+state
         });
     };
     
+    function openTextPage(stDocId,stNodeId) {
+        $("#legislationProcessForm").modal({
+            remote: "${basePath}/legislationProcessDoc/openDraftTextPage.do?stNodeId="+stNodeId+"&stDocId="+stDocId
+        });
+    };
+    
+    
+    
+
     function openLeaderIdeaPage(method,stDocId,stNodeId) {
         $.post("../legislationProcessTask/checkDealInfo.do?stDocId="+stDocId,
             function (data) {
@@ -502,7 +511,10 @@
                         remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${stNodeId}&method="+method+"&stDocId="+stDocId
                     });
                 }else{
-                    Duang.error("提示", "子流程未完成，请先完成子流程处理！");
+                	 $("#legislationProcessForm").modal({
+                         remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${stNodeId}&method="+method+"&stDocId="+stDocId
+                     });
+                    /* Duang.error("提示", "子流程未完成，请先完成子流程处理！"); */
                 }
             },
             "json")
@@ -510,6 +522,12 @@
     function openProMeetPage(method,stDocId,buttonStatus) {
         $("#legislationProcessForm").modal({
             remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method="+method+"&stDocId="+stDocId+"&stTaskStatus="+buttonStatus
+        });
+    };
+    
+    function openCityMeetPage(method,stDocId,buttonStatus) {
+        $("#legislationProcessForm").modal({
+            remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=NOD_0000000110&method="+method+"&stDocId="+stDocId+"&stTaskStatus="+buttonStatus
         });
     };
 
