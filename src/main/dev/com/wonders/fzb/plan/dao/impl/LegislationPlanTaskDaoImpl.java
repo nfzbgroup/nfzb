@@ -1,20 +1,18 @@
 package com.wonders.fzb.plan.dao.impl;
 
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.dao.impl.BaseSupportDao;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.dao.LegislationPlanTaskDao;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
-import com.wonders.fzb.base.dao.impl.BaseSupportDao;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.plan.beans.*;
-import com.wonders.fzb.plan.dao.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * LegislationPlanTask dao实现
@@ -72,4 +70,11 @@ public class LegislationPlanTaskDaoImpl extends BaseSupportDao implements Legisl
 		return result;
 	}
 
+	@Override
+	public Page findWithEnableByPage(Map<String, Object> condMap, Map<String, String> sortMap, int pageNo, int pageSize) throws FzbDaoException  {
+		if (sortMap == null)
+			sortMap = new LinkedHashMap<String, String>();
+		//sortMap.put("configName", CommonConst.ORDER_ASC);
+		return super.findWithEnableByPage(condMap, sortMap, pageNo, pageSize,"LegislationPlanTask");
+	}
 }

@@ -1,20 +1,5 @@
 package com.wonders.fzb.plan.web;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
@@ -32,8 +17,20 @@ import com.wonders.fzb.plan.beans.LegislationPlanTask;
 import com.wonders.fzb.plan.services.LegislationPlanItemService;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
-
 import dm.jdbc.util.StringUtil;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * LegislationPlan action接口
@@ -97,7 +94,8 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "openNoticeDraftInfoPage", location = "/plan/legislationNotice_draft.jsp"),
 			@Result(name = "openPlanCheckExplainPage", location = "/plan/legislationPlan_checkExplain.jsp"),
 			@Result(name = "openProjectAscriptionPage", location = "/plan/legislationPlan_projectAscription.jsp"),
-			@Result(name = "flowDealPage", location = "/plan/flowDealPage.jsp")
+			@Result(name = "flowDealPage", location = "/plan/flowDealPage.jsp"),
+			@Result(name = "openPlanDeleteReasonPage", location = "/plan/legislationPlan_deleteReason.jsp")
 	})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -430,5 +428,21 @@ public class LegislationPlanAction extends BaseAction {
 	private String flowDealPage(){
 		return pageController();
 	}
-    
+
+	/**
+	 * 跳转项目删除原因页面
+	 * @return
+	 */
+	private String openPlanDeleteReasonPage(){
+    	return pageController();
+	}
+
+	/**
+	 * 确认删除项目
+	 * @return
+	 */
+	private String saveLegislationPlanDeleteReason(){
+		legislationPlanTaskService.deletePlan(request,session);
+		return null;
+	}
 }

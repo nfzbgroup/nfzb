@@ -41,10 +41,17 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">立法项目类型：</label>
                 <div class="col-sm-9">
+                    <select class="form-control" name="stTypeId" <c:if test="${(nodeId!='NOD_0000000202'&&nodeId!='NOD_0000000207')||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus !='TODO')}">disabled</c:if>>
+                        <option value="立" <c:if test="${legislationPlanItem.stTypeId !=null&&legislationPlanItem.stTypeId =='立'}">selected</c:if>>立</option>
+                        <option value="改" <c:if test="${legislationPlanItem.stTypeId !=null&&legislationPlanItem.stTypeId =='改'}">selected</c:if>>改</option>
+                        <option value="废" <c:if test="${legislationPlanItem.stTypeId !=null&&legislationPlanItem.stTypeId =='废'}">selected</c:if>>废</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">立法项目类型：</label>
+                <div class="col-sm-9">
                     <select class="form-control" name="stTypeName" <c:if test="${(nodeId!='NOD_0000000202'&&nodeId!='NOD_0000000207')||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus !='TODO')}">disabled</c:if>>
-                        <option value="立" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='立'}">selected</c:if>>立</option>
-                        <option value="改" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='改'}">selected</c:if>>改</option>
-                        <option value="废" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='废'}">selected</c:if>>废</option>
                         <option value="正式" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='正式'}">selected</c:if>>正式</option>
                         <option value="预备" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='预备'}">selected</c:if>>预备</option>
                         <option value="修订" <c:if test="${legislationPlanItem.stTypeName !=null&&legislationPlanItem.stTypeName =='修订'}">selected</c:if>>修订</option>

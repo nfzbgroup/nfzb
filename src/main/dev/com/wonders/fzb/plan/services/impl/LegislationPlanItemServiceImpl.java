@@ -1,25 +1,27 @@
 package com.wonders.fzb.plan.services.impl;
 
-import java.util.*;
-
+import com.alibaba.fastjson.JSONObject;
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.plan.beans.LegislationPlanDeal;
+import com.wonders.fzb.plan.beans.LegislationPlanItem;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.dao.LegislationPlanItemDao;
+import com.wonders.fzb.plan.services.LegislationPlanDealService;
+import com.wonders.fzb.plan.services.LegislationPlanItemService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.alibaba.fastjson.JSONObject;
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.plan.beans.*;
-import com.wonders.fzb.plan.dao.*;
-import com.wonders.fzb.plan.services.*;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.*;
 
 
 /**
@@ -147,6 +149,7 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 		String stTaskId=request.getParameter("stTaskId");
 		String stPlanId=request.getParameter("stPlanId");
 		String stItemName=request.getParameter("stItemName");
+		String stTypeId=request.getParameter("stTypeId");
 		String stTypeName=request.getParameter("stTypeName");
 		String stContent=request.getParameter("stContent");
 		String stStatus=request.getParameter("stStatus");
@@ -163,6 +166,7 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 			legislationPlanItem.setStContent(stContent);
 			legislationPlanItem.setStItemName(stItemName);
 			legislationPlanItem.setStStatus(stStatus);
+			legislationPlanItem.setStTypeId(stTypeId);
 			legislationPlanItem.setStTypeName(stTypeName);
 			legislationPlanItem.setStUnitId(unitId);
 			legislationPlanItem.setStUnitName(unitName);
@@ -202,7 +206,7 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 				legislationPlanDealService.add(legislationPlanDeal);
 			}
 		}else{
-			//修改征集通知任务
+			//修改立法计划任务
 			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
 			legislationPlanTask.setStFlowId(stItemName);
 			legislationPlanTask.setStPlanId(stPlanId);
@@ -214,6 +218,7 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 			legislationPlanItem.setStContent(stContent);
 			legislationPlanItem.setStItemName(stItemName);
 			legislationPlanItem.setStStatus(stStatus);
+			legislationPlanItem.setStTypeId(stTypeId);
 			legislationPlanItem.setStTypeName(stTypeName);
 			update(legislationPlanItem);
 			stItemId=legislationPlanItem.getStItemId();
@@ -237,7 +242,7 @@ public class LegislationPlanItemServiceImpl implements LegislationPlanItemServic
 	@Override
 	public List<Map<String, Object>> queryProjectByPlanId(String stPlanId) {
 		List<Map<String, Object>> result=new ArrayList<>();
-		List<LegislationPlanItem> legislationPlanItemList=findByHQL("from LegislationPlanItem t where 1=1 and t.stPlanId='"+stPlanId+"'");
+		List<LegislationPlanItem> legislationPlanItemList=findByHQL("from LegislationPlanItem t where 1=1 and t.stPlanId='"+stPlanId+"' and t.stIsDelete is null");
 		legislationPlanItemList.forEach((LegislationPlanItem legislationPlanItem)->{
 			Map<String, Object> map=new HashMap<>();
 			map.put("stItemId",legislationPlanItem.getStItemId());

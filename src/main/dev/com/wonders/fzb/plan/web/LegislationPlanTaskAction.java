@@ -1,12 +1,15 @@
 package com.wonders.fzb.plan.web;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.base.actions.BaseAction;
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.plan.beans.LegislationPlan;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.services.LegislationPlanService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+import dm.jdbc.util.StringUtil;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
@@ -17,18 +20,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.wonders.fzb.base.actions.BaseAction;
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
-import com.wonders.fzb.plan.beans.LegislationPlan;
-import com.wonders.fzb.plan.beans.LegislationPlanTask;
-import com.wonders.fzb.plan.services.LegislationPlanService;
-import com.wonders.fzb.plan.services.LegislationPlanTaskService;
-import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
-import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
-
-import dm.jdbc.util.StringUtil;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * LegislationPlanTask action接口
@@ -166,7 +163,12 @@ public class LegislationPlanTaskAction extends BaseAction {
 		condMap.put("stEnableIsNull","null");
 		sortMap.put("dtOpenDate", "DESC");
 		@SuppressWarnings("unchecked")
-		Page<LegislationPlanTask> infoPage = legislationPlanTaskService.findByPage(condMap,sortMap, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+		Page<LegislationPlanTask> infoPage;
+		if("NOD_0000000202".equals(stNodeId)){
+			infoPage = legislationPlanTaskService.findWithEnableByPage(condMap,sortMap, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+		}else{
+			infoPage = legislationPlanTaskService.findByPage(condMap,sortMap, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+		}
 
 		if (StringUtil.isEmpty(stTaskStatus)) {
 			request.setAttribute("buttonStatus", "TODO");
@@ -187,6 +189,15 @@ public class LegislationPlanTaskAction extends BaseAction {
 	@SuppressWarnings("unused")
 	private String nextPlanProcess(){
 		legislationPlanTaskService.nextPlanProcess(request,session);
+		return null;
+	}
+
+	/**
+	 * 退回
+	 * @return
+	 */
+	private String goBackPlanProcess(){
+		legislationPlanTaskService.goBackPlanProcess(request,session);
 		return null;
 	}
 }

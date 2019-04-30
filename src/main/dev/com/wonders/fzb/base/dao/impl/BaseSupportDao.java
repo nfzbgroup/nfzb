@@ -713,4 +713,28 @@ public class BaseSupportDao extends HibernateDaoSupport implements BaseDao {
 		session.createQuery(sql).executeUpdate();
 		session.flush();
 	}
+
+	public Page findWithEnableByPage(Map<String, Object> condMap, Map<String, String> sortMap, int pageNo, int pageSize, String className) throws FzbDaoException {
+		if (condMap == null)
+			condMap = new HashMap<String, Object>();
+		if (sortMap == null)
+			sortMap = new LinkedHashMap<String, String>();
+		String hql = "select t from " + className + " t INNER JOIN LegislationPlanItem p on t.stParentId=p.stItemId";
+		String countHql = "select count(*) from " + className + " t INNER JOIN LegislationPlanItem p on t.stParentId=p.stItemId";
+		Object[] whereClause = this.formWhereClause(condMap, "t");
+		String filterPart = " where  1=1 and p.stIsDelete is null" + (String) whereClause[0];
+		@SuppressWarnings("unchecked")
+		List<HqlParameter> args = (List<HqlParameter>) whereClause[1];
+		filterPart += this.formOrderClause(sortMap, "t", true);
+		// return findByHQLWithPage(hql + filterPart, args, pageNo, pageSize,
+		// countHql + filterPart);
+
+		// System.out.println("hql + filterPart-----" + hql + filterPart);
+		// System.out.println("countHql + filterPart-----" + countHql + filterPart);
+
+		Page retPage = findByHQLWithPage(hql + filterPart, args, pageNo, pageSize, countHql + filterPart);
+		if (retPage.getTotalSize() == 0)
+			retPage = new Page();
+		return retPage;
+	}
 }

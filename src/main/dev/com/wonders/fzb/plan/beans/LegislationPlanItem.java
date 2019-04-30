@@ -1,17 +1,10 @@
 package com.wonders.fzb.plan.beans;
 
-import java.io.Serializable;
-import java.sql.Blob;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * LEGISLATION_PLAN_ITEM Bean (操作业务实体) 
@@ -229,6 +222,26 @@ public class LegislationPlanItem implements Serializable {
 	 */
 	public void setStContent (String stContent){
 		this.stContent = stContent;
+	}
+
+	/**
+	 * ST_IS_DELETE
+	 */
+	@Column(name = "ST_IS_DELETE")
+	private String stIsDelete;
+
+	/**
+	 * ST_IS_DELETE
+	 */
+	public String getStIsDelete(){
+		return stIsDelete;
+	}
+
+	/**
+	 * ST_IS_DELETE
+	 */
+	public void setStIsDelete (String stIsDelete){
+		this.stIsDelete = stIsDelete;
 	}
 
 	/**

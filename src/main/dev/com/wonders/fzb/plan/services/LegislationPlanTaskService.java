@@ -1,14 +1,13 @@
 package com.wonders.fzb.plan.services;
 
-import java.util.List;
-import java.util.Map;
-
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.plan.beans.LegislationPlanTask;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -90,4 +89,33 @@ public interface LegislationPlanTaskService{
 	 * @param session
 	 */
 	void nextPlanChildProcess(HttpServletRequest request, HttpSession session);
+
+	/**
+	 * 退回
+	 * @param request
+	 * @param session
+	 */
+	void goBackPlanProcess(HttpServletRequest request, HttpSession session);
+
+	/**
+	 * 删除项目
+	 * @param request
+	 * @param session
+	 */
+	void deletePlan(HttpServletRequest request, HttpSession session);
+
+	/**
+	 * 根据Map中过滤条件、排序条件和分页参数进行分页查询.
+	 *
+	 * @param condMap
+	 *            过滤条件<propertyName,properyValue>
+	 * @param sortMap
+	 *            排序条件<propertyName,properyValue>
+	 * @param pageNo
+	 *            当前页码
+	 * @param pageSize
+	 *            每页显示记录数.
+	 * @return
+	 */
+	public Page findWithEnableByPage(Map<String, Object> condMap, Map<String, String> sortMap, int pageNo, int pageSize) throws FzbDaoException;
 }

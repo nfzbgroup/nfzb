@@ -1,10 +1,12 @@
 package com.wonders.fzb.plan.web;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.wonders.fzb.base.actions.BaseAction;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.plan.beans.LegislationPlanItem;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.services.LegislationPlanItemService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -13,13 +15,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.wonders.fzb.base.actions.BaseAction;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.plan.beans.LegislationPlanItem;
-import com.wonders.fzb.plan.beans.LegislationPlanTask;
-import com.wonders.fzb.plan.services.LegislationPlanItemService;
-import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * LegislationPlanItem action接口
@@ -68,6 +67,7 @@ public class LegislationPlanItemAction extends BaseAction {
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();
 		condMap.put("stPlanId", legislationPlanTask.getStPlanId());
+		condMap.put("stIsDeleteIsNull", "null");
 		List<LegislationPlanItem> legislationPlanItemList=legislationPlanItemService.findByList(condMap,sortMap);
 		condMap.put("stNodeId","NOD_0000000205");
 		condMap.put("stTaskStatus","DONE");
