@@ -4,7 +4,9 @@ import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.plan.beans.LegislationPlan;
+import com.wonders.fzb.plan.beans.LegislationPlanItem;
 import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.services.LegislationPlanItemService;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
@@ -49,6 +51,10 @@ public class LegislationPlanTaskAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationPlanService")
 	private LegislationPlanService legislationPlanService;
+
+	@Autowired
+	@Qualifier("legislationPlanItemService")
+	private LegislationPlanItemService legislationPlanItemService;
 //	private int pageNo = 1;
 //	private int pageSize = 10;
 
@@ -169,7 +175,17 @@ public class LegislationPlanTaskAction extends BaseAction {
 		}else{
 			infoPage = legislationPlanTaskService.findByPage(condMap,sortMap, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
 		}
-
+		infoPage.getResult().forEach((LegislationPlanTask legislationPlanTask)->{
+			if("NOD_0000000202".equals(stNodeId)||"NOD_0000000203".equals(stNodeId)
+				||"NOD_0000000204".equals(stNodeId)||"NOD_0000000205".equals(stNodeId)
+					||"NOD_0000000207".equals(stNodeId)){
+				LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
+				legislationPlanTask.setStNodeName(legislationPlanItem.getStNodeName());
+			}else{
+				LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
+				legislationPlanTask.setStNodeName(legislationPlan.getStNodeName());
+			}
+		});
 		if (StringUtil.isEmpty(stTaskStatus)) {
 			request.setAttribute("buttonStatus", "TODO");
 		} else {
