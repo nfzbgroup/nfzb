@@ -25,7 +25,8 @@
 <div class="modal-body">
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">选择草案对应的议题</h2>
 	<form id="legislationProcessDocForm" class="form-horizontal" novalidate="novalidate">
-		<input hidden id="stDocId" name="stDocId" value="${stDocId}">
+		<input hidden id="stDocId" name="stDocId" value="${stDocId}" >
+		<input hidden id="stTaskId" name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}"</c:if>>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">草案名称：</label>
 				<div class="col-sm-9">
@@ -64,17 +65,18 @@
 			</div>
 
 		<div class="form-group text-center">
-		<c:if test="${legislationProcessTask.stTaskStatus !='DONE'}">
+		<label class="col-sm-3 control-label"></label>
+		<c:if test="${(legislationProcessTask.stTaskId == null)||(legislationProcessTask.stTaskStatus !='DONE')}">
 			<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveLegislationProcessDoc('save')" value="保存">
 			&nbsp;&nbsp;
 			<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveLegislationProcessDoc('submit')" value="提交">
-			</c:if>
+		</c:if>
 			&nbsp;&nbsp;
 			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 		</div>
 
-		<div class="form-group">
-			<label class="control-label">报审材料上传 </label>
+		<div class="form-group" >
+			<label class="col-sm-3 control-label">报审材料上传 </label>
 			<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传 </label>
 			<input type="file" id="7" name="upload" style="display: none" onchange="uploadFile(this.id,2,null)">
 		</div>

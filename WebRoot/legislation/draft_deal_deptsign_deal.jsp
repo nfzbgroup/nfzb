@@ -165,7 +165,7 @@
 				<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
 					<c:forEach var="file" items="${legislationFilesList}">
 						<c:if test="${file.stSampleId !=null&&file.stSampleId !='null'}">
-							<label class="control-label col-md-12 text-center"><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">${file.stTitle}</a></label>
+							<label class="col-md-12 text-center"><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">${file.stTitle}</a></label>
 						</c:if>
 					</c:forEach>
 				</c:if>
@@ -180,7 +180,7 @@
 			<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
 				<c:forEach var="file" items="${legislationFilesList}">
 					<c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
-						<label class="control-label col-md-12 text-center"><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">${file.stTitle}</a></label>
+						<label class="col-md-12 text-center"><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">${file.stTitle}</a></label>
 					</c:if>
 				</c:forEach>
 			</c:if>

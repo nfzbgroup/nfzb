@@ -81,37 +81,37 @@
 					</thead>
 					<tbody>
 						<s:iterator value="#request.LegislationExampleList" var="example">
-							<tr class="text-center">
-								<td class="text-left">${example.stExampleName}
-									<c:if test="">
-										<span style="color: red">(必须上传)</span>
-									</c:if>
-									<span style="color: dodgerblue">(范本)</span>
-								</td>
-								<td>
-									<c:choose>
-										<c:when test="">
-											<span>${example.fileName}</span>
-										</c:when>
-										<c:otherwise>
-											<span style="color: red">暂未上传</span>
-										</c:otherwise>
-									</c:choose>
-								</td>
-								<td>
-									<c:choose>
-										<c:when test="${example.fileId !=null}">
-											<a target="_blank" href="${basePath}/file/downloadAttach.do?name=${example.fileName}&url=${example.fileUrl}">下载</a>&nbsp;&nbsp;
-                                    <input type="hidden" id="${example.fileId}" name="${example.fileId}" value="${example.fileId}">
-											<label style="color: red" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')">删除</label>
-										</c:when>
-										<c:otherwise>
-											<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传</label>
-											<input id="${example.stExampleId}" name="upload" type="file" style="display: none" onchange="uploadFile(this.id,1,'${example.stExampleId}')">
-										</c:otherwise>
-									</c:choose>
-								</td>
-							</tr>
+							   <tr class="text-center">
+                                <td class="text-left">${example.stExampleName}
+                                    <c:if test="${example.stNeed=='NEED'}">
+                                        <span style="color: red">(必须上传)</span>
+                                    </c:if>
+                                    <span style="color: dodgerblue">(范本)</span>
+                                </td>
+                                <td >
+                                    <c:choose>
+                                        <c:when test="${example.fileId !=null}">
+                                            <span >${example.fileName}</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span style="color: red">暂未上传</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td >
+                                    <c:choose>
+                                        <c:when test="${example.fileId !=null}">
+                                            <a target="_blank" href="${basePath}/file/downloadAttach.do?name=${example.fileName}&url=${example.fileUrl}">下载</a>&nbsp;&nbsp;
+                                            <input type="hidden" id="${example.fileId}"  name="${example.fileId}" value="${example.fileId}">
+                                            <label style="color: red" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')" >删除</label>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
+                                            <input id="${example.stExampleId}" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1,'${example.stExampleId}')">
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
 						</s:iterator>
 					</tbody>
 				</table>
@@ -153,7 +153,7 @@
 			<div class="form-group text-center">
 				<input ${stStyle} type="button" class="btn btn-w-m btn-success" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
 				&nbsp;&nbsp;
-				<input ${stStyle} type="button" class="btn btn-w-m btn-success" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="confirmOnlineReport('${stDocId}','${nodeId}','${buttonId}')"</c:if> <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="提交">
+				<input ${stStyle} type="button" class="btn btn-w-m btn-success" onclick="confirmOnlineReport('${stDocId}','${nodeId}','${buttonId}')" value="提交">
 				&nbsp;&nbsp;
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>

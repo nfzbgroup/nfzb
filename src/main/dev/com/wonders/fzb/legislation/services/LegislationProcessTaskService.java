@@ -137,6 +137,8 @@ public interface LegislationProcessTaskService {
 	 */
 	Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) throws ParseException;
 
+	
+    Page<LegislationProcessDoc> findDocByPage(String sql, int pageNo, int pageSize) throws ParseException;
 	/**
 	 * 发送部门
 	 * 

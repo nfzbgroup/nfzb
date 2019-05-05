@@ -38,7 +38,7 @@
             </c:if>
             <c:if test="${nodeId=='NOD_0000000131'&&stTaskStatus=='PUBLISH'}">
                 <div class="form-group">
-                    <label class="col-sm-3 control-label text-left">综合处意见：</label>
+                    <label class="col-sm-3 control-label text-left">法治调研处意见：</label>
                     <div class="col-sm-9">
                         <textarea  name="stBakOne" class="form-control"></textarea>
                     </div>
@@ -108,7 +108,7 @@
         }else if(param.stNodeId=='NOD_0000000131'&&param.stTaskStatus=='SEND'&&(param.stComment1==null||param.stComment1=="")){
             Duang.error("提示","请输入办领导意见！");
         }else if(param.stNodeId=='NOD_0000000131'&&param.stTaskStatus=='PUBLISH'&&(param.stBakOne==null||param.stBakOne=="")){
-            Duang.error("提示","请输入综合处意见！");
+            Duang.error("提示","请输入法治调研处意见！");
         }else if(param.stNodeId=='NOD_0000000131'&&param.stTaskStatus=='PUBLISH'&&(param.dtBakDate==null||param.dtBakDate=="")){
             Duang.error("提示","请选择征求意见开始时间！");
         }else if(param.stNodeId=='NOD_0000000131'&&param.stTaskStatus=='PUBLISH'&&(param.dtDeadDate==null||param.dtDeadDate=="")){

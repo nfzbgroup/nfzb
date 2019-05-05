@@ -177,7 +177,39 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 			pageSize = totalSize;
 		return new Page<LegislationProcessDoc>(Page.getStartOfAnyPage(pageNo, pageSize), users.size(), totalSize, pageSize, users);
 	}
+	
+	@Override
+	public Page<LegislationProcessDoc> findDocByPage(String wheresql, int pageNo, int pageSize) throws ParseException {
+		String baseSql = " FROM LEGISLATION_PROCESS_DOC d ";
+		baseSql += " INNER JOIN LEGISLATION_PROCESS_TASK t ";
+		baseSql += " ON d.st_doc_id = t.st_doc_id ";
+		baseSql += wheresql;
+		String propView = "SELECT d.st_doc_id,d.st_doc_name,d.st_node_name,d.st_user_name,d.DT_CREATE_DATE";
+		String totalView = "SELECT COUNT(1) ";
 
+		List<LegislationProcessDoc> users = packageDocBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));
+		int totalSize = ((BigDecimal) (Object) executeSqlQueryWithoutPage(totalView + baseSql).get(0)).intValue();
+		if (pageSize == 0)
+			pageSize = totalSize;
+		return new Page<LegislationProcessDoc>(Page.getStartOfAnyPage(pageNo, pageSize), users.size(), totalSize, pageSize, users);
+	}
+
+	private List<LegislationProcessDoc> packageDocBean(List<Object[]> results) throws ParseException {
+		LinkedList<LegislationProcessDoc> docInfos = new LinkedList<LegislationProcessDoc>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		for (Object[] array : results) {
+			LegislationProcessDoc docInfo = new LegislationProcessDoc();
+			docInfo.setStDocId(array[0].toString());
+			docInfo.setStDocName(array[1] == null ? "" : array[1].toString());
+			docInfo.setStNodeName(array[2] == null ? "" : array[2].toString());
+			docInfo.setStUserName(array[3] == null ? "" : array[3].toString());
+			docInfo.setDtCreateDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
+			docInfos.add(docInfo);
+		}
+		return docInfos;
+	}
+	
+	
 	private List<LegislationProcessDoc> packageCheckMeetingBean(List<Object[]> results) throws ParseException {
 		LinkedList<LegislationProcessDoc> docInfos = new LinkedList<LegislationProcessDoc>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

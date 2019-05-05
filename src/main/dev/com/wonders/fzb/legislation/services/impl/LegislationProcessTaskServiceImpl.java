@@ -230,7 +230,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 							nextLegislationProcessTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
 							nextLegislationProcessTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
 						} else {
-							nextLegislationProcessTask.setStTeamName("综合业务处");
+							nextLegislationProcessTask.setStTeamName("法治调研处");
 						}
 
 					}else {
@@ -242,7 +242,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 					}
 					if (stNodeId.equals("NOD_0000000121")) {
 						nextLegislationProcessTask.setStTeamId("U_3_7");
-						nextLegislationProcessTask.setStTeamName("社会法规处");
+						nextLegislationProcessTask.setStTeamName("立法一处");
 					}
 					if (!(stNodeId.equals("NOD_0000000120") || stNodeId.equals("NOD_0000000121") || stNodeId.equals("NOD_0000000123")||stNodeId.equals("NOD_0000000115"))) {
 						nextLegislationProcessTask.setStBakOne(legislationProcessTask.getStBakOne());
@@ -392,6 +392,11 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	@Override
 	public Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) throws ParseException {
 		return legislationProcessTaskDao.findCheckMeetingByNodeId(sql, pageNo, pageSize);
+	}
+	
+	@Override
+	public Page<LegislationProcessDoc> findDocByPage(String sql, int pageNo, int pageSize) throws ParseException {
+		return legislationProcessTaskDao.findDocByPage(sql, pageNo, pageSize);
 	}
 
 	@Override

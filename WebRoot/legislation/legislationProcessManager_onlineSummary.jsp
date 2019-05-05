@@ -40,7 +40,7 @@
             <label class="col-sm-5 control-label control-label-left">${legislationProcessTask.stComment1}</label>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">综合处意见：</label>
+            <label class="col-sm-3 control-label">法治调研处意见：</label>
             <label class="col-sm-5 control-label control-label-left">${legislationProcessTask.stBakOne}</label>
         </div>
         <div class="form-group">

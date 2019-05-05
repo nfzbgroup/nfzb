@@ -10,7 +10,7 @@
 			<span>审核会议 > </span>
 		</li>
 		<li>
-			<span>会议纪要</span>
+			<span>参加情况反馈</span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
@@ -19,130 +19,107 @@
 	</button>
 </div>
 <div class="modal-body">
-	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">会议纪要</h2>
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">参会情况反馈</h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
-
-
+		<input type="hidden" name="allPersonFeedBack" id="allPersonFeedBack" value="">
+		<input type="hidden" name="allPersonFeedBackTime" id="allPersonFeedBackTime" value="">
 		<div class="form-body" align="center">
 			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
 				<tr class="text-center">
-					<th class="text-right" width="20%">
+					<td class="text-right" width="20%">
 						<label>会议名称：</label>
-					</th>
+					</td>
 					<td>${legislationCheckmeeting.stMeetingName}</td>
 				</tr>
 				<tr class="text-center">
-					<th class="text-right">
+					<td class="text-right">
 						<label>会议类型：</label>
-					</th>
+					</td>
 					<td>${legislationCheckmeeting.stType}</td>
 				</tr>
 				<tr class="text-center">
-					<th class="text-right">
+					<td class="text-right">
 						<label>会议地点：</label>
-					</th>
+					</td>
 					<td>${legislationCheckmeeting.stAddress}</td>
 				</tr>
 				<tr class="text-center">
-					<th class="text-right">
+					<td class="text-right">
 						<label>会议时间：</label>
-					</th>
+					</td>
 					<td>
 						<fmt:formatDate value="${legislationCheckmeeting.dtBeginDate}" pattern="yyyy-MM-dd" />
 					</td>
 				</tr>
-				<c:choose>
-				<c:when test="${legislationCheckmeetingItems!=null&&fn:length(legislationCheckmeetingItems)>0}">
-					<div class="form-group">
-						<label class="col-sm-2 control-label">已选事项：</label>
-						<div class="col-sm-8">
-							<table class="table table-bordered table-hover">
-								<thead>
-									<th class="text-center">事项编号</th>
-									<th class="text-center">事项名称</th>
-									<th class="text-center">事项类型</th>
-								</thead>
-								<tbody>
-									<c:forEach items="${legislationCheckmeetingItems}" var="item">
-										<tr>
-											<td class="text-center">${item.stItemId}</td>
-											<td class="text-center">${item.stItemName}</td>
-											<td class="text-center">${item.stTypeName}</td>
-										</tr>
-									</c:forEach>
-									
-								</tbody>
-							</table>
-						</div>
-					</div>				
-				</c:when>
-			</c:choose>
 				<tr class="text-center">
-					<th class="text-right">
-						<label>参会人员：</label>
-					</th>
-					<td>&nbsp;&nbsp;${legislationCheckmeeting.stPersons}</td>
-				</tr>
-				<tr class="text-center">
-					<th class="text-right">
-						<label>草案文本：</label>
-					</th>
+					<td class="text-right">
+						<label>对应草案：</label>
+					</td>
 					<td>
-						<span style="color: red">暂未上传</span>
+						<c:forEach items="${legislationProcessDocList}" var="doc" varStatus="status">
+						 ${status.index + 1}、${doc.stDocName}&nbsp;&nbsp;<br>
+						</c:forEach>
 					</td>
 				</tr>
 				<tr class="text-center">
-					<th class="text-right">
-						<label>起草说明/审查报告：</label>
-					</th>
-					<td>
-						<span style="color: red">暂未上传</span>
+					<td class="text-right">
+						<label>对应计划：</label>
 					</td>
-				</tr>
-				<tr class="text-center">
-					<th class="text-right">
-						<label>会议纪要：</label>
-					</th>
 					<td>
-						<span style="color: red">暂未上传</span>
+						<c:forEach items="${legislationPlanList}" var="plan" varStatus="status">
+						 ${status.index + 1}、${plan.stPlanName}&nbsp;&nbsp;<br>
+						</c:forEach>
 					</td>
 				</tr>
 			</table>
+
+			<br>
+			<br>
+			<div class="form-body" align="center">
+				<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+					<thead>
+						<th class="text-center" width="20%">参会人员</th>
+						<th class="text-center" width="50%">反馈信息</th>
+						<th class="text-center" width="30%">反馈时间</th>
+					</thead>
+					<tbody>
+						<c:forEach items="${mapListJson}" var="person" varStatus="status">
+							<tr class="text-right">
+								<td class="text-right">
+									<label>${person.name}</label>
+								</td>
+								<td>
+									<input type="text" class="form-control" id="personFeedBack${status.index}" value="${person.feedBack}">
+								</td>
+
+								<td>
+									<input type="text" class="form-control" id="feedTime${status.index}" value="${person.feedBackT}">
+								</td>
+							</tr>
+						</c:forEach>
+						<c:if test="${mapListJson==null}">
+							<c:forEach items="${stPersonList}" var="person" varStatus="status">
+								<tr class="text-right">
+									<td class="text-right">
+										<label>${person}</label>
+									</td>
+									<td>
+										<input type="text" class="form-control" id="personFeedBack${status.index}" value="">
+									</td>
+
+									<td>
+										<input type="text" class="form-control" id="feedTime${status.index}" value="">
+									</td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</tbody>
+				</table>
+
+			</div>
 		</div>
 
-		<div class="form-body" align="center">
-			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
-				<tbody class="text-center" align="center">
-					<tr class="text-center">
-						<td class="text-right" width="20%">
-							<label>会议内容概述：</label>
-						</td>
-						<td>
-							<textarea class="form-control" id="stSummary" name="stSummary">${legislationCheckmeetingTask.stSummary}</textarea>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<!-- 
-		<div class="form-body">
-			<div class="form-group">
-				<label class="col-sm-3 control-label">会议名称：</label>
-				<div class="col-sm-9">${legislationProcessDoc.stDocName}</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">与会人员：</label>
-				<div class="col-sm-9">${legislationProcessDoc.stComent}</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">会议纪要：</label>
-				<div class="col-sm-9">
-					<textarea class="form-control" id="stSummary" name="stSummary">${legislationCheckmeetingTask.stSummary}</textarea>
-				</div>
-			</div> 
-			-->
 		<div class="form-group text-center">
 			<input type="hidden" id="op" name="op">
 			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
@@ -153,14 +130,24 @@
 		</div>
 	</form>
 </div>
-
 <script>
 	$(function() {
+		<c:forEach items="${mapListJson}" var="person" varStatus="status">
 		laydate.render({
-			elem : '#dtCreateDate',
+			elem : '#feedTime${status.index}',
 			format : 'yyyy-MM-dd',
 			calendar : true,
 		});
+		</c:forEach>
+		<c:if test="${mapListJson==null}">
+		<c:forEach items="${stPersonList}" var="person" varStatus="status">
+		laydate.render({
+			elem : '#feedTime${status.index}',
+			format : 'yyyy-MM-dd',
+			calendar : true,
+		});
+		</c:forEach>
+		</c:if>
 	});
 	function toUploadFile(obj) {
 		$(obj).next().click();
@@ -197,7 +184,6 @@
 	};
 	function deleteAttach(attachObj, type, id, fileId, stSampleId) {
 		$.post('${basePath}/file/deleteAttach.do?fileId=' + fileId);
-
 		var obj = $(attachObj);
 		if (type == 1) {
 			obj.parent().prev().html('<span style="color: red">暂未上传</span>');
@@ -208,31 +194,59 @@
 		}
 	};
 	function saveAuditMeeting1(operation) {
+		//alert('----' + operation);
 		$('#op').val(operation);
+		//console.info($("[id^=personFeedBack]").size());
+		//console.info($("[id^=personFeedBack]").get(0));
+		//$('#allPersonFeedBack').val($("[id^=personFeedBack]").val());
+
+		var allPersonFeedBack = "";
+		var allPersonFeedBackTime = "";
+		$("[id^=personFeedBack]").each(function(index, item) {
+			var val = $(this).val(); //获取value值
+			console.info(val);
+			allPersonFeedBack += val + "#";
+		});
+		//console.info("allPersonFeedBack---" + allPersonFeedBack);
+		$('#allPersonFeedBack').val(allPersonFeedBack);
+		$("[id^=feedTime]").each(function(index, item) {
+			var val = $(this).val(); //获取value值
+			console.info(val);
+			allPersonFeedBackTime += val + "#";
+		});
+		//console.info("allPersonFeedBackTime---" + allPersonFeedBackTime);
+		$('#allPersonFeedBackTime').val(allPersonFeedBackTime);
+		//[{"website":"America","create_time":"123"},{"website":"china","create_time":"234"}]
+
 		var param = $('#auditMeetingForm').formToJson();
+		//console.info("param-------" + param);
+		//if (param.stComment1 == null || param.stComment1 == "") {
+		//	Duang.error("提示", "请输入会议人员的反馈");
+		//} else {
+
 		if (operation == 'submit') {
 			layer.confirm('请确认操作！', function(index) {
 				layer.close(layer.index);
-				//alert('----' + operation);
-				//if (param.stComment1 == null || param.stComment1 == "") {
-				//	Duang.error("提示", "请输入会议人员的反馈");
-				//} else {
 				$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
-					console.log(JSON.stringify(data));
+					//console.log(JSON.stringify(data));
 					if (data.success) {
-						$('#legislationProcessForm').modal('hide');
-						submitForm(1);
+						if (operation == 'submit') {
+							$('#legislationProcessForm').modal('hide');
+							submitForm(1);
+						}
 						Duang.success("提示", "操作成功");
 					} else {
 						Duang.error("提示", "操作失败");
 					}
 				});
-			})
+			});
 		} else {
 			$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCheckmeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
-				console.log(JSON.stringify(data));
+				//console.log(JSON.stringify(data));
 				if (data.success) {
-					submitForm(1);
+					if (operation == 'submit') {
+						submitForm(1);
+					}
 					Duang.success("提示", "操作成功");
 				} else {
 					Duang.error("提示", "操作失败");

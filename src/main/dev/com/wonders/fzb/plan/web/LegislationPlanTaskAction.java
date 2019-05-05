@@ -51,7 +51,7 @@ public class LegislationPlanTaskAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationPlanService")
 	private LegislationPlanService legislationPlanService;
-
+	
 	@Autowired
 	@Qualifier("legislationPlanItemService")
 	private LegislationPlanItemService legislationPlanItemService;
@@ -175,6 +175,7 @@ public class LegislationPlanTaskAction extends BaseAction {
 		}else{
 			infoPage = legislationPlanTaskService.findByPage(condMap,sortMap, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
 		}
+
 		infoPage.getResult().forEach((LegislationPlanTask legislationPlanTask)->{
 			if("NOD_0000000202".equals(stNodeId)||"NOD_0000000203".equals(stNodeId)
 				||"NOD_0000000204".equals(stNodeId)||"NOD_0000000205".equals(stNodeId)
@@ -186,6 +187,7 @@ public class LegislationPlanTaskAction extends BaseAction {
 				legislationPlanTask.setStNodeName(legislationPlan.getStNodeName());
 			}
 		});
+		
 		if (StringUtil.isEmpty(stTaskStatus)) {
 			request.setAttribute("buttonStatus", "TODO");
 		} else {

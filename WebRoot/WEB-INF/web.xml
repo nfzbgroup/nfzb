@@ -5,6 +5,15 @@
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
   
+  	<filter>
+	    <filter-name>permissionFilter</filter-name>
+	    <filter-class>com.wonders.fzb.base.filters.PermissionFiltersy</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>permissionFilter</filter-name>
+	    <url-pattern>*</url-pattern>
+	</filter-mapping>
+  
   <!-- 在Spring框架中是如何解决从页面传来的字符串的编码问题的呢？ 下面我们来看看Spring框架给我们提供过滤器CharacterEncodingFilter 
 		这个过滤器就是针对于每次浏览器请求进行过滤的，然后再其之上添加了父类没有的功能即处理字符编码。 其中encoding用来设置编码格式，forceEncoding用来设置是否理会 
 		request.getCharacterEncoding()方法，设置为true则强制覆盖之前的编码格式。 -->

@@ -38,5 +38,7 @@ public abstract interface LegislationProcessTaskDao extends BaseDao {
 
     Page<LegislationProcessDoc> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) throws ParseException;
     
+    public Page<LegislationProcessDoc> findDocByPage(String wheresql, int pageNo, int pageSize) throws ParseException;
+    
     public LegislationProcessTask findById(String id);
 }

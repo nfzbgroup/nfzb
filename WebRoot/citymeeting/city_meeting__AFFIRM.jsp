@@ -5,12 +5,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="page-bar">
-	<ul class="page-breadcrumb">
+	<ul class="page-breadcrumb"> 
 		<li>
 			<span>常务会议议题->材料确认></span>
-		</li>
-		<li>
-			<span>常务会议材料->材料确认 </span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
@@ -92,11 +89,13 @@
 			
 			
 			<div class="form-group text-center">
+			   <c:if test="${legislationCitymeetingTask.stTaskStatus=='AFFIRM'}">
 				<input type="hidden" id="op" name="op">
 				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
 				&nbsp;&nbsp;
 				<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="确定材料">
 				&nbsp;&nbsp;
+			   </c:if>
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 		</div>

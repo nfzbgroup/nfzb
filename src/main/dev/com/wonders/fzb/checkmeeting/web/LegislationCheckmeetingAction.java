@@ -1,11 +1,9 @@
 package com.wonders.fzb.checkmeeting.web;
 
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,13 +16,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingItem;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
+import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingDealService;
+import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingItemService;
 import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingService;
 import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingTaskService;
 import com.wonders.fzb.framework.beans.UserInfo;
@@ -85,7 +85,15 @@ public class LegislationCheckmeetingAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationPlanService")
 	private LegislationPlanService legislationPlanService;
+	@Autowired
+	@Qualifier("legislationCheckmeetingItemService")
+	private LegislationCheckmeetingItemService legislationCheckmeetingItemService;
+	
+	@Autowired
+	@Qualifier("legislationCheckmeetingDealService")
+	private LegislationCheckmeetingDealService legislationCheckmeetingDealService;
 
+	
 	private int pageNo = 1;
 	private int pageSize = 10;
 
@@ -100,8 +108,14 @@ public class LegislationCheckmeetingAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "checkmeeting_info", results = { @Result(name = "checkMeetingStart_old", location = "/checkmeeting/ckeckMeeting_start.jsp"), @Result(name = "checkmeeting_add", location = "/checkmeeting/checkmeeting_add.jsp"), @Result(name = "checkmeeting_feedback", location = "/checkmeeting/checkmeeting_feedback.jsp"), @Result(name = "checkmeeting_input", location = "/checkmeeting/checkmeeting_input.jsp"),
-			@Result(name = "checkmeeting_affirm", location = "/checkmeeting/checkmeeting_affirm.jsp"), @Result(name = "checkmeeting_end", location = "/checkmeeting/checkmeeting_end.jsp") })
+	@Action(value = "checkmeeting_info", results = {
+			@Result(name = "checkMeetingStart_old", location = "/checkmeeting/ckeckMeeting_start.jsp"),
+			@Result(name = "checkmeeting_add", location = "/checkmeeting/checkmeeting_add.jsp"),
+			@Result(name = "checkmeeting_addnew", location = "/checkmeeting/checkmeeting_addnew.jsp"),
+			@Result(name = "checkmeeting_feedback", location = "/checkmeeting/checkmeeting_feedback.jsp"),
+			@Result(name = "checkmeeting_input", location = "/checkmeeting/checkmeeting_input.jsp"),
+			@Result(name = "checkmeeting_affirm", location = "/checkmeeting/checkmeeting_affirm.jsp"),
+			@Result(name = "checkmeeting_end", location = "/checkmeeting/checkmeeting_end.jsp") })
 	public String draft_doc_info() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -135,8 +149,63 @@ public class LegislationCheckmeetingAction extends BaseAction {
 		request.setAttribute("stTaskStatus", "TODO");
 		return pageController();
 	}
-
+	//审核会议新接口
+	@SuppressWarnings("unused")
+	private String checkmeeting_addnew() {
+		String stNodeId = request.getParameter("stNodeId");
+		request.setAttribute("LegislationExampleList", legislationExampleService.queryLegislationExampleFilesList(stNodeId, null));
+		String stItemIds =  request.getParameter("stItemId");
+		String[] strs = stItemIds.split(",");
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < strs.length; i++) {
+			builder.append("'"+ strs[i] + (i!=strs.length-1?"',":"'"));
+		}
+		List<LegislationCheckmeetingItem> checkmeetingItems = legislationCheckmeetingItemService.findByHQL("FROM LegislationCheckmeetingItem T WHERE T.stItemId in ("+builder.toString()+")");
+		request.setAttribute("checkmeetingItems", checkmeetingItems);
+		request.setAttribute("stItemId", stItemIds);
+		return pageController();
+	}
+	
 	private String checkmeeting_feedback() {
+		String stNodeId = request.getParameter("stNodeId");
+		request.setAttribute("LegislationExampleList", legislationExampleService.queryLegislationExampleFilesList(stNodeId, null));
+		String stMeetingId = request.getParameter("stMeetingId");
+		LegislationCheckmeeting auditMeeting = legislationCheckmeetingService.findById(stMeetingId);
+		LegislationCheckmeetingTask legislationCheckmeetingTask = legislationCheckmeetingTaskService.findByHQL("from LegislationCheckmeetingTask t where t.stMeetingId='" + stMeetingId + "' and t.stNodeId='NOD_0000000170'").get(0);
+		List<LegislationCheckmeetingItem> legislationCheckmeetingItems = legislationCheckmeetingItemService.findByHQL("from LegislationCheckmeetingItem t where t.stMeetingId='" + stMeetingId + "'");
+		request.setAttribute("stTaskStatus", legislationCheckmeetingTask.getStTaskStatus());
+		request.setAttribute("legislationCheckmeeting", auditMeeting);
+		request.setAttribute("legislationCheckmeetingItems", legislationCheckmeetingItems);
+		
+		List stPersonList = new ArrayList();
+		// 获得参会人员信息
+		String stPerson = auditMeeting.getStPersons();
+		if(stPerson.indexOf("、")>-1) {
+			String[] stPersons = stPerson.split("、");
+			for (String str : stPersons) {
+				stPersonList.add(str);
+			}
+		}else {
+			stPersonList.add(stPerson);
+		}
+		// System.out.println("legislationCheckmeetingTask.getStFeedback();" +
+		// legislationCheckmeetingTask.getStFeedback());
+		// legislationCheckmeetingTask.getStFeedback();
+
+		// 后台获得 jsonArray字符串
+		String jsonMessage = legislationCheckmeetingTask.getStFeedback();
+		// 将字符串转换成jsonArray对象
+		JSONArray tableData = JSONArray.parseArray(jsonMessage);
+		// JsonArray对象转成成 json对象
+		List<Map<String, Object>> mapListJson = (List) tableData;
+
+		request.setAttribute("stPersonList", stPersonList);
+		request.setAttribute("mapListJson", mapListJson);
+		return pageController();
+	}
+	
+	@Deprecated
+	private String checkmeeting_feedback_old() {
 		String stNodeId = request.getParameter("stNodeId");
 		request.setAttribute("LegislationExampleList", legislationExampleService.queryLegislationExampleFilesList(stNodeId, null));
 		String stMeetingId = request.getParameter("stMeetingId");
@@ -215,40 +284,61 @@ public class LegislationCheckmeetingAction extends BaseAction {
 		request.setAttribute("legislationCheckmeetingTask", legislationCheckmeetingTask);
 		request.setAttribute("stTaskStatus", legislationCheckmeetingTask.getStTaskStatus());
 
-		// 获得已经选择的草案 DFT_0000000104 根据 legislation_process_doc
-		String stDocSource = auditMeeting.getStDocSource();
-		// stDocSource = "DFT_1200000000000127#DFT_0000000000000104";
-		String[] stDocSources = stDocSource.split("#");
-		List<String> stParentIdList = new ArrayList<String>();
-		for (String str : stDocSources) {
-			stParentIdList.add(str);
-		}
-		Map<String, Object> condMap = new HashMap<>();
-		Map<String, String> sortMap = new HashMap<>();
-		condMap.put("stDocId" + "List", stParentIdList);
-		sortMap.put("dtCreateDate", "ASC");
-		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByList(condMap, sortMap);
-		// System.out.println("legislationProcessDocList--" +
-		// legislationProcessDocList.size());
-		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+//		Map<String, Object> condMap = new HashMap<>();
+//		condMap.put("stMeetingId", stMeetingId);
+//		Map<String, String> sortMap = new HashMap<>();
+//		List<LegislationCheckmeetingItem> checkmeetingItem = legislationCheckmeetingItemService.findByList(condMap, sortMap);
+//		for (LegislationCheckmeetingItem lci : checkmeetingItem) {
+//			String stTypeName = lci.getStTypeName();
+//			String stSourceId = lci.getStSourceId();
+//			if(null==stSourceId) {
+//				continue;
+//			}
+//			if("草案".endsWith(stTypeName)) {
+//				List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stSourceId + "'");
+//				lci.setStSource(legislationProcessTaskList.get(0));
+//			}else if("立法计划".equals(stTypeName)) {//查询立法计划
+//				LegislationPlan legislationPlan = legislationPlanService.findById(stSourceId);
+//				lci.setStSource(legislationPlan);
+//			}
+//		}
 		
 		
-		 // 获得已经选择的计划
-		String stPlanSource = auditMeeting.getStPlanSource();
-		List<LegislationPlan> legislationPlanList =new ArrayList<>();
-		if(StringUtil.isNotEmpty(stPlanSource)) {
-		String[] stPlanSources = stPlanSource.split("#");
-		List<String> stParentIdList1 = new ArrayList<String>();
-		for (String str : stPlanSources) {
-			stParentIdList1.add(str);
-		}
-		Map<String, Object> condMap1 = new HashMap<>();
-		Map<String, String> sortMap1 = new HashMap<>();
-		condMap1.put("stPlanId" + "List", stParentIdList1);
-		sortMap1.put("dtCreateDate", "ASC");
-        legislationPlanList = legislationPlanService.findByList(condMap1, sortMap1);
-       }
-       request.setAttribute("legislationPlanList", legislationPlanList);
+		
+//		// 获得已经选择的草案 DFT_0000000104 根据 legislation_process_doc
+//		String stDocSource = auditMeeting.getStDocSource();
+//		// stDocSource = "DFT_1200000000000127#DFT_0000000000000104";
+//		String[] stDocSources = stDocSource.split("#");
+//		List<String> stParentIdList = new ArrayList<String>();
+//		for (String str : stDocSources) {
+//			stParentIdList.add(str);
+//		}
+//		Map<String, Object> condMap = new HashMap<>();
+//		Map<String, String> sortMap = new HashMap<>();
+//		condMap.put("stDocId" + "List", stParentIdList);
+//		sortMap.put("dtCreateDate", "ASC");
+//		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByList(condMap, sortMap);
+//		// System.out.println("legislationProcessDocList--" +
+//		// legislationProcessDocList.size());
+//		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+//		
+//		
+//		 // 获得已经选择的计划
+//		String stPlanSource = auditMeeting.getStPlanSource();
+//		List<LegislationPlan> legislationPlanList =new ArrayList<>();
+//		if(StringUtil.isNotEmpty(stPlanSource)) {
+//		String[] stPlanSources = stPlanSource.split("#");
+//		List<String> stParentIdList1 = new ArrayList<String>();
+//		for (String str : stPlanSources) {
+//			stParentIdList1.add(str);
+//		}
+//		Map<String, Object> condMap1 = new HashMap<>();
+//		Map<String, String> sortMap1 = new HashMap<>();
+//		condMap1.put("stPlanId" + "List", stParentIdList1);
+//		sortMap1.put("dtCreateDate", "ASC");
+//        legislationPlanList = legislationPlanService.findByList(condMap1, sortMap1);
+//       }
+//       request.setAttribute("legislationPlanList", legislationPlanList);
 		return pageController();
 	}
 
@@ -263,21 +353,42 @@ public class LegislationCheckmeetingAction extends BaseAction {
 		request.setAttribute("stTaskStatus", legislationCheckmeetingTask.getStTaskStatus());
 
 		// 所有的109草案任务返回前台，展示信息
-		List<LegislationProcessDoc> legislationProcessDocAll = new ArrayList<LegislationProcessDoc>();
-		Map<String, LegislationProcessTask> legislationProcessTaskMap = new HashMap<String, LegislationProcessTask>();
-		String[] stDocIdArray = auditMeeting.getStDocSource().split("#");
-		for (int i = 0; i < stDocIdArray.length; i++) {
-			String newDocId = stDocIdArray[i];
-			if (StringUtil.isNotEmpty(newDocId)) {
-				LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(newDocId);
-				legislationProcessDocAll.add(legislationProcessDoc);
-				// 草案的109的TODO都进行确认，结束了DONE
-				List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stDocIdArray[i] + "'");
-				legislationProcessTaskMap.put(newDocId, legislationProcessTaskList.get(0));
+		
+		
+		//查看事项
+		Map<String, Object> condMap = new HashMap<>();
+		condMap.put("stMeetingId", stMeetingId);
+		Map<String, String> sortMap = new HashMap<>();
+		List<LegislationCheckmeetingItem> checkmeetingItem = legislationCheckmeetingItemService.findByList(condMap, sortMap);
+		for (LegislationCheckmeetingItem lci : checkmeetingItem) {
+			String stTypeName = lci.getStTypeName();
+			String stSourceId = lci.getStSourceId();
+			if(null==stSourceId) {
+				continue;
+			}
+			if("草案".endsWith(stTypeName)) {
+				List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stSourceId + "'");
+				lci.setStSource(legislationProcessTaskList.get(0));
+			}else if("立法计划".equals(stTypeName)) {//查询立法计划
+				LegislationPlan legislationPlan = legislationPlanService.findById(stSourceId);
+				lci.setStSource(legislationPlan);
 			}
 		}
-		request.setAttribute("legislationProcessDocAll", legislationProcessDocAll);
-		request.setAttribute("legislationProcessTaskMap", legislationProcessTaskMap);
+//		List<LegislationProcessDoc> legislationProcessDocAll = new ArrayList<LegislationProcessDoc>();
+//		Map<String, LegislationProcessTask> legislationProcessTaskMap = new HashMap<String, LegislationProcessTask>();
+//		String[] stDocIdArray = auditMeeting.getStDocSource().split("#");
+//		for (int i = 0; i < stDocIdArray.length; i++) {
+//			String newDocId = stDocIdArray[i];
+//			if (StringUtil.isNotEmpty(newDocId)) {
+//				LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(newDocId);
+//				legislationProcessDocAll.add(legislationProcessDoc);
+//				// 草案的109的TODO都进行确认，结束了DONE
+//				List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stDocIdArray[i] + "'");
+//				
+//			}
+//		}
+//		request.setAttribute("legislationProcessDocAll", legislationProcessDocAll);
+		request.setAttribute("checkmeetingItem", checkmeetingItem);
 		return pageController();
 	}
 
@@ -292,30 +403,160 @@ public class LegislationCheckmeetingAction extends BaseAction {
 		request.setAttribute("stTaskStatus", legislationCheckmeetingTask.getStTaskStatus());
 
 		// 所有的109草案任务返回前台，展示信息
-		List<LegislationProcessDoc> legislationProcessDocAll = new ArrayList<LegislationProcessDoc>();
-		Map<String, LegislationProcessTask> legislationProcessTaskMap = new HashMap<String, LegislationProcessTask>();
-		String[] stDocIdArray = auditMeeting.getStDocSource().split("#");
-		for (int i = 0; i < stDocIdArray.length; i++) {
-			String newDocId = stDocIdArray[i];
-			if (StringUtil.isNotEmpty(newDocId)) {
-				LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(newDocId);
-				legislationProcessDocAll.add(legislationProcessDoc);
-				// 草案的109的TODO都进行确认，结束了DONE
-				List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stDocIdArray[i] + "'");
-				legislationProcessTaskMap.put(newDocId, legislationProcessTaskList.get(0));
+		
+		//查看事项
+		Map<String, Object> condMap = new HashMap<>();
+		condMap.put("stMeetingId", stMeetingId);
+		Map<String, String> sortMap = new HashMap<>();
+		List<LegislationCheckmeetingItem> checkmeetingItem = legislationCheckmeetingItemService.findByList(condMap, sortMap);
+		for (LegislationCheckmeetingItem lci : checkmeetingItem) {
+			String stTypeName = lci.getStTypeName();
+			String stSourceId = lci.getStSourceId();
+			if(null==stSourceId) {
+				continue;
+			}
+			if("草案".endsWith(stTypeName)) {
+				List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stSourceId + "'");
+				lci.setStSource(legislationProcessTaskList.get(0));
+			}else if("立法计划".equals(stTypeName)) {//查询立法计划
+				LegislationPlan legislationPlan = legislationPlanService.findById(stSourceId);
+				lci.setStSource(legislationPlan);
 			}
 		}
-		request.setAttribute("legislationProcessDocAll", legislationProcessDocAll);
-		request.setAttribute("legislationProcessTaskMap", legislationProcessTaskMap);
+		
+//		List<LegislationProcessDoc> legislationProcessDocAll = new ArrayList<LegislationProcessDoc>();
+//		Map<String, LegislationProcessTask> legislationProcessTaskMap = new HashMap<String, LegislationProcessTask>();
+//		String[] stDocIdArray = auditMeeting.getStDocSource().split("#");
+//		for (int i = 0; i < stDocIdArray.length; i++) {
+//			String newDocId = stDocIdArray[i];
+//			if (StringUtil.isNotEmpty(newDocId)) {
+//				LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(newDocId);
+//				legislationProcessDocAll.add(legislationProcessDoc);
+//				// 草案的109的TODO都进行确认，结束了DONE
+//				List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stDocIdArray[i] + "'");
+//				legislationProcessTaskMap.put(newDocId, legislationProcessTaskList.get(0));
+//			}
+//		}
+//		request.setAttribute("legislationProcessDocAll", legislationProcessDocAll);
+//		request.setAttribute("legislationProcessTaskMap", legislationProcessTaskMap);
+		request.setAttribute("checkmeetingItem", checkmeetingItem);
 		return pageController();
 	}
-
+	/**
+	 * 提交数据
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unused")
+	private String commitCheckmeeting() throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		//保存审核会议数据
+		
+		String stTaskStatus = request.getParameter("stTaskStatus");
+		String stType = request.getParameter("stType");
+		String stAddress = request.getParameter("stAddress");
+		String stPersons = request.getParameter("stPersons");
+		String stMeetingName = request.getParameter("stMeetingName");
+		
+		
+		
+		String stNodeName = request.getParameter("stNodeName");
+		String dtBeginDate = request.getParameter("dtBeginDate");
+		String stComent = request.getParameter("stComent");
+		String stItemIds = request.getParameter("stItemIds");//itemid组
+		
+		
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
+		String unitId = currentPerson.getTeamInfos().get(0).getId();
+		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
+		
+		// 审核会议数据
+		LegislationCheckmeeting checkmeeting = new LegislationCheckmeeting();
+		checkmeeting.setStMeetingName(stMeetingName);
+		checkmeeting.setStAddress(stAddress);
+		checkmeeting.setStPersons(stPersons);
+		checkmeeting.setStType(stType);
+		checkmeeting.setDtCreateDate(new Date());
+		checkmeeting.setDtBeginDate(formatter.parse(dtBeginDate));// 会议时间
+		checkmeeting.setStNodeId("NOD_0000000170");
+		checkmeeting.setStNodeName(stNodeName);
+		checkmeeting.setStTopic(stComent);
+		checkmeeting.setDtCreateDate(new Date());
+		checkmeeting.setStUserId(userId);
+		checkmeeting.setStUserName(userName);
+		checkmeeting.setStUnitId(unitId);
+		checkmeeting.setStUnitName(unitName);
+//		checkmeeting.setStTopic(stDocNo);
+//		checkmeeting.setStDocSource(stDocSource);// 包含的草案
+//		checkmeeting.setStPlanSource(stPlanSource);// 包含的计划
+		String stMeetingId  = legislationCheckmeetingService.addObj(checkmeeting);
+		//生成Task
+		LegislationCheckmeetingTask info = new LegislationCheckmeetingTask();
+		info.setStMeetingId(stMeetingId);
+		info.setStNodeId("NOD_0000000170");
+		info.setStNodeName("审核会议处理(单独)");
+		info.setStTaskStatus("FEEDBACK");//TODO
+		info.setStFlowId("");
+		info.setDtOpenDate(new Date());
+		info.setStUserId(userId);
+		info.setStUserName(userName);
+		// 一个任务的角色由节点配置定，而不是当前人，万一当前人多个角色呢？LJ
+		info.setStRoleId(session.getAttribute("userRoleId").toString());
+		info.setStRoleName(session.getAttribute("userRole").toString());
+		info.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
+		info.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
+		legislationCheckmeetingTaskService.add(info);
+		
+//		//记录备注信息
+//		LegislationCheckmeetingDeal legislationProcessDeal = new LegislationCheckmeetingDeal();
+//		legislationProcessDeal.setStMeetingId(stMeetingId);
+//		legislationProcessDeal.setStActionId("NOD_0000000170");
+//		legislationProcessDeal.setStActionName("新增审核会议");
+//		legislationProcessDeal.setStUserId(userId);
+//		legislationProcessDeal.setStUserName(userName);
+//		legislationProcessDeal.setStBakOne(stDocSource);
+//		legislationProcessDeal.setStBakTwo(stPlanSource);
+//		legislationProcessDeal.setDtDealDate(new Date());
+//		legislationCheckmeetingDealService.add(legislationProcessDeal);
+		
+		//更新Item表
+		String[] itemIds = null; 
+		if(!StringUtils.isEmpty(stItemIds)){
+			itemIds = stItemIds.split(",");
+		}
+		if(null!=itemIds&&itemIds.length>0) {
+			for (String string : itemIds) {
+				try {
+					LegislationCheckmeetingItem checkmeetingItem = legislationCheckmeetingItemService.findById(string);
+					checkmeetingItem.setStMeetingId(stMeetingId);
+					checkmeetingItem.setStStatus("DOING");
+					if(null!=checkmeetingItem)
+						legislationCheckmeetingItemService.update(checkmeetingItem);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("success", true);
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jsonObject);
+		return null;
+	}
+	
+	
 	/**
 	 * 保存审核会议信息
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unused")
 	private String saveCheckmeeting() throws Exception {
 		String stMeetingId = legislationCheckmeetingTaskService.saveAuditMeeting(request, session);
 		JSONObject jsonObject = new JSONObject();

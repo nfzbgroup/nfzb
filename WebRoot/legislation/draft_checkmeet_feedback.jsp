@@ -28,8 +28,7 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">修改说明：</label>
 					<div class="col-sm-9">
-						<textarea id="stComent" name="stComent" class="form-control">
-						<c:if test="${legislationProcessTask.stComment1 !=null}">${legislationProcessTask.stComment1}</c:if></textarea>
+						<textarea id="stComent" name="stComent" class="form-control"><c:if test="${legislationProcessTask.stComment1 !=null}">${legislationProcessTask.stComment1}</c:if></textarea>
 					</div>
 				</div>
 			<div class="form-group text-center">

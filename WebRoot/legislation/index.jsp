@@ -85,7 +85,16 @@
 									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=NOD_0000000103">立法办理</a></li>
 								</c:if>
 								<s:iterator value="#request.draftNodeList" var="task">
-									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+									<li>
+									<c:choose>
+											<c:when test="${task.stNodeId=='NOD_0000000122' || task.stNodeId=='NOD_0000000162'}"><!-- 部门接收因为用公共的接收表，所以单独处理 -->
+												<a class="J_menuItem" href="../legislationSendNotice/process_depart_notice_list.do?method=list&stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											</c:when>
+											<c:otherwise>
+												<a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											</c:otherwise>
+									</c:choose>
+									</li>
 								</s:iterator>
 							</ul>
 						</li> 
@@ -117,8 +126,14 @@
 											<c:when test="${task.stNodeId=='NOD_0000000170'}">
 												<a class="J_menuItem" href="../legislationCheckmeetingTask/checkmeeting_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
 											</c:when>
-											<c:otherwise>
+											<c:when test="${task.stNodeId=='NOD_0000000104'}">
 												<a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											</c:when>
+											<c:when test="${task.stNodeId=='NOD_0000000109'}">
+												<a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											</c:when>
+											<c:otherwise>
+												<a class="J_menuItem" href="../legislationCheckmeetingItem/checkmeeting_item_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
 											</c:otherwise>
 									</c:choose>
 									</li>
@@ -226,7 +241,7 @@
 					</div>
 				</div>
 				<div class="row J_mainContent" id="content-main">
-					<iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="indexPage.jsp" frameborder="0" data-id="indexPage.jsp" seamless></iframe>
+					<iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${basePath}/legislationProcessDoc/query_doc_info.do" frameborder="0" data-id="indexPage.jsp" seamless></iframe>
 				</div>
 			</div>
 		</div>
@@ -243,8 +258,6 @@
 <script src="${basePath}/legislation/assets/js/main.js"></script>
 <script>
 	$(function () {
-		
-		
 		$(window).resize(function () {
 			$('.content-new,#left-menu').height($('body').height() - 67);
 		});

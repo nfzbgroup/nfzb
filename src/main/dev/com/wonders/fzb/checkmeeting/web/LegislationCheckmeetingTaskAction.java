@@ -2,11 +2,8 @@ package com.wonders.fzb.checkmeeting.web;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
@@ -25,8 +22,6 @@ import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
 import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingTaskService;
 import com.wonders.fzb.framework.beans.UserInfo;
-import com.wonders.fzb.legislation.beans.LegislationExample;
-import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.services.LegislationExampleService;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
@@ -62,24 +57,26 @@ public class LegislationCheckmeetingTaskAction extends BaseAction {
 	@Qualifier("legislationFilesService")
 	private LegislationFilesService legislationFilesService;
 
-	private int pageNo = 1;
-	private int pageSize = 10;
-
+	
+	
 	Page<LegislationCheckmeeting> infoPage;
 
 	// LegislationCheckmeetingTask的修改
-	@Action(value = "legislationCheckmeetingTask_add", results = { @Result(name = SUCCESS, location = "/LegislationCheckmeetingTask.jsp"), @Result(name = "List", location = "/legislationCheckmeetingTask_list.jsp") })
+	@Action(value = "legislationCheckmeetingTask_add", results = {
+			@Result(name = SUCCESS, location = "/LegislationCheckmeetingTask.jsp"),
+			@Result(name = "List", location = "/legislationCheckmeetingTask_list.jsp") })
 	public String legislationCheckmeetingTask_add() throws FzbDaoException {
 //		System.out.println("Begin....");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		List<LegislationCheckmeetingTask> legislationCheckmeetingTaskList = new ArrayList<LegislationCheckmeetingTask>();
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//		List<LegislationCheckmeetingTask> legislationCheckmeetingTaskList = new ArrayList<LegislationCheckmeetingTask>();
 		LegislationCheckmeetingTask legislationCheckmeetingTask = new LegislationCheckmeetingTask();
 		legislationCheckmeetingTaskService.add(legislationCheckmeetingTask);
 		return SUCCESS;
 	}
 
 	// 所有模块的所有菜单的列表，统一一下请求，请不要改动。根据nodeid返回默认状态的任务列表。 lj
-	@Actions({ @Action(value = "checkmeeting_task_list", results = { @Result(name = SUCCESS, location = "/checkmeeting/meeting_list.jsp"), 
+	@Actions({ @Action(value = "checkmeeting_task_list", results = {
+			@Result(name = SUCCESS, location = "/checkmeeting/meeting_list.jsp"),
 			@Result(name = "QueryTable", location = "/checkmeeting/meeting_table.jsp") }) })
 	public String listMethodManager() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -99,25 +96,47 @@ public class LegislationCheckmeetingTaskAction extends BaseAction {
 			return object == null ? null : object.toString();
 		}
 	}
-
+	/*
+	 * 查询审核会议事项列表
+	 */
+	@Actions({ @Action(value = "checkmeeting_item_list", results = {
+			@Result(name = SUCCESS, location = "/checkmeeting/meeting_item_list.jsp"),
+			@Result(name = "QueryItemTable", location = "/checkmeeting/meeting_item_table.jsp") }) })
+	public String checkmeeting_item_list() throws Exception {
+		String methodStr = request.getParameter("method");
+		if (StringUtil.isEmpty(methodStr)) {
+			String stNodeId = request.getParameter("stNodeId");
+			request.setAttribute("requestUrl", request.getRequestURI());
+			request.setAttribute("nodeId", stNodeId);
+			boolean isZhc = (boolean) session.getAttribute("isZhc");
+			request.setAttribute("isZhc", isZhc);
+			request.setAttribute("stTodoNameList", wegovSimpleNodeService.queryButtonInfo(stNodeId));
+			return SUCCESS;
+		} else {
+			java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
+			Object object = method.invoke(this);
+			return object == null ? null : object.toString();
+		}
+	}
 	/**
 	 * table查询
 	 *
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String queryTable() throws ParseException {
-		if ("NOD_0000000140".equals(request.getParameter("stNodeId")) || "NOD_0000000141".equals(request.getParameter("stNodeId")) || "NOD_0000000150".equals(request.getParameter("stNodeId")) || "NOD_0000000151".equals(request.getParameter("stNodeId"))) {
+		String node = request.getParameter("stNodeId");
+		if ("NOD_0000000140".equals(node) || "NOD_0000000141".equals(request.getParameter("stNodeId")) || "NOD_0000000150".equals(node) || "NOD_0000000151".equals(node)) {
 			queryTaskDetail();
-		} else if ("NOD_0000000120".equals(request.getParameter("stNodeId")) || "NOD_0000000121".equals(request.getParameter("stNodeId")) || "NOD_0000000122".equals(request.getParameter("stNodeId")) || "NOD_0000000162".equals(request.getParameter("stNodeId"))) {
+		} else if ("NOD_0000000120".equals(node) || "NOD_0000000121".equals(node) || "NOD_0000000122".equals(node) || "NOD_0000000162".equals(node)) {
 			queryUnitOpinion();
-		} else if ("NOD_0000000170".equals(request.getParameter("stNodeId"))) {
+		} else if ("NOD_0000000170".equals(node)) {
 			queryCheckMeeting();
 		} else {
 			queryDoc();
 		}
 		return "QueryTable";
 	}
-
 	private void queryCheckMeeting() throws ParseException {
 		String pageSize = request.getParameter("pageSize");
 		String pageNo = request.getParameter("pageNo");

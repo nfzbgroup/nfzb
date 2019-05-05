@@ -107,13 +107,25 @@
 			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
 				<tbody class="text-center" align="center">
 					<tr class="text-center">
-						<th class="text-right" width="20%">草案名称</th>
-						<th class="text-center">草案答复反馈信息</th>
+						<th class="text-right" width="20%">事项名称</th>
+						<th class="text-center">事项类型</th>
+						<th class="text-center">事项反馈</th>
 					</tr>
-					<c:forEach items="${legislationProcessDocAll}" var="doc">
+					<c:forEach items="${checkmeetingItem}" var="doc">
 						<tr class="text-center">
-							<th class="text-right" width="20%">${doc.stDocName}</th>
-							<td class="text-center">${legislationProcessTaskMap.get(doc.stDocId).stComment1}</td>
+							<th class="text-right" width="20%">${doc.stItemName}</th>
+							<td class="text-center">${doc.stTypeName}</td>
+							<c:choose>
+								<c:when test="${doc.stSource!=null && doc.stTypeName=='草案'}">
+									<td class="text-center">${doc.stSource.stComment1} </td>
+								</c:when>
+								<c:when test="${doc.stSource!=null && doc.stTypeName=='立法计划'}">
+									<td class="text-center">${doc.stSource.stRemark} </td>
+								</c:when>
+								<c:otherwise>
+									<td></td>
+								</c:otherwise>
+							</c:choose>
 						</tr>
 					</c:forEach>
 				</tbody>

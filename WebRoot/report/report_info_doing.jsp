@@ -5,7 +5,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="page-bar">
-	<ul class="page-breadcrumb">
+	<ul class="page-breadcrumb"> 
 		<li>
 			<span>审签 > </span>
 		</li>
@@ -23,26 +23,74 @@
 	<form id="auditReportForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stReportId" value="${legislationReport.stReportId}">
 		<div class="form-body">
-			<div class="form-group">
-				<label class="col-sm-2 control-label">签报名称：</label>
-				<div class="col-sm-9">
+			 <div class="form-group">
+				<label class="col-sm-2 control-label">标题：</label>
+				<div class="col-sm-4">
 					<input type="text" class="form-control" disabled id="stReportName" name="stReportName" value="${legislationReport.stReportName}">
 				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">报送市领导：</label>
-				<div class="col-sm-9">
+				<label class="col-sm-2 control-label">经办处室：</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" >
+				</div>
+			 </div>
+			 <div class="form-group">
+				<label class="col-sm-2 control-label">主送领导：</label>
+				<div class="col-sm-4">
 					<input type="text" class="form-control" id="stBakTwo" name="stBakTwo" value="${legislationReportTask.stBakTwo!=null?legislationReportTask.stBakTwo:''}">
 				</div>
-			</div>
+				<label class="col-sm-2 control-label">文号：</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control">
+				</div>
+			 </div>
+			 <div class="form-group">
+				<label class="col-sm-2 control-label">经办人：</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" >
+				</div>
+				<label class="col-sm-2 control-label">日期：</label>
+				<div class="col-md-3">
+							<input type="text" class="form-control" id="dtBeginDate" value="" />
+				</div>
+			 </div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">报审说明：</label>
+				<label class="col-sm-2 control-label">正文：</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control" id="stComment2" name="stComment2" value="${legislationReportTask.stComment2!=null?legislationReportTask.stComment2:''}">
+				     <textarea id="stComment2" name="stComment2" class="form-control">${legislationReportTask.stComment2!=null?legislationReportTask.stComment2:''}</textarea>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">材料：</label>
+				<label class="col-sm-2 control-label">上传附件：</label>
+				<div class="col-sm-9">
+					<table class="table table-striped table-bordered table-hover text-center" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
+						<thead align="center">
+							<tr class="text-center">
+								<th class="text-center" data-field="id" width="40%">文件类型</th>
+								<th class="text-center" data-field="district_name" width="40%">文件名称</th>
+								<th class="text-center" data-field="set" width="20%">操作</th>
+							</tr>
+						</thead>
+						<tbody class="text-center" align="center">
+							<tr class="text-center" align="center">
+								<td class="text-left">
+									其他材料
+									<span style="color: red"></span>
+									<span style="color: dodgerblue">(范本)</span>
+								</td>
+								<td>
+									<span style="color: red">暂未上传</span>
+								</td>
+								<td>
+									<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传</label>
+									<input id="upload" name="upload" type="file" style="display: none">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">上传扫描件：</label>
 				<div class="col-sm-9">
 					<table class="table table-striped table-bordered table-hover text-center" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 						<thead align="center">

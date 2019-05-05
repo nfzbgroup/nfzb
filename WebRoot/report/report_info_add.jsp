@@ -7,7 +7,7 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span>审签 > </span>
+			<span>审签 > </span> 
 		</li>
 		<li>
 			<span>核稿送OA</span>
@@ -73,11 +73,13 @@
 				</div>
 			</div>
 			<div class="form-group text-center">
+			  <c:if test="${stTaskStatus=='TODO'}">
 				<input type="hidden" id="op" name="op">
 				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditReport1('save')" value="保存">
 				&nbsp;&nbsp;
 				<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditReport1('submit')" value="发OA审核">
 				&nbsp;&nbsp;
+			  </c:if>
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 		</div>

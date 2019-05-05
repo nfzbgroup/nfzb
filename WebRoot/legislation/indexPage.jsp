@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page import="com.wonders.fzb.framework.beans.*"%>
 <%@ page import="com.wonders.fzb.legislation.beans.*"%>
+<%@ page import="com.wonders.fzb.plan.beans.*"%>
 <%@ page import="java.util.ArrayList"%>
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -21,7 +22,8 @@
 		<link href="${basePath}/legislation/assets/plugin/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 	</head>
    <%
-   List legislationProcessDocList = (List)request.getAttribute("legislationProcessDocList");  
+   List legislationProcessDocList = (List)request.getAttribute("legislationProcessDocList"); 
+   List legislationPlanList = (List)request.getAttribute("legislationPlanList");
    %>              
 	<style type="text/css">
 		#echartsPie,
@@ -78,7 +80,8 @@
 				</div>
 			</div>
 		</div>
-   <form name="form1"  action="${basePath}/legislationProcessDoc/query_doc_info.do" method="post">
+   <form name="form1"  action="${basePath}/${requestUrl}"  method="post">
+   <input type="hidden" id="requestUrl" value="${requestUrl}">
 		<div class="ibox-title">
 			<div id="t-title">立法办理中的草案</div>
 			<table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
@@ -93,80 +96,42 @@
 					</tr>
 				</thead>
 				
-				<tbody id="div1">
-		
-             <%--   <%  
+				<tbody>
+			<%-- 	<c:if test="${retPage.totalSize > 0}">
+					<c:forEach items="${retPage.result}" var="doc">
+						<tr class="text-center">
+							<td>${doc.stDocId}</td>
+							<td>${doc.stDocName}</td>
+							<td>${doc.stNodeName}</td>
+							<td>${doc.stUserName}</td>
+							<td>
+							    <fmt:formatDate type="date" value="${doc.dtCreateDate}" />
+							</td>
+							<td><input type="button" onclick="openProcessIndex('${doc.stDocId}','${doc.stDocName}')"  class="btn btn-w-m btn-success" value='查看'></td>
+              
+						</tr>
+					</c:forEach>
+				</c:if> --%>
+              <%  
                   for(int i=0;i<legislationProcessDocList.size();i++){
                     LegislationProcessDoc legislationProcessDoc=(LegislationProcessDoc)legislationProcessDocList.get(i);
                %>
-               <tr>
+               <tr class="text-center">
+                <td nowrap="" width="20%"><%=legislationProcessDoc.getStDocId()%></td>
+                <td nowrap="" width="20%"><%=legislationProcessDoc.getStDocName()%></td>
                 <td nowrap="" width="20%"><%=legislationProcessDoc.getStNodeName()%></td>
-            </tr>
+                <td nowrap="" width="20%"><%=legislationProcessDoc.getStUserName()%></td>
+                <td nowrap="" width="20%"><fmt:formatDate value="<%=legislationProcessDoc.getDtCreateDate()%>"  pattern="yyyy-MM-dd"/></td>
+                <td><input type="button" onclick="openProcessIndex('<%=legislationProcessDoc.getStDocId()%>','<%=legislationProcessDoc.getStDocName()%>')"  class="btn btn-w-m btn-success" value='查看'></td>
+               </tr>
              
-             <%}%> --%>
-					<tr class="text-center">
-						<td>20190003</td>
-						<td>环境治理规章法</td>
-						<td>草案查看环节</td>
-						<td>张延新</td>
-						<td>2019-3-12</td>
-						<td>
-							<!-- <input type="button" class="btn btn-w-m btn-success" onclick="openPagexiugai()" value="查看">
-									</br> -->
-							<!-- <input type="button" class="btn btn-w-m btn-success" onclick="openPagebanli()" value="查看"> -->
-							<a class="J_menuItem" href="map.html">
-								<input type="button" class="btn btn-w-m btn-success" value="查看">
-							</a>
-						</td>
-					</tr>
-					<tr class="text-center">
-						<td>20190004</td>
-						<td>环境治理规章法</td>
-						<td>草案查看环节</td>
-						<td>张延新</td>
-						<td>2019-3-12</td>
-						<td>
-							<!-- <input type="button" class="btn btn-w-m btn-success" onclick="openPagexiugai()" value="查看">
-									</br> -->
-							<!-- <input type="button" class="btn btn-w-m btn-success" onclick="openPagebanli()" value="查看"> -->
-							<a class="J_menuItem" href="map.html">
-								<input type="button" class="btn btn-w-m btn-success" value="查看">
-							</a>
-						</td>
-					</tr>
-					<tr class="text-center">
-						<td>20190005</td>
-						<td>环境治理规章法</td>
-						<td>草案查看环节</td>
-						<td>张延新</td>
-						<td>2019-3-12</td>
-						<td>
-							<!-- <input type="button" class="btn btn-w-m btn-success" onclick="openPagexiugai()" value="查看">
-									</br> -->
-							<!-- <input type="button" class="btn btn-w-m btn-success" onclick="openPagebanli()" value="查看"> -->
-							<a class="J_menuItem" href="map.html">
-								<input type="button" class="btn btn-w-m btn-success" value="查看">
-							</a>
-						</td>
-					</tr>
-					<tr class="text-center">
-						<td>20190007</td>
-						<td>环境治理规章法</td>
-						<td>草案查看环节</td>
-						<td>张延新</td>
-						<td>2019-3-12</td>
-						<td>
-							<!-- <input type="button" class="btn btn-w-m btn-success" onclick="openPagexiugai()" value="查看">
-									</br> -->
-							<!-- <input type="button" class="btn btn-w-m btn-success" onclick="openPagebanli()" value="查看"> -->
-							<a class="J_menuItem" href="map.html">
-								<input type="button" class="btn btn-w-m btn-success" value="查看">
-							</a>
-						</td>
-					</tr>
+             <%}%>  
 				</tbody>
 				</table>
-				<div id="t-title">立法办理中的计划</div>
+				<div class="clearfix">
+				   <div class="list-page" id="listPage"></div>
+			    </div>
+				<div id="t-title">立法计划管理</div>
 			   <table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 				<thead>
 					<tr class="text-center">
@@ -178,18 +143,32 @@
 						<th class="text-center" data-field="set">操作</th>
 					</tr>
 				</thead>
-				<tbody id="div2">
+				<tbody>
+				 <%  
+                  for(int i=0;i<legislationPlanList.size();i++){
+                	  LegislationPlan legislationPlan=(LegislationPlan)legislationPlanList.get(i);
+               %>
+               <tr class="text-center">
+                <td nowrap="" width="20%"><%=legislationPlan.getStPlanId()%></td>
+                <td nowrap="" width="20%"><%=legislationPlan.getStPlanName()%></td>
+                <td nowrap="" width="20%"><%=legislationPlan.getStNodeName()%></td>
+                <td nowrap="" width="20%"><%=legislationPlan.getStCreatorName()%></td>
+                <td nowrap="" width="20%"><fmt:formatDate value="<%=legislationPlan.getDtCreateDate()%>"  pattern="yyyy-MM-dd"/></td>
+                <td><input type="button" onclick="openLegislationPlanList('<%=legislationPlan.getStPlanId()%>','<%=legislationPlan.getStPlanName()%>')"  class="btn btn-w-m btn-success" value='查看'></td>
+               </tr>
+             
+             <%}%> 
 				</tbody>
 				</table>
 				
 			
-			<div class="modal inmodal fade" id="processIndexRootForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+			<div class="modal inmodal fade" id="processIndexRootForm" data-backdrop="true" keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog" style="margin-top: 0px">
 					<div class="modal-content">
 					</div>
 				</div>
 			</div>
-			<div align="center">
+			<!-- <div align="center">
 				<ul class="pagination">
 					<li>
 						<a href="#">&laquo;</a>
@@ -213,7 +192,7 @@
 						<a href="#">&raquo;</a>
 					</li>
 				</ul>
-			</div>
+			</div> -->
 		</div>
 </form>
 		<script src="${basePath}/legislation/assets/js/jquery.min.js?v=2.1.4"></script>
@@ -222,69 +201,46 @@
 		<script src="${basePath}/legislation/assets/js/plugins/echarts/echarts-all.js"></script>
 		<script src="${basePath}/legislation/assets/js/content.min.js?v=1.0.0"></script>
 		<script src="${basePath}/legislation/assets/js/demo/echarts-demo.min.js"></script>
+		
+	<link href="${basePath}/legislation/assets/page/common.css" rel="stylesheet" type="text/css" />
+	<script src="${basePath}/legislation/assets/page/page.js" type="text/javascript"></script>
+	<script src="${basePath}/legislation/assets/page/common.js" type="text/javascript"></script>
 		<script type="text/javascript">
-	 	
-		window.onload=function(){
-			 $.ajax({
-                 type : "post",
-                 async : false, //同步执行
-                 url:"${basePath}/legislationProcessDoc/query_doc_info1.do",
-                 data :{},
-                 dataType : "json", //返回数据形式为json
-                 success : function(data) {
-                	 var option; 
-                	 $.each(data, function(i, n) {
-                		 option += "<tr class=text-center>" +
-                		 "<td>"+n.stDocId+"</td>"+
-                		 "<td>"+n.stDocName+"</td>"+
-                		 "<td>"+n.stNodeName+"</td>"+
-                		 "<td>"+n.stUserName+"</td>"+
-                		 "<td>2019-08-02</td>"+
-                		 "<td><input type='button' onclick='openProcessIndex(\""+n.stDocId+"\",\""+n.stDocName+"\")' class='btn btn-w-m btn-success' value='查看'></td>"
-							+ "</tr>"
- 					});  
-                	 $("#div1").html(option);
-                }
-               })
-               
-                $.ajax({
-                 type : "post",
-                 async : false, //同步执行
-                 url:"${basePath}/legislationPlanTask/query_doc_info1.do",
-                 data :{},
-                 dataType : "json", //返回数据形式为json
-                 success : function(data) {
-                	 var option;
-                	 $.each(data, function(i, n) {
-                		 option += "<tr class=text-center>" +
-                		 "<td>"+n.stPlanId+"</td>"+
-                		 "<td>"+n.stPlanName+"</td>"+
-                		 "<td>"+n.stNodeName+"</td>"+
-                		 "<td>"+n.stCreatorName+"</td>"+
-                		 "<td>2010-09-07</td>"+
-                		 "<td><a class='J_menuItem' href='/plan/flowDealPage.jsp'><input type='button' class='btn btn-w-m btn-success' value='查看'></a></td>"
-							+ "</tr>"
- 					});  
-                	 $("#div2").html(option);
-                }})
-               
-               
+		 
+		window.onload=function(){   
                $('#processIndexRootForm').on('show.bs.modal', function () {
                    $('#processIndexRootForm .wrapper').css('overflow', 'auto');
                    $('#processIndexRootForm .wrapper').css('height', $(window).height());
                    $('#processIndexRootForm .modal-dialog').css('width', $(window).width());
-               });
+               });  
 		}  
 		
 		 function openProcessIndex(stDocId,stDocName) {
-			 alert(stDocId);
-			 alert(stDocName);
+			 //alert(1);
 				$("#processIndexRootForm").modal({
 					remote:  '${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method=openProcessIndexPage&stDocId='+stDocId+'&stDocName='+stDocName
 				});
 		    }
+		 
+		 function openLegislationPlanList(stDocId,stDocName) {
+			 //alert(2);
+				$("#processIndexRootForm").modal({
+					remote:  '${basePath}/legislationPlan/draft_plan_info.do?stNodeId=${nodeId}&method=flowDealPage&stDocId='+stDocId+'&stDocName='+stDocName
+				});
+		    }
+			
+	        // 每次隐藏时，清除数据，确保不会和主页dom元素冲突。确保点击时，重新加载。
+	         $("#processIndexRootForm").on("hidden.bs.modal", function() {
+	             // 这个#processIndexRootForm是模态框的id
+	             $(this).removeData("bs.modal");
+	             $(this).find(".modal-content").children().remove(); 
+	         });
+		 
+		 
+		 
 			// 基于准备好的dom，初始化echarts实例
 			var myChart = echarts.init(document.getElementById('echartsBar'));
+		
 			//柱状图
 			var option = {
 				title: {
@@ -403,7 +359,7 @@
 			            $.ajax({
 			                 type : "post",
 			                 async : false, //同步执行
-			                 url:"${basePath}/legislationProcessDoc/query_doc_num1.do",
+			                 url:"${basePath}/legislationProcessDoc/query_user_num.do",
 			                 data :{},
 			                 dataType : "json", //返回数据形式为json
 			                 success : function(data) {
@@ -427,7 +383,7 @@
 			            $.ajax({
 			                 type : "post",
 			                 async : false, //同步执行
-			                 url:"${basePath}/legislationProcessDoc/query_doc_num1.do",
+			                 url:"${basePath}/legislationProcessDoc/query_user_num.do",
 			                 data :{},
 			                 dataType : "json", //返回数据形式为json
 			                 success : function(data) {

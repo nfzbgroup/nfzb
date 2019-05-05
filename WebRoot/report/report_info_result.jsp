@@ -6,7 +6,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="page-bar">
 	<ul class="page-breadcrumb">
-		<li>
+		<li> 
 			<span>审签 > </span>
 		</li>
 		<li>
@@ -72,11 +72,13 @@
 				</div>
 			</div>
 			<div class="form-group text-center">
+			  <c:if test="${stTaskStatus=='RESULT'}">
 				<input type="hidden" id="op" name="op">
 				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditReport1('save')" value="保存">
 				&nbsp;&nbsp;
 				<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditReport1('submit')" value="下一步">
 				&nbsp;&nbsp;
+			  </c:if>
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 		</div>

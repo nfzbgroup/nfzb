@@ -52,28 +52,34 @@
 						<fmt:formatDate value="${legislationCheckmeeting.dtBeginDate}" pattern="yyyy-MM-dd" />
 					</td>
 				</tr>
-				<tr class="text-center">
-					<td class="text-right">
-						<label>对应草案：</label>
-					</td>
-					<td>
-						<c:forEach items="${legislationProcessDocList}" var="doc" varStatus="status">
-						 ${status.index + 1}、${doc.stDocName}&nbsp;&nbsp;<br>
-						</c:forEach>
-					</td>
-				</tr>
-				<tr class="text-center">
-					<td class="text-right">
-						<label>对应计划：</label>
-					</td>
-					<td>
-						<c:forEach items="${legislationPlanList}" var="plan" varStatus="status">
-						 ${status.index + 1}、${plan.stPlanName}&nbsp;&nbsp;<br>
-						</c:forEach>
-					</td>
-				</tr>
-			</table>
-
+				</table>
+				<c:choose>
+				<c:when test="${legislationCheckmeetingItems!=null&&fn:length(legislationCheckmeetingItems)>0}">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">已选事项：</label>
+						<div class="col-sm-8">
+							<table class="table table-bordered table-hover">
+								<thead>
+									<th class="text-center">事项编号</th>
+									<th class="text-center">事项名称</th>
+									<th class="text-center">事项类型</th>
+								</thead>
+								<tbody>
+									<c:forEach items="${legislationCheckmeetingItems}" var="item">
+										<tr>
+											<td class="text-center">${item.stItemId}</td>
+											<td class="text-center">${item.stItemName}</td>
+											<td class="text-center">${item.stTypeName}</td>
+										</tr>
+									</c:forEach>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>				
+				</c:when>
+			</c:choose>
+			
 			<br>
 			<br>
 			<div class="form-body" align="center">

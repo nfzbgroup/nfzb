@@ -58,7 +58,7 @@
 		</tr>
 		<tr>
 			<td class="text-right tab-left">
-				<label style="white-space: nowrap">综合处意见:</label>
+				<label style="white-space: nowrap">法治调研处意见:</label>
 			</td>
 			<td class="text-center">
 				<label>${legislationProcessTask.stBakOne}</label>

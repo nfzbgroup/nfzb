@@ -120,7 +120,6 @@ public class LegislationCheckmeetingTaskDaoImpl extends BaseSupportDao implement
 	private List<Object[]> executeSqlQuery(String sql, int pageNo, int pageSize) {
 		Session session = getSession();
 		Query query = session.createSQLQuery(sql);
-
 		if (pageNo > 0) {
 			if (pageSize == 0)
 				pageSize = 10;
@@ -228,12 +227,14 @@ public class LegislationCheckmeetingTaskDaoImpl extends BaseSupportDao implement
 			docInfo.setStType(array[11] == null ? "" : array[11].toString());
 			docInfo.setStDocSource(array[12] == null ? "" : array[12].toString());
 			
-			
 			//去草案表中查询信息。获得名称，返回在列表页面
 			String strName = "";
-			String[] strs = array[12].toString().split("#");
-			for (String str : strs) {
-				strName += legislationProcessDocService.findById(str).getStDocName()+"<br>";
+			Object spstr = array[12];
+			if(null!=spstr) {
+				String[] strs = String.valueOf(spstr).split("#");
+				for (String str : strs) {
+					strName += legislationProcessDocService.findById(str).getStDocName()+"<br>";
+				}
 			}
 			docInfo.setStDocSource(strName);
 			docInfos.add(docInfo);

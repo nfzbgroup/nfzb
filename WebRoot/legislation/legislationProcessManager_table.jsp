@@ -459,13 +459,11 @@
 													
 													<div <c:if test="${isZhc eq false}">style="width:40%;float:left;border-right:1px solid #D5D5D5"</c:if>>
 													
-														<a href="javascript:void(0);" onclick="openProcessIndex('${task.stDocId}','${task.stDocName}')" class="layer_full_link">办理&nbsp;&nbsp;</a>
-														<c:if test="${isZhc eq false}">
-															<br>
+														<a href="javascript:void(0);" onclick="openProcessIndex('${task.stDocId}','${task.stDocName}')" class="layer_full_link">办理&nbsp;&nbsp;</a><br>
+														<!--<c:if test="${isZhc eq false}">
 															<a href="javascript:void(0);" onclick="openLeaderIdeaPage('openLeaderIdeaPage','${task.stDocId}','${task.stNodeId}')" class="layer_full_link" title="有校验流程状态">办理完成&nbsp;&nbsp;</a>
-														</c:if>
-														    <a href="javascript:void(0);" onclick="openLeaderIdeaPage('openLeaderIdeaPage','${task.stDocId}','${task.stNodeId}')" class="layer_full_link" title="无校验，临时使用">完成&nbsp;&nbsp;</a>
-														
+														</c:if>-->
+														    <a href="javascript:void(0);" onclick="openLeaderIdeaPage('openLeaderIdeaPage','${task.stDocId}','${task.stNodeId}')" class="layer_full_link" title="无校验，临时使用">提交正式文本&nbsp;&nbsp;</a>
 													</div >
 													<c:if test="${isZhc eq false}">
 														<div style="width:60% ;float:right">

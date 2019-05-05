@@ -1,16 +1,15 @@
 package com.wonders.fzb.checkmeeting.beans;
 
 import java.io.Serializable;
-import java.sql.Blob;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -250,5 +249,31 @@ public class LegislationCheckmeetingItem implements Serializable {
 	public void setStContent (String stContent){
 		this.stContent = stContent;
 	}
+	
+	/**
+	 * 关联数据：计划、草案等
+	 */
+	@Transient
+	private Object stSource;
 
+	public Object getStSource() {
+		return stSource;
+	}
+
+	public void setStSource(Object stSource) {
+		this.stSource = stSource;
+	}
+	/**
+	 * 关联数据：计划items、草案items等
+	 */
+	@Transient//忽略表和数据库该字段
+	private Object stSourceitems;
+	
+	public Object getStSourceitems() {
+		return stSourceitems;
+	}
+	
+	public void setStSourceitems(Object stSourceitems) {
+		this.stSourceitems = stSourceitems;
+	}
 }

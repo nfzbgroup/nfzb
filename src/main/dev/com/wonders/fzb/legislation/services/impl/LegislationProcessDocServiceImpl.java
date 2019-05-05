@@ -381,7 +381,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 				} else {
 					legislationProcessTask.setDtBakDate(null);
 				}
-				if("NOD_0000000121".equals(stNodeId)&&(legislationProcessTask.getStComment1()!=null||StringUtil.isNotEmpty(legislationProcessTask.getStComment1()))) {
+				if(("NOD_0000000121".equals(stNodeId)||"NOD_0000000161".equals(stNodeId))&&(legislationProcessTask.getStComment1()!=null||StringUtil.isNotEmpty(legislationProcessTask.getStComment1()))) {
 					//部门意见征求-已发送OA 
 				}else {
 					legislationProcessTask.setStComment1(stComment1);

@@ -23,9 +23,11 @@ import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingDeal;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingItem;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
 import com.wonders.fzb.checkmeeting.dao.LegislationCheckmeetingTaskDao;
 import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingDealService;
+import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingItemService;
 import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingService;
 import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingTaskService;
 import com.wonders.fzb.framework.beans.UserInfo;
@@ -81,6 +83,10 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 	@Autowired
 	@Qualifier("legislationPlanService")
 	private LegislationPlanService legislationPlanService;
+	
+	@Autowired
+	@Qualifier("legislationCheckmeetingItemService")
+	private LegislationCheckmeetingItemService legislationCheckmeetingItemService;
 
 	/**
 	 * 添加实体对象
@@ -368,6 +374,7 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 		String stAddress = request.getParameter("stAddress");
 		String stPersons = request.getParameter("stPersons");
 		String stMeetingId = request.getParameter("stMeetingId");
+		String stItemId = request.getParameter("stItemId")==null?"":request.getParameter("stItemId");
 		String stMeetingName = request.getParameter("stMeetingName");
 		String stDocNo = request.getParameter("stDocNo");
 		String stDocSource = request.getParameter("stDocSource");// 包含的草案ID，#
@@ -493,6 +500,10 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 					}
 				}
 				
+			LegislationCheckmeetingItem item = legislationCheckmeetingItemService.findById(stItemId);
+			item.setStMeetingId(stMeetingId);
+			item.setStStatus("DOING");
+			legislationCheckmeetingItemService.update(item);
 				if(StringUtil.isNotEmpty(stPlanSource)) {
 				String[] stPlanIdArray = stPlanSource.split("#");
 				for (int i = 0; i < stPlanIdArray.length; i++) {
@@ -546,98 +557,119 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 			legislationCheckmeetingTask.setStSummary(stSummary);
 			if ("submit".equals(op) && "INPUT".equals(legislationCheckmeetingTask.getStTaskStatus())) {
 				legislationCheckmeetingTask.setStTaskStatus("AFFIRM");
-				// 同时把所有的草案,产生109的TODO，需要反馈
-				String[] stDocIdArray = auditMeeting.getStDocSource().split("#");
-				for (int i = 0; i < stDocIdArray.length; i++) {
-					String newDocId = stDocIdArray[i];
-					if (StringUtil.isNotEmpty(newDocId)) {
-						// 105就结束了DONE 产生一个草案的109的TODO，表示反馈任务来了.
-						WegovSimpleNode nextNodeInfo = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where t.stNodeId='NOD_0000000109'").get(0);
-						List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000105' and t.stDocId='" + stDocIdArray[i] + "'");
-						legislationProcessTaskList.forEach((LegislationProcessTask newLegislationProcessTask) -> {
-							newLegislationProcessTask.setStTaskStatus("DONE");
-							legislationProcessTaskService.update(newLegislationProcessTask);// 105结束
-							// 产生一个个109的任务。
-							LegislationProcessTask legislationProcessTask = new LegislationProcessTask();
-							legislationProcessTask.setStDocId(newLegislationProcessTask.getStDocId());
-							legislationProcessTask.setStNodeId("NOD_0000000109");
-							legislationProcessTask.setStNodeName(nextNodeInfo.getStNodeName());
-							legislationProcessTask.setStTaskStatus("TODO");
-							legislationProcessTask.setStFlowId("");
-							legislationProcessTask.setDtOpenDate(new Date());
-							legislationProcessTask.setStUserId(userId);
-							legislationProcessTask.setStUserName(userName);
-							legislationProcessTask.setStRoleId(nextNodeInfo.getStSubmitRole());
-							legislationProcessTask.setStRoleName(nextNodeInfo.getStSubmitRole());
-							legislationProcessTaskService.add(legislationProcessTask);
-						});
+				List<LegislationCheckmeetingItem> legislationCheckmeetingItemList = legislationCheckmeetingItemService.findByHQL("from LegislationCheckmeetingItem t where t.stStatus='DOING' and t.stMeetingId='" + stMeetingId + "' order by t.dtCreateDate desc");
+				for(LegislationCheckmeetingItem legislationCheckmeetingItem:legislationCheckmeetingItemList){
+					String stTypeName = legislationCheckmeetingItem.getStTypeName();
+					WegovSimpleNode nextNodeInfo = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where t.stNodeId='NOD_0000000109'").get(0);
+
+					if ("草案".equals(stTypeName)) {
+						String legislationProcessTaskId = legislationCheckmeetingItem.getStSourceId();
+						LegislationProcessTask newLegislationProcessTask = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stDocId='" + legislationProcessTaskId + "'").get(0);
+						
+						newLegislationProcessTask.setStTaskStatus("DONE");
+						legislationProcessTaskService.update(newLegislationProcessTask);// 105结束
+						// 产生一个个109的任务。
+						LegislationProcessTask legislationProcessTask = new LegislationProcessTask();
+						legislationProcessTask.setStDocId(newLegislationProcessTask.getStDocId());
+						legislationProcessTask.setStNodeId("NOD_0000000109");
+						legislationProcessTask.setStNodeName(nextNodeInfo.getStNodeName());
+						legislationProcessTask.setStTaskStatus("TODO");
+						legislationProcessTask.setStFlowId(newLegislationProcessTask.getStFlowId());
+						legislationProcessTask.setDtOpenDate(new Date());
+						legislationProcessTask.setStUserId(userId);
+						legislationProcessTask.setStUserName(userName);
+						legislationProcessTask.setStRoleId(nextNodeInfo.getStSubmitRole());
+						legislationProcessTask.setStRoleName(nextNodeInfo.getStSubmitRole());
+						legislationProcessTaskService.add(legislationProcessTask);
 					}
-				}
-				
-				
-				// 同时把所有的计划,210节点改为done  同时产生211的TODO
-				if(StringUtil.isNotEmpty(stPlanSource)) {
-				String[] stPlanIdArray = stPlanSource.split("#");
-				for (int i = 0; i < stPlanIdArray.length; i++) {
-					String newPlanId = stPlanIdArray[i];
-					if (StringUtil.isNotEmpty(newPlanId)) {
-						// 210就结束了DONE 产生一个草案的211的TODO.
-						WegovSimpleNode nextNodeInfo = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where t.stNodeId='NOD_0000000211'").get(0);
-						List<LegislationPlanTask> legislationPlanTaskList = legislationPlanTaskService.findByHQL("from LegislationPlanTask t where 1=1 and t.stNodeId='NOD_0000000210' and t.stPlanId='" + stPlanIdArray[i] + "'");
-						legislationPlanTaskList.forEach((LegislationPlanTask newLegislationPlanTask) -> {
-							newLegislationPlanTask.setStTaskStatus("DONE");
-							legislationPlanTaskService.update(newLegislationPlanTask);// 210结束
-							// 产生一个个211的任务。
-							LegislationPlanTask legislationPlanTask = new LegislationPlanTask();
-							legislationPlanTask.setStPlanId(newLegislationPlanTask.getStPlanId());
-							legislationPlanTask.setStNodeId("NOD_0000000211");
-							legislationPlanTask.setStNodeName(nextNodeInfo.getStNodeName());
-							legislationPlanTask.setStTaskStatus("TODO");
-							legislationPlanTask.setStFlowId(newLegislationPlanTask.getStFlowId());
-							legislationPlanTask.setDtOpenDate(new Date());
-							legislationPlanTask.setStUserId(userId);
-							legislationPlanTask.setStUserName(userName);
-							legislationPlanTask.setStRoleId(nextNodeInfo.getStSubmitRole());
-							legislationPlanTask.setStRoleName(nextNodeInfo.getStSubmitRole());
-							legislationPlanTaskService.add(legislationPlanTask);
-						});
+					if ("立法计划".equals(stTypeName)) {
+						String legislationPlanTaskId = legislationCheckmeetingItem.getStSourceId();
+						LegislationPlanTask newLegislationPlanTask = legislationPlanTaskService.findByHQL("from LegislationPlanTask t where 1=1 and t.stNodeId='NOD_0000000210' and t.stTaskStatus='TODO' and t.stPlanId='" + legislationPlanTaskId + "'").get(0);
+
+						newLegislationPlanTask.setStTaskStatus("DONE");
+						legislationPlanTaskService.update(newLegislationPlanTask);// 210结束
+						// 产生一个个211的任务。
+						LegislationPlanTask legislationPlanTask = new LegislationPlanTask();
+						legislationPlanTask.setStPlanId(newLegislationPlanTask.getStPlanId());
+						legislationPlanTask.setStNodeId("NOD_0000000211");
+						legislationPlanTask.setStNodeName(nextNodeInfo.getStNodeName());
+						legislationPlanTask.setStTaskStatus("TODO");
+						legislationPlanTask.setStFlowId(newLegislationPlanTask.getStFlowId());
+						legislationPlanTask.setDtOpenDate(new Date());
+						legislationPlanTask.setStUserId(userId);
+						legislationPlanTask.setStUserName(userName);
+						legislationPlanTask.setStRoleId(nextNodeInfo.getStSubmitRole());
+						legislationPlanTask.setStRoleName(nextNodeInfo.getStSubmitRole());
+						legislationPlanTaskService.add(legislationPlanTask);
+						
+						
 					}
-				  }
-				}
+					legislationCheckmeetingItem.setStStatus("DONE");
+					legislationCheckmeetingItemService.update(legislationCheckmeetingItem);
+				
 			}
+		}
 			this.update(legislationCheckmeetingTask);
+
 		}
 		// 如果不是TODO，是另一个环节
 		else if ("AFFIRM".equals(stTaskStatus)) {
 			LegislationCheckmeetingTask legislationCheckmeetingTask = findByHQL("from LegislationCheckmeetingTask t where t.stMeetingId='" + stMeetingId + "' and t.stNodeId='NOD_0000000170'").get(0);
 			if ("submit".equals(op) && "AFFIRM".equals(legislationCheckmeetingTask.getStTaskStatus())) {
 				legislationCheckmeetingTask.setStTaskStatus("DONE");
-				// 同时把所有的草案变成109的DONE，反馈也完成了
-				String[] stDocIdArray = auditMeeting.getStDocSource().split("#");
-				for (int i = 0; i < stDocIdArray.length; i++) {
-					String newDocId = request.getParameter(stDocIdArray[i]);
-					if (StringUtil.isNotEmpty(newDocId)) {
-						// 草案的109的TODO都进行确认，结束了DONE
-						List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stDocIdArray[i] + "'");
+				
+				
+				Map<String, Object> condMap = new HashMap<>();
+				condMap.put("stMeetingId", stMeetingId);
+				Map<String, String> sortMap = new HashMap<>();
+				List<LegislationCheckmeetingItem> checkmeetingItem = legislationCheckmeetingItemService.findByList(condMap, sortMap);
+				for (LegislationCheckmeetingItem lci : checkmeetingItem) {
+					String stTypeName = lci.getStTypeName();
+					String stSourceId = lci.getStSourceId();
+					if(null==stSourceId) {
+						continue;
+					}
+					if("草案".endsWith(stTypeName)) {
+						List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stSourceId + "'");
 						legislationProcessTaskList.forEach((LegislationProcessTask newLegislationProcessTask) -> {
 							newLegislationProcessTask.setStTaskStatus("DONE");
 							legislationProcessTaskService.update(newLegislationProcessTask);// 109结束
 						});
+						
+						LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stSourceId);
+						String stNodeId = "NOD_0000000103";
+						stNodeName = "立法办理";
+						legislationProcessDoc.setStNodeId(stNodeId);
+						legislationProcessDoc.setStNodeName(stNodeName);
+						legislationProcessDocService.update(legislationProcessDoc);
 					}
-
-					// 如果已经开始了审核会议 那主表legislation_process_doc 的这条数据 st_node_id 和st_node_name 都需要修改 成
-					// 2019年4月12日11:22:49 sy
-					// NOD_0000000170 审核会议
-					LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocIdArray[i]);
-					String stNodeId = "NOD_0000000103";
-					stNodeName = "立法办理";
-					legislationProcessDoc.setStNodeId(stNodeId);
-					legislationProcessDoc.setStNodeName(stNodeName);
-					legislationProcessDocService.update(legislationProcessDoc);
-					// ed
-
 				}
-
+//				// 同时把所有的草案变成109的DONE，反馈也完成了
+//				String[] stDocIdArray = auditMeeting.getStDocSource().split("#");
+//				for (int i = 0; i < stDocIdArray.length; i++) {
+//					String newDocId = request.getParameter(stDocIdArray[i]);
+//					if (StringUtil.isNotEmpty(newDocId)) {
+//						// 草案的109的TODO都进行确认，结束了DONE
+//						List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findByHQL("from LegislationProcessTask t where 1=1 and t.stNodeId='NOD_0000000109' and t.stDocId='" + stDocIdArray[i] + "'");
+//						legislationProcessTaskList.forEach((LegislationProcessTask newLegislationProcessTask) -> {
+//							newLegislationProcessTask.setStTaskStatus("DONE");
+//							legislationProcessTaskService.update(newLegislationProcessTask);// 109结束
+//						});
+//					}
+//
+//					// 如果已经开始了审核会议 那主表legislation_process_doc 的这条数据 st_node_id 和st_node_name 都需要修改 成
+//					// 2019年4月12日11:22:49 sy
+//					// NOD_0000000170 审核会议
+//					LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocIdArray[i]);
+//					String stNodeId = "NOD_0000000103";
+//					stNodeName = "立法办理";
+//					legislationProcessDoc.setStNodeId(stNodeId);
+//					legislationProcessDoc.setStNodeName(stNodeName);
+//					legislationProcessDocService.update(legislationProcessDoc);
+//					// ed
+//
+//				}
+				
 			}
 			this.update(legislationCheckmeetingTask);
 		}
