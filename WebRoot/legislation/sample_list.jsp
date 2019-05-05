@@ -11,20 +11,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-<link href="${basePath}/legislation/assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
-<link href="${basePath}/legislation/assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
-<link href="${basePath}/legislation/assets/css/animate.min.css" rel="stylesheet">
-<link href="${basePath}/legislation/assets/css/style.min.css?v=4.0.0" rel="stylesheet">
-<link href="${basePath}/legislation/assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+	<link href="${basePath}/legislation/assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+	<link href="${basePath}/legislation/assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+	<link href="${basePath}/legislation/assets/css/animate.min.css" rel="stylesheet">
+	<link href="${basePath}/legislation/assets/css/style.min.css?v=4.0.0" rel="stylesheet">
+	<link href="${basePath}/legislation/assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+	<link href="${basePath}/legislation/assets/plugin/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+	<link href="${basePath}/legislation/assets/css/myUtil.css" rel="stylesheet">
 
 </head>
 
 <body>
 
 	<div class="ibox-content">
-	<div class="ibox-content" id="divAdd">
-
-	</div>
 		<table class="table table-bordered">
 			<thead>
 				<tr>
@@ -49,7 +48,7 @@
 						<td>立法过程</td>
 						<td>*</td>
 						<td>*</td>
-						<td><a href="${basePath}/legislationProcessDoc/draft_doc_info.do?method=legislation_saple_flow" target="_blank">处理(可点击)</a></td>
+						<td><a href="javaScript:void(0)" onclick="openSamplePage()" >处理(可点击)</a></td>
 					</tr>
 
 					<tr>
@@ -69,43 +68,64 @@
 			</tbody>
 		</table>
 	</div>
-
+	<div class="modal inmodal fade" id="processIndexRootForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			</div>
+		</div>
+	</div>
+	<div class="modal inmodal fade" id="processIndexForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			</div>
+		</div>
+	</div>
+	<div class="modal inmodal fade" id="processIndexChildForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			</div>
+		</div>
+	</div>
 	<script src="${basePath}/legislation/assets/js/jquery.min.js?v=2.1.4"></script>
 	<script src="${basePath}/legislation/assets/js/bootstrap.min.js?v=3.3.5"></script>
 	<script src="${basePath}/legislation/assets/js/plugins/toastr/toastr.min.js"></script>
+	<script src="${basePath}/legislation/assets/plugins/laydate/laydate.js"></script>
+	<script src="${basePath}/legislation/assets/js/content.min.js?v=1.0.0"></script>
+	<link href="${basePath}/legislation/assets/page/common.css" rel="stylesheet" type="text/css" />
+	<script src="${basePath}/legislation/assets/page/page.js" type="text/javascript"></script>
+	<script src="${basePath}/legislation/assets/page/common.js" type="text/javascript"></script>
+	<script src="${basePath}/legislation/assets/util/util.js" type="text/javascript"></script>
+	<script src="${basePath}/legislation/assets/js/plugins/layer/layer.min.js?v=2.0"></script>
+	<script src="${basePath}/legislation/assets/util/ajaxfileupload.js" type="text/javascript"></script>
+	<link href="${basePath}/legislation/assets/css/plugins/layout/css/layout.min.css" rel="stylesheet" type="text/css"/>
 	
 	
 	<script type="text/javascript">
-	$(function () {
-		if("${nodeId}"==101){
-			$('#divAdd').show();
-		}else{
-			$('#divAdd').hide();
-		}
-	});
-	
-	//添加草案
-    $('#btnAdd').click(function () {
-    	var stNodeId='${request.nodeInfo.stNodeId}';
-    	window.open ('${basePath}/legislationProcessDoc/draft_create_info.do?action=add&stNodeId='+stNodeId, 'newwindow', 'height=400, width=1080, top=200, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no') ;
-    	
-    });
-	
-		toastr.options = {
-			"closeButton" : true,
-			"debug" : false,
-			"progressBar" : false,
-			"positionClass" : "toast-top-center",
-			"onclick" : null,
-			"showDuration" : "400",
-			"hideDuration" : "1000",
-			"timeOut" : "7000",
-			"extendedTimeOut" : "1000",
-			"showEasing" : "swing",
-			"hideEasing" : "linear",
-			"showMethod" : "fadeIn",
-			"hideMethod" : "fadeOut"
-		}
+        $(function () {
+            $('body').on('hidden.bs.modal', '.modal', function () {
+                $(this).removeData('bs.modal');
+            });
+            $('#processIndexRootForm').on('show.bs.modal', function () {
+                $('#processIndexRootForm .modal-dialog').css('overflow', 'auto');
+                $('#processIndexRootForm .modal-dialog').css('height', $(window).height());
+                $('#processIndexRootForm .modal-dialog').css('width', $(window).width());
+            });
+            $('#processIndexChildForm').on('show.bs.modal', function () {
+                $('#processIndexChildForm .modal-dialog').css('overflow', 'auto');
+                $('#processIndexChildForm .modal-dialog').css('height', $(window).height());
+                $('#processIndexChildForm .modal-dialog').css('width', $(window).width()*0.9);
+            });
+            $('#processIndexForm').on('show.bs.modal', function () {
+                $('#processIndexForm .modal-dialog').css('overflow', 'auto');
+                $('#processIndexForm .modal-dialog').css('height', $(window).height());
+                $('#processIndexForm .modal-dialog').css('width', $(window).width()*0.9);
+            });
+        });
+        function openSamplePage() {
+			$("#processIndexRootForm").modal({
+				remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?method=legislation_saple_flow"
+			});
+        };
 	</script>
 	
 </body>

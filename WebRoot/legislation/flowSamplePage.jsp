@@ -4,17 +4,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="Y5OVOmDep8d96uDKyDf7EsLvELGUUrPLSimrCRo8" />
-    <title>立法过程样本管理</title>
-    <link href="assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
-    <link href="assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
-    <link href="assets/css/animate.min.css" rel="stylesheet">
-    <link href="assets/css/style.min.css?v=4.0.0" rel="stylesheet">
-    <link href="assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
-    <link href="assets/plugin/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <style>
         /*边框样式*/
         li{ list-style: none;}
@@ -158,8 +147,6 @@
         .flow8_span3{background:#008cdc url("${basePath}/legislation/assets/demo/icon03.png") no-repeat center;}
 
     </style>
-</head>
-<body class="gray-bg white-bg1">
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="ibox float-e-margins">
@@ -168,12 +155,6 @@
 					<span aria-hidden="true">&times;</span>
 					<span class="sr-only">Close</span>
 				</button>
-			<div class="modal inmodal fade" id="processIndexForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-					</div>
-				</div>
-			</div>
                 <div class="row">
                     <div class="row_title_inner">立法过程样本管理(点击修改节点样本)</div>
                     <div class="flowPic">
@@ -790,125 +771,23 @@
         </div>
     </div>
 </div>
-<script src="assets/js/jquery.min.js?v=2.1.4"></script>
-<script src="assets/js/bootstrap.min.js?v=3.3.5"></script>
-<script src="assets/js/plugins/toastr/toastr.min.js"></script>
-<script src="assets/plugin/laydate/laydate.js"></script>
-<script src="assets/js/content.min.js?v=1.0.0"></script>
-<script src="assets/js/plugins/layer/layer.min.js?v=2.0"></script>
-<%--</div>--%>
 <script>
+
 	function openDemonstrationPage(buttonId) {
-		alert(buttonId);
 		$("#processIndexForm").modal({
-			remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?method=sampleList&nodeId="+buttonId
+			remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?method=sampleList&stNodeId="+buttonId
 		});
 	};
-	function uploadDemonstrationReport(stDocId, stNodeId, buttonId) {
-		$.post("../legislationProcessTask/uploadReport.do?stDocId=" + stDocId + "&stNode=" + stNodeId, function(data) {
-			if (data.success) {
-				//提交操作，到达下一个节点
-				nextDemonstrationProcess(stDocId, stNodeId, "nextProcess", buttonId);
-			} else {
-				Duang.error("提示", "请补全必填材料！");
-			}
-		}, "json")
-	};
-	function uploadChildDemonstrationReport(stDocId, stNodeId, nodeStatus) {
-		$.post("../legislationProcessTask/uploadReport.do?stDocId=" + stDocId + "&stNode=" + stNodeId, function(data) {
-			//alert("附件数校验"+JSON.stringify(data));
-			if (data.success) {
-				nextChildDemonstrationProcess(stDocId, stNodeId, "nextChildProcess", nodeStatus);
-			} else {
-				Duang.error("提示", "请补全必填材料！");
-			}
-		}, "json")
-	};
-
-	function nextDemonstrationProcess(stDocId, stNodeId, method, buttonId) {
-		layer.confirm('请确认操作！', function(index) {
-			layer.close(layer.index);
-			//console.info(" $('#requestUrl').val() --------"+ $('#requestUrl').val() )
-			$.post("../" + $('#requestUrl').val() + "?stDocId=" + stDocId + "&stNodeId=" + stNodeId + "&method=" + method + "&buttonId=" + buttonId, function(data) {
-				if (data.success) {
-					$('#processIndexForm').modal('hide');
-					//alert(JSON.stringify(data));
-					$.each(data.nodeChangeArray, function(index, item) {
-						//改变当前按钮的背景颜色
-						$('#' + item.node).parent().removeClass('bcg_gray').removeClass('bcg_blue').removeClass('bcg_green');
-						$('#' + item.node).parent().addClass(item.colorSet);
-						console.info("item.nodeHref------"+item.nodeHref);
-						if (item.nodeHref != undefined && item.nodeHref != null && item.nodeHref != '') {
-							$('#' + item.node).parent().attr('nodeHref', item.nodeHref);
-						}
-					});
-					Duang.success("提示", "操作成功");
-				} else {
-					Duang.error("提示", "操作失败");
-				}
-			});
-		});
-	};
-	function nextChildDemonstrationProcess(stDocId, stNodeId, method, nodeStatus) {
-		layer.confirm('请确认操作！', function(index) {
-			layer.close(layer.index);
-			$.post("../" + $('#requestUrl').val() + "?stDocId=" + stDocId + "&stNodeId=" + stNodeId + "&method=" + method + "&nodeStatus=" + nodeStatus, function(data) {
-				//alert(JSON.stringify(data));
-				if (data.success) {
-					$('#processIndexForm').modal('hide');
-					$.each(data.nodeChangeArray, function(index, item) {
-						// 改变当前按钮的背景颜色
-						$('#' + item.node).parent().removeClass('bcg_gray').removeClass('bcg_blue').removeClass('bcg_green');
-						$('#' + item.node).parent().addClass(item.colorSet);
-						if (item.nodeHref != undefined && item.nodeHref != null && item.nodeHref != '')
-							$('#' + item.node).parent().attr('nodeHref', item.nodeHref);
-					});
-					Duang.success("提示", "操作成功");
-				} else {
-					Duang.error("提示", "操作失败");
-				}
-			});
-		});
-	};
-	function toUploadFile(obj) {
-		$(obj).next().click();
-	};
-	function deleteAttach(attachObj, type, id, fileId, stSampleId) {
-		$.post('${basePath}/file/deleteAttach.do?fileId=' + fileId);
-		var obj = $(attachObj);
-		if (type == 1) {
-			obj.parent().prev().html('<span style="color: red">暂未上传</span>');
-			var html = '<label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>' + '<input id="' + id + '" name="upload" type="file" style="display:none"  onchange="uploadFile(\'' + id + '\',1,\'' + stSampleId + '\')">';
-			obj.parent().html(html);
-		} else {
-			obj.parent().parent().remove();
-		}
-	};
-	function openDemonstrationTaskPageWithStatus(method, stTaskId, buttonStatus, stDocId, stNodeId) {
-		$("#processIndexChildForm").modal({
-			remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?method=" + method + "&stDocId=" + stDocId + "&stNodeId=" + stNodeId + "&stTaskStatus=" + buttonStatus + "&stTaskId=" + stTaskId
-		});
-	};
-	function changeUnitSeal(buttonId) {
-		if ($('#' + buttonId).attr("handStatus") == undefined) {
-			$('#' + buttonId).parent().attr("class", "cell row_items row_item3 bcg_blue border_width border_style border_radius border_color_yellow");
-			$('#' + buttonId).attr("class", "removeHand");
-			$('#' + buttonId).attr("handStatus", "1");
-		}
-	};
-
+    function openDemonstrationChildPage(method,stExampleId,stNodeId) {
+        $("#processIndexChildForm").modal({
+            remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?method="+method+"&stExampleId="+stExampleId+"&stNodeId="+stNodeId
+        });
+    };
 	function closeProcessIndex() {
 		$('#processIndexRootForm').modal('hide');
-		//if(${nodeId=='NOD_0000000103'}){
-		//changeType('DOING');
-		//}else{
-		//submitForm(1);
-		//}
 	}
 
-	
 </script>
 <!--js区 end-->
 
-</body>
 </html>

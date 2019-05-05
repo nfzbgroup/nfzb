@@ -3,7 +3,6 @@ package com.wonders.fzb.legislation.web;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
-import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
@@ -20,9 +19,7 @@ import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
-
 import dm.jdbc.util.StringUtil;
-
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -33,6 +30,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -97,7 +95,36 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationPlanService")
 	private LegislationPlanService legislationPlanService;
-	
+
+	private File upload;
+
+	private String uploadContentType;
+
+	private String uploadFileName;
+
+	public File getUpload() {
+		return upload;
+	}
+
+	public void setUpload(File upload) {
+		this.upload = upload;
+	}
+
+	public String getUploadContentType() {
+		return uploadContentType;
+	}
+
+	public void setUploadContentType(String uploadContentType) {
+		this.uploadContentType = uploadContentType;
+	}
+
+	public String getUploadFileName() {
+		return uploadFileName;
+	}
+
+	public void setUploadFileName(String uploadFileName) {
+		this.uploadFileName = uploadFileName;
+	}
 
 	@Action(value = "draft_doc_info", results = { @Result(name = "openAddPage", location = "/legislation/legislationProcessManager_add.jsp"), @Result(name = "openEditPage", location = "/legislation/legislationProcessManager_add.jsp"), @Result(name = "draft_create_info", location = "/legislation/legislationProcessManager_info.jsp"), @Result(name = "openDraftHistoryPage", location = "/legislation/legislationProcessManager_draftHistory.jsp"),
 			@Result(name = "openSeparatePage", location = "/legislation/legislationProcessManager_separate.jsp"), @Result(name = "openDemonstrationPage", location = "/legislation/legislationProcessManager_demonstration.jsp"), @Result(name = "openExpertDemonstrationPage", location = "/legislation/legislationProcessManager_expertDemonstration.jsp"), @Result(name = "openLegislationDemonstrationPage", location = "/legislation/legislationProcessManager_legislationDemonstration.jsp"),
@@ -120,6 +147,7 @@ public class LegislationProcessDocAction extends BaseAction {
 
 			@Result(name = "legislation_saple_flow", location = "/legislation/flowSamplePage.jsp"),
 			@Result(name = "sampleList", location = "/legislation/flowSampleDeal.jsp"),
+			@Result(name = "sampleTable", location = "/legislation/flowSampleTable.jsp"),
 			
 
 
@@ -205,10 +233,15 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "draft_promeet_info__TODO", location = "/legislation/draft_promeet_info_audit.jsp"),
 			
 			//发起常务会议，把草案对应到议题上，产生110的TODO
-			@Result(name = "draft_citymeet_deal", location = "/legislation/draft_citymeet_deal.jsp")
+			@Result(name = "draft_citymeet_deal", location = "/legislation/draft_citymeet_deal.jsp"),
+
+			//样本新增
+			@Result(name = "openAddExamplePage", location = "/legislation/flowSampleForm.jsp"),
+			//样本编辑
+			@Result(name = "openEditExamplePage", location = "/legislation/flowSampleForm.jsp")
 	
 	})
-		
+
 	public String legislationProcessDoc_form() throws Exception {
 		String methodStr = request.getParameter("method");
 		java.lang.reflect.Method method = this.getClass().getDeclaredMethod(methodStr);
@@ -243,15 +276,22 @@ public class LegislationProcessDocAction extends BaseAction {
 	
 	
 	private String sampleList() {
-		String stNodeId = "";
+		return pageController();
+	}
+
+	private String sampleTable() {
+		String[] stNodeId = request.getParameter("stNodeId").split("__");
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();
-		condMap.put("stNodeId", "NOD_0000000101");
+		condMap.put("stNode", stNodeId[0]);
+		condMap.put("stStatus", "USED");
+		if(stNodeId.length>1){
+			condMap.put("stNodeStatus", stNodeId[1]);
+		}
 		List<LegislationExample> legislationExampleFilesList = legislationExampleService.findByList(condMap, sortMap);
 		request.setAttribute("legislationExampleFilesList", legislationExampleFilesList);
 		return pageController();
 	}
-	
 
 	// 流程图页面上，ajax加载当前草案的各节点的信息 lj
 	private String openProcessIndexPage_ajax() throws IOException {
@@ -4663,6 +4703,53 @@ public class LegislationProcessDocAction extends BaseAction {
 	private String dealFinish() {
 		legislationProcessTaskService.dealFinish(request, session);
 
+		return null;
+	}
+
+	/**
+	 * 跳转新增样本页面
+	 * @return
+	 */
+	private String openAddExamplePage(){
+		LegislationExample legislationExample=new LegislationExample();
+		request.setAttribute("legislationExample",legislationExample);
+		return pageController();
+	}
+
+	/**
+	 * 跳转编辑样本页面
+	 * @return
+	 */
+	private String openEditExamplePage(){
+		String stExampleId=request.getParameter("stExampleId");
+		LegislationExample legislationExample=legislationExampleService.findById(stExampleId);
+		request.setAttribute("legislationExample",legislationExample);
+		return pageController();
+	}
+
+	/**
+	 * 删除样本
+	 * @return
+	 */
+	private String deleteSimple(){
+		String stExampleId=request.getParameter("stExampleId");
+		LegislationExample legislationExample=legislationExampleService.findById(stExampleId);
+		legislationExample.setStStatus("NOUSED");
+		legislationExampleService.update(legislationExample);
+		return null;
+	}
+
+	/**
+	 * 保存样本
+	 * @return
+	 * @throws IOException
+	 */
+	private String saveExampleFile() throws IOException {
+		JSONObject jsonObject=new JSONObject();
+		legislationExampleService.saveExampleFile(request,session,upload,uploadFileName);
+		jsonObject.put("success",true);
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jsonObject);
 		return null;
 	}
 }

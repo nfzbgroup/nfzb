@@ -5,6 +5,10 @@ import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.legislation.beans.LegislationExample;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -82,4 +86,6 @@ public interface LegislationExampleService{
 	 * @return
 	 */
 	List<Map> queryLegislationExampleFilesList(String stNodeId,List<LegislationFiles> legislationFilesList);
+
+	void saveExampleFile(HttpServletRequest request, HttpSession session,File upload,String uploadFileName) throws IOException;
 }
