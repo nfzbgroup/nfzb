@@ -26,8 +26,9 @@
 					</c:if>
 				</td>
 				<td>
-					<a href="javaScript:void(0)" data-title="编辑" onclick="openDemonstrationChildPage('openEditExamplePage','${exampleFile.stExampleId}','${nodeId}')" class="layer_full_link">编辑</a>
-					<a href="javaScript:void(0)" data-title="删除" onclick="deleteSimple('${exampleFile.stExampleId}','${nodeId}')" class="layer_full_link">删除</a>
+					<label style="color: #1a7bb9;cursor: pointer" onclick="openDemonstrationChildPage('openExampleInfoPage','${exampleFile.stExampleId}','${nodeId}')" class="layer_full_link">查看</label>
+					<label style="color: #1a7bb9;cursor: pointer" onclick="openDemonstrationChildPage('openEditExamplePage','${exampleFile.stExampleId}','${nodeId}')" class="layer_full_link">编辑</label>
+					<label style="color: #1a7bb9;cursor: pointer" onclick="deleteSimple('${exampleFile.stExampleId}','${nodeId}')" class="layer_full_link">删除</label>
 				</td>
 			</tr>
 		</c:forEach>

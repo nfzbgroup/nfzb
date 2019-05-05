@@ -5,10 +5,10 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="modal-body" >
-	<div class="pull-right">
+	<div class="pull-right" style="margin-bottom: 5px">
 		<label class="btn btn-w-m btn-success"  onclick="openDemonstrationChildPage('openAddExamplePage',null,'${nodeId}')">添加</label>
 	</div>
-	<div id="sampleTable">
+	<div class="ibox-content" id="sampleTable">
 
 	</div>
 	<div class="form-group text-center">

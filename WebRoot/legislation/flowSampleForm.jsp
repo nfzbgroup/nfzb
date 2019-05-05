@@ -13,13 +13,13 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">样本名称：</label>
 				<div class="col-sm-9">
-					<input class="form-control" name="stExampleName" <c:if test="${legislationExample.stExampleName !=null}">value="${legislationExample.stExampleName}" </c:if>>
+					<input class="form-control" name="stExampleName" <c:if test="${button=='info'}">disabled</c:if> <c:if test="${legislationExample.stExampleName !=null}">value="${legislationExample.stExampleName}" </c:if>>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">是否必须：</label>
 				<div class="col-sm-9">
-					<select  class="form-control" name="stNeed">
+					<select  class="form-control" name="stNeed" <c:if test="${button=='info'}">disabled</c:if>>
 						<option value="NEED" <c:if test="${legislationExample.stNeed!=null&&legislationExample.stNeed=='NEED'}">selected</c:if>>必须</option>
 						<option value="NONEED" <c:if test="${legislationExample.stNeed!=null&&legislationExample.stNeed=='NONEED'}">selected</c:if>>非必须</option>
 					</select>
@@ -27,13 +27,15 @@
 			</div>
 
 			<div class="form-group text-center">
-				<input type="button" class="btn btn-w-m btn-success"  value="保存" onclick="saveExampleFile()"> &nbsp;&nbsp;
+				<c:if test="${button=='edit'}">
+					<input type="button" class="btn btn-w-m btn-success"  value="保存" onclick="saveExampleFile()"> &nbsp;&nbsp;
+				</c:if>
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 			<div class="form-group">
 				<label class="control-label">样本材料
 				</label>
-				<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)" id="uploadButton" <c:if test="${legislationExample.stFileNo !=null}">style="display:none"</c:if>>点击上传
+				<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)" id="uploadButton" <c:if test="${button=='info'||legislationExample.stFileNo !=null}">style="display:none"</c:if>>点击上传
 				</label>
 				<input type="file" id="upload" name="upload" style="display:none"  onchange="uploadFile(this)">
 			</div>
@@ -56,7 +58,10 @@
 								<td>样本材料</td>
 								<td><c:if test="${legislationExample.stFileNo !=null}">${legislationExample.stFileNo}</c:if></td>
 								<td>
-									<label  style="color: red" onclick="deleteAttach(this)">删除</label>
+									<label  style="color: #1a7bb9;cursor: pointer" onclick="downloadAttach('${legislationExample.stFileNo}',${legislationExample.blContent})">下载</label>
+									<c:if test="${button=='edit'}">
+										<label  style="color: red;cursor: pointer" onclick="deleteAttach(this)">删除</label>
+									</c:if>
 									<input type="hidden" name="stFileNo" value="${legislationExample.stFileNo}">
 								</td>
 							</tr>
@@ -114,5 +119,13 @@
                 }
             });
         }
+    };
+    function downloadAttach(stFileNo,blContent) {
+        var a = document.createElement('a');
+        var url = window.URL.createObjectURL(blContent);
+        a.href = url;
+        a.download = stFileNo;
+        a.click();
+        window.URL.revokeObjectURL(url)
     }
 </script>

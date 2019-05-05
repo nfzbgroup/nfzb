@@ -238,7 +238,9 @@ public class LegislationProcessDocAction extends BaseAction {
 			//样本新增
 			@Result(name = "openAddExamplePage", location = "/legislation/flowSampleForm.jsp"),
 			//样本编辑
-			@Result(name = "openEditExamplePage", location = "/legislation/flowSampleForm.jsp")
+			@Result(name = "openEditExamplePage", location = "/legislation/flowSampleForm.jsp"),
+			//样本查看
+			@Result(name = "openExampleInfoPage", location = "/legislation/flowSampleForm.jsp")
 	
 	})
 
@@ -4724,6 +4726,19 @@ public class LegislationProcessDocAction extends BaseAction {
 		String stExampleId=request.getParameter("stExampleId");
 		LegislationExample legislationExample=legislationExampleService.findById(stExampleId);
 		request.setAttribute("legislationExample",legislationExample);
+		request.setAttribute("button","edit");
+		return pageController();
+	}
+
+	/**
+	 *跳转查看样本页面
+	 * @return
+	 */
+	private String openExampleInfoPage(){
+		String stExampleId=request.getParameter("stExampleId");
+		LegislationExample legislationExample=legislationExampleService.findById(stExampleId);
+		request.setAttribute("legislationExample",legislationExample);
+		request.setAttribute("button","info");
 		return pageController();
 	}
 
