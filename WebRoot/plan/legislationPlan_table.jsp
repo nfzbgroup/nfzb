@@ -61,6 +61,8 @@
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000213'}">
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="项目详情" onclick="openPlanPage('openNoticeProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
+												<br/>
 												<a href="javaScript:void(0)" data-title="编辑草案送审稿说明" onclick="openPlanPage('openNoticeDraftPage','${plan.stTaskId}')" class="layer_full_link">编辑草案送审稿说明</a>
 												<a href="javaScript:void(0)" data-title="送常务会议" onclick="checkPlanItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">送常务会议</a>
 											</c:if>
@@ -71,11 +73,15 @@
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000211'}">
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="项目详情" onclick="openPlanPage('openNoticeProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
+												<br/>
 												<a href="javaScript:void(0)" data-title="编辑草案修改说明" onclick="openPlanPage('openNoticeExplainPage','${plan.stTaskId}')" class="layer_full_link">编辑草案修改说明</a>
 												<a href="javaScript:void(0)" data-title="报签 " onclick="checkPlanExplain('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">报签 </a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000209'}">
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="项目详情" onclick="openPlanPage('openNoticeProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
+												<br/>
 												<a href="javaScript:void(0)" data-title="编辑计划说明" onclick="openPlanPage('openNoticeExplainPage','${plan.stTaskId}')" class="layer_full_link">编辑计划说明</a>
 												<a href="javaScript:void(0)" data-title="送审核会议" onclick="checkPlanExplain('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">送审核会议</a>
 											</c:if>
@@ -87,7 +93,7 @@
 										</td>
 										<td>
 											<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
-											<c:if test="${nodeId=='NOD_0000000208'}">
+											<c:if test="${nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000213'||nodeId=='NOD_0000000215'}">
 												<a href="javaScript:void(0)" data-title="项目详情" onclick="openPlanPage('openNoticeProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'}">
