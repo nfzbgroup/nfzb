@@ -4715,6 +4715,7 @@ public class LegislationProcessDocAction extends BaseAction {
 	private String openAddExamplePage(){
 		LegislationExample legislationExample=new LegislationExample();
 		request.setAttribute("legislationExample",legislationExample);
+		request.setAttribute("button","add");
 		return pageController();
 	}
 

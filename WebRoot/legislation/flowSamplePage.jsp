@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
     <style>
         /*边框样式*/
         li{ list-style: none;}
@@ -147,6 +148,8 @@
         .flow8_span3{background:#008cdc url("${basePath}/legislation/assets/demo/icon03.png") no-repeat center;}
 
     </style>
+</head>
+<body class="gray-bg white-bg1">
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="ibox float-e-margins">
@@ -577,60 +580,60 @@
                                 <i class="arrow_line line2"></i>
                                 <i class="arrow_line line3"></i>
                                 <div class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_yellow">
-                                    <a href="javaScript:void(0)" id="NOD_0000000104__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000104__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                         <p class="font_color_black">审核会前征询</br>意见发起</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_yellow">
-                                    <a href="javaScript:void(0)" id="NOD_0000000104__DOING" class="removeHand" onclick="openDemonstrationPage(this.id)">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000104__DOING" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                          <p class="font_color_black">审核会前征询</br>意见反馈汇总</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div nodeHref="" class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="javaScript:void(0)" id="NOD_0000000170__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000170__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                      <p class="font_color_black">审核会议发起</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="javaScript:void(0)" id="NOD_0000000170__FEEDBACK" class="removeHand" onclick="openDemonstrationPage(this.id)">								                                  
-                                     
+                                    <a href="javaScript:void(0)" id="NOD_0000000170__FEEDBACK" class="removeHand" onclick="openDemonstrationPage(this.id)">
+
                                         <p class="font_color_black">审核会议汇总</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_t">
-                                   <a href="javaScript:void(0)" id="NOD_0000000170__INPUT" class="removeHand" onclick="openDemonstrationPage(this.id)">								                                  
-                                     
+                                   <a href="javaScript:void(0)" id="NOD_0000000170__INPUT" class="removeHand" onclick="openDemonstrationPage(this.id)">
+
                                         <p class="font_color_black">审核会议安排</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item6 bcg_gray border_width border_style border_radius border_color_yellow">
-                                   <a href="javaScript:void(0)" id="NOD_0000000170__AFFIRM" class="removeHand" onclick="openDemonstrationPage(this.id)">								                                  
-                                     
+                                   <a href="javaScript:void(0)" id="NOD_0000000170__AFFIRM" class="removeHand" onclick="openDemonstrationPage(this.id)">
+
                                         <p class="font_color_black">审核会议通知</br>发送</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item7 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="javaScript:void(0)" id="NOD_0000000170__AFFIRM" class="removeHand" onclick="openDemonstrationPage(this.id)">								                                  
-                                     
+                                    <a href="javaScript:void(0)" id="NOD_0000000170__AFFIRM" class="removeHand" onclick="openDemonstrationPage(this.id)">
+
                                         <p class="font_color_black">审核会议意见整理</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item8 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="javaScript:void(0)" id="NOD_0000000170__DONE" class="removeHand" onclick="openDemonstrationPage(this.id)">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000170__DONE" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                          <p class="font_color_black">审核会议意见发送</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item9 bcg_gray border_width border_style border_radius border_color_t">
-                                   <a href="javaScript:void(0)" id="NOD_0000000109__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">								                                  
-                                    
+                                   <a href="javaScript:void(0)" id="NOD_0000000109__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
+
                                         <p class="font_color_black">审核会议意见<br>采纳情况说明</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
@@ -719,7 +722,7 @@
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow3" alt="">
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow4" alt="">
                                 <div nodeHref=""  class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_t">
-                                 <a href="javaScript:void(0)" id="NOD_0000000114" class="removeHand" onclick="openDemonstrationPage(this.id)">								
+                                 <a href="javaScript:void(0)" id="NOD_0000000114" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                         <p class="font_color_black">校对/复核</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle two_work">立<b>/调</b></span>
                                     </a>
@@ -732,7 +735,7 @@
                                 </div>
                                 <div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_t">
                                     <a href="javaScript:void(0)" id="NOD_0000000115__PRINT" class="removeHand" onclick="openDemonstrationPage(this.id)">
-                                      
+
                                         <p class="font_color_black">正式文本</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
@@ -751,14 +754,14 @@
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow2" alt="">
                                 <div class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_t width_p">
                                     <a href="javaScript:void(0)" id="NOD_0000000116__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
-                                      
+
                                         <p class="font_color_black width_p">规章文本向司法部和</br>市人大委员会报备</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
                                      <a href="javaScript:void(0)" id="NOD_0000000116__DOING" class="removeHand" onclick="openDemonstrationPage(this.id)">
-                                      
+
                                         <p class="font_color_black">备案审查意见</br>处理</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
@@ -789,5 +792,5 @@
 
 </script>
 <!--js区 end-->
-
+</body>
 </html>

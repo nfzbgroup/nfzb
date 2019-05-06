@@ -27,7 +27,7 @@
 			</div>
 
 			<div class="form-group text-center">
-				<c:if test="${button=='edit'}">
+				<c:if test="${button !='info'}">
 					<input type="button" class="btn btn-w-m btn-success"  value="保存" onclick="saveExampleFile()"> &nbsp;&nbsp;
 				</c:if>
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
@@ -58,7 +58,7 @@
 								<td>样本材料</td>
 								<td><c:if test="${legislationExample.stFileNo !=null}">${legislationExample.stFileNo}</c:if></td>
 								<td>
-									<label  style="color: #1a7bb9;cursor: pointer" onclick="downloadAttach('${legislationExample.stFileNo}',${legislationExample.blContent})">下载</label>
+									<a target="_blank" href="${basePath}/file/downloadSample.do?stExampleId=${legislationExample.stExampleId}">下载</a>
 									<c:if test="${button=='edit'}">
 										<label  style="color: red;cursor: pointer" onclick="deleteAttach(this)">删除</label>
 									</c:if>
@@ -120,12 +120,4 @@
             });
         }
     };
-    function downloadAttach(stFileNo,blContent) {
-        var a = document.createElement('a');
-        var url = window.URL.createObjectURL(blContent);
-        a.href = url;
-        a.download = stFileNo;
-        a.click();
-        window.URL.revokeObjectURL(url)
-    }
 </script>

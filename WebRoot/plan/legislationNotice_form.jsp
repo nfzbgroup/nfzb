@@ -68,7 +68,7 @@
                                         <td>通知材料</td>
                                         <td>${file.stTitle}</td>
                                         <td>
-                                            <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
+                                            <a  target="_blank" href="${basePath}/file/downloadAttach.do?fileId=${file.stFileId}">下载</a>
                                             <c:if test="${nodeId=='NOD_0000000201'&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
                                                 &nbsp;&nbsp;
                                                 <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>

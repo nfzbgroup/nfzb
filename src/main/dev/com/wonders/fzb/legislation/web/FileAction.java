@@ -188,8 +188,7 @@ public class FileAction extends BaseAction {
 
     @Action(value = "downloadAttach")
     public void downloadAttach() throws Exception{
-        String name=request.getParameter("name");
-        String fileId=request.getParameter("url");
+        String fileId=request.getParameter("fileId");
         request.setCharacterEncoding("UTF-8");
         //第一步：设置响应类型
         response.setContentType("application/force-download");//应用程序强制下载
@@ -197,7 +196,35 @@ public class FileAction extends BaseAction {
         LegislationFiles legislationFiles=legislationFilesService.findById(fileId);
         InputStream in = new ByteArrayInputStream(legislationFiles.getBlContent());
         //设置响应头，对文件进行url编码
+        String name=legislationFiles.getStTitle();
         name = new String(legislationFiles.getStTitle().getBytes("UTF-8"),"ISO-8859-1");
+        response.setHeader("Content-Disposition",  String.format("attachment; filename=\"%s\"", name));
+        response.setContentLength(in.available());
+        response.setCharacterEncoding("UTF-8");
+        //第三步：老套路，开始copy
+        OutputStream out = response.getOutputStream();
+        byte[] b = new byte[1024];
+        int len = 0;
+        while((len = in.read(b))!=-1){
+            out.write(b, 0, len);
+        }
+        out.flush();
+        out.close();
+        in.close();
+    }
+
+    @Action(value = "downloadSample")
+    public void downloadSample() throws Exception{
+        String stExampleId=request.getParameter("stExampleId");
+        request.setCharacterEncoding("UTF-8");
+        //第一步：设置响应类型
+        response.setContentType("application/force-download");//应用程序强制下载
+        //第二读取文件
+        LegislationExample legislationExample=legislationExampleService.findById(stExampleId);
+        InputStream in = new ByteArrayInputStream(legislationExample.getBlContent());
+        //设置响应头，对文件进行url编码
+        String name=legislationExample.getStFileNo();
+        name = new String(name.getBytes("UTF-8"),"ISO-8859-1");
         response.setHeader("Content-Disposition",  String.format("attachment; filename=\"%s\"", name));
         response.setContentLength(in.available());
         response.setCharacterEncoding("UTF-8");

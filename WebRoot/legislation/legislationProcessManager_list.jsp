@@ -373,7 +373,6 @@
 				<div class="row" id="legislationProcessTaskTable">
 
 				</div>
-				</div>
 			</div>
 			<div class="modal inmodal fade" id="legislationProcessForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog">
