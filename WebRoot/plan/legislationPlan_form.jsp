@@ -112,7 +112,7 @@
                                         <td>立法项目材料</td>
                                         <td>${file.stTitle}</td>
                                         <td>
-                                            <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
+                                            <a  target="_blank" href="${basePath}/file/downloadAttach.do?fileId=${file.stFileId}">下载</a>
                                            <c:if test="${(nodeId=='NOD_0000000202'||nodeId=='NOD_0000000207')&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
                                              &nbsp;&nbsp;
                                             <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
@@ -143,8 +143,6 @@
             Duang.error("提示","请输入建议立项理由");
         }else if(param.stStatus==null||param.stStatus==""){
             Duang.error("提示","请输入目前进展情况");
-        }else if(param.stBak==null||param.stBak==""){
-            Duang.error("提示","请输入备注");
         }else {
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationPlan",param,function(data){
                 $('#legislationProcessForm').modal('hide');
@@ -167,7 +165,7 @@
                 var file = JSON.parse(data);
                 if (file.success) {
                     if(type==1){
-                        var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
+                        var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?fileId='+file.fileId+'">下载</a>&nbsp;&nbsp;'
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                         +'<label  style="color: red" onclick="deleteAttach(this,1,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')" >删除</label>';
                         $("#"+id).parent().prev().html('<span>'+file.name+'</span>');
@@ -176,7 +174,7 @@
                         var html='<tr class="text-center">'
                             +'<td>立法项目材料</td>'
                             +'<td>'+file.name+'</td>'
-                            +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
+                            +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?fileId='+file.fileId+'">下载</a>&nbsp;&nbsp;'
                             +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                             +'</td></tr>';

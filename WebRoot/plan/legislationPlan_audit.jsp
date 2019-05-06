@@ -51,8 +51,6 @@
         var param=$('#legislationPlanAuditForm').formToJson();
         if(param.stActive==null||param.stActive==""){
             Duang.error("提示","请输入审核意见");
-        }else if(param.stComment1==null||param.stComment1==""){
-            Duang.error("提示","请输入备注");
         }else {
         	layer.close(layer.index);
         	layer.confirm('是否提交！', function(index) {

@@ -85,7 +85,7 @@
                 if (file.success) {
                         var html='<tr class="text-center">'
                             +'<td>'+file.name+'</td>'
-                            +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
+                            +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?fileId='+file.fileId+'">下载</a>&nbsp;&nbsp;'
                             +'<label  style="color: red" onclick="deleteAttach(this,\''+file.fileId+'\')">删除</label>'
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                             +'</td></tr>';

@@ -19,7 +19,6 @@
     <table class="table table-border table-bordered table-bg table-hover">
         <thead>
             <tr class="text-center">
-                <th class="text-center">项目编号</th>
                 <th class="text-center">项目名称</th>
                 <th class="text-center">项目状态</th>
                 <c:if test="${nodeId=='NOD_0000000215'}">
@@ -36,7 +35,6 @@
         <c:if test="${legislationPlanItemList !=null&&fn:length(legislationPlanItemList)>0}">
             <c:forEach var="planItem" items="${legislationPlanItemList}">
                 <tr class="text-center">
-                    <td>${planItem.stItemId}</td>
                     <td>${planItem.stItemName}</td>
                     <td>
                     	 <c:set var="theString" value='${planItem.stStatus}' />

@@ -79,7 +79,7 @@
                                 <td >
                                     <c:choose>
                                         <c:when test="${example.fileId !=null}">
-                                            <a target="_blank" href="${basePath}/file/downloadAttach.do?name=${example.fileName}&url=${example.fileUrl}">下载</a>&nbsp;&nbsp;
+                                            <a target="_blank" href="${basePath}/file/downloadAttach.do?fileId=${example.fileId}">下载</a>&nbsp;&nbsp;
                                             <input type="hidden" id="${example.fileId}"  name="${example.fileId}" value="${example.fileId}">
                                             <label style="color: red" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')" >删除</label>
                                         </c:when>
@@ -122,7 +122,7 @@
                                         <td class="text-left">需要报送的其他材料</td>
                                         <td>${file.stTitle}</td>
                                         <td>
-                                            <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>&nbsp;&nbsp;
+                                            <a  target="_blank" href="${basePath}/file/downloadAttach.do?fileId=${file.stFileId}">下载</a>&nbsp;&nbsp;
                                             <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
                                             <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">
                                         </td>
@@ -156,7 +156,7 @@
     }
     function uploadFile(id,type,stSampleId) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do?stNodeId=NOD_0000000101&stSampleId='+stSampleId,
+            url: '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId='+stSampleId,
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,
@@ -166,7 +166,7 @@
                 var file = JSON.parse(data);
                 if (file.success) {
                     if(type==1){
-                        var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
+                        var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?fileId='+file.fileId+'">下载</a>&nbsp;&nbsp;'
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                         +'<label  style="color: red" onclick="deleteAttach(this,1,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')" >删除</label>';
                         $("#"+id).parent().prev().html('<span>'+file.name+'</span>');
@@ -175,7 +175,7 @@
                         var html='<tr class="text-center">'
                             +'<td class="text-left">需要报送的其他材料</td>'
                             +'<td>'+file.name+'</td>'
-                            +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
+                            +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?fileId='+file.fileId+'">下载</a>&nbsp;&nbsp;'
                             +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'
                             +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
                             +'</td></tr>';
