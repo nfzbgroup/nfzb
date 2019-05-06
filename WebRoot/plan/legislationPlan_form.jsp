@@ -76,6 +76,14 @@
                     <textarea class="form-control" name="stBak" <c:if test="${(nodeId!='NOD_0000000202'&&nodeId!='NOD_0000000207')||(legislationPlanTask.stTaskStatus !=null&&legislationPlanTask.stTaskStatus !='TODO')}">disabled</c:if> ><c:if test="${legislationPlanItem.stBak !=null}">${legislationPlanItem.stBak}</c:if></textarea>
                 </div>
             </div>
+            <c:if test="${(nodeId=='NOD_0000000202'||nodeId=='NOD_0000000204')&&legislationPlanTask.stActive!=null}">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">退回原因：</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" disabled>${legislationPlanTask.stActive}</textarea>
+                    </div>
+                </div>
+            </c:if>
 			<div class="form-group text-center">
                 <c:if test="${(nodeId=='NOD_0000000202'||nodeId=='NOD_0000000207')&&(legislationPlanTask.stTaskStatus ==null||legislationPlanTask.stTaskStatus=='TODO')}">
                     <input type="button" class="btn btn-w-m btn-success"  value="保存" onclick="saveLegislationPlan()"> &nbsp;&nbsp;

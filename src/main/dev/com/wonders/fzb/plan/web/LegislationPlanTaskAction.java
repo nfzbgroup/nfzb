@@ -209,13 +209,4 @@ public class LegislationPlanTaskAction extends BaseAction {
 		legislationPlanTaskService.nextPlanProcess(request,session);
 		return null;
 	}
-
-	/**
-	 * 退回
-	 * @return
-	 */
-	private String goBackPlanProcess(){
-		legislationPlanTaskService.goBackPlanProcess(request,session);
-		return null;
-	}
 }

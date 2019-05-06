@@ -95,7 +95,8 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "openPlanCheckExplainPage", location = "/plan/legislationPlan_checkExplain.jsp"),
 			@Result(name = "openProjectAscriptionPage", location = "/plan/legislationPlan_projectAscription.jsp"),
 			@Result(name = "flowDealPage", location = "/plan/flowDealPage.jsp"),
-			@Result(name = "openPlanDeleteReasonPage", location = "/plan/legislationPlan_deleteReason.jsp")
+			@Result(name = "openPlanDeleteReasonPage", location = "/plan/legislationPlan_deleteReason.jsp"),
+			@Result(name = "openPlanBackReasonPage", location = "/plan/legislationPlan_deleteReason.jsp")
 	})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -434,7 +435,17 @@ public class LegislationPlanAction extends BaseAction {
 	 * @return
 	 */
 	private String openPlanDeleteReasonPage(){
+		request.setAttribute("button","delete");
     	return pageController();
+	}
+
+	/**
+	 * 跳转项目退回原因页面
+	 * @return
+	 */
+	private String openPlanBackReasonPage(){
+		request.setAttribute("button","back");
+		return pageController();
 	}
 
 	/**
@@ -443,6 +454,15 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	private String saveLegislationPlanDeleteReason(){
 		legislationPlanTaskService.deletePlan(request,session);
+		return null;
+	}
+
+	/**
+	 * 确认退回项目
+	 * @return
+	 */
+	private String goBackPlanProcess(){
+		legislationPlanTaskService.goBackPlanProcess(request,session);
 		return null;
 	}
 }

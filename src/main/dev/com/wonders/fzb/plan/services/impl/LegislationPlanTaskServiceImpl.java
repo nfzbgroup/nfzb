@@ -172,7 +172,9 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 			legislationPlanTask.setStActive(stActive);
 			legislationPlanTask.setStComment1(stComment1);
 		}
-
+		if("NOD_0000000202".equals(stNodeId)||"NOD_0000000204".equals(stNodeId)){
+			legislationPlanTask.setStActive(null);
+		}
 		update(legislationPlanTask);//修改任务状态
 		
 		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
@@ -308,6 +310,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 	public void goBackPlanProcess(HttpServletRequest request, HttpSession session) {
 		String stTaskId = request.getParameter("stTaskId");
 		String stNodeId = request.getParameter("stNodeId");
+		String stActive=request.getParameter("stActive");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String teamId=currentPerson.getTeamInfos().get(0).getId();
 		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
@@ -324,7 +327,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanTask.setStRoleName(userRole);
 		legislationPlanTask.setStTeamId(teamId);
 		legislationPlanTask.setStTeamName(teamName);
-		legislationPlanTask.setStActive("退回");
+		legislationPlanTask.setStActive("退回原因: "+stActive);
 		update(legislationPlanTask);
 		String oldNodeId;
 		if("NOD_0000000203".equals(stNodeId)){
@@ -334,6 +337,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		}
 		LegislationPlanTask oldLegislationPlanTask=findByHQL("from LegislationPlanTask t where 1=1 and t.stParentId='"+legislationPlanTask.getStParentId()+"' and t.stNodeId='"+oldNodeId+"' and t.stEnable is null").get(0);
 		oldLegislationPlanTask.setStTaskStatus("TODO");
+		oldLegislationPlanTask.setStActive(stActive);
 		update(oldLegislationPlanTask);
 
 		LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
@@ -352,7 +356,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanDeal.setDtDealDate(new Date());
 		legislationPlanDeal.setStPlanId(legislationPlanItem.getStItemId());
 		legislationPlanDeal.setStBakOne(legislationPlanItem.getStItemName());
-		legislationPlanDeal.setStBakTwo("退回");
+		legislationPlanDeal.setStBakTwo("退回原因: "+stActive);
 		legislationPlanDealService.add(legislationPlanDeal);
 	}
 
@@ -377,7 +381,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanTask.setStRoleName(userRole);
 		legislationPlanTask.setStTeamId(teamId);
 		legislationPlanTask.setStTeamName(teamName);
-		legislationPlanTask.setStActive(stActive);
+		legislationPlanTask.setStActive("删除原因: "+stActive);
 		update(legislationPlanTask);
 
 		LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
@@ -394,7 +398,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanDeal.setDtDealDate(new Date());
 		legislationPlanDeal.setStPlanId(legislationPlanItem.getStItemId());
 		legislationPlanDeal.setStBakOne(legislationPlanItem.getStItemName());
-		legislationPlanDeal.setStBakTwo("删除");
+		legislationPlanDeal.setStBakTwo("删除原因: "+stActive);
 		legislationPlanDealService.add(legislationPlanDeal);
 	}
 
