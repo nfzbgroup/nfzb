@@ -124,12 +124,14 @@ public class LegislationExampleServiceImpl implements LegislationExampleService 
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();
 		condMap.put("stNode", stNodeId);
+		condMap.put("stStatus", "USED");
 		sortMap.put("stExampleId", "ASC");
 		List<LegislationExample> legislationExampleList = findByList(condMap, sortMap);
 		legislationExampleList.forEach((LegislationExample legislationExample)->{
 			Map map=new HashMap();
 			map.put("stExampleId",legislationExample.getStExampleId());
 			map.put("stExampleName",legislationExample.getStExampleName());
+			map.put("stFileNo",legislationExample.getStFileNo());
 			map.put("stNeed",legislationExample.getStNeed());
 			if(legislationFilesList!=null&&legislationFilesList.size()>0){
 				legislationFilesList.forEach((LegislationFiles legislationFiles)->{

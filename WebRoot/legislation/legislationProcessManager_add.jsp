@@ -59,7 +59,12 @@
                                     <c:if test="${example.stNeed=='NEED'}">
                                         <span style="color: red">(必须上传)</span>
                                     </c:if>
-                                    <span style="color: dodgerblue">(范本)</span>
+                                    <c:if test="${example.stFileNo !=null}">
+                                        <a style="color: dodgerblue" href="${basePath}/file/downloadSample.do?stExampleId=${example.stExampleId}">(范本)</a>
+                                    </c:if>
+                                    <c:if test="${example.stFileNo ==null}">
+                                        <span style="color: dodgerblue">(范本)</span>
+                                    </c:if>
                                 </td>
                                 <td >
                                     <c:choose>
