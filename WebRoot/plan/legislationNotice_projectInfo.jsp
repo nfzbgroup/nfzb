@@ -39,7 +39,7 @@
                     <td>
                     	 <c:set var="theString" value='${planItem.stStatus}' />
 	                   	 <c:if test="${fn:contains(theString,'已处理')}" var="flag" scope="session">
-							 <p>a<c:out value="${planItem.stStatus}"/><p>
+							 <p><c:out value="${planItem.stStatus}"/><p>
 						 </c:if>
 					 	 <c:if test="${not flag}">
 						 	  <p> <span style="color:red;"><c:out value="${planItem.stStatus}" /></span>	 <p>

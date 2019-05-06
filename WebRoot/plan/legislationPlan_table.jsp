@@ -87,6 +87,9 @@
 										</td>
 										<td>
 											<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openNoticeInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+											<c:if test="${nodeId=='NOD_0000000208'}">
+												<a href="javaScript:void(0)" data-title="项目详情" onclick="openPlanPage('openNoticeProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
+											</c:if>
 											<c:if test="${nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'}">
 											<a href="javaScript:void(0)" data-title="查看计划说明" onclick="openPlanPage('openNoticeExplainInfoPage','${plan.stTaskId}')" class="layer_full_link">查看计划说明</a>
 											</c:if>

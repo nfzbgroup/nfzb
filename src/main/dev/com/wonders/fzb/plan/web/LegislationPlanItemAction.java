@@ -69,6 +69,8 @@ public class LegislationPlanItemAction extends BaseAction {
 		condMap.put("stPlanId", legislationPlanTask.getStPlanId());
 		condMap.put("stIsDeleteIsNull", "null");
 		List<LegislationPlanItem> legislationPlanItemList=legislationPlanItemService.findByList(condMap,sortMap);
+		condMap.clear();
+		condMap.put("stPlanId", legislationPlanTask.getStPlanId());
 		condMap.put("stNodeId","NOD_0000000205");
 		condMap.put("stTaskStatus","DONE");
 		condMap.put("stEnableIsNull","null");
