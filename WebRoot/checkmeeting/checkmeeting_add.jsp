@@ -151,7 +151,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">参会人员：</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('')">${legislationCheckmeeting.stPersons}</textarea>
+					<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导,秘书处,立法一处')">${legislationCheckmeeting.stPersons}</textarea>
 				</div>
 				<input type="hidden" name="stPersonsId" id="stPersonsId" <c:if test="${stPersonsId!=null}">value="${stPersonsId}" </c:if>>
 				<input type="hidden" name="otherPersonsName" id="otherPersonsName" <c:if test="${otherPersonsName!=null}">value="${otherPersonsName}" </c:if>>

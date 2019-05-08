@@ -18,18 +18,18 @@
 <div class="modal-body">
 <h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">征询意见发送部门</h2>
 	  <div class="form-group">
-		<label class="col-sm-2 control-label">对应草案：</label> 
-		<label class="col-sm-2 control-label text-left"><span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span></label>
+		<label class="col-sm-3 control-label">对应草案：</label>
+		<label class="col-sm-9 control-label text-left"><span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span></label>
 		<c:if test="${legislationProcessTask.stTaskStatus=='DONE'}">
-			<label class="col-sm-6 control-label text-right">发送时间：</label> <label
-			class="col-sm-2 control-label"><fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
+			<label class="col-sm-3 control-label text-right">发送时间：</label> <label
+			class="col-sm-9 control-label"><fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
             value="${legislationProcessTask.dtDealDate}" /></label>
 		</c:if>
 	  </div>
 	 <div class="form-group">
-		<label class="col-sm-2 control-label">选择部门：</label>
+		<label class="col-sm-3 control-label">选择部门：</label>
 		 <div class="col-sm-9">
-			 <textarea class="form-control" id="teamName"><c:if test="${legislationProcessTask.stBakTwo !=null}">${legislationProcessTask.stBakTwo}</c:if></textarea>
+			 <textarea class="form-control" id="teamName" readonly ondblclick="checkDepartment('委办局,市司法局处室,区县')"><c:if test="${legislationProcessTask.stBakTwo !=null}">${legislationProcessTask.stBakTwo}</c:if></textarea>
 		 </div>
 		 <input type="hidden" id="teamId" <c:if test="${legislationProcessTask.stBakOne!=null}">value="${legislationProcessTask.stBakOne}" </c:if>>
 	</div>
@@ -84,8 +84,10 @@
 			Duang.error("提示", "请选择征询单位");
 		}
 	};
-	function checkDepartment() {
+	function checkDepartment(orgType) {
         var teamId = $('#teamId').val();
-
+        $("#processIndexChildForm").modal({
+            remote : "../${requestUrl}?method=openDepartmentCheckPage&teamId=" + teamId+"&orgType="+orgType
+        });
     }
 </script>

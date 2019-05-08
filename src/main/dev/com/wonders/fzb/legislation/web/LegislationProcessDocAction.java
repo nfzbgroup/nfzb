@@ -2878,29 +2878,29 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
 		LegislationProcessTask legislationProcessTask = legislationProcessTaskList.get(0);
 		String stTaskId = legislationProcessTask.getStTaskId();
-		// 发送部门id所保存在task表中的字段
-		String stBakOne = legislationProcessTask.getStBakOne();
-		String deptIds[] = null;
-		List<TeamInfo> teamInfoList = new ArrayList<TeamInfo>();
-		if (stBakOne != null && !stBakOne.isEmpty()) {
-			// 拿到部门id
-			deptIds = stBakOne.split(",");
-		}
-		if ("TODO".equals(legislationProcessTask.getStTaskStatus())) {
-			// 任务进行中
-			// 保存的已选择的部门id
-			request.setAttribute("deptIds", deptIds);
-			teamInfoList = teamInfoService.findTeamInfoInModuleByType("MODULE_LEGISLATE", "委办局");
-			method = "draft_deal_deptopinion_send";
-		} else {
-			// 任务已完成
-			// 已发送的部门
-			for (String id : deptIds) {
-				TeamInfo teamInfo = teamInfoService.findTeamInfoByTeamId("MODULE_LEGISLATE", id);
-				teamInfoList.add(teamInfo);
-			}
-		}
-		request.setAttribute("teamInfoList", teamInfoList);
+//		// 发送部门id所保存在task表中的字段
+//		String stBakOne = legislationProcessTask.getStBakOne();
+//		String deptIds[] = null;
+//		List<TeamInfo> teamInfoList = new ArrayList<TeamInfo>();
+//		if (stBakOne != null && !stBakOne.isEmpty()) {
+//			// 拿到部门id
+//			deptIds = stBakOne.split(",");
+//		}
+//		if ("TODO".equals(legislationProcessTask.getStTaskStatus())) {
+//			// 任务进行中
+//			// 保存的已选择的部门id
+//			request.setAttribute("deptIds", deptIds);
+//			teamInfoList = teamInfoService.findTeamInfoInModuleByType("MODULE_LEGISLATE", "委办局");
+//			method = "draft_deal_deptopinion_send";
+//		} else {
+//			// 任务已完成
+//			// 已发送的部门
+//			for (String id : deptIds) {
+//				TeamInfo teamInfo = teamInfoService.findTeamInfoByTeamId("MODULE_LEGISLATE", id);
+//				teamInfoList.add(teamInfo);
+//			}
+//		}
+//		request.setAttribute("teamInfoList", teamInfoList);
 		request.setAttribute("legislationProcessTask", legislationProcessTask);
 		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
 		return demonstrationPageController(method, stTaskId);

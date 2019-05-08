@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -142,7 +139,8 @@ public class LegislationSendNoticeServiceImpl implements LegislationSendNoticeSe
 		condMap.put("moduleId","MODULE_LEGISLATE");
 		condMap.put("orgType","市司法局处室");
 		if(StringUtils.isNotEmpty(showName)){
-			condMap.put("showName",showName);
+			List showNameList=Arrays.asList(showName.split(","));
+			condMap.put("showNameList",showNameList);
 		}
 		sortMap.put("sort","ASC");
 		List<MOR> morList=teamInfoService.findMorList(condMap,sortMap);
