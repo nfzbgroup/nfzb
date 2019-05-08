@@ -1,21 +1,5 @@
 package com.wonders.fzb.checkmeeting.web;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
@@ -23,10 +7,8 @@ import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingItem;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
-import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingDealService;
-import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingItemService;
-import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingService;
-import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingTaskService;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTaskd;
+import com.wonders.fzb.checkmeeting.services.*;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
@@ -39,8 +21,18 @@ import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
-
 import dm.jdbc.util.StringUtil;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * LegislationCheckmeeting action接口
@@ -93,7 +85,10 @@ public class LegislationCheckmeetingAction extends BaseAction {
 	@Qualifier("legislationCheckmeetingDealService")
 	private LegislationCheckmeetingDealService legislationCheckmeetingDealService;
 
-	
+	@Autowired
+	@Qualifier("legislationCheckmeetingTaskdService")
+	private LegislationCheckmeetingTaskdService legislationCheckmeetingTaskdService;
+
 	private int pageNo = 1;
 	private int pageSize = 10;
 
@@ -140,11 +135,21 @@ public class LegislationCheckmeetingAction extends BaseAction {
 		request.setAttribute("legislationPlanList", legislationPlanList);
 
 		String stMeetingId = request.getParameter("stMeetingId");
+		request.setAttribute("stPersonsId",null);
+		request.setAttribute("otherPersonsName",null);
 		if (StringUtil.isEmpty(stMeetingId)) {
 			request.setAttribute("legislationCheckmeeting", new LegislationCheckmeeting());
 		} else {
 			LegislationCheckmeeting auditMeeting = legislationCheckmeetingService.findById(stMeetingId);
 			request.setAttribute("legislationCheckmeeting", auditMeeting);
+			List<LegislationCheckmeetingTask> legislationCheckmeetingTaskList = legislationCheckmeetingTaskService.findByHQL("from LegislationCheckmeetingTask t where t.stMeetingId='" + stMeetingId + "' and t.stNodeId='NOD_0000000170'");
+			if(legislationCheckmeetingTaskList.size()>0){
+				List<LegislationCheckmeetingTaskd> legislationCheckmeetingTaskdList=legislationCheckmeetingTaskdService.findByHQL("from LegislationCheckmeetingTaskd t where 1=1 and t.stTaskId='"+legislationCheckmeetingTaskList.get(0).getStTaskId()+"' and t.stTaskStatus='TODO'");
+				if(legislationCheckmeetingTaskdList.size()>0){
+					request.setAttribute("stPersonsId",legislationCheckmeetingTaskdList.get(0).getStPersonId());
+					request.setAttribute("otherPersonsName",legislationCheckmeetingTaskdList.get(0).getStBak1());
+				}
+			}
 		}
 		request.setAttribute("stTaskStatus", "TODO");
 		return pageController();

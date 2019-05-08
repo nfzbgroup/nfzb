@@ -1,20 +1,25 @@
 package com.wonders.fzb.legislation.services.impl;
 
-import java.text.ParseException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.MOR;
+import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.framework.services.TeamInfoService;
+import com.wonders.fzb.framework.services.UserInfoService;
+import com.wonders.fzb.legislation.beans.LegislationSendNotice;
+import com.wonders.fzb.legislation.beans.SendNoticeVO;
+import com.wonders.fzb.legislation.dao.LegislationSendNoticeDao;
+import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.legislation.beans.*;
-import com.wonders.fzb.legislation.dao.*;
-import com.wonders.fzb.legislation.services.*;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -29,6 +34,12 @@ public class LegislationSendNoticeServiceImpl implements LegislationSendNoticeSe
 
 	@Autowired
 	private LegislationSendNoticeDao legislationSendNoticeDao;
+
+	@Autowired
+	private TeamInfoService teamInfoService;
+
+	@Autowired
+	private UserInfoService userInfoService;
 	
 	/**
 	 * 添加实体对象
@@ -121,5 +132,40 @@ public class LegislationSendNoticeServiceImpl implements LegislationSendNoticeSe
 			String mainTableName, String columnNames, int pageNo,
 														 int pageSize) throws ParseException {
 		return legislationSendNoticeDao.findSendNoticeList(wheresql, mainTableName, columnNames, pageNo, pageSize);
+	}
+
+	@Override
+	public List<Map<String, Object>> findParticipantsList(String showName,String stPersonsId) {
+		List<Map<String, Object>> result=new ArrayList<>();
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("moduleId","MODULE_LEGISLATE");
+		condMap.put("orgType","市司法局处室");
+		if(StringUtils.isNotEmpty(showName)){
+			condMap.put("showName",showName);
+		}
+		sortMap.put("sort","ASC");
+		List<MOR> morList=teamInfoService.findMorList(condMap,sortMap);
+		morList.forEach((MOR mor)->{
+			Map<String, Object> map=new HashMap<>();
+			map.put("teamId",mor.getId());
+			map.put("teamName",mor.getShowName());
+			List<UserInfo> userInfoList=userInfoService.findByHQL("select user from MOR mor LEFT JOIN  OUR our ON our.morId = mor.id " +
+					"LEFT JOIN UserInfo user ON user.userId = our.userId where mor.id='"+mor.getId()+"'");
+			if(StringUtils.isNotEmpty(stPersonsId)){
+				String[] userIdArray=stPersonsId.split(",");
+				userInfoList.forEach((UserInfo userInfo)->{
+					for (String s:userIdArray) {
+						if(userInfo.getUserId().equals(s)){
+							userInfo.setChecked(true);
+							break;
+						}
+					}
+				});
+			}
+			map.put("userInfoList",userInfoList);
+			result.add(map);
+		});
+		return result;
 	}
 }

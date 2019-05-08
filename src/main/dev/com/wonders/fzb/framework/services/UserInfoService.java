@@ -1,13 +1,13 @@
 package com.wonders.fzb.framework.services;
 
-import java.util.List;
-import java.util.Map;
-
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.framework.beans.MOR;
 import com.wonders.fzb.framework.beans.OUR;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.beans.vo.UserInfoBean;
+
+import java.util.List;
+import java.util.Map;
 
 public interface UserInfoService {
 
@@ -137,6 +137,10 @@ public interface UserInfoService {
 	public List<UserInfo> findAll();
 
 	public List<OUR> findOurByMorId(String condtion);
+
+	List<UserInfo> findByHQL(String hql);
+
+	UserInfo findByUserId(String id);
 
 	
 }

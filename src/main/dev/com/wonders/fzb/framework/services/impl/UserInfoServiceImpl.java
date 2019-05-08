@@ -1,6 +1,7 @@
 package com.wonders.fzb.framework.services.impl;
 
 import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.dao.impl.BaseSupportDao;
 import com.wonders.fzb.base.kit.StringKit;
 import com.wonders.fzb.framework.beans.MOR;
 import com.wonders.fzb.framework.beans.OUR;
@@ -9,6 +10,8 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.beans.vo.UserInfoBean;
 import com.wonders.fzb.framework.dao.PlatformDao;
 import com.wonders.fzb.framework.services.UserInfoService;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,7 @@ import java.util.UUID;
  */
 @Service("userInfoService")
 @Transactional
-public class UserInfoServiceImpl implements UserInfoService {
+public class UserInfoServiceImpl extends BaseSupportDao implements UserInfoService {
 
 	@Autowired
 	@Qualifier("platformDao")
@@ -254,7 +257,20 @@ public class UserInfoServiceImpl implements UserInfoService {
 		return platformDao.findOurByMorId(condtion);
 	}
 
-	
+	@Override
+	public List<UserInfo> findByHQL(String hql) {
+		Session session = getSession();
+		Query query = session.createQuery(hql);
+		List<UserInfo> list=query.list();
+		session.flush();
+		return list;
+	}
+
+	@Override
+	public UserInfo findByUserId(String id) {
+		return  platformDao.findUserInfoByUserId(id);
+	}
+
 
 	// @Override
 	// public List<UserInfo> findUserInfoTest(String string) {

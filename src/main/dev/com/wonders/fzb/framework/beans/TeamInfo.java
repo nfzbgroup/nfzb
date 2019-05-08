@@ -1,17 +1,11 @@
 package com.wonders.fzb.framework.beans;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * 组织架构
@@ -101,6 +95,9 @@ public class TeamInfo implements Serializable {
     
     @Transient
     private List<UserInfo> users;
+
+	@Transient
+    private Boolean checked;
 
 	public String getId() {
 		return id;
@@ -204,5 +201,13 @@ public class TeamInfo implements Serializable {
 
 	public void setUsers(List<UserInfo> users) {
 		this.users = users;
+	}
+
+	public Boolean getChecked() {
+		return checked;
+	}
+
+	public void setChecked(Boolean checked) {
+		this.checked = checked;
 	}
 }

@@ -313,7 +313,15 @@
 			$("#processIndexRootForm").modal({
 				remote : '${basePath}/legislationCheckmeeting/checkmeeting_info.do?stNodeId=${nodeId}&method=openProcessIndexPage&stMeetingId=' + stDocId + '&stMeetingName=' + stDocName
 			});
-		}
+		};
+
+		function openEditParticipants(showName) {
+		    var stPersonsId=$('#stPersonsId').val();
+		    var otherPersonsName=$('#otherPersonsName').val();
+            $("#processIndexForm").modal({
+                remote : "${basePath}/legislationSendNotice/openEditParticipants.do?showName="+showName+"&stPersonsId="+stPersonsId+"&otherPersonsName="+otherPersonsName
+            });
+        }
 	</script>
 </body>
 

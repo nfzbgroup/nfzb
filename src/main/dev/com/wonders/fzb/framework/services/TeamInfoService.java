@@ -1,13 +1,12 @@
 package com.wonders.fzb.framework.services;
 
-import java.util.List;
-import java.util.Map;
-
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.MOR;
 import com.wonders.fzb.framework.beans.TeamInfo;
-import com.wonders.fzb.platform.beans.TeamMemberInfo;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 组织单位Service
@@ -131,4 +130,12 @@ public interface TeamInfoService {
 	 * @param unitId 单位ID
 	 */
 	public List<MOR> findMorListByUnitId(String moduleId,String unitId);
+
+	/**
+	 * 某一模块下的某些类型的部门
+	 * @param moduleId
+	 * @param orgType
+	 * @return
+	 */
+	List<Map<String,Object>> findTeamListByTypeArray(String moduleId, String orgType,String[] deptIds);
 }

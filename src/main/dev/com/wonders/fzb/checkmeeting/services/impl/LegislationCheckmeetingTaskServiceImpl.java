@@ -1,49 +1,41 @@
 package com.wonders.fzb.checkmeeting.services.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
-import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingDeal;
-import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingItem;
-import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
+import com.wonders.fzb.checkmeeting.beans.*;
 import com.wonders.fzb.checkmeeting.dao.LegislationCheckmeetingTaskDao;
-import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingDealService;
-import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingItemService;
-import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingService;
-import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingTaskService;
+import com.wonders.fzb.checkmeeting.services.*;
 import com.wonders.fzb.framework.beans.UserInfo;
-import com.wonders.fzb.legislation.beans.LegislationProcessDeal;
+import com.wonders.fzb.framework.services.UserInfoService;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
+import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
 import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.beans.LegislationPlanTask;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
-
 import dm.jdbc.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * LegislationCheckmeetingTask service实现
@@ -88,6 +80,15 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 	@Qualifier("legislationCheckmeetingItemService")
 	private LegislationCheckmeetingItemService legislationCheckmeetingItemService;
 
+	@Autowired
+	@Qualifier("legislationCheckmeetingTaskdService")
+	private LegislationCheckmeetingTaskdService legislationCheckmeetingTaskdService;
+
+	@Autowired
+	private UserInfoService userInfoService;
+
+	@Autowired
+	private LegislationSendNoticeService legislationSendNoticeService;
 	/**
 	 * 添加实体对象
 	 */
@@ -373,6 +374,8 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 		String stType = request.getParameter("stType");
 		String stAddress = request.getParameter("stAddress");
 		String stPersons = request.getParameter("stPersons");
+		String stPersonsId = request.getParameter("stPersonsId");
+		String otherPersonsName = request.getParameter("otherPersonsName");
 		String stMeetingId = request.getParameter("stMeetingId");
 		String stItemId = request.getParameter("stItemId")==null?"":request.getParameter("stItemId");
 		String stMeetingName = request.getParameter("stMeetingName");
@@ -401,6 +404,7 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 			}
 		}
 		if ("TODO".equals(stTaskStatus)) {
+			String meetingTaskId;
 			// 如果是新增加会议
 			if (StringUtil.isEmpty(stMeetingId)) {
 				auditMeeting.setStMeetingName(stMeetingName);
@@ -438,7 +442,7 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 				legislationProcessTask.setStRoleName(session.getAttribute("userRole").toString());
 				legislationProcessTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
 				legislationProcessTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
-				add(legislationProcessTask);
+				meetingTaskId=addObj(legislationProcessTask);
 
 				// 用户一个操作，只用增加一条经办记录就可以了，草案可以作为记录的备注，不用象原来多个记录。
 				LegislationCheckmeetingDeal legislationProcessDeal = new LegislationCheckmeetingDeal();
@@ -464,8 +468,9 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 				auditMeeting.setStPersons(stPersons);
 				auditMeeting.setDtBeginDate(formatter.parse(dtBeginDate));// 会议时间
 				legislationCheckmeetingService.update(auditMeeting);
+				LegislationCheckmeetingTask legislationCheckmeetingTask = findByHQL("from LegislationCheckmeetingTask t where t.stMeetingId='" + stMeetingId + "' and t.stNodeId='NOD_0000000170'").get(0);
+				meetingTaskId=legislationCheckmeetingTask.getStTaskId();
 				if ("submit".equals(op)) {
-					LegislationCheckmeetingTask legislationCheckmeetingTask = findByHQL("from LegislationCheckmeetingTask t where t.stMeetingId='" + stMeetingId + "' and t.stNodeId='NOD_0000000170'").get(0);
 					legislationCheckmeetingTask.setStTaskStatus("FEEDBACK");
 					this.update(legislationCheckmeetingTask);
 				}
@@ -526,6 +531,51 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 					}
 				}
 			  }
+			}
+
+			//保存参会人员
+			List<LegislationCheckmeetingTaskd> legislationCheckmeetingTaskdList=legislationCheckmeetingTaskdService.findByHQL("from LegislationCheckmeetingTaskd t where 1=1 and t.stTaskId='"+meetingTaskId+"' and t.stTaskStatus='TODO'");
+			LegislationCheckmeetingTaskd legislationCheckmeetingTaskd=new LegislationCheckmeetingTaskd();
+			if(legislationCheckmeetingTaskdList.size()>0){
+				legislationCheckmeetingTaskd=legislationCheckmeetingTaskdList.get(0);
+				legislationCheckmeetingTaskd.setStPersonId(stPersonsId);
+				legislationCheckmeetingTaskd.setStPersonName(stPersons);
+				legislationCheckmeetingTaskd.setStBak1(otherPersonsName);
+				legislationCheckmeetingTaskdService.update(legislationCheckmeetingTaskd);
+			}else{
+				legislationCheckmeetingTaskd.setStTaskId(meetingTaskId);
+				legislationCheckmeetingTaskd.setStTaskStatus("TODO");
+				legislationCheckmeetingTaskd.setStPersonId(stPersonsId);
+				legislationCheckmeetingTaskd.setStPersonName(stPersons);
+				legislationCheckmeetingTaskd.setStBak1(otherPersonsName);
+				legislationCheckmeetingTaskd.setDtOpenDate(new Date());
+				legislationCheckmeetingTaskd.setStNodeId("NOD_0000000170");
+				legislationCheckmeetingTaskdService.add(legislationCheckmeetingTaskd);
+			}
+			String[] userIdArray=stPersonsId.split(",");
+			for (String s:userIdArray) {
+				UserInfo userInfo=userInfoService.findByUserId(s);
+				LegislationSendNotice legislationSendNotice=new LegislationSendNotice();
+				legislationSendNotice.setStDocId(stMeetingId);
+				legislationSendNotice.setDtOpenDate(new Date());
+				legislationSendNotice.setStUserId(userInfo.getUserId());
+				legislationSendNotice.setStUserName(userInfo.getName());
+				legislationSendNotice.setStModelName("审核会议");
+				legislationSendNotice.setStNodeName("审核会议发送通知");
+				legislationSendNotice.setStNoticeStatus("已发送");
+				legislationSendNotice.setStNoticeContent("参加审核会议: "+stMeetingName+"的通知");
+				legislationSendNoticeService.add(legislationSendNotice);
+			}
+			if(StringUtils.isNotEmpty(otherPersonsName)){
+				LegislationSendNotice legislationSendNotice=new LegislationSendNotice();
+				legislationSendNotice.setStDocId(stMeetingId);
+				legislationSendNotice.setDtOpenDate(new Date());
+				legislationSendNotice.setStUserName(otherPersonsName);
+				legislationSendNotice.setStModelName("审核会议");
+				legislationSendNotice.setStNodeName("审核会议发送通知");
+				legislationSendNotice.setStNoticeStatus("已发送");
+				legislationSendNotice.setStNoticeContent("参加审核会议: "+stMeetingName+"的通知");
+				legislationSendNoticeService.add(legislationSendNotice);
 			}
 		} else if ("FEEDBACK".equals(stTaskStatus)) {// 如果不是TODO，是另一个环节
 			String stFeedback = request.getParameter("stFeedback");// 反馈信息

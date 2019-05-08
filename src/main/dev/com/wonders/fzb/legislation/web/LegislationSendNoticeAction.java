@@ -1,14 +1,14 @@
 package com.wonders.fzb.legislation.web;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.base.actions.BaseAction;
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.legislation.beans.LegislationSendNotice;
+import com.wonders.fzb.legislation.beans.SendNoticeVO;
+import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+import dm.jdbc.util.StringUtil;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Actions;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -18,15 +18,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import com.wonders.fzb.base.actions.BaseAction;
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.legislation.beans.*;
-import com.wonders.fzb.legislation.services.*;
-import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
-import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
-
-import dm.jdbc.util.StringUtil;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * LegislationSendNotice action接口
@@ -139,8 +134,20 @@ public class LegislationSendNoticeAction extends BaseAction {
 				request.setAttribute("pageSize", pageSize);
 				request.setAttribute("retPage", infoPage);
 				request.setAttribute("nodeId", stNodeId);
-			}
-			
-			return "QueryTable";
 		}
+			
+		return "QueryTable";
+	}
+
+
+	@Action(value = "openEditParticipants",results = {@Result(name = "openEditParticipants",location = "/legislation/legislationProcessManager_participantsEdit.jsp")})
+	public String openEditParticipants(){
+		String showName=request.getParameter("showName");
+		String stPersonsId=request.getParameter("stPersonsId");
+		String otherPersonsName=request.getParameter("otherPersonsName");
+		List<Map<String, Object>> participantsList=legislationSendNoticeService.findParticipantsList(showName,stPersonsId);
+		request.setAttribute("participantsList",participantsList);
+		request.setAttribute("otherPersonsName",otherPersonsName);
+		return "openEditParticipants";
+	}
 }

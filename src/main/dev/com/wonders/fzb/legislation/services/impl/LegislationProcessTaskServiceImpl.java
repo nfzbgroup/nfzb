@@ -681,12 +681,14 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 	@Override
 	public WegovSimpleNode sendUnit(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole) {
 		String teamId = request.getParameter("teamId");
+		String teamName = request.getParameter("teamName");
 		String stNodeId = request.getParameter("stNodeId");
 		String stTaskId = request.getParameter("stTaskId");
 		//保存信息，修改状态
 		LegislationProcessTask legislationProcessTask = findById(stTaskId);
 		legislationProcessTask.setStTaskStatus("DONE");
 		legislationProcessTask.setStBakOne(teamId);
+		legislationProcessTask.setStBakTwo(teamName);
 		update(legislationProcessTask);
 		//取得部门id，获取信息，添加下一节点task
 		String[] teamIdArray = teamId.split(",");

@@ -107,6 +107,9 @@ public class UserInfo implements Serializable {
 
 	@Transient
 	private List<TeamInfo> teamInfos;
+
+	@Transient
+	private Boolean checked;
 	
 	public String getUserId() {
 		return this.userId;
@@ -218,6 +221,14 @@ public class UserInfo implements Serializable {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public Boolean getChecked() {
+		return checked;
+	}
+
+	public void setChecked(Boolean checked) {
+		this.checked = checked;
 	}
 
 //	public String getOfficePhone() {

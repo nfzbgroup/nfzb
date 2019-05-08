@@ -1,20 +1,18 @@
 package com.wonders.fzb.checkmeeting.dao.impl;
 
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.dao.impl.BaseSupportDao;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTaskd;
+import com.wonders.fzb.checkmeeting.dao.LegislationCheckmeetingTaskdDao;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
-import com.wonders.fzb.base.dao.impl.BaseSupportDao;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.checkmeeting.beans.*;
-import com.wonders.fzb.checkmeeting.dao.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * LegislationCheckmeetingTaskd dao实现
@@ -28,7 +26,7 @@ public class LegislationCheckmeetingTaskdDaoImpl extends BaseSupportDao implemen
 	@Override
 	public void save(Object object) {
 		LegislationCheckmeetingTaskd info = (LegislationCheckmeetingTaskd) object;
-		info.setStTaskdetailId(super.getId("SEQ_LEGISLATION_CHECKMEET_TASKD", "TDE_", 16));
+		info.setStTaskdetailId(super.getId("SEQ_LEGISLATION_CHECKMEET_TSKD", "TDE_", 16));
 		super.save(info);
 	}
 	

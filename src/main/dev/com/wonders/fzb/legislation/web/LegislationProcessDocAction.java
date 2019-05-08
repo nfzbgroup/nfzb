@@ -160,6 +160,8 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "draft_deal_deptopinion_sign", location = "/legislation/draft_deal_deptopinion_sign.jsp"),
 			// 部门意见征询发送部门
 			@Result(name = "draft_deal_deptopinion_send", location = "/legislation/draft_deal_deptopinion_send.jsp"),
+			// 部门意见征询发送部门
+			@Result(name = "openDepartmentCheckPage", location = "/legislation/legislationProcessManager_departmentCheck.jsp"),
 			// 部门意见征询接收反馈
 			@Result(name = "draft_deal_deptopinion_input", location = "/legislation/draft_deal_deptopinion_input.jsp"),
 
@@ -2904,6 +2906,21 @@ public class LegislationProcessDocAction extends BaseAction {
 		return demonstrationPageController(method, stTaskId);
 	}
 
+	/**
+	 * 发送部门--选择部门页面
+	 * @return
+	 */
+	private String openDepartmentCheckPage(){
+		String orgType=request.getParameter("orgType");
+		String teamId=request.getParameter("teamId");
+		String[] deptIds = null;
+		if(org.apache.commons.lang3.StringUtils.isNotEmpty(teamId)){
+			deptIds=teamId.split(",");
+		}
+		List<Map<String,Object>> teamList=teamInfoService.findTeamListByTypeArray("MODULE_LEGISLATE",orgType,deptIds);
+		request.setAttribute("teamList",teamList);
+		return pageController();
+	}
 	/**
 	 * 办理页面--跳转部门征求意见录入页面 openUnitDemonstrationPage
 	 * 

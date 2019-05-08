@@ -1,10 +1,6 @@
 package com.wonders.fzb.framework.services.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -194,6 +190,30 @@ public class TeamInfoServiceImpl implements TeamInfoService{
 	public List<MOR> findMorListByUnitId(String moduleId, String unitId) {
 		// TODO Auto-generated method stub
 		return platformDao.findMorListByUnitId(moduleId, unitId);
+	}
+
+	@Override
+	public List<Map<String, Object>> findTeamListByTypeArray(String moduleId, String orgType,String[] deptIds) {
+		List<Map<String, Object>> result=new ArrayList<>();
+		String[] typeArray=orgType.split(",");
+		for (String s:typeArray) {
+			Map<String, Object> map=new HashMap<>();
+			map.put("typeName",s);
+			List<TeamInfo> teamInfoList=findTeamInfoInModuleByType(moduleId,s);
+			if(null!=deptIds){
+				teamInfoList.forEach((TeamInfo teamInfo)->{
+					for (String deptId:deptIds) {
+						if(teamInfo.getId().equals(deptId)){
+							teamInfo.setChecked(true);
+							break;
+						}
+					}
+				});
+			}
+			map.put("teamInfoList",teamInfoList);
+			result.add(map);
+		}
+		return result;
 	}
 }
 

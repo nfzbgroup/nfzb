@@ -1,13 +1,13 @@
 package com.wonders.fzb.legislation.services;
 
-import java.text.ParseException;
-import java.util.List;
-import java.util.Map;
-
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.beans.SendNoticeVO;
+
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -80,4 +80,5 @@ public interface LegislationSendNoticeService{
 			String columnNames, int pageNo, int pageSize) throws ParseException;
 
 
+	List<Map<String,Object>> findParticipantsList(String showName,String stPersonsId);
 }

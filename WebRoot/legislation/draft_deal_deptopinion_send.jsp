@@ -27,37 +27,12 @@
 		</c:if>
 	  </div>
 	 <div class="form-group">
-		<label class="col-sm-12 control-label">选择部门：</label>
+		<label class="col-sm-2 control-label">选择部门：</label>
+		 <div class="col-sm-9">
+			 <textarea class="form-control" id="teamName"><c:if test="${legislationProcessTask.stBakTwo !=null}">${legislationProcessTask.stBakTwo}</c:if></textarea>
+		 </div>
+		 <input type="hidden" id="teamId" <c:if test="${legislationProcessTask.stBakOne!=null}">value="${legislationProcessTask.stBakOne}" </c:if>>
 	</div>
-	<table class="table table-border table-bordered" >
-		<thead>
-			<tr>
-			  <c:if test="${legislationProcessTask.stTaskStatus=='TODO'}">
-				<th><input type="checkbox" id="all" onchange="changeType(this)">
-				</th>
-		      </c:if>
-				<th style="text-align: center">单位名称</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:if test="${teamInfoList !=null&&fn:length(teamInfoList)>0}">
-				<c:forEach var="t" items="${teamInfoList}" varStatus="status">
-					<tr>
-					  <c:if test="${legislationProcessTask.stTaskStatus=='TODO'}">
-						<td><input type="checkbox"
-							<c:forEach items="${deptIds}" var="id" >
-                                   <c:if test="${id==t.id}">
-                                               checked="checked"
-                                   </c:if>
-                         </c:forEach>
-							name="dept" value="${t.id}"></td>
-					  </c:if>
-						<td style="text-align: center">${t.teamName}</td>
-					</tr>
-				</c:forEach>
-			</c:if>
-		</tbody>
-	</table>
 
 	<div class="form-group text-center">
 	  <c:if test="${legislationProcessTask.stTaskStatus=='TODO'}">
@@ -70,39 +45,11 @@
 	</div>
 </div>
 <script>
-	$(function() {
-		$(".tab-left").css('width', $(window).width() * 0.1);
-		$('[name="dept"]').change(function() {
-			var num = $('[name="dept"]').size();
-			var checkedNum = 0;
-			$('[name="dept"]').each(function() {
-				if ($(this).prop("checked")) {
-					checkedNum++;
-				}
-			});
-			if (num == checkedNum) {
-				$("#all").prop("checked", true);
-			} else {
-				$("#all").prop("checked", false);
-			}
-		});
-	});
-	function changeType(obj) {
-		if ($(obj).prop("checked")) {
-			$('[name="dept"]').prop("checked", true);
-		} else {
-			$('[name="dept"]').prop("checked", false);
-		}
-	};
 	function saveLegislationDemonstration() {
-		var teamId = "";
-		var checkedNum = 0;
-		$('[name="dept"]:checked').each(function() {
-			teamId = teamId + "," + this.value;
-			checkedNum++;
-		});
-		if (checkedNum > 0) {
-			$.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration&stTaskId=${stTaskId}&stBakOne=" + teamId.substring(1), function(data) {
+        var teamId = $('#teamId').val();
+        var teamName = $('#teamName').val();
+        if (teamId!=null&&teamId!='') {
+			$.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration&stTaskId=${stTaskId}&stBakOne=" + teamId+"&stBakTwo="+teamName, function(data) {
 				$('#processIndexForm').modal('hide');
 				$('#${buttonId}').parent().attr("class", "cell row_items row_item4 bcg_blue border_width border_style border_radius border_color_red");
 				Duang.success("提示", "保存成功");
@@ -112,14 +59,10 @@
 		}
 	};
 	function sendDept() {
-		var teamId = "";
-		var checkedNum = 0;
-		$('[name="dept"]:checked').each(function() {
-			teamId = teamId + "," + this.value;
-			checkedNum++;
-		});
-		if (checkedNum > 0) {
-			$.post("${basePath}/legislationProcessTask/draft_task_list.do?stNodeId=${nodeId}&method=nextProcess&stDocId=${legislationProcessDoc.stDocId}&stTaskId=${stTaskId}&teamId=" + teamId.substring(1), function(data) {
+		var teamId = $('#teamId').val();
+        var teamName = $('#teamName').val();
+		if (teamId!=null&&teamId!='') {
+			$.post("${basePath}/legislationProcessTask/draft_task_list.do?stNodeId=${nodeId}&method=nextProcess&stDocId=${legislationProcessDoc.stDocId}&stTaskId=${stTaskId}&teamId=" + teamId+"&teamName="+teamName, function(data) {
 				if (data.success) {
 					$('#processIndexForm').modal('hide');
 					//alert(JSON.stringify(data));
@@ -140,5 +83,9 @@
 		} else {
 			Duang.error("提示", "请选择征询单位");
 		}
-	}
+	};
+	function checkDepartment() {
+        var teamId = $('#teamId').val();
+
+    }
 </script>
