@@ -1,19 +1,28 @@
 package com.wonders.fzb.assess.services.impl;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.assess.beans.LegislationAssess;
+import com.wonders.fzb.assess.beans.LegislationAssessDeal;
+import com.wonders.fzb.assess.beans.LegislationAssessItem;
+import com.wonders.fzb.assess.beans.LegislationAssessTask;
+import com.wonders.fzb.assess.dao.LegislationAssessTaskDao;
+import com.wonders.fzb.assess.services.LegislationAssessDealService;
+import com.wonders.fzb.assess.services.LegislationAssessItemService;
+import com.wonders.fzb.assess.services.LegislationAssessService;
+import com.wonders.fzb.assess.services.LegislationAssessTaskService;
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.assess.beans.*;
-import com.wonders.fzb.assess.dao.*;
-import com.wonders.fzb.assess.services.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,6 +37,18 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 
 	@Autowired
 	private LegislationAssessTaskDao legislationAssessTaskDao;
+
+	@Autowired
+	private WegovSimpleNodeService wegovSimpleNodeService;
+
+	@Autowired
+	private LegislationAssessItemService legislationAssessItemService;
+
+	@Autowired
+	private LegislationAssessService legislationAssessService;
+
+	@Autowired
+	private LegislationAssessDealService legislationAssessDealService;
 	
 	/**
 	 * 添加实体对象
@@ -112,5 +133,73 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 	public List<LegislationAssessTask> findByHQL(String hql) {
 		List<LegislationAssessTask> legislationAssessTaskList = legislationAssessTaskDao.findByHQL(hql);
 		return legislationAssessTaskList;
+	}
+
+	@Override
+	public void nextAssessProcess(HttpServletRequest request, HttpSession session) {
+		String stTaskId = request.getParameter("stTaskId");
+		String stNodeId = request.getParameter("stNodeId");
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String teamId=currentPerson.getTeamInfos().get(0).getId();
+		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
+		String userId=currentPerson.getUserId();
+		String userName=currentPerson.getName();
+		String userRoleId = session.getAttribute("userRoleId").toString();
+		String userRole = session.getAttribute("userRole").toString();
+		LegislationAssessTask legislationAssessTask=findById(stTaskId);
+		legislationAssessTask.setStTaskStatus("DONE");
+		legislationAssessTask.setDtDealDate(new Date());
+		legislationAssessTask.setStDealId(userId);
+		legislationAssessTask.setStDealName(userName);
+		legislationAssessTask.setStRoleId(userRoleId);
+		legislationAssessTask.setStRoleName(userRole);
+		legislationAssessTask.setStTeamId(teamId);
+		legislationAssessTask.setStTeamName(teamName);
+		update(legislationAssessTask);//修改任务状态
+
+		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
+		WegovSimpleNode nextNode=wegovSimpleNodeService.findById(node.getStNextNode());
+		if(!"END".equals(node.getStNextNode())) {//增加一条新任务
+			LegislationAssessTask newLegislationAssessTask=new LegislationAssessTask();
+			newLegislationAssessTask.setStFlowId(legislationAssessTask.getStFlowId());
+			newLegislationAssessTask.setStTaskStatus("TODO");
+			newLegislationAssessTask.setDtOpenDate(legislationAssessTask.getDtOpenDate());
+			newLegislationAssessTask.setStNodeId(nextNode.getStNodeId());
+			newLegislationAssessTask.setStNodeName(nextNode.getStNodeName());
+			newLegislationAssessTask.setStUserId(legislationAssessTask.getStUserId());
+			newLegislationAssessTask.setStUserName(legislationAssessTask.getStUserName());
+			newLegislationAssessTask.setStParentId(legislationAssessTask.getStParentId());
+			addObj(newLegislationAssessTask);
+		}
+
+		//添加一条操作记录
+		LegislationAssessDeal legislationAssessDeal=new LegislationAssessDeal();
+		legislationAssessDeal.setStActionId(stNodeId);
+		legislationAssessDeal.setStActionName(node.getStNodeName());
+		legislationAssessDeal.setStUserId(userId);
+		legislationAssessDeal.setStUserName(userName);
+		legislationAssessDeal.setDtDealDate(new Date());
+		if("NOD_0000000251".equals(stNodeId)){
+			LegislationAssess legislationAssess=legislationAssessService.findById(legislationAssessTask.getStParentId());
+			legislationAssessDeal.setStAssessId(legislationAssess.getStAssessId());
+			legislationAssessDeal.setStBakOne(legislationAssess.getStAssessName());
+			legislationAssessDeal.setStBakTwo(legislationAssess.getStRemark());
+			if (!"END".equals(node.getStNextNode())) {
+				legislationAssess.setStNodeId(nextNode.getStNodeId());
+				legislationAssess.setStNodeName(nextNode.getStNodeName());
+				legislationAssessService.update(legislationAssess);
+			}
+		}else{
+			LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
+			legislationAssessDeal.setStAssessId(legislationAssessItem.getStItemId());
+			legislationAssessDeal.setStBakOne(legislationAssessItem.getStItemName());
+			legislationAssessDeal.setStBakTwo(legislationAssessItem.getStBak());
+			if (!"END".equals(node.getStNextNode())) {
+				legislationAssessItem.setStNodeId(nextNode.getStNodeId());
+				legislationAssessItem.setStNodeName(nextNode.getStNodeName());
+				legislationAssessItemService.update(legislationAssessItem);
+			}
+		}
+		legislationAssessDealService.add(legislationAssessDeal);
 	}
 }

@@ -1,11 +1,13 @@
 package com.wonders.fzb.assess.services;
 
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.assess.beans.LegislationAssessTask;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.assess.beans.LegislationAssessTask;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -73,6 +75,13 @@ public interface LegislationAssessTaskService{
 	 * 根据HQL进行查询.
 	 */
 	public List<LegislationAssessTask> findByHQL(String hql);
+
+	/**
+	 * 立法后评估大节点流转
+	 * @param request
+	 * @param session
+	 */
+	void nextAssessProcess(HttpServletRequest request, HttpSession session);
 
 
 }

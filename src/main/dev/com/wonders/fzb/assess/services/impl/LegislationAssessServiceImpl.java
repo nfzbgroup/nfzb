@@ -1,19 +1,26 @@
 package com.wonders.fzb.assess.services.impl;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.assess.beans.LegislationAssess;
+import com.wonders.fzb.assess.beans.LegislationAssessTask;
+import com.wonders.fzb.assess.dao.LegislationAssessDao;
+import com.wonders.fzb.assess.services.LegislationAssessService;
+import com.wonders.fzb.assess.services.LegislationAssessTaskService;
+import com.wonders.fzb.base.beans.Page;
+import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
-import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.assess.beans.*;
-import com.wonders.fzb.assess.dao.*;
-import com.wonders.fzb.assess.services.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,7 +35,16 @@ public class LegislationAssessServiceImpl implements LegislationAssessService {
 
 	@Autowired
 	private LegislationAssessDao legislationAssessDao;
-	
+
+	@Autowired
+	private WegovSimpleNodeService wegovSimpleNodeService;
+
+	@Autowired
+	private LegislationFilesService legislationFilesService;
+
+	@Autowired
+	private LegislationAssessTaskService legislationAssessTaskService;
+
 	/**
 	 * 添加实体对象
 	 */
@@ -112,5 +128,67 @@ public class LegislationAssessServiceImpl implements LegislationAssessService {
 	public List<LegislationAssess> findByHQL(String hql) {
 		List<LegislationAssess> legislationAssessList = legislationAssessDao.findByHQL(hql);
 		return legislationAssessList;
+	}
+
+	@Override
+	public void saveLegislationAssess(HttpServletRequest request, HttpSession session) {
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String unitId = currentPerson.getTeamInfos().get(0).getId();
+		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
+		String teamId=currentPerson.getTeamInfos().get(0).getId();
+		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
+		String userId=currentPerson.getUserId();
+		String userName=currentPerson.getName();
+		String userRoleId = session.getAttribute("userRoleId").toString();
+		String userRole = session.getAttribute("userRole").toString();
+		String stTaskId=request.getParameter("stTaskId");
+		String stAssessName=request.getParameter("stAssessName");
+		String stRemark=request.getParameter("stRemark");
+		String stNodeId=request.getParameter("stNodeId");
+		String stAssessId;
+		if(StringUtils.isEmpty(stTaskId)){
+			WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
+			//添加评估规划
+			LegislationAssess legislationAssess=new LegislationAssess();
+			legislationAssess.setStAssessName(stAssessName);
+			legislationAssess.setStRemark(stRemark);
+			legislationAssess.setDtCreateDate(new Date());
+			legislationAssess.setStCreatorId(userId);
+			legislationAssess.setStCreatorName(userName);
+			legislationAssess.setStUnitId(unitId);
+			legislationAssess.setStUnitName(unitName);
+			legislationAssess.setStNodeId(stNodeId);
+			legislationAssess.setStNodeName(node.getStNodeName());
+			stAssessId=addObj(legislationAssess);
+
+			//添加评估规划任务
+			LegislationAssessTask legislationAssessTask=new LegislationAssessTask();
+			legislationAssessTask.setStFlowId(stAssessName);
+			legislationAssessTask.setStParentId(stAssessId);
+			legislationAssessTask.setStNodeId(stNodeId);
+			legislationAssessTask.setStNodeName(node.getStNodeName());
+			legislationAssessTask.setStTaskStatus("TODO");
+			legislationAssessTask.setDtOpenDate(new Date());
+			legislationAssessTask.setStRoleId(userRoleId);
+			legislationAssessTask.setStRoleName(userRole);
+			legislationAssessTask.setStUserId(userId);
+			legislationAssessTask.setStUserName(userName);
+			legislationAssessTask.setStTeamId(teamId);
+			legislationAssessTask.setStTeamName(teamName);
+			legislationAssessTaskService.add(legislationAssessTask);
+		}else{
+			LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
+			stAssessId=legislationAssessTask.getStParentId();
+			LegislationAssess legislationAssess=findById(stAssessId);
+			//修改评估规划任务
+			legislationAssessTask.setStFlowId(stAssessName);
+			legislationAssessTaskService.update(legislationAssessTask);
+			//修改评估规划
+			legislationAssess.setStAssessName(stAssessName);
+			legislationAssess.setStRemark(stRemark);
+			update(legislationAssess);
+		}
+		//处理附件内容
+		legislationFilesService.updateParentIdById(request,stAssessId);
 	}
 }

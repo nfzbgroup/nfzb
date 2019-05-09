@@ -129,7 +129,7 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	@SuppressWarnings("unused")
 	private String openPlanAddPage(){
-		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId = 'NOD_0000000208' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
 		request.setAttribute("legislationPlanItem",new LegislationPlanItem());
 		request.setAttribute("legislationPlanTask",new LegislationPlanTask());
@@ -155,7 +155,7 @@ public class LegislationPlanAction extends BaseAction {
 		}
 		sortMap.put("dtPubDate", "ASC");
 		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId = 'NOD_0000000208' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
 		request.setAttribute("legislationFilesList",legislationFilesList);
 		request.setAttribute("legislationPlanItem",legislationPlanItem);
