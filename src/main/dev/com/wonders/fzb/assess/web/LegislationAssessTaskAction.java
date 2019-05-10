@@ -120,7 +120,7 @@ public class LegislationAssessTaskAction extends BaseAction {
 
 		if (StringUtil.isNotEmpty(stNodeId)) {
 			condMap.put("stNodeId",stNodeId);
-			if("NOD_0000000254".equals(stNodeId)){
+			if("NOD_0000000254".equals(stNodeId)||"NOD_0000000256".equals(stNodeId)){
 				condMap.put("stTeamId",session.getAttribute("unitCode"));
 			}
 		}

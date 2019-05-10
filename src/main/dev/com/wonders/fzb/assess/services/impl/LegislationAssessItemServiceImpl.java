@@ -176,15 +176,23 @@ public class LegislationAssessItemServiceImpl implements LegislationAssessItemSe
 			legislationAssessTask.setStTeamName(teamName);
 			legislationAssessTaskService.add(legislationAssessTask);
 		}else{
-			//修改评估项目任务
 			LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
-			legislationAssessTask.setStFlowId(stItemName);
-			legislationAssessTaskService.update(legislationAssessTask);
-			//评估项目
 			stItemId=legislationAssessTask.getStParentId();
 			LegislationAssessItem legislationAssessItem=findById(stItemId);
-			legislationAssessItem.setStBak(stBak);
-			legislationAssessItem.setStItemName(stItemName);
+			if("NOD_0000000252".equals(stNodeId)){
+				//修改评估项目任务
+				legislationAssessTask.setStFlowId(stItemName);
+				legislationAssessTaskService.update(legislationAssessTask);
+				//修改评估项目
+				legislationAssessItem.setStBak(stBak);
+				legislationAssessItem.setStItemName(stItemName);
+
+			}else if("NOD_0000000256".equals(stNodeId)){
+				String stTypeName=request.getParameter("stTypeName");
+				String stContent=request.getParameter("stContent");
+				legislationAssessItem.setStTypeName(stTypeName);
+				legislationAssessItem.setStContent(stContent);
+			}
 			update(legislationAssessItem);
 		}
 		// 处理附件内容
@@ -192,7 +200,7 @@ public class LegislationAssessItemServiceImpl implements LegislationAssessItemSe
 	}
 
 	@Override
-	public List<Map<String, Object>> queryProjectByAssessId(String stAssessId) {
+	public List<Map<String, Object>> queryProjectByAssessId(String stAssessId,String stNodeId) {
 		List<Map<String, Object>> result=new ArrayList<>();
 		List<LegislationAssessItem> legislationAssessItemList=findByHQL("from LegislationAssessItem t where 1=1 and t.stAssessId='"+stAssessId+"' and t.stIsDelete is null");
 		legislationAssessItemList.forEach((LegislationAssessItem legislationAssessItem)->{
@@ -205,6 +213,10 @@ public class LegislationAssessItemServiceImpl implements LegislationAssessItemSe
 				stStatus=stStatus+"(待处理)";
 			}else{
 				stStatus=stStatus+"(已处理)";
+			}
+			if("NOD_0000000255".equals(stNodeId)){
+				LegislationAssessTask legislationAssessTaskActive=legislationAssessTaskService.findByHQL("from LegislationAssessTask t where 1=1 and t.stParentId='"+legislationAssessItem.getStItemId()+"' and t.stNodeId='NOD_0000000254' and t.stEnable is null").get(0);
+				map.put("stActive",legislationAssessTaskActive.getStActive());
 			}
 			map.put("stStatus",stStatus);
 			map.put("stUserName",legislationAssessItem.getStUserName());

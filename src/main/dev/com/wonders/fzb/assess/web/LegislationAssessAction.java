@@ -153,8 +153,9 @@ public class LegislationAssessAction extends BaseAction {
 	 */
 	private String openAssessProjectInfoPage(){
 		String stTaskId=request.getParameter("stTaskId");
+		String stNodeId=request.getParameter("stNodeId");
 		LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
-		List<Map<String, Object>> legislationAssessItemList=legislationAssessItemService.queryProjectByAssessId(legislationAssessTask.getStParentId());
+		List<Map<String, Object>> legislationAssessItemList=legislationAssessItemService.queryProjectByAssessId(legislationAssessTask.getStParentId(),stNodeId);
 		request.setAttribute("legislationAssessItemList",legislationAssessItemList);
 		return pageController();
 	}

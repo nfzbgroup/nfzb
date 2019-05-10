@@ -66,7 +66,7 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
-									<c:when test="${nodeId=='NOD_0000000252'||nodeId=='NOD_0000000254'}">
+									<c:otherwise>
 										<div class="col-md-5">
 											<div class="form-group">
 												<label class="col-md-3 control-label">发起时间:</label>
@@ -99,7 +99,7 @@
 										</div>
 										<div class="col-md-5">
 										</div>
-									</c:when>
+									</c:otherwise>
 								</c:choose>
 
 								<div class="col-md-4">

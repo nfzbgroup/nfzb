@@ -83,5 +83,5 @@ public interface LegislationAssessItemService{
 	 */
 	void saveLegislationAssessItem(HttpServletRequest request, HttpSession session);
 
-    List<Map<String,Object>> queryProjectByAssessId(String stAssessId);
+    List<Map<String,Object>> queryProjectByAssessId(String stAssessId,String stNodeId);
 }

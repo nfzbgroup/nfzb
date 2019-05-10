@@ -53,7 +53,12 @@
 											<c:if test="${nodeId=='NOD_0000000253'}">
 												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
 												<a href="javaScript:void(0)" data-title="项目详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
-												<a href="javaScript:void(0)" data-title="分送" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">分送</a>
+												<a href="javaScript:void(0)" data-title="评估汇总分送" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">评估汇总分送</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000255'}">
+												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
+												<a href="javaScript:void(0)" data-title="纳入后评估计划" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">纳入后评估计划</a>
 											</c:if>
 										</td>
 									</c:when>
@@ -65,6 +70,9 @@
 											<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
 											<c:if test="${nodeId=='NOD_0000000253'}">
 												<a href="javaScript:void(0)" data-title="项目详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000255'}">
+												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
 											</c:if>
 										</td>
 									</c:otherwise>
@@ -94,7 +102,12 @@
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000254'}">
 												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
-												<a href="javaScript:void(0)" data-title="审核" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">审核</a>
+												<a href="javaScript:void(0)" data-title="审核" onclick="openAssessItemPage('openAssessItemAuditPage','${plan.stTaskId}')" class="layer_full_link">审核</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000256'}">
+												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="编辑评估方案" onclick="openAssessItemPage('openAssessItemPlanPage','${plan.stTaskId}')" class="layer_full_link">编辑评估方案</a>
+												<a href="javaScript:void(0)" data-title="上报" onclick="checkAssessItemPlan('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">上报</a>
 											</c:if>
 										</td>
 									</c:when>
@@ -104,6 +117,9 @@
 										</td>
 										<td>
 											<a href="javaScript:void(0)" data-title="查看" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+											<c:if test="${nodeId=='NOD_0000000256'}">
+												<a href="javaScript:void(0)" data-title="查看评估方案" onclick="openAssessItemPage('openAssessItemPlanPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案</a>
+											</c:if>
 										</td>
 									</c:otherwise>
 								</c:choose>
@@ -133,7 +149,11 @@
         $.post("../legislationAssessItem/checkAssessItem.do?stTaskId="+stTaskId+"&stNodeId="+stNodeId,
             function (data) {
                 if(data.success) {
-                    openAssessPage("openAssessDistributePage",stTaskId);
+                    if(stNodeId=='NOD_0000000253'){
+                        openAssessPage("openAssessDistributePage",stTaskId);
+                    }else{
+                        nextAssessProcess(stTaskId,stNodeId)
+                    }
                 }else{
                     Duang.error("提示", data.message);
                 }
@@ -141,13 +161,13 @@
             "json")
     }
 
-    function checkPlanExplain(stTaskId,stNodeId) {
-        $.post("../legislationPlan/checkPlanExplain.do?stTaskId="+stTaskId+"&stNode="+stNodeId,
+    function checkAssessItemPlan(stTaskId,stNodeId) {
+        $.post("../legislationAssessItem/checkAssessItemPlan.do?stTaskId="+stTaskId+"&stNode="+stNodeId,
             function (data) {
                 if(data.success) {
-                    nextPlanProcess(stTaskId,stNodeId);
+                    nextAssessProcess(stTaskId,stNodeId);
                 }else{
-                    Duang.error("提示", "请补全计划说明信息！");
+                    Duang.error("提示", "请补全评估方案信息！");
                 }
             },
             "json")

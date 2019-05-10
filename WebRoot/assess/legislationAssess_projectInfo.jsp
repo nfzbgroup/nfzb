@@ -21,6 +21,9 @@
             <tr class="text-center">
                 <th class="text-center">项目名称</th>
                 <th class="text-center">项目状态</th>
+                <c:if test="${nodeId=='NOD_0000000255'}">
+                    <th class="text-center">审核意见</th>
+                </c:if>
                 <th class="text-center">发起人</th>
                 <th class="text-center">发起时间</th>
             </tr>
@@ -39,6 +42,9 @@
 						 	  <p> <span style="color:red;"><c:out value="${assessItem.stStatus}" /></span>	 <p>
 						 </c:if>
                     </td>
+                    <c:if test="${nodeId=='NOD_0000000255'}">
+                        <td>${assessItem.stActive}</td>
+                    </c:if>
                     <td>${assessItem.stUserName}</td>
                     <td><fmt:formatDate type="date" value="${assessItem.dtCreateDate}" /></td>
                 </tr>

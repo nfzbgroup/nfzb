@@ -156,6 +156,13 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 		legislationAssessTask.setStRoleName(userRole);
 		legislationAssessTask.setStTeamId(teamId);
 		legislationAssessTask.setStTeamName(teamName);
+		if("NOD_0000000254".equals(stNodeId)){
+			//审核意见
+			String stActive=request.getParameter("stActive");
+			String stComment1=request.getParameter("stComment1");
+			legislationAssessTask.setStActive(stActive);
+			legislationAssessTask.setStComment1(stComment1);
+		}
 		update(legislationAssessTask);//修改任务状态
 
 		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
@@ -180,7 +187,7 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 		legislationAssessDeal.setStUserId(userId);
 		legislationAssessDeal.setStUserName(userName);
 		legislationAssessDeal.setDtDealDate(new Date());
-		if("NOD_0000000251".equals(stNodeId)||"NOD_0000000253".equals(stNodeId)){
+		if("NOD_0000000251".equals(stNodeId)||"NOD_0000000253".equals(stNodeId)||"NOD_0000000255".equals(stNodeId)){
 			LegislationAssess legislationAssess=legislationAssessService.findById(legislationAssessTask.getStParentId());
 			legislationAssessDeal.setStAssessId(legislationAssess.getStAssessId());
 			legislationAssessDeal.setStBakOne(legislationAssess.getStAssessName());
@@ -212,6 +219,30 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 					addObj(legislationAssessTaskDistribute);
 					legislationAssessItem.setStNodeId("NOD_0000000254");
 					legislationAssessItem.setStNodeName("立法处初审");
+					legislationAssessItemService.update(legislationAssessItem);
+				});
+			}
+			//纳入后评估计划
+			if("NOD_0000000255".equals(stNodeId)){
+				Map<String, Object> condMap = new HashMap<>();
+				Map<String, String> sortMap = new HashMap<>();
+				condMap.put("stAssessId", legislationAssessTask.getStParentId());
+				condMap.put("stIsDeleteIsNull", "null");
+				List<LegislationAssessItem> legislationAssessItemList=legislationAssessItemService.findByList(condMap,sortMap);
+				legislationAssessItemList.forEach((LegislationAssessItem legislationAssessItem)->{
+					LegislationAssessTask legislationAssessTaskPlan=new LegislationAssessTask();
+					legislationAssessTaskPlan.setStFlowId(legislationAssessItem.getStItemName());
+					legislationAssessTaskPlan.setStTaskStatus("TODO");
+					legislationAssessTaskPlan.setDtOpenDate(legislationAssessItem.getDtCreateDate());
+					legislationAssessTaskPlan.setStNodeId("NOD_0000000256");
+					legislationAssessTaskPlan.setStNodeName("制定评估方案");
+					legislationAssessTaskPlan.setStUserId(legislationAssessItem.getStUserId());
+					legislationAssessTaskPlan.setStUserName(legislationAssessItem.getStUserName());
+					legislationAssessTaskPlan.setStParentId(legislationAssessItem.getStItemId());
+					legislationAssessTaskPlan.setStTeamId(legislationAssessItem.getStUnitId());
+					addObj(legislationAssessTaskPlan);
+					legislationAssessItem.setStNodeId("NOD_0000000256");
+					legislationAssessItem.setStNodeName("制定评估方案");
 					legislationAssessItemService.update(legislationAssessItem);
 				});
 			}
