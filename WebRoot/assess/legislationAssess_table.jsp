@@ -50,6 +50,11 @@
 												<a href="javaScript:void(0)" data-title="编辑" onclick="openAssessPage('openAssessEditPage','${plan.stTaskId}')" class="layer_full_link">编辑</a>
 												<a href="javaScript:void(0)" data-title="启动" onclick="nextAssessProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">启动</a>
 											</c:if>
+											<c:if test="${nodeId=='NOD_0000000253'}">
+												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="项目详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
+												<a href="javaScript:void(0)" data-title="分送" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">分送</a>
+											</c:if>
 										</td>
 									</c:when>
 									<c:otherwise>
@@ -58,6 +63,9 @@
 										</td>
 										<td>
 											<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+											<c:if test="${nodeId=='NOD_0000000253'}">
+												<a href="javaScript:void(0)" data-title="项目详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
+											</c:if>
 										</td>
 									</c:otherwise>
 								</c:choose>
@@ -83,6 +91,10 @@
 											<c:if test="${nodeId=='NOD_0000000252'}">
 												<a href="javaScript:void(0)" data-title="编辑" onclick="openAssessItemPage('openAssessItemEditPage','${plan.stTaskId}')" class="layer_full_link">编辑</a>
 												<a href="javaScript:void(0)" data-title="申请" onclick="nextAssessProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">申请</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000254'}">
+												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="审核" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">审核</a>
 											</c:if>
 										</td>
 									</c:when>
@@ -117,13 +129,13 @@
         submitForm(1);
     }
 
-    function checkPlanItem(stTaskId,stNodeId) {
-        $.post("../legislationPlanItem/checkPlanItem.do?stTaskId="+stTaskId+"&stNode="+stNodeId,
+    function checkAssessItem(stTaskId,stNodeId) {
+        $.post("../legislationAssessItem/checkAssessItem.do?stTaskId="+stTaskId+"&stNodeId="+stNodeId,
             function (data) {
                 if(data.success) {
-                    nextPlanProcess(stTaskId,stNodeId);
+                    openAssessPage("openAssessDistributePage",stTaskId);
                 }else{
-                    Duang.error("提示", "请将所有项目都审核完！");
+                    Duang.error("提示", data.message);
                 }
             },
             "json")

@@ -3,6 +3,7 @@ package com.wonders.fzb.assess.services.impl;
 import com.wonders.fzb.assess.beans.LegislationAssess;
 import com.wonders.fzb.assess.beans.LegislationAssessTask;
 import com.wonders.fzb.assess.dao.LegislationAssessDao;
+import com.wonders.fzb.assess.services.LegislationAssessItemService;
 import com.wonders.fzb.assess.services.LegislationAssessService;
 import com.wonders.fzb.assess.services.LegislationAssessTaskService;
 import com.wonders.fzb.base.beans.Page;
@@ -44,6 +45,9 @@ public class LegislationAssessServiceImpl implements LegislationAssessService {
 
 	@Autowired
 	private LegislationAssessTaskService legislationAssessTaskService;
+
+	@Autowired
+	private LegislationAssessItemService legislationAssessItemService;
 
 	/**
 	 * 添加实体对象

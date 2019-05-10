@@ -2,10 +2,13 @@ package com.wonders.fzb.assess.web;
 
 import com.wonders.fzb.assess.beans.LegislationAssess;
 import com.wonders.fzb.assess.beans.LegislationAssessTask;
+import com.wonders.fzb.assess.services.LegislationAssessItemService;
 import com.wonders.fzb.assess.services.LegislationAssessService;
 import com.wonders.fzb.assess.services.LegislationAssessTaskService;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.MOR;
+import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import org.apache.struts2.convention.annotation.Action;
@@ -45,6 +48,14 @@ public class LegislationAssessAction extends BaseAction {
 	@Qualifier("legislationFilesService")
 	private LegislationFilesService legislationFilesService;
 
+	@Autowired
+	@Qualifier("legislationAssessItemService")
+	private LegislationAssessItemService legislationAssessItemService;
+
+	@Autowired
+	@Qualifier("teamInfoService")
+	private TeamInfoService teamInfoService;
+
 	private int pageNo = 1;
 	private int pageSize = 10;
 
@@ -62,7 +73,9 @@ public class LegislationAssessAction extends BaseAction {
 
 	@Action(value = "assess_plan_info", results = { @Result(name = "openAssessAddPage", location = "/assess/legislationAssess_form.jsp"),
 			@Result(name = "openAssessEditPage", location = "/assess/legislationAssess_form.jsp"),
-			@Result(name = "openAssessInfoPage", location = "/assess/legislationAssess_form.jsp")
+			@Result(name = "openAssessInfoPage", location = "/assess/legislationAssess_form.jsp"),
+			@Result(name = "openAssessProjectInfoPage", location = "/assess/legislationAssess_projectInfo.jsp"),
+			@Result(name = "openAssessDistributePage", location = "/assess/legislationAssess_distribute.jsp")
 	})
 	public String legislationAssess() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -131,6 +144,43 @@ public class LegislationAssessAction extends BaseAction {
 	 */
 	private String saveLegislationAssess(){
 		legislationAssessService.saveLegislationAssess(request,session);
+		return null;
+	}
+
+	/**
+	 * 跳转汇总项目详情列表页
+	 * @return
+	 */
+	private String openAssessProjectInfoPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
+		List<Map<String, Object>> legislationAssessItemList=legislationAssessItemService.queryProjectByAssessId(legislationAssessTask.getStParentId());
+		request.setAttribute("legislationAssessItemList",legislationAssessItemList);
+		return pageController();
+	}
+
+	/**
+	 * 跳转评估项目汇总分送页
+	 * @return
+	 */
+	private String openAssessDistributePage(){
+		//查立法处
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("moduleId","MODULE_LEGISLATE");
+		condMap.put("showNameLike","立法");
+		sortMap.put("sort","ASC");
+		List<MOR> morList=teamInfoService.findMorList(condMap,sortMap);
+		request.setAttribute("morList",morList);
+		return pageController();
+	}
+
+	/**
+	 * 保存评估项目汇总分送
+	 * @return
+	 */
+	private String saveLegislationAssessDistribute(){
+		legislationAssessTaskService.nextAssessProcess(request,session);
 		return null;
 	}
 }

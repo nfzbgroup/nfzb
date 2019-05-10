@@ -1,11 +1,13 @@
 package com.wonders.fzb.assess.services;
 
-import java.util.List;
-import java.util.Map;
-
+import com.wonders.fzb.assess.beans.LegislationAssessItem;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.assess.beans.LegislationAssessItem;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -74,5 +76,12 @@ public interface LegislationAssessItemService{
 	 */
 	public List<LegislationAssessItem> findByHQL(String hql);
 
+	/**
+	 * 评估规划项目保存
+	 * @param request
+	 * @param session
+	 */
+	void saveLegislationAssessItem(HttpServletRequest request, HttpSession session);
 
+    List<Map<String,Object>> queryProjectByAssessId(String stAssessId);
 }

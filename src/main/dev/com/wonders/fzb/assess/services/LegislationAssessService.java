@@ -83,5 +83,4 @@ public interface LegislationAssessService{
 	 */
 	void saveLegislationAssess(HttpServletRequest request, HttpSession session);
 
-
 }

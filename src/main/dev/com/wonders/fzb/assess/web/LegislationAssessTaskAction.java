@@ -145,7 +145,8 @@ public class LegislationAssessTaskAction extends BaseAction {
 		sortMap.put("dtOpenDate", "DESC");
 		Page<LegislationAssessTask> infoPage=legislationAssessTaskService.findByPage(condMap,sortMap,Integer.parseInt(pageNo),Integer.parseInt(pageSize));
 		infoPage.getResult().forEach((LegislationAssessTask legislationAssessTask)->{
-			if("NOD_0000000251".equals(stNodeId)||"NOD_0000000253".equals(stNodeId)){
+			if("NOD_0000000251".equals(stNodeId)||"NOD_0000000253".equals(stNodeId)||"NOD_0000000255".equals(stNodeId)
+					||"NOD_0000000262".equals(stNodeId)||"NOD_0000000263".equals(stNodeId)){
 				LegislationAssess legislationAssess=legislationAssessService.findById(legislationAssessTask.getStParentId());
 				legislationAssessTask.setStNodeName(legislationAssess.getStNodeName());
 			}else{

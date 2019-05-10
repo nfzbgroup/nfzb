@@ -32,7 +32,7 @@
 								<input type="hidden" id="stNodeId" value="${nodeId}">
 								<input type="hidden" id="requestUrl" value="${requestUrl}">
 								<c:choose>
-									<c:when test="${nodeId=='NOD_0000000251'||nodeId=='NOD_0000000253'||nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
+									<c:when test="${nodeId=='NOD_0000000251'||nodeId=='NOD_0000000253'||nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
 										<div class="col-md-5">
 											<div class="form-group">
 												<label class="col-md-3 control-label">发起时间:</label>
@@ -66,7 +66,7 @@
 										<div class="col-md-5">
 										</div>
 									</c:when>
-									<c:when test="${nodeId=='NOD_0000000252'}">
+									<c:when test="${nodeId=='NOD_0000000252'||nodeId=='NOD_0000000254'}">
 										<div class="col-md-5">
 											<div class="form-group">
 												<label class="col-md-3 control-label">发起时间:</label>

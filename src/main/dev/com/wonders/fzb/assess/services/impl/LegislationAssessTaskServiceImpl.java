@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -179,7 +180,7 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 		legislationAssessDeal.setStUserId(userId);
 		legislationAssessDeal.setStUserName(userName);
 		legislationAssessDeal.setDtDealDate(new Date());
-		if("NOD_0000000251".equals(stNodeId)){
+		if("NOD_0000000251".equals(stNodeId)||"NOD_0000000253".equals(stNodeId)){
 			LegislationAssess legislationAssess=legislationAssessService.findById(legislationAssessTask.getStParentId());
 			legislationAssessDeal.setStAssessId(legislationAssess.getStAssessId());
 			legislationAssessDeal.setStBakOne(legislationAssess.getStAssessName());
@@ -188,6 +189,31 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 				legislationAssess.setStNodeId(nextNode.getStNodeId());
 				legislationAssess.setStNodeName(nextNode.getStNodeName());
 				legislationAssessService.update(legislationAssess);
+			}
+			//评估汇总分送
+			if("NOD_0000000253".equals(stNodeId)){
+				String stTeamId=request.getParameter("stTeamId");
+				Map<String, Object> condMap = new HashMap<>();
+				Map<String, String> sortMap = new HashMap<>();
+				condMap.put("stAssessId", legislationAssessTask.getStParentId());
+				condMap.put("stIsDeleteIsNull", "null");
+				List<LegislationAssessItem> legislationAssessItemList=legislationAssessItemService.findByList(condMap,sortMap);
+				legislationAssessItemList.forEach((LegislationAssessItem legislationAssessItem)->{
+					LegislationAssessTask legislationAssessTaskDistribute=new LegislationAssessTask();
+					legislationAssessTaskDistribute.setStFlowId(legislationAssessItem.getStItemName());
+					legislationAssessTaskDistribute.setStTaskStatus("TODO");
+					legislationAssessTaskDistribute.setDtOpenDate(legislationAssessItem.getDtCreateDate());
+					legislationAssessTaskDistribute.setStNodeId("NOD_0000000254");
+					legislationAssessTaskDistribute.setStNodeName("立法处初审");
+					legislationAssessTaskDistribute.setStUserId(legislationAssessItem.getStUserId());
+					legislationAssessTaskDistribute.setStUserName(legislationAssessItem.getStUserName());
+					legislationAssessTaskDistribute.setStParentId(legislationAssessItem.getStItemId());
+					legislationAssessTaskDistribute.setStTeamId(stTeamId);
+					addObj(legislationAssessTaskDistribute);
+					legislationAssessItem.setStNodeId("NOD_0000000254");
+					legislationAssessItem.setStNodeName("立法处初审");
+					legislationAssessItemService.update(legislationAssessItem);
+				});
 			}
 		}else{
 			LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
