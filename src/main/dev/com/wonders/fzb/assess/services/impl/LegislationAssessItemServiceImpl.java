@@ -188,15 +188,29 @@ public class LegislationAssessItemServiceImpl implements LegislationAssessItemSe
 				legislationAssessItem.setStItemName(stItemName);
 
 			}else if("NOD_0000000256".equals(stNodeId)){
+				//评估方案
 				String stTypeName=request.getParameter("stTypeName");
 				String stContent=request.getParameter("stContent");
 				legislationAssessItem.setStTypeName(stTypeName);
 				legislationAssessItem.setStContent(stContent);
-			}
+			}else if("NOD_0000000257".equals(stNodeId)){
+				//评估方案建议
+                String stSuggest=request.getParameter("stSuggest");
+                legislationAssessItem.setStSuggest(stSuggest);
+            }else if("NOD_0000000258".equals(stNodeId)){
+				//反馈评估进度
+				String stComment1=request.getParameter("stComment1");
+				legislationAssessTask.setStComment1(stComment1);
+				legislationAssessTaskService.update(legislationAssessTask);
+            }
 			update(legislationAssessItem);
 		}
 		// 处理附件内容
-		legislationFilesService.updateParentIdById(request, stItemId);
+		if("NOD_0000000258".equals(stNodeId)){
+			legislationFilesService.updateParentIdById(request, stTaskId);
+		}else{
+			legislationFilesService.updateParentIdById(request, stItemId);
+		}
 	}
 
 	@Override

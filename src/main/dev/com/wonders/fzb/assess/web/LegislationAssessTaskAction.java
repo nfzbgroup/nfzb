@@ -120,7 +120,7 @@ public class LegislationAssessTaskAction extends BaseAction {
 
 		if (StringUtil.isNotEmpty(stNodeId)) {
 			condMap.put("stNodeId",stNodeId);
-			if("NOD_0000000254".equals(stNodeId)||"NOD_0000000256".equals(stNodeId)){
+			if("NOD_0000000254".equals(stNodeId)||"NOD_0000000256".equals(stNodeId)||"NOD_0000000258".equals(stNodeId)){
 				condMap.put("stTeamId",session.getAttribute("unitCode"));
 			}
 		}
@@ -143,6 +143,9 @@ public class LegislationAssessTaskAction extends BaseAction {
 		}
 		condMap.put("stEnableIsNull","null");
 		sortMap.put("dtOpenDate", "DESC");
+		if("NOD_0000000258".equals(stNodeId)){
+			sortMap.put("stActive", "ASC");
+		}
 		Page<LegislationAssessTask> infoPage=legislationAssessTaskService.findByPage(condMap,sortMap,Integer.parseInt(pageNo),Integer.parseInt(pageSize));
 		infoPage.getResult().forEach((LegislationAssessTask legislationAssessTask)->{
 			if("NOD_0000000251".equals(stNodeId)||"NOD_0000000253".equals(stNodeId)||"NOD_0000000255".equals(stNodeId)

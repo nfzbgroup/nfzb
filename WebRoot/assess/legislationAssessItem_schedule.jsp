@@ -7,10 +7,10 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >评估方案 > </span>
+            <span >评估进度 > </span>
         </li>
         <li>
-            <span ><c:choose><c:when test="${nodeId=='NOD_0000000256'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">编辑</c:when><c:otherwise>查看</c:otherwise></c:choose> </span>
+            <span ><c:choose><c:when test="${nodeId=='NOD_0000000258'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">编辑</c:when><c:otherwise>查看</c:otherwise></c:choose></span>
         </li>
     </ul>
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -35,25 +35,43 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">评估方案名称：</label>
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" name="stTypeName" <c:if test="${nodeId !='NOD_0000000256'||(legislationAssessTask.stTaskStatus !=null&&legislationAssessTask.stTaskStatus=='DONE')}">disabled</c:if> <c:if test="${legislationAssessItem.stTypeName !=null}">value="${legislationAssessItem.stTypeName}" </c:if>>
+                    <label  class="form-control">${legislationAssessItem.stTypeName}</label>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">评估方案说明：</label>
                 <div class="col-sm-9">
-                    <textarea class="form-control" name="stContent" <c:if test="${nodeId !='NOD_0000000256'||(legislationAssessTask.stTaskStatus !=null&&legislationAssessTask.stTaskStatus=='DONE')}">disabled</c:if> ><c:if test="${legislationAssessItem.stContent !=null}">${legislationAssessItem.stContent}</c:if></textarea>
+                    <label  class="form-control">${legislationAssessItem.stContent}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">评估方案建议：</label>
+                <div class="col-sm-9">
+                    <label  class="form-control">${legislationAssessItem.stSuggest}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">季度：</label>
+                <div class="col-sm-9">
+                    <label  class="form-control">第${legislationAssessTask.stActive}季度</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">评估进度：</label>
+                <div class="col-sm-9">
+                    <textarea class="form-control" name="stComment1" <c:if test="${nodeId !='NOD_0000000258'||(legislationAssessTask.stTaskStatus !=null&&legislationAssessTask.stTaskStatus=='DONE')}">disabled</c:if> ><c:if test="${legislationAssessTask.stComment1 !=null}">${legislationAssessTask.stComment1}</c:if></textarea>
                 </div>
             </div>
 			<div class="form-group text-center">
-                <c:if test="${nodeId=='NOD_0000000256'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">
+                <c:if test="${nodeId=='NOD_0000000258'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">
                     <input type="button" class="btn btn-w-m btn-success"  value="保存" onclick="saveLegislationAssessItem()"> &nbsp;&nbsp;
                 </c:if>
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
             <div class="form-group">
-                <label class="control-label">评估方案材料
+                <label class="control-label">评估进度材料
                 </label>
-                <c:if test="${nodeId=='NOD_0000000256'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">
+                <c:if test="${nodeId=='NOD_0000000258'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">
                     <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
                     </label>
                     <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
@@ -77,11 +95,11 @@
                             <c:forEach var="file" items="${legislationFilesList}">
                                 <c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
                                     <tr class="text-center">
-                                        <td>评估方案材料</td>
+                                        <td>评估进度材料</td>
                                         <td>${file.stTitle}</td>
                                         <td>
                                             <a  target="_blank" href="${basePath}/file/downloadAttach.do?fileId=${file.stFileId}">下载</a>
-                                           <c:if test="${nodeId=='NOD_0000000256'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">
+                                           <c:if test="${nodeId=='NOD_0000000258'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">
                                              &nbsp;&nbsp;
                                             <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
                                             <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">
@@ -101,8 +119,8 @@
 <script>
     function saveLegislationAssessItem() {
         var param=$('#legislationAssessItemForm').formToJson();
-        if(param.stTypeName==null||param.stTypeName==""){
-            Duang.error("提示","请输入评估方案名称");
+        if(param.stComment1==null||param.stComment1==""){
+            Duang.error("提示","请输入评估进度");
         }else {
             $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationAssessItem",param,function(data){
                 $('#legislationProcessForm').modal('hide');
@@ -132,7 +150,7 @@
                         $("#"+id).parent().html(html);
                     }else{
                         var html='<tr class="text-center">'
-                            +'<td>评估方案材料</td>'
+                            +'<td>评估进度材料</td>'
                             +'<td>'+file.name+'</td>'
                             +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?fileId='+file.fileId+'">下载</a>&nbsp;&nbsp;'
                             +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'

@@ -7,7 +7,7 @@
 	<thead>
 		<tr class="text-center">
 			<c:choose>
-				<c:when test="${nodeId=='NOD_0000000251'||nodeId=='NOD_0000000253'||nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
+				<c:when test="${nodeId=='NOD_0000000251'||nodeId=='NOD_0000000253'||nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
 					<th class="text-center" data-field="district_name">规划名称</th>
 					<th class="text-center" data-field="district_name">处理环节</th>
 					<th class="text-center" data-field="created_at">发起人</th>
@@ -20,6 +20,9 @@
 				<c:otherwise>
 					<th class="text-center" data-field="district_name">评估项目名称</th>
 					<th class="text-center" data-field="district_name">处理环节</th>
+					<c:if test="${nodeId=='NOD_0000000258'}">
+						<th class="text-center" data-field="district_name">季度</th>
+					</c:if>
 					<th class="text-center" data-field="created_at">发起人</th>
 					<th class="text-center" data-field="district_name">发起时间</th>
 					<c:if test="${buttonStatus=='DONE'}">
@@ -89,6 +92,9 @@
 							<tr class="text-center">
 								<td>${plan.stFlowId}</td>
 								<td>${plan.stNodeName}</td>
+								<c:if test="${nodeId=='NOD_0000000258'}">
+									<td>第${plan.stActive}季度</td>
+								</c:if>
 								<td>${plan.stUserName}</td>
 								<td>
 									<fmt:formatDate type="date" value="${plan.dtOpenDate}" />
@@ -101,13 +107,38 @@
 												<a href="javaScript:void(0)" data-title="申请" onclick="nextAssessProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">申请</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000254'}">
-												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="查看评估项目" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估项目</a>
 												<a href="javaScript:void(0)" data-title="审核" onclick="openAssessItemPage('openAssessItemAuditPage','${plan.stTaskId}')" class="layer_full_link">审核</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000256'}">
-												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="查看评估项目" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估项目</a>
 												<a href="javaScript:void(0)" data-title="编辑评估方案" onclick="openAssessItemPage('openAssessItemPlanPage','${plan.stTaskId}')" class="layer_full_link">编辑评估方案</a>
-												<a href="javaScript:void(0)" data-title="上报" onclick="checkAssessItemPlan('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">上报</a>
+												<a href="javaScript:void(0)" data-title="下一步" onclick="checkAssessItemPlan('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">下一步</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000257'}">
+												<a href="javaScript:void(0)" data-title="查看评估项目" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估项目</a>
+												<a href="javaScript:void(0)" data-title="查看评估方案" onclick="openAssessItemPage('openAssessItemPlanPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案</a>
+												<br/>
+												<a href="javaScript:void(0)" data-title="编辑评估方案建议" onclick="openAssessItemPage('openAssessItemSuggestPage','${plan.stTaskId}')" class="layer_full_link">编辑评估方案建议</a>
+												<a href="javaScript:void(0)" data-title="下一步" onclick="checkAssessItemPlan('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">下一步</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000258'}">
+												<a href="javaScript:void(0)" data-title="查看评估项目" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估项目</a>
+												<a href="javaScript:void(0)" data-title="查看评估方案" onclick="openAssessItemPage('openAssessItemPlanPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案</a>
+												<br/>
+												<a href="javaScript:void(0)" data-title="查看评估方案建议" onclick="openAssessItemPage('openAssessItemSuggestPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案建议</a>
+												<a href="javaScript:void(0)" data-title="反馈评估进度" onclick="openAssessItemPage('openAssessItemSchedulePage','${plan.stTaskId}')" class="layer_full_link">反馈评估进度</a>
+												<br/>
+												<a href="javaScript:void(0)" data-title="下一步" onclick="checkAssessItemPlan('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">下一步</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000259'}">
+												<a href="javaScript:void(0)" data-title="查看评估项目" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估项目</a>
+												<a href="javaScript:void(0)" data-title="查看评估方案" onclick="openAssessItemPage('openAssessItemPlanPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案</a>
+												<br/>
+												<a href="javaScript:void(0)" data-title="查看评估方案建议" onclick="openAssessItemPage('openAssessItemSuggestPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案建议</a>
+												<a href="javaScript:void(0)" data-title="查看评估进度" onclick="openAssessItemPage('openAssessItemScheduleListPage','${plan.stTaskId}')" class="layer_full_link">查看评估进度</a>
+												<br/>
+												<a href="javaScript:void(0)" data-title="提交评估报告" onclick="checkAssessItemPlan('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">下一步</a>
 											</c:if>
 										</td>
 									</c:when>
@@ -116,9 +147,19 @@
 											<fmt:formatDate type="date" value="${plan.dtDealDate}" />
 										</td>
 										<td>
-											<a href="javaScript:void(0)" data-title="查看" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
-											<c:if test="${nodeId=='NOD_0000000256'}">
+											<a href="javaScript:void(0)" data-title="查看评估项目" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估项目</a>
+											<c:if test="${nodeId=='NOD_0000000256'||nodeId=='NOD_0000000257'||nodeId=='NOD_0000000258'||nodeId=='NOD_0000000259'}">
 												<a href="javaScript:void(0)" data-title="查看评估方案" onclick="openAssessItemPage('openAssessItemPlanPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000257'||nodeId=='NOD_0000000258'||nodeId=='NOD_0000000259'}">
+												<br/>
+												<a href="javaScript:void(0)" data-title="查看评估方案建议" onclick="openAssessItemPage('openAssessItemSuggestPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案建议</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000258'}">
+												<a href="javaScript:void(0)" data-title="查看评估进度" onclick="openAssessItemPage('openAssessItemSchedulePage','${plan.stTaskId}')" class="layer_full_link">查看评估进度</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000259'}">
+												<a href="javaScript:void(0)" data-title="查看评估进度" onclick="openAssessItemPage('openAssessItemScheduleListPage','${plan.stTaskId}')" class="layer_full_link">查看评估进度</a>
 											</c:if>
 										</td>
 									</c:otherwise>
@@ -162,16 +203,17 @@
     }
 
     function checkAssessItemPlan(stTaskId,stNodeId) {
-        $.post("../legislationAssessItem/checkAssessItemPlan.do?stTaskId="+stTaskId+"&stNode="+stNodeId,
+        $.post("../legislationAssessItem/checkAssessItemPlan.do?stTaskId="+stTaskId+"&stNodeId="+stNodeId,
             function (data) {
                 if(data.success) {
                     nextAssessProcess(stTaskId,stNodeId);
                 }else{
-                    Duang.error("提示", "请补全评估方案信息！");
+                    Duang.error("提示", data.message);
                 }
             },
             "json")
     }
+
     function nextAssessProcess(stTaskId,stNodeId) {
         layer.confirm('请确认操作！',function(index){
             layer.close(layer.index);
