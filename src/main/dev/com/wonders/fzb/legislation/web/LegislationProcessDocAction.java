@@ -3,6 +3,7 @@ package com.wonders.fzb.legislation.web;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
+import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
@@ -13,12 +14,15 @@ import com.wonders.fzb.citymeeting.services.LegislationCitymeetingService;
 import com.wonders.fzb.framework.beans.TeamInfo;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
+import com.wonders.fzb.framework.services.UserInfoService;
 import com.wonders.fzb.legislation.beans.*;
 import com.wonders.fzb.legislation.services.*;
 import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+
+import antlr.Utils;
 import dm.jdbc.util.StringUtil;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
@@ -67,10 +71,14 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationFilesService")
 	private LegislationFilesService legislationFilesService;
-
+	
 	@Autowired
 	@Qualifier("teamInfoService")
 	private TeamInfoService teamInfoService;
+	
+	@Autowired
+	@Qualifier("userInfoService")
+	private UserInfoService userInfoService;
 
 	@Autowired
 	@Qualifier("legislationProcessDealService")
@@ -95,6 +103,10 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationPlanService")
 	private LegislationPlanService legislationPlanService;
+	
+	@Autowired
+	@Qualifier("legislationSendNoticeService")
+	private LegislationSendNoticeService legislationSendNoticeService;
 
 	private File upload;
 
@@ -160,11 +172,13 @@ public class LegislationProcessDocAction extends BaseAction {
 			@Result(name = "draft_deal_deptopinion_sign", location = "/legislation/draft_deal_deptopinion_sign.jsp"),
 			// 部门意见征询发送部门
 			@Result(name = "draft_deal_deptopinion_send", location = "/legislation/draft_deal_deptopinion_send.jsp"),
-			// 部门意见征询发送部门
-			@Result(name = "openDepartmentCheckPage", location = "/legislation/legislationProcessManager_departmentCheck.jsp"),
 			// 部门意见征询接收反馈
 			@Result(name = "draft_deal_deptopinion_input", location = "/legislation/draft_deal_deptopinion_input.jsp"),
-
+			// 部门意见部门反馈
+			@Result(name = "depart_notice_feedback", location = "/legislation/depart_notice_feedback.jsp"),
+			@Result(name = "person_notice_feedback", location = "/legislation/person_notice_feedback.jsp"),
+			// 部门意见征询发送部门
+			@Result(name = "openDepartmentCheckPage", location = "/legislation/legislationProcessManager_departmentCheck.jsp"),
 			// -----------以上是部门征求意见--------
 
 			@Result(name = "openLegislationReceivePage", location = "/legislation/legislationProcessManager_legislationReceive.jsp"), @Result(name = "openLegislationCensorshipPage", location = "/legislation/legislationProcessManager_legislationCensorship.jsp"), @Result(name = "openLegislationReleasePage", location = "/legislation/legislationProcessManager_legislationRelease.jsp"),
@@ -1072,12 +1086,17 @@ public class LegislationProcessDocAction extends BaseAction {
 		}
 		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
 		// 查询分办处
-		Map<String, Object> condMap = new HashMap<>();
-		Map<String, String> sortMap = new HashMap<>();
-		condMap.put("idLike", "U_3_");
-		condMap.put("unitNameLike", "法规处");
-		sortMap.put("id", "ASC");
-		List<TeamInfo> teamInfoList = teamInfoService.findTeamInfoList(condMap, sortMap);
+//		Map<String, Object> condMap = new HashMap<>();
+//		Map<String, String> sortMap = new HashMap<>();
+//		condMap.put("idLike", "U_3_");
+//		condMap.put("unitNameLike", "法规处");
+//		sortMap.put("id", "ASC");
+//		List<TeamInfo> teamInfoList = teamInfoService.findTeamInfoList(condMap, sortMap);
+		List<TeamInfo> teamInfoListRaw = teamInfoService.findTeamInfoInModuleByType("MODULE_LEGISLATE","市司法局处室");
+		List<TeamInfo> teamInfoList=new ArrayList<TeamInfo>();
+		for(TeamInfo each:teamInfoListRaw){
+			if(each.getTeamName().indexOf("立法")>=0)  teamInfoList.add(each);
+		}
 		request.setAttribute("teamList", teamInfoList);
 		return pageController();
 	}
@@ -1096,53 +1115,6 @@ public class LegislationProcessDocAction extends BaseAction {
 	private String openDemonstrationPage() {
 		return pageController();
 	}
-
-	/**
-	 * 办理页面--跳转网上征求意见发起页面openOnlineDemonstrationPage
-	 * 
-	 * @return
-	 */
-	private String draft_deal_net_start() {
-		String method;
-		String stDocId = request.getParameter("stDocId");
-		String stNodeId = request.getParameter("stNodeId");
-		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
-		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
-		if (legislationProcessTaskList.size() > 0) {
-			Map<String, Object> condMap = new HashMap<>();
-			Map<String, String> sortMap = new HashMap<>();
-			condMap.put("stParentId", stDocId);
-			condMap.put("stNodeId", stNodeId);
-			sortMap.put("dtPubDate", "ASC");
-			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-				method = "draft_deal_net_start";
-			} else {
-				String stStyle = "style ='display: none;'";
-				request.setAttribute("stStyle", stStyle);
-				method = "draft_deal_net_start";
-			}
-			request.setAttribute("legislationFilesList", legislationFilesList);
-			request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
-		} else {
-			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, null);
-			request.setAttribute("legislationProcessTask", new LegislationProcessTask());
-			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-			method = "draft_deal_net_start";
-		}
-
-		request.setAttribute("nodeId", stNodeId);
-		request.setAttribute("stDocId", stDocId);
-		request.setAttribute("buttonId", request.getParameter("buttonId"));
-		request.setAttribute("requestUrl", request.getRequestURI());
-		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
-		return method;
-	}
-	
-	
-	
 	/**
 	 * 办理页面--跳转立法听证会发起页面
 	 * 
@@ -1161,9 +1133,9 @@ public class LegislationProcessDocAction extends BaseAction {
 			condMap.put("stNodeId", stNodeId);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 				method = "draft_deal_hearing_start";
 			} else {
 				String stStyle = "style ='display: none;'";
@@ -1187,60 +1159,6 @@ public class LegislationProcessDocAction extends BaseAction {
 		return method;
 	}
 
-	/**
-	 * 公开征求意见接收页面
-	 * 
-	 * @return
-	 * @author sy
-	 */
-	private String draft_deal_net_deal__TODO() {
-		String method = "draft_deal_net_deal__TODO";
-		String stDocId = request.getParameter("stDocId");
-		String stNodeId = request.getParameter("stNodeId");// 图中的节点，再状态
-		String nodeIdStatus[] = stNodeId.split("__");
-		stNodeId = nodeIdStatus[0];
-		String nodeStatus = nodeIdStatus[1];
-		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
-		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
-		if (legislationProcessTaskList.size() > 0) {
-			Map<String, Object> condMap = new HashMap<>();
-			Map<String, String> sortMap = new HashMap<>();
-			condMap.put("stParentId", stDocId);
-			condMap.put("stNodeId", stNodeId);
-			sortMap.put("dtPubDate", "ASC");
-			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-			// 如果当前节点正好TODO，就是操作页。否则是只读页面
-			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-				method = "draft_deal_net_deal__TODO";
-			} else {
-				String stStyle = "style ='display: none;'";
-				request.setAttribute("stStyle", stStyle);
-				method = "draft_deal_net_deal__TODO";
-			}
-			request.setAttribute("legislationFilesList", legislationFilesList);
-			request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
-		}
-		// 页面元素是legislation_process_taskdetail 表数据 bg
-		LegislationProcessTaskdetail legislationProcessTaskdetail = new LegislationProcessTaskdetail();
-		Map<String, Object> taskdetailCondMap = new HashMap<>();
-		Map<String, String> taskdetailSortMap = new HashMap<>();
-		taskdetailCondMap.put("stTaskId", legislationProcessTaskList.get(0).getStTaskId());
-		taskdetailCondMap.put("stTaskStatus", nodeStatus);
-		List<LegislationProcessTaskdetail> taskdetailList = legislationProcessTaskdetailService.findByList(taskdetailCondMap, taskdetailSortMap);
-		if (taskdetailList.size() > 0) {
-			legislationProcessTaskdetail = taskdetailList.get(0);
-			request.setAttribute("legislationProcessTaskdetail", legislationProcessTaskdetail);
-		}
-		// 页面元素是legislation_process_taskdetail 表数据 ed
-		request.setAttribute("nodeId", stNodeId);
-		request.setAttribute("stDocId", stDocId);
-		request.setAttribute("nodeStatus", nodeStatus);
-		request.setAttribute("requestUrl", request.getRequestURI());
-		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
-		return method;
-	}
 	
 	
 	/**
@@ -1252,6 +1170,7 @@ public class LegislationProcessDocAction extends BaseAction {
 	private String draft_deal_hearing_deal__TODO() {
 		String method = "draft_deal_hearing_deal__TODO";
 		String stDocId = request.getParameter("stDocId");
+		String stPersonsIds = request.getParameter("stPersonsId");
 		String stNodeId = request.getParameter("stNodeId");// 图中的节点，再状态
 		String nodeIdStatus[] = stNodeId.split("__");
 		stNodeId = nodeIdStatus[0];
@@ -1259,24 +1178,27 @@ public class LegislationProcessDocAction extends BaseAction {
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
 		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
 		if (legislationProcessTaskList.size() > 0) {
+			LegislationProcessTask legislationProcessTask = legislationProcessTaskList.get(0);
 			Map<String, Object> condMap = new HashMap<>();
 			Map<String, String> sortMap = new HashMap<>();
 			condMap.put("stParentId", stDocId);
+			condMap.put("stNodeStatus", nodeStatus);
 			condMap.put("stNodeId", stNodeId);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 			// 如果当前节点正好TODO，就是操作页。否则是只读页面
 			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 				method = "draft_deal_hearing_deal__TODO";
 			} else {
 				String stStyle = "style ='display: none;'";
 				request.setAttribute("stStyle", stStyle);
 				method = "draft_deal_hearing_deal__TODO";
 			}
+			
 			request.setAttribute("legislationFilesList", legislationFilesList);
-			request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+			request.setAttribute("legislationProcessTask", legislationProcessTask);
 		}
 		// 页面元素是legislation_process_taskdetail 表数据 bg
 		LegislationProcessTaskdetail legislationProcessTaskdetail = new LegislationProcessTaskdetail();
@@ -1287,6 +1209,10 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTaskdetail> taskdetailList = legislationProcessTaskdetailService.findByList(taskdetailCondMap, taskdetailSortMap);
 		if (taskdetailList.size() > 0) {
 			legislationProcessTaskdetail = taskdetailList.get(0);
+			//根据id字符串 获取已选人员信息集合
+			 List<UserInfo>	userInfoList = legislationProcessDocService.findUserInfoListByString(legislationProcessTaskdetail.getStPersonId());
+			request.setAttribute("userInfoList", userInfoList);
+			request.setAttribute("stPersonsId", legislationProcessTaskdetail.getStPersonId());
 			request.setAttribute("legislationProcessTaskdetail", legislationProcessTaskdetail);
 		}
 		// 页面元素是legislation_process_taskdetail 表数据 ed
@@ -1319,12 +1245,13 @@ public class LegislationProcessDocAction extends BaseAction {
 			Map<String, String> sortMap = new HashMap<>();
 			condMap.put("stParentId", stDocId);
 			condMap.put("stNodeId", stNodeId);
+			condMap.put("stNodeStatus", nodeStatus);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 			// 如果当前节点正好SEND，就是操作页。否则是只读页面
 			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 				method = "draft_deal_hearing_deal__SEND";
 			} else {
 				String stStyle = "style ='display: none;'";
@@ -1377,11 +1304,12 @@ public class LegislationProcessDocAction extends BaseAction {
 			condMap.put("stParentId", stDocId);
 			condMap.put("stNodeId", stNodeId);
 			sortMap.put("dtPubDate", "ASC");
+			condMap.put("stNodeStatus", nodeStatus);
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 			// 如果当前节点正好SEND，就是操作页。否则是只读页面
 			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 				method = "draft_deal_hearing_deal__PUBLISH";
 			} else {
 				String stStyle = "style ='display: none;'";
@@ -1432,11 +1360,12 @@ public class LegislationProcessDocAction extends BaseAction {
 			condMap.put("stParentId", stDocId);
 			condMap.put("stNodeId", stNodeId);
 			sortMap.put("dtPubDate", "ASC");
+			condMap.put("stNodeStatus", nodeStatus);
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 			// 如果当前节点正好GATHER，就是操作页。否则是只读页面
 			if ("GATHER".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 				method = "draft_deal_hearing_deal__GATHER";
 			} else {
 				String stStyle = "style ='display: none;'";
@@ -1492,12 +1421,13 @@ public class LegislationProcessDocAction extends BaseAction {
 			Map<String, String> sortMap = new HashMap<>();
 			condMap.put("stParentId", stDocId);
 			condMap.put("stNodeId", stNodeId);
+			condMap.put("stNodeStatus", nodeStatus);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 			// 如果当前节点正好RESULT，就是操作页。否则是只读页面
 			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 				method = "draft_deal_hearing_deal__RESULT";
 			} else {
 				String stStyle = "style ='display: none;'";
@@ -1528,7 +1458,108 @@ public class LegislationProcessDocAction extends BaseAction {
 		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
 		return method;
 	}
+	/**
+	 * 办理页面--跳转网上征求意见发起页面openOnlineDemonstrationPage
+	 * 
+	 * @return
+	 */
+	private String draft_deal_net_start() {
+		String method;
+		String stDocId = request.getParameter("stDocId");
+		String stNodeId = request.getParameter("stNodeId");
+		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
+		if (legislationProcessTaskList.size() > 0) {
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", stDocId);
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+				method = "draft_deal_net_start";
+			} else {
+				String stStyle = "style ='display: none;'";
+				request.setAttribute("stStyle", stStyle);
+				method = "draft_deal_net_start";
+			}
+			request.setAttribute("legislationFilesList", legislationFilesList);
+			request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+		} else {
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, null);
+			request.setAttribute("legislationProcessTask", new LegislationProcessTask());
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			method = "draft_deal_net_start";
+		}
 
+		request.setAttribute("nodeId", stNodeId);
+		request.setAttribute("stDocId", stDocId);
+		request.setAttribute("buttonId", request.getParameter("buttonId"));
+		request.setAttribute("requestUrl", request.getRequestURI());
+		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
+		return method;
+	}
+	
+	/**
+	 * 公开征求意见接收页面
+	 * 
+	 * @return
+	 * @author sy
+	 */
+	private String draft_deal_net_deal__TODO() {
+		String method = "draft_deal_net_deal__TODO";
+		String stDocId = request.getParameter("stDocId");
+		String stNodeId = request.getParameter("stNodeId");// 图中的节点，再状态
+		String nodeIdStatus[] = stNodeId.split("__");
+		stNodeId = nodeIdStatus[0];
+		String nodeStatus = nodeIdStatus[1];
+		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
+		if (legislationProcessTaskList.size() > 0) {
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", stDocId);
+			condMap.put("stNodeId", stNodeId);
+			condMap.put("stNodeStatus", nodeStatus);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			
+			// 如果当前节点正好TODO，就是操作页。否则是只读页面
+			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+				method = "draft_deal_net_deal__TODO";
+			} else {
+				String stStyle = "style ='display: none;'";
+				request.setAttribute("stStyle", stStyle);
+				method = "draft_deal_net_deal__TODO";
+			}
+			request.setAttribute("legislationFilesList", legislationFilesList);
+			request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+		}
+		// 页面元素是legislation_process_taskdetail 表数据 bg
+		LegislationProcessTaskdetail legislationProcessTaskdetail = new LegislationProcessTaskdetail();
+		Map<String, Object> taskdetailCondMap = new HashMap<>();
+		Map<String, String> taskdetailSortMap = new HashMap<>();
+		taskdetailCondMap.put("stTaskId", legislationProcessTaskList.get(0).getStTaskId());
+		taskdetailCondMap.put("stTaskStatus", nodeStatus);
+		List<LegislationProcessTaskdetail> taskdetailList = legislationProcessTaskdetailService.findByList(taskdetailCondMap, taskdetailSortMap);
+		if (taskdetailList.size() > 0) {
+			legislationProcessTaskdetail = taskdetailList.get(0);
+			request.setAttribute("legislationProcessTaskdetail", legislationProcessTaskdetail);
+		}
+		// 页面元素是legislation_process_taskdetail 表数据 ed
+		request.setAttribute("nodeId", stNodeId);
+		request.setAttribute("stDocId", stDocId);
+		request.setAttribute("nodeStatus", nodeStatus);
+		request.setAttribute("requestUrl", request.getRequestURI());
+		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
+		return method;
+	}
+	
+	
 	/**
 	 * 公开征求意见送审页面
 	 * 
@@ -1549,13 +1580,14 @@ public class LegislationProcessDocAction extends BaseAction {
 			Map<String, String> sortMap = new HashMap<>();
 			condMap.put("stParentId", stDocId);
 			condMap.put("stNodeId", stNodeId);
+			condMap.put("stNodeStatus", nodeStatus);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			
 			// 如果当前节点正好SEND，就是操作页。否则是只读页面
-			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-				method = "draft_deal_net_deal__SEND";
+			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {method = "draft_deal_net_deal__SEND";
 			} else {
 				String stStyle = "style ='display: none;'";
 				request.setAttribute("stStyle", stStyle);
@@ -1604,13 +1636,14 @@ public class LegislationProcessDocAction extends BaseAction {
 			Map<String, String> sortMap = new HashMap<>();
 			condMap.put("stParentId", stDocId);
 			condMap.put("stNodeId", stNodeId);
+			condMap.put("stNodeStatus", nodeStatus);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			
 			// 如果当前节点正好SEND，就是操作页。否则是只读页面
-			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-				method = "draft_deal_net_deal__PUBLISH";
+			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {method = "draft_deal_net_deal__PUBLISH";
 			} else {
 				String stStyle = "style ='display: none;'";
 				request.setAttribute("stStyle", stStyle);
@@ -1659,13 +1692,14 @@ public class LegislationProcessDocAction extends BaseAction {
 			Map<String, String> sortMap = new HashMap<>();
 			condMap.put("stParentId", stDocId);
 			condMap.put("stNodeId", stNodeId);
+			condMap.put("stNodeStatus", nodeStatus);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			
 			// 如果当前节点正好GATHER，就是操作页。否则是只读页面
-			if ("GATHER".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-				method = "draft_deal_net_deal__GATHER";
+			if ("GATHER".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {method = "draft_deal_net_deal__GATHER";
 			} else {
 				String stStyle = "style ='display: none;'";
 				request.setAttribute("stStyle", stStyle);
@@ -1720,13 +1754,13 @@ public class LegislationProcessDocAction extends BaseAction {
 			Map<String, String> sortMap = new HashMap<>();
 			condMap.put("stParentId", stDocId);
 			condMap.put("stNodeId", stNodeId);
+			condMap.put("stNodeStatus", nodeStatus);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId,nodeStatus, legislationFilesList);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 			// 如果当前节点正好RESULT，就是操作页。否则是只读页面
-			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-				method = "draft_deal_net_deal__RESULT";
+			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {method = "draft_deal_net_deal__RESULT";
 			} else {
 				String stStyle = "style ='display: none;'";
 				request.setAttribute("stStyle", stStyle);
@@ -1777,7 +1811,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			condMap.put("stNodeId", stNodeId);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+			if (true) {
 				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
 				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 				method = "draft_deal_expert_start";
@@ -1821,7 +1855,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			condMap.put("stNodeId", stNodeId);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+			if (true) {
 				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
 				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 				method = "draft_deal_expert_deal";
@@ -1981,22 +2015,25 @@ public class LegislationProcessDocAction extends BaseAction {
 	private String draft_deal_deptsign_input() {
 		String stDocId = request.getParameter("stDocId");
 		String stNodeId = request.getParameter("stNodeId");
-		boolean allDone = true;
+		// boolean allDone = true;
 		String method = "draft_deal_deptsign_input";
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
-		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
-		if (legislationProcessTaskList.size() > 0) {
-			// 得到所有意见录入task
-			request.setAttribute("legislationProcessTaskList", legislationProcessTaskList);
-			// 是否已全部确认
-			for (LegislationProcessTask task : legislationProcessTaskList) {
-				if ("TODO".equals(task.getStTaskStatus())) {
-					allDone = false;
-				}
-			}
-		}
-		request.setAttribute("nodeId", "NOD_0000000122");
-		request.setAttribute("allDone", allDone);
+		List<LegislationSendNotice> legislationSendNoticeList = legislationSendNoticeService
+				.findByHQL("from LegislationSendNotice t where t.stDocId='" + stDocId + "' and t.stModelName='立法过程' and t.stNodeName='部门会签录入' ");
+		request.setAttribute("legislationSendNoticeList", legislationSendNoticeList);
+		// if (legislationProcessTaskList.size() > 0) {
+		// // 得到所有意见录入task
+		// request.setAttribute("legislationProcessTaskList",
+		// legislationProcessTaskList);
+		// // 是否已全部确认
+		// for (LegislationProcessTask task : legislationProcessTaskList) {
+		// if ("TODO".equals(task.getStTaskStatus())) {
+		// allDone = false;
+		// }
+		// }
+		// }
+		request.setAttribute("nodeId", "NOD_0000000162");
+		// request.setAttribute("allDone", allDone);
 		request.setAttribute("stDocId", stDocId);
 		request.setAttribute("buttonId", request.getParameter("buttonId"));
 		request.setAttribute("requestUrl", request.getRequestURI());
@@ -2004,6 +2041,109 @@ public class LegislationProcessDocAction extends BaseAction {
 		return method;
 	}
 	
+	/**
+	 * 部门意见反馈页面
+	 * @return
+	 */
+	private String depart_notice_feedback() {
+		String method = request.getParameter("method");
+		String stNoticeId = request.getParameter("stNoticeId");
+		String stNodeId = request.getParameter("stNodeId");
+		String preNodeId="";
+		if("NOD_0000000122".equals(stNodeId)) {
+			//部门征求意见发起
+			preNodeId="NOD_0000000120";
+		}else {
+			//部门会签发起
+			preNodeId="NOD_0000000160";
+		}
+		LegislationSendNotice legislationSendNotice = legislationSendNoticeService.findById(stNoticeId);
+		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(legislationSendNotice.getStDocId(), preNodeId);
+		if (legislationProcessTaskList.size() > 0) {
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			//部门征求意见材料
+			condMap.put("stParentId", legislationSendNotice.getStDocId());
+			condMap.put("stNodeId", preNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			condMap.clear();
+			sortMap.clear();
+			//部门反馈上传材料
+			condMap.put("stParentId", legislationSendNotice.getStDocId());
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList1 = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList1);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			request.setAttribute("legislationFilesList", legislationFilesList);
+			request.setAttribute("legislationFilesList1", legislationFilesList1);
+		}
+		request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+		request.setAttribute("nodeId", stNodeId);
+		request.setAttribute("legislationSendNotice", legislationSendNotice);
+		return method;
+	}
+	
+	/**
+	 * 领导意见反馈页面
+	 * @return
+	 */
+	private String person_notice_feedback() {
+		String method = request.getParameter("method");
+		String stNoticeId = request.getParameter("stNoticeId");
+		String stNodeId = "NOD_0000000162";
+		String preNodeId="";
+		if("NOD_0000000122".equals(stNodeId)) {
+			//部门征求意见发起
+			preNodeId="NOD_0000000120";
+		}else {
+			//部门会签发起
+			preNodeId="NOD_0000000160";
+		}
+		LegislationSendNotice legislationSendNotice = legislationSendNoticeService.findById(stNoticeId);
+		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(legislationSendNotice.getStDocId(), preNodeId);
+		if (legislationProcessTaskList.size() > 0) {
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			//部门征求意见材料
+			condMap.put("stParentId", legislationSendNotice.getStDocId());
+			condMap.put("stNodeId", preNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			condMap.clear();
+			sortMap.clear();
+			//部门反馈上传材料
+			condMap.put("stParentId", legislationSendNotice.getStDocId());
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList1 = legislationFilesService.findByList(condMap, sortMap);
+			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList1);
+			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			request.setAttribute("legislationFilesList", legislationFilesList);
+			request.setAttribute("legislationFilesList1", legislationFilesList1);
+		}
+		request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+		request.setAttribute("nodeId", stNodeId);
+		request.setAttribute("legislationSendNotice", legislationSendNotice);
+		return method;
+	}
+	
+	/**
+	 * 发送部门--选择部门页面
+	 * @return
+	 */
+	private String openDepartmentCheckPage(){
+		String orgType=request.getParameter("orgType");
+		String teamId=request.getParameter("teamId");
+		String[] deptIds = null;
+		if(org.apache.commons.lang3.StringUtils.isNotEmpty(teamId)){
+			deptIds=teamId.split(",");
+		}
+		List<Map<String,Object>> teamList=teamInfoService.findTeamListByTypeArray("MODULE_LEGISLATE",orgType,deptIds);
+		request.setAttribute("teamList",teamList);
+		return pageController();
+	}
 	
 	/**
 	 * 办理页面--跳转网上征求意见盖章页面
@@ -2804,6 +2944,8 @@ public class LegislationProcessDocAction extends BaseAction {
 		String method = request.getParameter("method");
 		String stDocId = request.getParameter("stDocId");
 		String stNodeId = request.getParameter("stNodeId");
+		String nodeIdStatus[] = method.split("_");
+		String nodeStatus = nodeIdStatus[1];
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
 		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
 		if (legislationProcessTaskList.size() > 0) {
@@ -2813,7 +2955,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			condMap.put("stNodeId", stNodeId);
 			sortMap.put("dtPubDate", "ASC");
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+			if (true) {
 				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
 				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 			}
@@ -2878,49 +3020,49 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
 		LegislationProcessTask legislationProcessTask = legislationProcessTaskList.get(0);
 		String stTaskId = legislationProcessTask.getStTaskId();
-//		// 发送部门id所保存在task表中的字段
-//		String stBakOne = legislationProcessTask.getStBakOne();
-//		String deptIds[] = null;
-//		List<TeamInfo> teamInfoList = new ArrayList<TeamInfo>();
-//		if (stBakOne != null && !stBakOne.isEmpty()) {
-//			// 拿到部门id
-//			deptIds = stBakOne.split(",");
-//		}
-//		if ("TODO".equals(legislationProcessTask.getStTaskStatus())) {
-//			// 任务进行中
-//			// 保存的已选择的部门id
-//			request.setAttribute("deptIds", deptIds);
-//			teamInfoList = teamInfoService.findTeamInfoInModuleByType("MODULE_LEGISLATE", "委办局");
-//			method = "draft_deal_deptopinion_send";
-//		} else {
-//			// 任务已完成
-//			// 已发送的部门
-//			for (String id : deptIds) {
-//				TeamInfo teamInfo = teamInfoService.findTeamInfoByTeamId("MODULE_LEGISLATE", id);
-//				teamInfoList.add(teamInfo);
-//			}
-//		}
-//		request.setAttribute("teamInfoList", teamInfoList);
+		// 发送部门id所保存在task表中的字段
+		String stBakOne = legislationProcessTask.getStBakOne();
+		String deptIds[] = null;
+		List<TeamInfo> teamInfoList = new ArrayList<TeamInfo>();
+		if (stBakOne != null && !stBakOne.isEmpty()) {
+			// 拿到部门id
+			deptIds = stBakOne.split(",");
+		}
+		if (legislationProcessTaskList.size() > 0) {
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", stDocId);
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			// 可操作页面
+			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
+				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			}
+			request.setAttribute("legislationFilesList", legislationFilesList);
+			request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+		}
+		if ("TODO".equals(legislationProcessTask.getStTaskStatus())) {
+			// 任务进行中
+			// 保存的已选择的部门id
+			request.setAttribute("deptIds", deptIds);
+			teamInfoList = teamInfoService.findTeamInfoInModuleByType("MODULE_LEGISLATE", "委办局");
+			method = "draft_deal_deptopinion_send";
+		} else {
+			// 任务已完成
+			// 已发送的部门
+			for (String id : deptIds) {
+				TeamInfo teamInfo = teamInfoService.findTeamInfoByTeamId("MODULE_LEGISLATE", id);
+				teamInfoList.add(teamInfo);
+			}
+		}
+		request.setAttribute("teamInfoList", teamInfoList);
 		request.setAttribute("legislationProcessTask", legislationProcessTask);
 		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
 		return demonstrationPageController(method, stTaskId);
 	}
 
-	/**
-	 * 发送部门--选择部门页面
-	 * @return
-	 */
-	private String openDepartmentCheckPage(){
-		String orgType=request.getParameter("orgType");
-		String teamId=request.getParameter("teamId");
-		String[] deptIds = null;
-		if(org.apache.commons.lang3.StringUtils.isNotEmpty(teamId)){
-			deptIds=teamId.split(",");
-		}
-		List<Map<String,Object>> teamList=teamInfoService.findTeamListByTypeArray("MODULE_LEGISLATE",orgType,deptIds);
-		request.setAttribute("teamList",teamList);
-		return pageController();
-	}
 	/**
 	 * 办理页面--跳转部门征求意见录入页面 openUnitDemonstrationPage
 	 * 
@@ -2929,22 +3071,23 @@ public class LegislationProcessDocAction extends BaseAction {
 	private String draft_deal_deptopinion_input() {
 		String stDocId = request.getParameter("stDocId");
 		String stNodeId = request.getParameter("stNodeId");
-		boolean allDone = true;
+		// boolean allDone = true;
 		String method = "draft_deal_deptopinion_input";
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
-		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
-		if (legislationProcessTaskList.size() > 0) {
-			// 得到所有意见录入task
-			request.setAttribute("legislationProcessTaskList", legislationProcessTaskList);
-			// 是否已全部确认
-			for (LegislationProcessTask task : legislationProcessTaskList) {
-				if ("TODO".equals(task.getStTaskStatus())) {
-					allDone = false;
-				}
-			}
-		}
+		List<LegislationSendNotice> legislationSendNoticeList = legislationSendNoticeService
+				.findByHQL("from LegislationSendNotice t where t.stDocId='" + stDocId + "' and t.stModelName='立法过程' and t.stNodeName='部门意见录入' ");
+		// if (legislationSendNoticeList.size() > 0) {
+		// 得到所有意见录入task
+		request.setAttribute("legislationSendNoticeList", legislationSendNoticeList);
+		// 是否已全部确认
+		// for (LegislationSendNotice task : legislationSendNoticeList) {
+		// if (!"已反馈".equals(task.getStNoticeStatus())) {
+		// allDone = false;
+		// }
+		// }
+		// }
 		request.setAttribute("nodeId", "NOD_0000000122");
-		request.setAttribute("allDone", allDone);
+		// request.setAttribute("allDone", allDone);
 		request.setAttribute("stDocId", stDocId);
 		request.setAttribute("buttonId", request.getParameter("buttonId"));
 		request.setAttribute("requestUrl", request.getRequestURI());
@@ -3396,6 +3539,7 @@ public class LegislationProcessDocAction extends BaseAction {
 	//打开送常务会议页面
 	private String draft_citymeet_deal() {
 		String stTaskStatus = request.getParameter("stTaskStatus");
+		
 		String stDocId = request.getParameter("stDocId");
 		String stNodeId = request.getParameter("stNodeId");
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
@@ -3404,8 +3548,7 @@ public class LegislationProcessDocAction extends BaseAction {
 		if(list.size()>0) legislationProcessTask = list.get(0);
 		
 		//可用的议题
-		List<LegislationCitymeeting> cityMeetingList = legislationCitymeetingService.findByHQL("select t from LegislationCitymeeting t,LegislationCitymeetingTask k where 1=1 and t.stTopicId =k.stTopicId and k.stNodeId='NOD_0000000180' and k.stTaskStatus ='AFFIRM' ");
-		
+		List<LegislationCitymeeting> cityMeetingList = legislationCitymeetingService.findByHQL("select k from LegislationCitymeeting k, LegislationSendNotice t where 1=1 and t.stDocId =k.stTopicId and t.stNoticeStatus !='已反馈' ");		
 		request.setAttribute("stTaskStatus", stTaskStatus);
 		request.setAttribute("nodeId", legislationProcessTask.getStNodeId());
 		request.setAttribute("stDocId", stDocId);
@@ -3413,6 +3556,48 @@ public class LegislationProcessDocAction extends BaseAction {
 		request.setAttribute("cityMeetingList", cityMeetingList);
 		request.setAttribute("legislationProcessTask", legislationProcessTask);
 		request.setAttribute("requestUrl", request.getRequestURI());
+		
+		
+		//回显上传材料
+		String nodeStatus = request.getParameter("stTaskStatus");
+		if(!"TODO".equals(nodeStatus)){
+			nodeStatus="TODO";
+		}
+		String method="";
+				if(true){
+					//String nodeIdStatus[] = method.split("__");	
+					//String nodeStatus = nodeIdStatus[1];		
+					String stItemId = request.getParameter("stItemIds");
+					String stItemIds =  request.getParameter("stItemId");
+					if(stItemIds!=null){
+						String[] strs = stItemIds.split(",");
+						StringBuilder builder = new StringBuilder();
+						for (int i = 0; i < strs.length; i++) {
+						builder.append("'"+ strs[i] + (i!=strs.length-1?"',":"'"));
+						}
+					}
+					//回显上传材料
+					if (true) {
+						Map<String, Object> condMap = new HashMap<>();
+						Map<String, String> sortMap = new HashMap<>();
+						condMap.put("stParentId",stDocId);
+						condMap.put("stNodeId", stNodeId);
+						condMap.put("stNodeStatus", nodeStatus);
+						sortMap.put("dtPubDate", "ASC");
+						List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+							List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId, nodeStatus, legislationFilesList);
+							request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+						
+							String stStyle = "style ='display: none;'";
+							request.setAttribute("stStyle", stStyle);
+						request.setAttribute("nodeStatus", nodeStatus);
+						request.setAttribute("legislationFilesList", legislationFilesList);
+						//request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+					}
+				}
+
+		
+		
 		return "draft_citymeet_deal";
 	}
 	
@@ -3436,7 +3621,7 @@ public class LegislationProcessDocAction extends BaseAction {
 
 		String userId = currentPerson.getUserId();
 		String userName = currentPerson.getName();
-		
+		String isbanli="";
 		WegovSimpleNode curentNode = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'").get(0);
 		
 		if (stTaskId != null && !stTaskId.isEmpty()) {
@@ -3444,7 +3629,14 @@ public class LegislationProcessDocAction extends BaseAction {
 			stDocId = legislationProcessTask.getStDocId();
 		}
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
-
+		if("submit".equals(op)){
+			//更改处室议题接收状态   已接收 --》已反馈
+			LegislationSendNotice legislationSendNotice = legislationSendNoticeService.findByHQL("from LegislationSendNotice t where 1=1 and t.stDocId ='" + stComment2 + "'").get(0);
+			legislationSendNotice.setStNoticeStatus("已反馈");
+			legislationSendNotice.setStBak(stDocId);
+			legislationSendNotice.setDtFeekbackDate(new Date());
+			legislationSendNoticeService.update(legislationSendNotice);
+		}
 		if (StringUtil.isEmpty(stTaskId) || "null".equals(stTaskId)) {
 			// 如果没有任务ID，就产生一个新的任务，任务节点就是传入的节点。
 			LegislationProcessTask newTask = new LegislationProcessTask();
@@ -3518,7 +3710,7 @@ public class LegislationProcessDocAction extends BaseAction {
 //			stTaskId = legislationProcessTaskService.addObj(newTask);
 		}
 		// 处理附件内容
-//		legislationFilesService.updateParentIdById(request, stDocId);
+		legislationFilesService.updateParentIdById(request, stDocId);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("stTaskId", stTaskId);
 		jsonObject.put("success", true);
@@ -3863,12 +4055,13 @@ public class LegislationProcessDocAction extends BaseAction {
 	 * @return
 	 */
 	private String draftPromeetInfo() {
-
+   
 		String isbanli = "";
 		String stDocId = request.getParameter("stDocId");
 		String methodStr = request.getParameter("method");
 		String stComent = request.getParameter("stComent");
 		String stNodeId = request.getParameter("stNodeId");
+		String stPersonsIds = request.getParameter("stPersonsId");
 		boolean infoPage=false;
 		if (!(("NOD_0000000104".equals(stNodeId))||("NOD_0000000105".equals(stNodeId)))) {
 			isbanli = "banli";
@@ -3915,23 +4108,54 @@ public class LegislationProcessDocAction extends BaseAction {
 		 * taskDetail.setStTitle(legislationProcessTask.getStNodeName());
 		 * legislationProcessTaskdetailService.add(taskDetail); }
 		 */
-		Map<String, Object> condMap = new HashMap<>();
-		Map<String, String> sortMap = new HashMap<>();
-		condMap.put("stParentId", legislationProcessTask.getStDocId());
-		condMap.put("stNodeId", legislationProcessDoc.getStNodeId());
-		sortMap.put("dtPubDate", "ASC");
-		// 文件查询还有问题
-		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-
+		//回显上传材料
+		String nodeStatus = request.getParameter("stTaskStatus");
+		if (nodeStatus!="TODO"){
+			nodeStatus="DOING";
+		}
+		String method="";
+				if(true){
+					//String nodeIdStatus[] = method.split("__");	
+					//String nodeStatus = nodeIdStatus[1];		
+					String stItemId = request.getParameter("stItemIds");
+					String stItemIds =  request.getParameter("stItemId");
+					if(stItemIds!=null){
+						String[] strs = stItemIds.split(",");
+						StringBuilder builder = new StringBuilder();
+						for (int i = 0; i < strs.length; i++) {
+						builder.append("'"+ strs[i] + (i!=strs.length-1?"',":"'"));
+						}
+					}
+					//回显上传材料
+					if (true) {
+						Map<String, Object> condMap = new HashMap<>();
+						Map<String, String> sortMap = new HashMap<>();
+						condMap.put("stParentId",stDocId);
+						condMap.put("stNodeId", stNodeId);
+						condMap.put("stNodeStatus", nodeStatus);
+						sortMap.put("dtPubDate", "ASC");
+						List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+							List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId, nodeStatus, legislationFilesList);
+							request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+						
+							String stStyle = "style ='display: none;'";
+							request.setAttribute("stStyle", stStyle);
+						request.setAttribute("nodeStatus", nodeStatus);
+						request.setAttribute("legislationFilesList", legislationFilesList);
+						//request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+					}
+				}
 		request.setAttribute("stDocId", stDocId);
 		request.setAttribute("nodeId", stNodeId);
 		request.setAttribute("infoPage", infoPage);
 		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
 		request.setAttribute("legislationProcessTask", legislationProcessTask);
 		request.setAttribute("requestUrl", request.getRequestURI());
-		request.setAttribute("legislationFilesList", legislationFilesList);
 		request.setAttribute("statusCodeArray", statusCodeArray);
 		request.setAttribute("stTaskStatus", legislationProcessTask.getStTaskStatus());
+		//根据id字符串获取人员信息集合
+		List<UserInfo> userInfoList = legislationProcessDocService.findUserInfoListByString(legislationProcessTask.getStBakTwo());
+		request.setAttribute("userInfoList", userInfoList);
         if(infoPage) {
         	request.setAttribute("nodeId", "NOD_0000000105");
         }
@@ -3943,15 +4167,17 @@ public class LegislationProcessDocAction extends BaseAction {
 		// request.setAttribute("taskDetail", taskDetail);
 		if (statusCodeArray.length > 0 && statusCodeArray[0].equals(stTaskStatus)) {// 待审批
 			if (StringUtils.hasText(type)) {// 保存、提交操作
-				if (StringUtils.hasText(stComent) && StringUtils.hasText(reportLeadershipReview)) {
+				if (StringUtils.hasText(stComent) && StringUtils.hasText(stPersonsIds)) {
 					legislationProcessTask.setStBakOne(stComent);// 记录报审说明
-					legislationProcessTask.setStBakTwo(reportLeadershipReview);// 送审领导
+					legislationProcessTask.setStBakTwo(stPersonsIds);// 送审领导
+					
 				}
 			}
 		} else if (statusCodeArray.length > 0 && statusCodeArray[1].equals(stTaskStatus)) {// 录入意见
 			if (StringUtils.hasText(type)) {// 保存、提交操作
 				if (StringUtils.hasText(stComent)) {
 					legislationProcessTask.setStComment1(stComent);// 记录领导意见
+					
 				}
 			}
 		}
@@ -3977,9 +4203,10 @@ public class LegislationProcessDocAction extends BaseAction {
 				legislationProcessTask.setStRoleName(session.getAttribute("userRole").toString());
 				legislationProcessTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
 				legislationProcessTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
-				legislationProcessTaskService.update(legislationProcessTask);
 			}
-
+            if(StringUtils.hasText(legislationProcessTask.getStTaskId())) {
+            	legislationProcessTaskService.update(legislationProcessTask);
+            }
 		}
 		if ("submit".equals(type)) {// 提交操作，修改task状态 并新增一个task
 			int position = -1;
@@ -4004,7 +4231,35 @@ public class LegislationProcessDocAction extends BaseAction {
 				legislationProcessTaskService.add(nextlegislationProcessTask);
 			}
 			legislationProcessTaskService.update(legislationProcessTask);
+			String personIds = legislationProcessTask.getStBakTwo();
+			//发送领导
+			if (personIds.indexOf(",") > -1) {
+				String[] personIArray = personIds.split(",");
+				for (int i = 0; i < personIArray.length; i++) {
+					LegislationSendNotice legislationSendNotice = new LegislationSendNotice();
+					legislationSendNotice.setStDocId(legislationProcessTask.getStDocId());
+					legislationSendNotice.setStNoticeStatus("已发送");
+					legislationSendNotice.setDtOpenDate(new Date());
+					legislationSendNotice.setStUserId(userInfoList.get(i).getUserId());
+					legislationSendNotice.setStUserName(userInfoList.get(i).getName());
+					legislationSendNotice.setStModelName("审核会议");
+					legislationSendNotice.setStNodeName(node.getStNodeName());
+					legislationSendNoticeService.add(legislationSendNotice);
+				}
+			} else {
+				LegislationSendNotice legislationSendNotice = new LegislationSendNotice();
+				legislationSendNotice.setStDocId(legislationProcessTask.getStDocId());
+				legislationSendNotice.setStNoticeStatus("已发送");
+				legislationSendNotice.setDtOpenDate(new Date());
+				legislationSendNotice.setStUserId(userInfoList.get(0).getUserId());
+				legislationSendNotice.setStUserName(userInfoList.get(0).getName());
+				legislationSendNotice.setStModelName("审核会议");
+				legislationSendNotice.setStNodeName(node.getStNodeName());
+				legislationSendNoticeService.add(legislationSendNotice);
+			}
 		}
+		//上传的材料添加st_parent_id字段数据
+		legislationFilesService.updateParentIdById(request,stDocId);
 		return methodStr;
 	}
 
@@ -4038,20 +4293,56 @@ public class LegislationProcessDocAction extends BaseAction {
 		}
 		WegovSimpleNode node = (WegovSimpleNode) wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where t.stNodeId='" + stNodeId + "'").get(0);
 		String[] statusCodeArray = node.getStDoneName().split("#");
-		Map<String, Object> condMap = new HashMap<>();
-		Map<String, String> sortMap = new HashMap<>();
-		condMap.put("stParentId", legislationProcessTask.getStDocId());
-		condMap.put("stNodeId", legislationProcessDoc.getStNodeId());
-		sortMap.put("dtPubDate", "ASC");
-		// 文件查询还有问题
-		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+		
+		//回显上传材料
+		String nodeStatus = request.getParameter("stTaskStatus");
+		String buttonStatus = request.getParameter("buttonStatus");
+		if(nodeStatus== null || nodeStatus.equals("")){
+			nodeStatus="TODO";
+		}
+		String method="";
+				if(true){
+					//String nodeIdStatus[] = method.split("__");	
+					//String nodeStatus = nodeIdStatus[1];		
+					String stItemId = request.getParameter("stItemIds");
+					String stItemIds =  request.getParameter("stItemId");
+					if(stItemIds!=null){
+						String[] strs = stItemIds.split(",");
+						StringBuilder builder = new StringBuilder();
+						for (int i = 0; i < strs.length; i++) {
+						builder.append("'"+ strs[i] + (i!=strs.length-1?"',":"'"));
+						}
+					}
+					//回显上传材料
+					if (true) {
+						Map<String, Object> condMap = new HashMap<>();
+						Map<String, String> sortMap = new HashMap<>();
+						condMap.put("stParentId",stDocId);
+						condMap.put("stNodeId", stNodeId);
+						condMap.put("stNodeStatus", nodeStatus);
+						sortMap.put("dtPubDate", "ASC");
+						List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+							List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId, nodeStatus, legislationFilesList);
+							request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+						
+							String stStyle = "style ='display: none;'";
+							request.setAttribute("stStyle", stStyle);
+						request.setAttribute("nodeStatus", nodeStatus);
+						request.setAttribute("legislationFilesList", legislationFilesList);
+						//request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+					}
+				}
+
+
+
+		//上传的材料添加st_parent_id字段数据
+		legislationFilesService.updateParentIdById(request,stDocId);
 		request.setAttribute("stDocId", stDocId);
 		request.setAttribute("nodeId", stNodeId);
 		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
 		request.setAttribute("legislationCheckmeeting", legislationCheckmeeting);
 		request.setAttribute("legislationProcessTask", legislationProcessTask);
 		request.setAttribute("requestUrl", request.getRequestURI());
-		request.setAttribute("legislationFilesList", legislationFilesList);
 		request.setAttribute("statusCodeArray", statusCodeArray);
 
 		if (StringUtils.hasText(type)) {// 保存、提交操作
@@ -4097,7 +4388,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
 			if ("TODO".equals(stTaskStatus)) {
 				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+
 			} else {
 				//String stStyle = "style ='display: none;'";
 				//request.setAttribute("stStyle", stStyle);
@@ -4670,7 +4961,7 @@ public class LegislationProcessDocAction extends BaseAction {
 			}
 		}
 		
-		@Action(value = "query_doc_num1")
+		@Action(value = "query_user_num")
 		public void query_user_num() throws IOException {
 			PrintWriter out = response.getWriter(); 
 			net.sf.json.JSONArray array=new net.sf.json.JSONArray();
@@ -4688,16 +4979,39 @@ public class LegislationProcessDocAction extends BaseAction {
 			}
 		}
 		
+		Page<LegislationProcessDoc> infoPage;
+		
 		@Action(value = "query_doc_info", results = { @Result(name = "queryDocInfo", location = "/legislation/indexPage.jsp")})				
-		public String queryDocInfo() throws IOException, NumberFormatException, FzbDaoException {
-            List<LegislationProcessDoc> docList = legislationProcessDocService.findByHQL("select d \r\n" + 
-            		"  from LegislationProcessDoc d inner join LegislationProcessTask t\r\n" + 
-            		"  on d.stDocId=t.stDocId where t.stNodeId='NOD_0000000103' and\r\n" + 
-            		"  t.stTaskStatus='DOING'");		
-            
-            request.setAttribute("legislationProcessDocList", docList);
-       
-            return "queryDocInfo";
+		public String queryDocInfo() throws IOException, NumberFormatException, FzbDaoException, ParseException {
+			  List<LegislationProcessDoc> docList = legislationProcessDocService.findByHQL("select d \r\n" + 
+	            		"  from LegislationProcessDoc d inner join LegislationProcessTask t\r\n" + 
+	            		"  on d.stDocId=t.stDocId where t.stNodeId='NOD_0000000103' and\r\n" + 
+	            		"  t.stTaskStatus='DOING'");
+	            
+	            List<LegislationPlan> planList = legislationPlanService.findByHQL("select t \r\n" + 
+	            		"  from LegislationPlanTask d left join LegislationPlan t\r\n" + 
+	            		"  on d.stPlanId=t.stPlanId where " + 
+	            		"  d.stTaskStatus='TODO'");
+	            
+	            request.setAttribute("legislationProcessDocList", docList);
+	            request.setAttribute("legislationPlanList", planList);
+	            
+	            String pageSize = request.getParameter("pageSize");
+	    		String pageNo = request.getParameter("pageNo");
+	    		if (null == pageSize || "".equals(pageSize)) {
+	    			pageSize = "10";
+	    		}
+	    		if (null == pageNo || "".equals(pageNo)) {
+	    			pageNo = "1";
+	    		}
+	            String baseSql = "where t.st_node_Id='NOD_0000000103' and t.st_task_status='DOING' ";
+	            String orderSql = " order by d.dt_create_date DESC";
+	    		infoPage = legislationProcessTaskService.findDocByPage(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+	    		request.setAttribute("requestUrl", request.getRequestURI());
+	    		request.setAttribute("retPage", infoPage);
+	    		request.setAttribute("pageNo", pageNo);
+	    		request.setAttribute("pageSize", pageSize);
+	            return "queryDocInfo";
 			
 		}
 		

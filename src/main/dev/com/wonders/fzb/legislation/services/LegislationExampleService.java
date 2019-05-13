@@ -87,5 +87,11 @@ public interface LegislationExampleService{
 	 */
 	List<Map> queryLegislationExampleFilesList(String stNodeId,List<LegislationFiles> legislationFilesList);
 
+
 	void saveExampleFile(HttpServletRequest request, HttpSession session,File upload,String uploadFileName) throws IOException;
+
+	
+	public List<Map> queryLegislationExampleFilesListByNodeStatus(String stNodeId,String nodeStatus, List<LegislationFiles> legislationFilesList);
+		
+
 }

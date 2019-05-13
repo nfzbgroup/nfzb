@@ -449,7 +449,7 @@ public class LegislationProcessTaskAction extends BaseAction {
 		String userRoleId = session.getAttribute("userRoleId").toString();
 		String userRole = (String) session.getAttribute("userRole");
 		WegovSimpleNode wegovSimpleNode = null;
-		if ("NOD_0000000123".equals(stNodeId)) {
+		if ("NOD_0000000123".equals(stNodeId)||"NOD_0000000163".equals(stNodeId)) {
 			// 发送部门
 			wegovSimpleNode = legislationProcessTaskService.sendUnit(request, currentPerson, userRoleId, userRole);
 		} else {
@@ -528,27 +528,30 @@ public class LegislationProcessTaskAction extends BaseAction {
 		String stDocId = request.getParameter("stDocId");
 		String stNodeId = request.getParameter("stNodeId");
 		String nodeStatus = request.getParameter("nodeStatus");
-
-		String nextStatus = legislationProcessTaskService.nextChildProcess(stDocId, stNodeId, userRoleId, userRole, currentPerson);
-		WegovSimpleNode wegovSimpleNode = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'").get(0);
-		String teamId = currentPerson.getTeamInfos().get(0).getId();
+		String stNoticeId = request.getParameter("stNoticeId");
 		JSONObject jsonObject = new JSONObject();
-
-		// 根据流程不同，节点状态数据的变化
-		JSONArray nodeChangeArray = new JSONArray();
-		JSONObject nodeChange = new JSONObject();
-		nodeChange.put("node", stNodeId + "__" + nodeStatus);
-		nodeChange.put("colorSet", "bcg_blue");
-		JSONObject nodeChange2 = new JSONObject();
-		nodeChange2.put("node", stNodeId + "__" + nextStatus);
-		nodeChange2.put("colorSet", "bcg_green");
-		nodeChange2.put("nodeHref", wegovSimpleNode.getStInfoUrl() + "__" + nextStatus);
-		nodeChangeArray.add(nodeChange);
-		nodeChangeArray.add(nodeChange2);
-		// 返回
-		jsonObject.put("nodeChangeArray", nodeChangeArray);
+        if(null!=stNoticeId) {
+        	String nextStatus = legislationProcessTaskService.nextChildProcess(stNoticeId, stNodeId, userRoleId, userRole, currentPerson);
+        }else {
+        	String nextStatus = legislationProcessTaskService.nextChildProcess(stDocId, stNodeId, userRoleId, userRole, currentPerson);
+    		WegovSimpleNode wegovSimpleNode = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'").get(0);
+    		String teamId = currentPerson.getTeamInfos().get(0).getId();
+    		
+    		// 根据流程不同，节点状态数据的变化
+    		JSONArray nodeChangeArray = new JSONArray();
+    		JSONObject nodeChange = new JSONObject();
+    		nodeChange.put("node", stNodeId + "__" + nodeStatus);
+    		nodeChange.put("colorSet", "bcg_blue");
+    		JSONObject nodeChange2 = new JSONObject();
+    		nodeChange2.put("node", stNodeId + "__" + nextStatus);
+    		nodeChange2.put("colorSet", "bcg_green");
+    		nodeChange2.put("nodeHref", wegovSimpleNode.getStInfoUrl() + "__" + nextStatus);
+    		nodeChangeArray.add(nodeChange);
+    		nodeChangeArray.add(nodeChange2);
+    		// 返回
+    		jsonObject.put("nodeChangeArray", nodeChangeArray);
+        }
 		jsonObject.put("success", true);
-
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().print(jsonObject);
 		return null;

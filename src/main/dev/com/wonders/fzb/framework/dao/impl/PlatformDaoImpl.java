@@ -135,7 +135,7 @@ public class PlatformDaoImpl extends BaseSupportDao implements PlatformDao {
 		hql += " LEFT JOIN MOR mor ON  mor.teamCid = team.id ";
 		// hql += " LEFT JOIN OUR our ON mor.id = our.morId ";
 		// hql += " LEFT JOIN UserInfo user ON our.userId = user.userId ";
-		hql += " WHERE mor.orgType = '" + type + "' AND mor.moduleId = '" + moduleId + "'";
+		hql += " WHERE mor.orgType = '" + type + "' AND mor.moduleId = '" + moduleId + "' order by mor.sort";
 
 		List<Object[]> results = executeHqlQuery(hql);
 

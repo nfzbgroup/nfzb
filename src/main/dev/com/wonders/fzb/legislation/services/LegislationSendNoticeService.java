@@ -75,10 +75,12 @@ public interface LegislationSendNoticeService{
 	 * 根据HQL进行查询.
 	 */
 	public List<LegislationSendNotice> findByHQL(String hql);
-
+	
 	Page<SendNoticeVO> findSendNoticeList(String wheresql, String mainTableName,
 			String columnNames, int pageNo, int pageSize) throws ParseException;
-
+	
+	Page<SendNoticeVO> findSendNoticeCitymeetingList(String wheresql, String mainTableName,
+			String columnNames, int pageNo, int pageSize) throws ParseException;
 
 	List<Map<String,Object>> findParticipantsList(String showName,String stPersonsId);
 }

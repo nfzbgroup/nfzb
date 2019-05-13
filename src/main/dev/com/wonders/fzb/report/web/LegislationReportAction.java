@@ -69,7 +69,9 @@ public class LegislationReportAction extends BaseAction {
 	private int pageSize = 10;
 
 	// LegislationReport的修改
-	@Action(value = "legislationReport_add", results = { @Result(name = SUCCESS, location = "/LegislationReport.jsp"), @Result(name = "List", location = "/legislationReport_list.jsp") })
+	@Action(value = "legislationReport_add", results = { 
+			@Result(name = SUCCESS, location = "/LegislationReport.jsp"), 
+			@Result(name = "List", location = "/legislationReport_list.jsp") })
 	public String legislationReport_add() throws FzbDaoException {
 		// System.out.println("Begin....");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -100,9 +102,12 @@ public class LegislationReportAction extends BaseAction {
 		return methodStr;
 	}
 
-	@Action(value = "report_doc_info", results = { @Result(name = "checkMeetingStart_old", location = "/checkmeeting/ckeckMeeting_start.jsp"),
-			@Result(name = "report_info_add", location = "/report/report_info_add.jsp"), @Result(name = "report_info_input", location = "/report/report_info_input.jsp"),
-			@Result(name = "report_info_doing", location = "/report/report_info_doing.jsp"), @Result(name = "report_info_result", location = "/report/report_info_result.jsp"),
+	@Action(value = "report_doc_info", results = { 
+			@Result(name = "checkMeetingStart_old", location = "/checkmeeting/ckeckMeeting_start.jsp"),
+			@Result(name = "report_info_add", location = "/report/report_info_add.jsp"),
+			@Result(name = "report_info_input", location = "/report/report_info_input.jsp"),
+			@Result(name = "report_info_doing", location = "/report/report_info_doing.jsp"), 
+			@Result(name = "report_info_result", location = "/report/report_info_result.jsp"),
 			@Result(name = "report_info_done", location = "/report/report_info_done.jsp") })
 	public String report_doc_info() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -125,6 +130,41 @@ public class LegislationReportAction extends BaseAction {
 
 		List<LegislationReportTask> taskList = legislationReportTaskService.findByHQL("from LegislationReportTask t where t.stReportId='" + stReportId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
 		LegislationReportTask legislationReportTask = taskList.get(0);
+		
+		String nodeStatus = request.getParameter("stTaskStatus");
+		if(true){
+			
+			//String nodeIdStatus[] = method.split("__");	
+			//String nodeStatus = nodeIdStatus[1];		
+			String stItemId = request.getParameter("stItemIds");
+			String stItemIds =  request.getParameter("stItemId");
+			if(stItemIds!=null){
+				String[] strs = stItemIds.split(",");
+				StringBuilder builder = new StringBuilder();
+				for (int i = 0; i < strs.length; i++) {
+					builder.append("'"+ strs[i] + (i!=strs.length-1?"',":"'"));
+				}
+			}
+		
+			//回显上传材料
+			if (true) {
+				Map<String, Object> condMap = new HashMap<>();
+				Map<String, String> sortMap = new HashMap<>();
+				condMap.put("stParentId", stReportId);
+				condMap.put("stNodeId", stNodeId);
+				condMap.put("stNodeStatus", nodeStatus);
+				sortMap.put("dtPubDate", "ASC");
+				List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+					List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId, nodeStatus, legislationFilesList);
+					request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+				
+					String stStyle = "style ='display: none;'";
+					request.setAttribute("stStyle", stStyle);
+				request.setAttribute("nodeStatus", nodeStatus);
+				request.setAttribute("legislationFilesList", legislationFilesList);
+				//request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+			}
+		}
 
 		request.setAttribute("legislationReport", legislationReport);
 		request.setAttribute("legislationReportTask", legislationReportTask);

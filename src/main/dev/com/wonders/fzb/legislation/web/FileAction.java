@@ -93,6 +93,7 @@ public class FileAction extends BaseAction {
         String userId = currentPerson.getUserId();
         String userName = currentPerson.getName();
         String stSampleId=request.getParameter("stSampleId");
+        String nodeStatus=request.getParameter("nodeStatus");
 
         LegislationFiles legislationFiles = new LegislationFiles();
 //        legislationFiles.setStFileUrl(path+"/"+fileName);
@@ -102,6 +103,7 @@ public class FileAction extends BaseAction {
         legislationFiles.setDtPubDate(new Date());
         legislationFiles.setStTitle(uploadFileName);
         legislationFiles.setStNodeId(request.getParameter("stNodeId"));
+        legislationFiles.setStNodeStatus(nodeStatus);
         
         legislationFiles.setBlContent(FileUtils.readFileToByteArray(upload));//文件内容uploadfile2Byte()
         

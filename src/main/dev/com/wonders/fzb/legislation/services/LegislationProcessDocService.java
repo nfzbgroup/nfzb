@@ -95,6 +95,12 @@ public interface LegislationProcessDocService{
 	 * @param request
 	 */
 	void draft_dist_info(HttpServletRequest request) throws ParseException;
+	
+	/**
+	 * 提交分办
+	 * @param request
+	 */
+    public List<UserInfo> findUserInfoListByString(String personIds);
 
 	String saveLegislation(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole,String stNodeId,String stNodeName) throws Exception;
 

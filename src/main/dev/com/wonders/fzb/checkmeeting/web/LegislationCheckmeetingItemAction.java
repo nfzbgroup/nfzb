@@ -20,8 +20,11 @@ import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingItem;
 import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingItemService;
+import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.services.LegislationExampleService;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
 import com.wonders.fzb.plan.beans.LegislationPlan;
@@ -64,6 +67,12 @@ public class LegislationCheckmeetingItemAction extends BaseAction {
 	@Qualifier("wegovSimpleNodeService")
 	private WegovSimpleNodeService wegovSimpleNodeService;
 	
+	@Autowired
+	@Qualifier("legislationExampleService")
+	private LegislationExampleService legislationExampleService;
+	@Autowired
+	@Qualifier("legislationFilesService")
+	private LegislationFilesService legislationFilesService;
 	Page<LegislationCheckmeetingItem> infoPage;
 	
 	//LegislationCheckmeetingItem的修改
@@ -79,6 +88,7 @@ public class LegislationCheckmeetingItemAction extends BaseAction {
 	@Actions({ @Action(value = "checkmeeting_item_list", results = {
 			@Result(name = SUCCESS, location = "/checkmeeting/meeting_item_list.jsp"),
 			@Result(name = "QueryItemTable", location = "/checkmeeting/meeting_item_table.jsp"),
+			@Result(name = "editItemInfoPage", location = "/checkmeeting/checkmeeting_additem.jsp"),
 			@Result(name = "openItemInfoPage", location = "/checkmeeting/meeting_item_info.jsp"),
 			@Result(name = "openItemInfoPlanPage", location = "/checkmeeting/meeting_item_info_plan.jsp"),
 			@Result(name = "openItemInfoProcessPage", location = "/checkmeeting/meeting_item_info_process.jsp"), }) })
@@ -139,9 +149,86 @@ public class LegislationCheckmeetingItemAction extends BaseAction {
 			}
 			//..... 其他事项以后补充 
 		}
+		if(true){
+			String stNodeId = request.getParameter("stNodeId");
+			String method = "checkmeeting_additem";
+			//String stDocId = auditMeeting.getStMeetingId();
+		//	String stNodeId = request.getParameter("stNodeId");
+			String nodeIdStatus[] = method.split("_");
+			
+			String nodeStatus = nodeIdStatus[1];
+			//LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+			//List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
+			if (true) {
+				Map<String, Object> condMap = new HashMap<>();
+				Map<String, String> sortMap = new HashMap<>();
+				condMap.put("stParentId", stItemId);
+				condMap.put("stNodeId", stNodeId);
+				condMap.put("stNodeStatus", nodeStatus);
+				sortMap.put("dtPubDate", "ASC");
+				List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+					List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId, nodeStatus, legislationFilesList);
+					request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+				
+					String stStyle = "style ='display: none;'";
+					request.setAttribute("stStyle", stStyle);
+				request.setAttribute("nodeStatus", nodeStatus);
+				request.setAttribute("legislationFilesList", legislationFilesList);
+				//request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+			}
+		}
 		request.setAttribute("iteminfo", iteminfo);
 		return result;
 	}
+	
+	/**
+	 * 编辑审核会议无sourceid项目
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private String editItemInfoPage() {
+		String stItemId = request.getParameter("stItemId");
+		LegislationCheckmeetingItem iteminfo = legislationCheckmeetingItemService.findById(stItemId);
+		
+				//
+				//String stNodeId = request.getParameter("stNodeId");
+				String method = "checkmeeting_additem";
+				//String stDocId = auditMeeting.getStMeetingId();
+				String stNodeId = request.getParameter("stNodeId");// 
+				String nodeIdStatus[] = method.split("_");
+				
+				String nodeStatus = nodeIdStatus[1];
+				//LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+				//List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
+				if (true) {
+					Map<String, Object> condMap = new HashMap<>();
+					Map<String, String> sortMap = new HashMap<>();
+					condMap.put("stParentId", stItemId);
+					condMap.put("stNodeId", stNodeId);
+					condMap.put("stNodeStatus", nodeStatus);
+					sortMap.put("dtPubDate", "ASC");
+					List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+					// 
+						List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId, nodeStatus, legislationFilesList);
+						request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+					
+						String stStyle = "style ='display: none;'";
+						request.setAttribute("stStyle", stStyle);
+					request.setAttribute("nodeStatus", nodeStatus);
+					request.setAttribute("legislationFilesList", legislationFilesList);
+					//request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+				}
+		
+		
+		
+		
+		String result = "editItemInfoPage";
+		request.setAttribute("iteminfo", iteminfo);
+		return result;
+	}
+	
+	
+	
 	/**
 	 * 查询审核会议事项分节点处理业务处理
 	 */
@@ -169,6 +256,7 @@ public class LegislationCheckmeetingItemAction extends BaseAction {
 			request.setAttribute("pageSize", pageSize);
 			request.setAttribute("retPage", itemPage);
 			request.setAttribute("nodeId", stNodeId);
+			request.setAttribute("taskStatus", StringUtils.isEmpty(taskStatus)?"TODO":taskStatus);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (FzbDaoException e) {

@@ -94,7 +94,7 @@ public class LoginAction extends BaseAction {
 					if (unitCode != null && (unitCode.equals(LegislateConst.TEAM_ID_JJFGC) || unitCode.equals(LegislateConst.TEAM_ID_CJFGC) || unitCode.equals(LegislateConst.TEAM_ID_SHFGC))) {
 						isLfc = true;
 					}
-					if (unitName != null && (unitName.endsWith("综合业务处"))) {
+					if (unitName != null && (unitName.endsWith("法治调研处"))) {
 						isZhc = true;
 					}
 					session.setAttribute("isLfc", isLfc);// 是否立法处

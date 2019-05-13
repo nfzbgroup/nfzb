@@ -1,15 +1,22 @@
 package com.wonders.fzb.plan.web;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
+import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
 import com.wonders.fzb.citymeeting.beans.LegislationCitymeeting;
 import com.wonders.fzb.citymeeting.beans.LegislationCitymeetingTask;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingService;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingTaskService;
 import com.wonders.fzb.framework.beans.TeamInfo;
+import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
+import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
+import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.beans.LegislationPlanItem;
@@ -17,7 +24,12 @@ import com.wonders.fzb.plan.beans.LegislationPlanTask;
 import com.wonders.fzb.plan.services.LegislationPlanItemService;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+
 import dm.jdbc.util.StringUtil;
+
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -27,6 +39,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +77,10 @@ public class LegislationPlanAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationCitymeetingTaskService")
 	private LegislationCitymeetingTaskService legislationCitymeetingTaskService;
+	
+	@Autowired
+	@Qualifier("wegovSimpleNodeService")
+	private WegovSimpleNodeService wegovSimpleNodeService;
 //	private int pageNo = 1;
 //	private int pageSize = 10;
 
@@ -85,6 +102,18 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "openNoticeAddPage", location = "/plan/legislationNotice_form.jsp"),
 			@Result(name = "openNoticeEditPage", location = "/plan/legislationNotice_form.jsp"),
 			@Result(name = "openNoticeInfoPage", location = "/plan/legislationNotice_form.jsp"),
+			@Result(name = "plan_collect_info", location = "/plan/legislationNotice_form.jsp"),
+			@Result(name = "plan_item_dist", location = "/plan/legislationPlan_form.jsp"),
+			@Result(name = "plan_draft_info", location = "/plan/legislationNotice_form.jsp"),
+			@Result(name = "plan_draft_modify", location = "/plan/legislationNotice_form.jsp"),
+			@Result(name = "plan_item_check", location = "/plan/legislationPlan_form.jsp"),
+			@Result(name = "plan_draft_fianl", location = "/plan/legislationNotice_form.jsp"),
+			@Result(name = "plan_item_outplan", location = "/plan/legislationPlan_form.jsp"),
+			@Result(name = "plan_creat_info", location = "/plan/legislationNotice_form.jsp"),
+			@Result(name = "plan_item_recv", location = "/plan/legislationPlan_form.jsp"),
+			@Result(name = "QueryTable", location = "/plan/legislationPlan_item.jsp"),
+			@Result(name = "openPlanItemInfoPage", location = "/plan/legislationPlan_form.jsp"),
+			//plan_item_upload
 			@Result(name = "openPlanSeparatePage", location = "/plan/legislationPlan_separate.jsp"),
             @Result(name = "openPlanAuditPage", location = "/plan/legislationPlan_audit.jsp"),
 			@Result(name = "openNoticeProjectInfoPage", location = "/plan/legislationNotice_projectInfo.jsp"),
@@ -94,9 +123,9 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "openNoticeDraftInfoPage", location = "/plan/legislationNotice_draft.jsp"),
 			@Result(name = "openPlanCheckExplainPage", location = "/plan/legislationPlan_checkExplain.jsp"),
 			@Result(name = "openProjectAscriptionPage", location = "/plan/legislationPlan_projectAscription.jsp"),
-			@Result(name = "flowDealPage", location = "/plan/flowDealPage.jsp"),
-			@Result(name = "openPlanDeleteReasonPage", location = "/plan/legislationPlan_deleteReason.jsp"),
-			@Result(name = "openPlanBackReasonPage", location = "/plan/legislationPlan_deleteReason.jsp")
+			@Result(name = "flowDealPage", location = "/plan/flowPlanDealPage.jsp"),
+			@Result(name = "legislation_plan_flow", location = "/plan/flowPlanPage.jsp"),
+			@Result(name = "openPlanDeleteReasonPage", location = "/plan/legislationPlan_deleteReason.jsp")
 	})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -104,6 +133,356 @@ public class LegislationPlanAction extends BaseAction {
 		Object object = method.invoke(this);
 		return object == null ? null : object.toString();
 	}
+	
+	private String legislation_plan_flow() {
+		LegislationPlan planInfo = new LegislationPlan();
+		request.setAttribute("planInfo", planInfo);
+		request.setAttribute("requestUrl", request.getRequestURI());
+		return pageController();
+	}
+	
+	
+	// 流程图页面上，ajax加载当前草案的各节点的信息 lj
+		private String openPlanIndexPage_ajax() throws IOException {
+			String stPlanId = request.getParameter("stPlanId");
+			UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+			String userRole = (String) session.getAttribute("userRole");
+	
+			JSONObject retJson = new JSONObject();
+			JSONArray nodeInfoArray = new JSONArray();
+			
+			// 找出当前草案下的所有任务，设置到节点的状态上
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stPlanId", stPlanId);
+			// 获得草案主流程task的信息
+			List<LegislationPlanTask> taskList = legislationPlanTaskService.findByList(condMap, sortMap);
+			String allNodeId = "";
+			for (LegislationPlanTask each : taskList) {
+				WegovSimpleNode node = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId='" + each.getStNodeId() + "'").get(0);
+				String statusColor = "";
+				statusColor = "bcg_blue";
+				allNodeId += each.getStNodeId() + "#";
+				JSONObject nodeChange = new JSONObject();
+				System.out.println("this is not done node!!!!!");
+				
+					// 这里是普通的正在做的节点
+					if (!"DONE".equals(each.getStTaskStatus())) {
+						nodeChange.put("node", each.getStNodeId());
+						nodeChange.put("colorSet", "bcg_green");
+						// 当前正在做的，用权限控制一下
+						if (node.getStSubmitRole() != null && (node.getStSubmitRole().indexOf(userRole) >= 0)) {
+							nodeChange.put("nodeHref", node.getStInfoUrl());
+						}
+						System.out.println(each.getStNodeId() + "[color]：" + "bcg_green");
+						System.out.println(each.getStNodeId() + "[URL]：" + node.getStInfoUrl());
+						nodeInfoArray.add(nodeChange);
+					} else {
+						// 这里是完成的节点
+						nodeChange.put("node", each.getStNodeId());
+						nodeChange.put("colorSet", "bcg_blue");
+						nodeChange.put("nodeHref", node.getStInfoUrl());
+						System.out.println(" 这里是完成的节点" + each.getStNodeId() + "[color]：" + "bcg_blue");
+						nodeInfoArray.add(nodeChange);
+					}
+			}
+
+			// 找出所有的启动节点，根据当前人的角色进行设置
+			JSONArray nodeStartInfoArray = new JSONArray();
+			System.out.println("当前草案下的任务数：" + taskList.size());
+			System.out.println("这些任务的NodeIds：" + allNodeId);
+			retJson.put("success", true);
+			retJson.put("nodeInfoArray", nodeInfoArray);// 当前草案下的任务节点信息
+			retJson.put("nodeStartInfoArray", nodeStartInfoArray);// 所有还没有开始的启动节点的信息
+			response.setContentType("application/json; charset=UTF-8");
+			response.getWriter().print(retJson);
+			return null;
+		}
+		private String plan_item_upload() throws ParseException, FzbDaoException {
+			queryNoticeList();
+			return "QueryTable";
+		}
+		
+		@SuppressWarnings("unchecked")
+		private void queryNoticeList() throws ParseException, FzbDaoException {
+			String pageSize = request.getParameter("pageSize");
+			String pageNo = request.getParameter("pageNo");
+			//String stNodeId = "NOD_0000000205";
+			String stNodeId="NOD_0000000205";
+			String stPlanId="PLA_0000000000000061";
+		
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+
+			if (null == pageSize || "".equals(pageSize)) {
+				pageSize = "10";
+			}
+			if (null == pageNo || "".equals(pageNo)) {
+				pageNo = "1";
+			}
+			WegovSimpleNode nodeInfo = wegovSimpleNodeService.findById(stNodeId);
+				condMap.put("stNodeId",stNodeId);
+				condMap.put("stPlanId",stPlanId);
+			//condMap.put("stEnableIsNull","null");
+			sortMap.put("dtCreateDate", "DESC");
+			@SuppressWarnings("unchecked")
+			Page<LegislationPlanItem> infoPage;
+			infoPage = legislationPlanItemService.findByPage(condMap, sortMap, 1, 10);
+
+			request.setAttribute("nodeInfo", nodeInfo);
+			request.setAttribute("pageNo", pageNo);
+			request.setAttribute("pageSize", pageSize);
+			request.setAttribute("retPage", infoPage);
+			request.setAttribute("nodeId", stNodeId);
+		}
+		
+		
+		@SuppressWarnings("unused")
+		private String openPlanItemInfoPage(){
+			String stItemId=request.getParameter("stItemId");
+			String stNodeId=request.getParameter("stNodeId");
+			LegislationPlanItem legislationPlanItem = legislationPlanItemService.findById(stItemId);
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", legislationPlanItem.getStItemId());
+			if("NOD_0000000207".equals(stNodeId)){
+				condMap.put("stNodeId", stNodeId);
+			}else{
+				condMap.put("stNodeId", "NOD_0000000202");
+			}
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
+			request.setAttribute("legislationPlanList",legislationPlanList);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlanItem",legislationPlanItem);
+			request.setAttribute("legislationPlanTask",new LegislationPlanTask());
+			return pageController();
+		}
+		
+		private String plan_item_recv(){
+			String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+			String stTaskId="";
+			Map<String, Object> condMap1 = new HashMap<>();
+			Map<String, String> sortMap1 = new HashMap<>();
+			condMap1.put("stPlanId", stPlanId);
+			condMap1.put("stNodeId", stNodeId);
+			List<LegislationPlanTask> findByList = legislationPlanTaskService.findByList(condMap1, sortMap1);
+			if(findByList.size()>0) {
+				stTaskId=findByList.get(0).getStTaskId();
+			}
+			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+			LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", legislationPlanItem.getStItemId());
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
+			request.setAttribute("legislationPlanList",legislationPlanList);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlanItem",legislationPlanItem);
+			request.setAttribute("legislationPlanTask",legislationPlanTask);
+			return pageController();
+		}
+		
+		private String plan_creat_info(){
+			String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+			String stTaskId="";
+			Map<String, Object> condMap1 = new HashMap<>();
+			Map<String, String> sortMap1 = new HashMap<>();
+			condMap1.put("stPlanId", stPlanId);
+			condMap1.put("stNodeId", stNodeId);
+			List<LegislationPlanTask> findByList = legislationPlanTaskService.findByList(condMap1, sortMap1);
+			if(findByList.size()>0) {
+				stTaskId=findByList.get(0).getStTaskId();
+			}
+			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+			LegislationPlan legislationPlan=legislationPlanService.findById(legislationPlanTask.getStPlanId());
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", legislationPlan.getStPlanId());
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlan",legislationPlan);
+			request.setAttribute("legislationPlanTask",legislationPlanTask);
+			return pageController();
+		}
+		private String plan_item_outplan(){
+			String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+			String stTaskId="";
+			Map<String, Object> condMap1 = new HashMap<>();
+			Map<String, String> sortMap1 = new HashMap<>();
+			condMap1.put("stPlanId", stPlanId);
+			condMap1.put("stNodeId", stNodeId);
+			List<LegislationPlanTask> findByList = legislationPlanTaskService.findByList(condMap1, sortMap1);
+			if(findByList.size()>0) {
+				stTaskId=findByList.get(0).getStTaskId();
+			}
+			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+			LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", legislationPlanItem.getStItemId());
+			if("NOD_0000000207".equals(stNodeId)){
+				condMap.put("stNodeId", stNodeId);
+			}else{
+				condMap.put("stNodeId", stNodeId);
+			}
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
+			request.setAttribute("legislationPlanList",legislationPlanList);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlanItem",legislationPlanItem);
+			request.setAttribute("legislationPlanTask",legislationPlanTask);
+			return pageController();
+		}
+		
+		private String plan_draft_fianl(){
+			String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+			String stTaskId="";
+			Map<String, Object> condMap1 = new HashMap<>();
+			Map<String, String> sortMap1 = new HashMap<>();
+			condMap1.put("stPlanId", stPlanId);
+			condMap1.put("stNodeId", stNodeId);
+			List<LegislationPlanTask> findByList = legislationPlanTaskService.findByList(condMap1, sortMap1);
+			if(findByList.size()>0) {
+				stTaskId=findByList.get(0).getStTaskId();
+			}
+			
+			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+			LegislationPlan legislationPlan=legislationPlanService.findById(stPlanId);
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", legislationPlan.getStPlanId());
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlan",legislationPlan);
+			request.setAttribute("legislationPlanTask",legislationPlanTask);
+			return pageController();
+		}
+		
+		private String plan_item_dist(){
+			String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+			String stTaskId="";
+			Map<String, Object> condMap1 = new HashMap<>();
+			Map<String, String> sortMap1 = new HashMap<>();
+			condMap1.put("stPlanId", stPlanId);
+			condMap1.put("stNodeId", stNodeId);
+			List<LegislationPlanTask> findByList = legislationPlanTaskService.findByList(condMap1, sortMap1);
+			if(findByList.size()>0) {
+				stTaskId=findByList.get(0).getStTaskId();
+			}
+			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+			LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", legislationPlanItem.getStItemId());
+		
+				condMap.put("stNodeId", stNodeId);
+			
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
+			request.setAttribute("legislationPlanList",legislationPlanList);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlanItem",legislationPlanItem);
+			request.setAttribute("legislationPlanTask",legislationPlanTask);
+			return pageController();
+		}
+		
+		private String plan_item_check(){
+			String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+			String stTaskId="";
+			Map<String, Object> condMap1 = new HashMap<>();
+			Map<String, String> sortMap1 = new HashMap<>();
+			condMap1.put("stPlanId", stPlanId);
+			condMap1.put("stNodeId", stNodeId);
+			List<LegislationPlanTask> findByList = legislationPlanTaskService.findByList(condMap1, sortMap1);
+			if(findByList.size()>0) {
+				stTaskId=findByList.get(0).getStTaskId();
+			}
+			LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+			LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", legislationPlanItem.getStItemId());
+			condMap.put("stNodeId", stNodeId);
+			
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
+			request.setAttribute("legislationPlanList",legislationPlanList);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlanItem",legislationPlanItem);
+			request.setAttribute("legislationPlanTask",legislationPlanTask);
+			return pageController();
+		}
+		
+		//plan_draft_modify
+		private String plan_collect_info(){
+			String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+			
+			//LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+			LegislationPlan legislationPlan=legislationPlanService.findById(stPlanId);
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", stPlanId);
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlan",legislationPlan);
+			request.setAttribute("legislationPlanTask",new LegislationPlanTask());
+			return pageController();
+		}
+		
+		private String plan_draft_info(){
+			String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+			//LegislationPlanTask legislationPlanTask=legislationPlanTaskService.findById(stTaskId);
+			LegislationPlan legislationPlan=legislationPlanService.findById(stPlanId);
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", stPlanId);
+			condMap.put("stNodeId", "NOD_0000000201");
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlan",legislationPlan);
+			request.setAttribute("legislationPlanTask",new LegislationPlanTask());
+			return pageController();
+		}
+		
+		private String plan_draft_modify(){
+			String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+
+			LegislationPlan legislationPlan=legislationPlanService.findById(stPlanId);
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", legislationPlan.getStPlanId());
+			condMap.put("stNodeId", "NOD_0000000201");
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			request.setAttribute("legislationFilesList",legislationFilesList);
+			request.setAttribute("legislationPlan",legislationPlan);
+			request.setAttribute("legislationPlanTask",new LegislationPlanTask());
+			return pageController();
+		}
 
 	/**
 	 * 页面控制
@@ -129,7 +508,7 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	@SuppressWarnings("unused")
 	private String openPlanAddPage(){
-		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId = 'NOD_0000000208' order by t.dtCreateDate desc");
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
 		request.setAttribute("legislationPlanItem",new LegislationPlanItem());
 		request.setAttribute("legislationPlanTask",new LegislationPlanTask());
@@ -155,7 +534,7 @@ public class LegislationPlanAction extends BaseAction {
 		}
 		sortMap.put("dtPubDate", "ASC");
 		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId = 'NOD_0000000208' order by t.dtCreateDate desc");
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
 		request.setAttribute("legislationFilesList",legislationFilesList);
 		request.setAttribute("legislationPlanItem",legislationPlanItem);
@@ -239,12 +618,17 @@ public class LegislationPlanAction extends BaseAction {
 	@SuppressWarnings("unused")
 	private String openPlanSeparatePage(){
 		// 查询分办处
-		Map<String, Object> condMap = new HashMap<>();
-		Map<String, String> sortMap = new HashMap<>();
-		condMap.put("idLike", "U_3_");
-		condMap.put("unitNameLike", "法规处");
-		sortMap.put("id", "ASC");
-		List<TeamInfo> teamInfoList = teamInfoService.findTeamInfoList(condMap, sortMap);
+//		Map<String, Object> condMap = new HashMap<>();
+//		Map<String, String> sortMap = new HashMap<>();
+//		condMap.put("idLike", "U_3_");
+//		condMap.put("unitNameLike", "法规处");
+//		sortMap.put("id", "ASC");
+//		List<TeamInfo> teamInfoList = teamInfoService.findTeamInfoList(condMap, sortMap);
+		List<TeamInfo> teamInfoListRaw = teamInfoService.findTeamInfoInModuleByType("MODULE_LEGISLATE","市司法局处室");
+		List<TeamInfo> teamInfoList=new ArrayList<TeamInfo>();
+		for(TeamInfo each:teamInfoListRaw){
+			if(each.getTeamName().indexOf("立法")>=0)  teamInfoList.add(each);
+		}
 		request.setAttribute("teamList", teamInfoList);
 		return pageController();
 	}
@@ -319,6 +703,11 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	private String openNoticeDraftPage(){
 		String stTaskId=request.getParameter("stTaskId");
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String teamId="";
+		if(currentPerson.getTeamInfos().size()>0) {
+			teamId=currentPerson.getTeamInfos().get(0).getId();
+		}
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();
 		
@@ -330,23 +719,26 @@ public class LegislationPlanAction extends BaseAction {
 			LegislationCitymeeting legislationCitymeeting = legislationCitymeetingService.findById(checkmeetingTaskId);
 			request.setAttribute("checkmeetingTaskId",legislationCitymeeting.getStTopicName());
 		}
-		//常务会议立法
-		condMap.put("stTaskStatus", "AFFIRM");
-		sortMap.put("dtDeadDate", "ASC");
-		List<LegislationCitymeetingTask> legislationCitymeetingTaskList = legislationCitymeetingTaskService.findByList(condMap , sortMap);
-		condMap.clear();
-		sortMap.clear();
-		List<String> checkmeetingIds=new ArrayList<String>();
-		if(legislationCitymeetingTaskList.size()>0) {
-			for(LegislationCitymeetingTask legislationCitymeetingTask: legislationCitymeetingTaskList) {
-				checkmeetingIds.add(legislationCitymeetingTask.getStTopicId());
-			}
-		}
+//		//常务会议立法
+//		condMap.put("stTaskStatus", "AFFIRM");
+//		sortMap.put("dtDeadDate", "ASC");
+//		List<LegislationCitymeetingTask> legislationCitymeetingTaskList = legislationCitymeetingTaskService.findByList(condMap , sortMap);
+		//可用的议题
+		List<LegislationCitymeeting> cityMeetingList = legislationCitymeetingService.findByHQL("select k from LegislationCitymeeting k, LegislationSendNotice t where 1=1 and t.stDocId =k.stTopicId and t.stTeamId='" + teamId + "' and t.stNoticeStatus !='已反馈' ");		
+				
+//		condMap.clear();
+//		sortMap.clear();
+//		List<String> checkmeetingIds=new ArrayList<String>();
+//		if(legislationCitymeetingTaskList.size()>0) {
+//			for(LegislationCitymeetingTask legislationCitymeetingTask: legislationCitymeetingTaskList) {
+//				checkmeetingIds.add(legislationCitymeetingTask.getStTopicId());
+//			}
+//		}
 		//获得常务会议实体
-		condMap.put("stTopicId"+"List", checkmeetingIds);
-		List<LegislationCitymeeting> legislationCitymeetingList = legislationCitymeetingService.findByList(condMap , sortMap);
-		condMap.clear();
-		sortMap.clear();
+		//condMap.put("stTopicId"+"List", checkmeetingIds);
+		//List<LegislationCitymeeting> legislationCitymeetingList = legislationCitymeetingService.findByList(condMap , sortMap);
+		//condMap.clear();
+		//sortMap.clear();
 		condMap.put("stParentId", legislationPlan.getStPlanId());
 		condMap.put("stNodeId", "NOD_0000000209");
 		sortMap.put("dtPubDate", "ASC");
@@ -355,8 +747,8 @@ public class LegislationPlanAction extends BaseAction {
 		request.setAttribute("legislationFilesList",legislationFilesList);
 		request.setAttribute("legislationPlan",legislationPlan);
 		request.setAttribute("legislationPlanTask",legislationPlanTask);
-		request.setAttribute("legislationCitymeetingTaskList", legislationCitymeetingTaskList);
-		request.setAttribute("legislationCitymeetingList", legislationCitymeetingList);
+		//request.setAttribute("legislationCitymeetingTaskList", legislationCitymeetingTaskList);
+		request.setAttribute("legislationCitymeetingList", cityMeetingList);
 		return pageController();
 	}
 	/**
@@ -427,6 +819,10 @@ public class LegislationPlanAction extends BaseAction {
     
     //流程图展示
 	private String flowDealPage(){
+		String stPlanId = request.getParameter("stPlanId");
+		LegislationPlan planInfo = legislationPlanService.findById(stPlanId);
+		request.setAttribute("planInfo", planInfo);
+		request.setAttribute("requestUrl", request.getRequestURI());
 		return pageController();
 	}
 
@@ -435,17 +831,7 @@ public class LegislationPlanAction extends BaseAction {
 	 * @return
 	 */
 	private String openPlanDeleteReasonPage(){
-		request.setAttribute("button","delete");
     	return pageController();
-	}
-
-	/**
-	 * 跳转项目退回原因页面
-	 * @return
-	 */
-	private String openPlanBackReasonPage(){
-		request.setAttribute("button","back");
-		return pageController();
 	}
 
 	/**
@@ -454,15 +840,6 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	private String saveLegislationPlanDeleteReason(){
 		legislationPlanTaskService.deletePlan(request,session);
-		return null;
-	}
-
-	/**
-	 * 确认退回项目
-	 * @return
-	 */
-	private String goBackPlanProcess(){
-		legislationPlanTaskService.goBackPlanProcess(request,session);
 		return null;
 	}
 }

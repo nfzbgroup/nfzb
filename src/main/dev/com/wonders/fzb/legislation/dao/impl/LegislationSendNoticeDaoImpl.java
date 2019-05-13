@@ -145,5 +145,26 @@ public class LegislationSendNoticeDaoImpl extends BaseSupportDao implements Legi
 			pageSize = totalSize;
 		return new Page<SendNoticeVO>(Page.getStartOfAnyPage(pageNo, pageSize), users.size(), totalSize, pageSize, users);
 	}
+	
+	/*
+	 * columnNames:d.st_topic_id,d.st_topic_name,d.st_node_name,t.st_node_id,d.DT_CREATE_DATE,d.ST_USER_NAME,d.ST_TOPIC
+	 * 一定要8位，后两位日期，与VO对应。不足的字段前6个补 ''，后两个日期 null，或者与之前的重复。这样统一处理。
+	 */
+	@Override
+	public Page<SendNoticeVO> findSendNoticeCitymeetingList(String wheresql,String mainTableName,String columnNames, int pageNo, int pageSize) throws ParseException {
+		String baseSql = " FROM "+mainTableName+ " d ";
+		baseSql += " INNER JOIN LEGISLATION_SEND_NOTICE t ";
+		baseSql += " ON d.ST_TOPIC_ID = t.ST_DOC_ID ";
+		baseSql += wheresql;
+//		String propView = "SELECT d.st_topic_id,d.st_topic_name,d.st_node_name,t.st_node_id,d.DT_CREATE_DATE,d.ST_USER_NAME,d.ST_TOPIC";
+		String propView = "SELECT "+columnNames;
+		String totalView = "SELECT COUNT(1) ";
+
+		List<SendNoticeVO> users = packageVOBean(executeSqlQuery(propView + baseSql, pageNo, pageSize),columnNames.split(",").length);
+		int totalSize = ((BigDecimal) (Object) executeSqlQueryWithoutPage(totalView + baseSql).get(0)).intValue();
+		if (pageSize == 0)
+			pageSize = totalSize;
+		return new Page<SendNoticeVO>(Page.getStartOfAnyPage(pageNo, pageSize), users.size(), totalSize, pageSize, users);
+	}
 
 }

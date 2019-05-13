@@ -32,4 +32,6 @@ public abstract interface LegislationSendNoticeDao extends BaseDao {
 	Page<SendNoticeVO> findSendNoticeList(String wheresql,
 			String mainTableName, String columnNames, int pageNo, int pageSize)
 			throws ParseException;
+
+	Page<SendNoticeVO> findSendNoticeCitymeetingList(String wheresql, String mainTableName, String columnNames, int pageNo, int pageSize) throws ParseException;
 }

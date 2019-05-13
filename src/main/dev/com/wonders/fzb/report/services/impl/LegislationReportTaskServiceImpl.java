@@ -3,8 +3,6 @@ package com.wonders.fzb.report.services.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,14 +14,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.beans.Page;
-import com.wonders.fzb.base.consts.CommonConst;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
-import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.beans.LegislationPlanDeal;
@@ -31,9 +26,11 @@ import com.wonders.fzb.plan.beans.LegislationPlanTask;
 import com.wonders.fzb.plan.services.LegislationPlanDealService;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
-import com.wonders.fzb.report.beans.*;
-import com.wonders.fzb.report.dao.*;
-import com.wonders.fzb.report.services.*;
+import com.wonders.fzb.report.beans.LegislationReport;
+import com.wonders.fzb.report.beans.LegislationReportTask;
+import com.wonders.fzb.report.dao.LegislationReportTaskDao;
+import com.wonders.fzb.report.services.LegislationReportService;
+import com.wonders.fzb.report.services.LegislationReportTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
@@ -81,7 +78,9 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 	@Qualifier("legislationPlanService")
 	private LegislationPlanService legislationPlanService;
 	
-	
+    @Autowired
+    @Qualifier("legislationFilesService")
+    private LegislationFilesService legislationFilesService;
 	/**
 	 * 添加实体对象
 	 */
@@ -336,6 +335,6 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 			this.update(legislationReportTask);
 		}
 
-//		legislationFilesService.updateParentIdById(request,stReportId);
+		legislationFilesService.updateParentIdById(request,stReportId);
 	}
 }

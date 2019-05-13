@@ -166,4 +166,8 @@ public class LegislationSendNoticeServiceImpl implements LegislationSendNoticeSe
 		});
 		return result;
 	}
+	@Override
+	public Page<SendNoticeVO> findSendNoticeCitymeetingList(String wheresql, String mainTableName, String columnNames, int pageNo, int pageSize) throws ParseException {
+		return legislationSendNoticeDao.findSendNoticeCitymeetingList(wheresql, mainTableName, columnNames, pageNo, pageSize);
+	}
 }

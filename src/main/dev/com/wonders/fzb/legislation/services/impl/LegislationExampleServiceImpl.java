@@ -133,6 +133,7 @@ public class LegislationExampleServiceImpl implements LegislationExampleService 
 			map.put("stExampleName",legislationExample.getStExampleName());
 			map.put("stFileNo",legislationExample.getStFileNo());
 			map.put("stNeed",legislationExample.getStNeed());
+			map.put("stNodeStatus",legislationExample.getStNodeStatus());
 			if(legislationFilesList!=null&&legislationFilesList.size()>0){
 				legislationFilesList.forEach((LegislationFiles legislationFiles)->{
 					if(null!=legislationFiles.getStSampleId()&&
@@ -152,6 +153,41 @@ public class LegislationExampleServiceImpl implements LegislationExampleService 
 		return legislationExampleFilesList;
 	}
 
+	
+	@Override
+	public List<Map> queryLegislationExampleFilesListByNodeStatus(String stNodeId,String nodeStatus, List<LegislationFiles> legislationFilesList) {
+		List<Map> legislationExampleFilesList =new ArrayList<>();
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stNode", stNodeId);
+		condMap.put("stNodeStatus", nodeStatus);
+		sortMap.put("stExampleId", "ASC");
+		List<LegislationExample> legislationExampleList = findByList(condMap, sortMap);
+		legislationExampleList.forEach((LegislationExample legislationExample)->{
+			Map map=new HashMap();
+			map.put("stExampleId",legislationExample.getStExampleId());
+			map.put("stExampleName",legislationExample.getStExampleName());
+			map.put("stNeed",legislationExample.getStNeed());
+			map.put("stNodeStatus",legislationExample.getStNodeStatus());
+			if(legislationFilesList!=null&&legislationFilesList.size()>0){
+				legislationFilesList.forEach((LegislationFiles legislationFiles)->{
+					if(null!=legislationFiles.getStSampleId()&&
+							legislationExample.getStExampleId().equals(legislationFiles.getStSampleId())){
+						map.put("fileId",legislationFiles.getStFileId());
+						map.put("fileName",legislationFiles.getStTitle());
+						map.put("fileUrl",legislationFiles.getStFileUrl());
+					}
+				});
+			}else{
+				map.put("fileId",null);
+				map.put("fileName",null);
+				map.put("fileUrl",null);
+			}
+			legislationExampleFilesList.add(map);
+		});
+		return legislationExampleFilesList;
+	}
+	
 	@Override
 	public void saveExampleFile(HttpServletRequest request, HttpSession session, File upload, String uploadFileName) throws IOException {
 		String stExampleId=request.getParameter("stExampleId");

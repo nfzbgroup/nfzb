@@ -21,9 +21,14 @@ import com.wonders.fzb.citymeeting.beans.LegislationCitymeetingTask;
 import com.wonders.fzb.citymeeting.dao.LegislationCitymeetingTaskDao;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingService;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingTaskService;
+import com.wonders.fzb.framework.beans.TeamInfo;
 import com.wonders.fzb.framework.beans.UserInfo;
+import com.wonders.fzb.framework.services.TeamInfoService;
+import com.wonders.fzb.legislation.beans.LegislationSendNotice;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
+import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
 import com.wonders.fzb.plan.beans.LegislationPlanTask;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
@@ -61,6 +66,21 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 
 	@Autowired
 	private LegislationPlanTaskService legislationPlanTaskService;
+	
+	@Autowired
+	@Qualifier("legislationSendNoticeService")
+	private LegislationSendNoticeService legislationSendNoticeService;
+	
+	@Autowired
+	@Qualifier("teamInfoService")
+	private TeamInfoService teamInfoService;
+	
+
+    @Autowired
+    @Qualifier("legislationFilesService")
+    private LegislationFilesService legislationFilesService;
+
+	
 	/**
 	 * 添加实体对象
 	 */
@@ -185,12 +205,16 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 		String stBak = request.getParameter("stBak");
 		String stBak1 = request.getParameter("stBak1");
 		String stBak2 = request.getParameter("stBak2");
+		String stBak3 = request.getParameter("stBak3");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String userId = currentPerson.getUserId();
 		String userName = currentPerson.getName();
 		String unitId = currentPerson.getTeamInfos().get(0).getId();
 		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
 		LegislationCitymeeting auditMeeting = new LegislationCitymeeting();
+		
+
+		
 		if ("TODO".equals(stTaskStatus)) {
 			// 如果是修改签报
 			if (StringUtil.isEmpty(stTopicId)) {
@@ -203,7 +227,6 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 				//auditMeeting.setDtBeginDate(formatter.parse(dtBeginDate));//
 				auditMeeting.setStTopic(stDocNo);
 				auditMeeting.setStNodeId("NOD_0000000180");
-				auditMeeting.setStNodeName(stNodeName);
 				auditMeeting.setStTopic(stComent);
 				auditMeeting.setStNodeName("常务会议");
 				// auditMeeting.setDtCreateDate(DateUtils.parseDate(dtCreateDate,"yyyy-MM-dd"));
@@ -235,23 +258,25 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 				add(legislationProcessTask);
 			} else {
 				// 如果是TODO的修改
+				auditMeeting.setStNodeName("常务会议");
 				auditMeeting.setStTopicId(stTopicId);
 				auditMeeting.setStTopicName(stTopicName);
 				auditMeeting.setStType(stType);
 				auditMeeting.setStTopic(stDocNo);
-				auditMeeting.setStNodeName(stNodeName);
 				auditMeeting.setStTopic(stComent);
 				auditMeeting.setStAddress(stAddress);
 				auditMeeting.setStPersons(stPersons);
+				auditMeeting.setDtCreateDate(new Date());
 				//auditMeeting.setDtBeginDate(formatter.parse(dtBeginDate));// 会议时间
 				legislationCitymeetingService.update(auditMeeting);
+				LegislationCitymeetingTask legislationCitymeetingTask = findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
+				legislationCitymeetingTask.setStBak(stBak);
 				if ("submit".equals(op)) {
-					LegislationCitymeetingTask legislationCitymeetingTask = findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
 					legislationCitymeetingTask.setStTaskStatus("RESULT");
 					legislationCitymeetingTask.setStBak(stBak);
-					this.update(legislationCitymeetingTask);
+					
 				}
-			
+				this.update(legislationCitymeetingTask);
 			}
 
 		} else if ("RESULT".equals(stTaskStatus)) {
@@ -260,23 +285,40 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 			auditMeeting.setStTopicName(stTopicName);
 			auditMeeting.setStType(stType);
 			auditMeeting.setStTopic(stDocNo);
-			auditMeeting.setStNodeName(stNodeName);
 			auditMeeting.setStTopic(stComent);
 			auditMeeting.setStAddress(stAddress);
 			auditMeeting.setStPersons(stPersons);
+			auditMeeting.setStNodeName("常务会议");
+			auditMeeting.setDtCreateDate(new Date());
 			//auditMeeting.setDtBeginDate(formatter.parse(dtBeginDate));// 会议时间
 			legislationCitymeetingService.update(auditMeeting);
 			LegislationCitymeetingTask legislationCitymeetingTask = findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
 			legislationCitymeetingTask.setStTaskStatus("RESULT");
 			legislationCitymeetingTask.setStBak(stBak);
 			legislationCitymeetingTask.setStBak1(stBak1);
+			legislationCitymeetingTask.setStBak3(stBak3);
+		
 			this.update(legislationCitymeetingTask);
+			
 			if ("submit".equals(op)) {
 				LegislationCitymeetingTask legislationCitymeetingTask2 = findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
 				legislationCitymeetingTask2.setStTaskStatus("AFFIRM");
 				legislationCitymeetingTask2.setStBak(stBak);
 				legislationCitymeetingTask2.setStBak1(stBak1);
+				legislationCitymeetingTask2.setStBak3(stBak3);
 				this.update(legislationCitymeetingTask2);
+				//议题发送处室
+				WegovSimpleNode nodeInfo = wegovSimpleNodeService.findById("NOD_0000000110");
+				TeamInfo teamInfo = teamInfoService.findTeamInfoByTeamId("MODULE_LEGISLATE", stBak3);
+				LegislationSendNotice legislationSendNotice=new LegislationSendNotice();
+				legislationSendNotice.setStTeamId(stBak3);
+				legislationSendNotice.setStTeamName(teamInfo.getTeamName());
+				legislationSendNotice.setStNoticeStatus("已发送");
+				legislationSendNotice.setStDocId(stTopicId);
+				legislationSendNotice.setDtOpenDate(new Date());
+				legislationSendNotice.setStModelName("常务会议");
+				legislationSendNotice.setStNodeName(nodeInfo.getStNodeName());
+				legislationSendNoticeService.add(legislationSendNotice);
 			}
 			
 			
@@ -286,10 +328,11 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 			auditMeeting.setStTopicName(stTopicName);
 			auditMeeting.setStType(stType);
 			auditMeeting.setStTopic(stDocNo);
-			auditMeeting.setStNodeName(stNodeName);
 			auditMeeting.setStTopic(stComent);
 			auditMeeting.setStAddress(stAddress);
 			auditMeeting.setStPersons(stPersons);
+			auditMeeting.setStNodeName("常务会议");
+			auditMeeting.setDtCreateDate(new Date());// 会议时间
 			//auditMeeting.setDtBeginDate(formatter.parse(dtBeginDate));// 会议时间
 			legislationCitymeetingService.update(auditMeeting);
 			LegislationCitymeetingTask legislationCitymeetingTask = findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
@@ -317,13 +360,12 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 			
 			
 		}else if ("INPUT".equals(stTaskStatus)) {
-
-
+			auditMeeting.setDtCreateDate(new Date());// 会议时间
 			auditMeeting.setStTopicId(stTopicId);
 			auditMeeting.setStTopicName(stTopicName);
 			auditMeeting.setStType(stType);
 			auditMeeting.setStTopic(stDocNo);
-			auditMeeting.setStNodeName(stNodeName);
+			auditMeeting.setStNodeName("常务会议");
 			auditMeeting.setStTopic(stComent);
 			auditMeeting.setStAddress(stAddress);
 			auditMeeting.setStPersons(stPersons);
@@ -336,21 +378,22 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 			legislationCitymeetingTask.setStBak2(stBak2);
 			this.update(legislationCitymeetingTask);
 			if ("submit".equals(op)) {
-				LegislationCitymeetingTask legislationCitymeetingTask2 = findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
-				legislationCitymeetingTask2.setStTaskStatus("DONE");
-				legislationCitymeetingTask2.setStBak(stBak);
-				legislationCitymeetingTask2.setStBak1(stBak1);
+				LegislationCitymeetingTask legislationCitymeetingTaskTwo = findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
+				legislationCitymeetingTaskTwo.setStTaskStatus("DONE");
+				legislationCitymeetingTaskTwo.setStBak(stBak);
+				legislationCitymeetingTaskTwo.setStBak1(stBak1);
 				legislationCitymeetingTask.setStBak2(stBak2);
-				this.update(legislationCitymeetingTask2);
+				this.update(legislationCitymeetingTaskTwo);
 				//常务会议议题对应的立法计划节点传递
 				List<LegislationPlanTask> legislationPlanTaskList = legislationPlanTaskService.findByHQL("from LegislationPlanTask t where t.stNodeId='NOD_0000000214' and t.stTaskStatus='DOING' and t.stTopicId='"+stTopicId+"' order by t.dtOpenDate desc");
 				if(legislationPlanTaskList.size()>0){
 					for(LegislationPlanTask legislationPlanTask : legislationPlanTaskList) {
+						
 						String stNodeId = legislationPlanTask.getStNodeId();
 						WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
 						WegovSimpleNode nextNode=wegovSimpleNodeService.findById(node.getStNextNode());
-						if(!"DOING".equals(node.getStNextNode())){//增加一条新任务
-							
+						if(!"DOING".equals(node.getStNextNode())){
+							//增加一条新任务
 							LegislationPlanTask newLegislationPlanTask=new LegislationPlanTask();
 							newLegislationPlanTask.setStPlanId(legislationPlanTask.getStPlanId());
 							newLegislationPlanTask.setStFlowId(legislationPlanTask.getStFlowId());
@@ -369,23 +412,39 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 							newLegislationPlanTask.setStActive(legislationPlanTask.getStActive());
 							newLegislationPlanTask.setStEnable(legislationPlanTask.getStEnable());
 							newLegislationPlanTask.setStParentId(legislationPlanTask.getStParentId());
-
 							newLegislationPlanTask.setStDealId(legislationPlanTask.getStDealId());
-							newLegislationPlanTask.setStDealName(legislationPlanTask.getStDealId());
+							newLegislationPlanTask.setStDealName(legislationPlanTask.getStDealName());
 							newLegislationPlanTask.setDtDeadDate(legislationPlanTask.getDtDeadDate());
 							newLegislationPlanTask.setStTopicId(stTopicId);
 							legislationPlanTaskService.addObj(newLegislationPlanTask);
+							
+							/*//legislationPlanItem立法计划信息记录  同步
+							LegislationPlanItem legislationPlanItem = new LegislationPlanItem();
+							legislationPlanItem.setStPlanId(legislationPlanTask.getStPlanId());
+							legislationPlanItem.setStItemName(legislationPlanTask.getStFlowId());
+							legislationPlanItem.setStNodeId(nextNode.getStNodeId());
+							legislationPlanItem.setStNodeName(nextNode.getStNodeName());
+							legislationPlanItem.setStStatus("TODO");
+							legislationPlanItem.setDtCreateDate(legislationPlanTask.getDtOpenDate());
+							legislationPlanItem.setStUserId(legislationPlanTask.getStUserId());
+							legislationPlanItem.setStUserName(legislationPlanTask.getStUserName());
+							legislationPlanItem.setStUnitId(legislationPlanTask.getStRoleId());
+							legislationPlanItem.setStUnitName(legislationPlanTask.getStRoleName());
+							legislationPlanItem.setStTypeId(legislationPlanTask.getStTeamId());
+							legislationPlanItem.setStTypeName(legislationPlanTask.getStTeamName());
+							legislationPlanItem.setStSourceId(stTopicId);
+							legislationPlanItemService.addObj(legislationPlanItem);*/
+							}
 						}
-			}
-			
 			}}
 			
 		}else if ("DONE".equals(stTaskStatus)) {
+			auditMeeting.setStNodeName("常务会议");
+			auditMeeting.setDtCreateDate(new Date());
 			auditMeeting.setStTopicId(stTopicId);
 			auditMeeting.setStTopicName(stTopicName);
 			auditMeeting.setStType(stType);
 			auditMeeting.setStTopic(stDocNo);
-			auditMeeting.setStNodeName(stNodeName);
 			auditMeeting.setStTopic(stComent);
 			auditMeeting.setStAddress(stAddress);
 			auditMeeting.setStPersons(stPersons);
@@ -409,6 +468,8 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 			
 		
 		}
+		// 处理附件内容
+		legislationFilesService.updateParentIdById(request, stTopicId);
 		return stTopicId;
 	}
 }
