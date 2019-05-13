@@ -31,46 +31,48 @@
 					是否反馈
 				</th>
 				<th style="text-align: center">
+					反馈内容
+				</th>
+				<th style="text-align: center">
 					反馈时间
 				</th>
-				<c:if test="${allDone==false}" >
-				 <th id="conHead" style="text-align: center">
-					确认
-				 </th>
-				</c:if>
 			</tr>
 		</thead>
 		<tbody>
-		<c:if test="${legislationProcessTaskList !=null&&fn:length(legislationProcessTaskList)>0}">
-			<c:forEach var="legislationProcessTask" items="${legislationProcessTaskList}" >
+		<c:if test="${legislationSendNoticeList !=null&&fn:length(legislationSendNoticeList)>0}">
+			<c:forEach var="legislationSendNotice" items="${legislationSendNoticeList}" >
 			   <tr>
 					<td style="text-align: center">
-						${legislationProcessTask.stBakOne}
+						${legislationSendNotice.stTeamName}
 					</td> 
 					<td style="text-align: center">
-						<c:if test="${legislationProcessTask.stTaskStatus=='TODO'}" >
-						未反馈</c:if>
-						<c:if test="${legislationProcessTask.stTaskStatus=='DONE'}" >
-						已反馈</c:if>
+						${legislationSendNotice.stNoticeStatus}
 					</td> 
 					<td style="text-align: center">
-						<c:if test="${legislationProcessTask.stTaskStatus=='TODO'}" >
+						 <c:choose>
+					  <c:when test="${legislationSendNotice.stNoticeStatus!='已反馈'}">---</c:when>
+					  <c:otherwise>${legislationSendNotice.stFeedbackContent}</c:otherwise>
+					 </c:choose>
+					</td> 
+					<td style="text-align: center">
+						<c:if test="${legislationSendNotice.stNoticeStatus!='已反馈'}" >
 						---</c:if>
-						<c:if test="${legislationProcessTask.stTaskStatus=='DONE'}" >
+						<c:if test="${legislationSendNotice.stNoticeStatus=='已反馈'}" >
 						<fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
-            value="${legislationProcessTask.dtDealDate}" /></c:if>
-					<c:if test="${allDone==false}" >
-					  <td style="text-align: center">
-						<input id="${legislationProcessTask.stTaskId}"
-						<c:if test="${legislationProcessTask.stTaskStatus=='DONE'}">disabled</c:if>
-						 name="confirm" type="button" onclick="confirm(this)" value="确认" />
-					  </td>
-					</c:if> 
+            value="${legislationSendNotice.dtFeekbackDate}" /></c:if>
+                    </td>
 			   </tr>
 			</c:forEach>
 		</c:if>
 		</tbody>
 	</table>
+	
+ 	<div class="form-group">
+		<label class="control-label">上传材料接收 </label>
+	</div>	
+	<%@include file="/legislation/file/attachUpload.jsp" %>
+	
+	
 	<div class="form-group text-center">
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 	</div>
@@ -79,24 +81,40 @@
     $(function () {
         $(".tab-left").css('width', $(window).width() * 0.1);
     });
-	
-    function confirm(e) {
-             $.post("../${requestUrl}?stNodeId=${nodeId}&stDocId=${legislationProcessDoc.stDocId}&stTaskId="+e.id+"&method=confirm",
-            	function(data){
-	            	 if(data.success){
-	            		 Duang.success("提示","确认成功");
-	            		 $(e).attr("disabled","disabled");
-	                 	var dealDate =JSON.stringify(data.dealDate);
-	                 	dealDate = dealDate.replace("\"","").replace("\"","");
-	                 	 $(e).parent().prev().text(dealDate);
-	                 	 $(e).parent().prev().prev().text("已反馈");
-	                 	if(data.allDone){
-	                 		$('#${nodeId}').parent().removeClass('bcg_gray').removeClass('bcg_blue').removeClass('bcg_green').addClass('bcg_blue');
-	                 		$('[name="confirm"][id="conHead"]').attr("hidden","hidden");
-	                 	}
-	                 }else{
-	                     Duang.error("提示","操作失败");
-	                 }
-             	});
-    };
+  //上传按钮点击事件
+	function toUploadFile(obj) {
+		$(obj).next().click();
+	};
+	//上传材料到数据库表LEGISLATION_FILES事件
+	function uploadFile(id, type, stSampleId) {
+		$.ajaxFileUpload({
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			type : 'post',
+			secureuri : false, //是否启用安全提交,默认为false
+			fileElementId : id,
+			dataType : 'JSON',
+			success : function(data, status) { //服务器响应成功时的处理函数
+				data = data.replace(/<.*?>/ig, ""); //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+				var file = JSON.parse(data);
+				if (file.success) {
+					if (type == 1) {
+						var html = '<a target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '<label  style="color: red" onclick="deleteAttach(this,1,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId + '\')" >删除</label>';
+						$("#" + id).parent().prev().html('<span>' + file.name + '</span>');
+						$("#" + id).parent().html(html);
+					} else {
+						var html = '<tr class="text-center">' + '<td class="text-left">需要报送的其他材料</td>' + '<td>' + file.name + '</td>' + '<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<label  style="color: red" onclick="deleteAttach(this,2,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId
+								+ '\')">删除</label>' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '</td></tr>';
+						$('#otherMaterial').append(html);
+					}
+					Duang.success("提示", "上传材料成功");
+				} else {
+					Duang.error("提示", "上传材料失败");
+				}
+			},
+			error : function(data, status, e) { //服务器响应失败时的处理函数
+				Duang.error("提示", "上传材料失败");
+			}
+		});
+	};
+
 </script>

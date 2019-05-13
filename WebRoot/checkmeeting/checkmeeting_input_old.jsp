@@ -19,7 +19,7 @@
 	</button>
 </div>
 <div class="modal-body">
-	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">会议纪要</h2>
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">s会议纪要</h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
 
@@ -31,12 +31,6 @@
 						<label>会议名称：</label>
 					</th>
 					<td>${legislationCheckmeeting.stMeetingName}</td>
-				</tr>
-				<tr class="text-center">
-					<th class="text-right">
-						<label>会议类型：</label>
-					</th>
-					<td>${legislationCheckmeeting.stType}</td>
 				</tr>
 				<tr class="text-center">
 					<th class="text-right">

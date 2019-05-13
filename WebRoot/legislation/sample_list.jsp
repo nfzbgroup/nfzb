@@ -43,7 +43,7 @@
 								<td>立法计划</td>
 								<td>*</td>
 								<td>*</td>
-								<td><a href="#" onclick="alert('待开发');">处理</a></td>
+								<td><a href="#" onclick="openPlanPage()">处理(可点击)</a></td>
 							</tr>
 							<tr>
 								<td>2</td>
@@ -146,6 +146,12 @@
         function openSamplePage() {
 			$("#processIndexRootForm").modal({
 				remote: "${basePath}/legislationProcessDoc/draft_doc_info.do?method=legislation_saple_flow"
+			});
+        };
+        
+        function openPlanPage() {
+			$("#processIndexRootForm").modal({
+				remote: "${basePath}/legislationPlan/draft_plan_info.do?method=legislation_plan_flow"
 			});
         };
 	</script>

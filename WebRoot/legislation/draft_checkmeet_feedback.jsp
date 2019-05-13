@@ -16,7 +16,9 @@
     <h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议意见反馈</h2>
 	<form id="legislationProcessDocForm" class="form-horizontal"
 		  novalidate="novalidate">
-        <input hidden id="stDocId" name="stDocId" value="${stDocId}">
+        		<input hidden id="stDocId" name="stDocId" value="${stDocId}">
+        		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
+        
                 <div class="form-group">
 					<label class="col-sm-3 control-label text-left">会议名称：</label>
 					<label class="col-sm-5 control-label" style="text-align:left"><c:if test="${legislationCheckmeeting.stMeetingName !=null}">${legislationCheckmeeting.stMeetingName}</c:if></label>
@@ -31,6 +33,10 @@
 						<textarea id="stComent" name="stComent" class="form-control"><c:if test="${legislationProcessTask.stComment1 !=null}">${legislationProcessTask.stComment1}</c:if></textarea>
 					</div>
 				</div>
+			<div class="form-group">
+				<label class="control-label">审核会议材料接收 </label>
+			</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
 			<div class="form-group text-center">
 			    <c:if test="${legislationProcessTask.stTaskStatus=='TODO'}">
 					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
@@ -41,43 +47,7 @@
 			    <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 			
-            <div class="form-group">
-                <label class="control-label">报审材料上传
-                </label>
-                <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
-                </label>
-                <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
-            </div>
-            <div class="form-group">
-                <table class="table table-striped table-hover"
-                       data-toggle="table"
-                       data-mobile-responsive="true"
-                       data-card-view = "true"
-                       data-pagination="true">
-                    <thead>
-                    <tr class="text-center">
-                        <th class="text-center" data-field="district_name">文件名称</th>
-                        <th class="text-center" data-field="set">操作</th>
-                    </tr>
-                    </thead>
-                    <tbody id="otherMaterial">
-                        <c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
-                            <c:forEach var="file" items="${legislationFilesList}">
-                                <c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
-                                    <tr class="text-center">
-                                        <td>${file.stTitle}</td>
-                                        <td>
-                                            <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>&nbsp;&nbsp;
-                                            <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
-                                            <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">
-                                        </td>
-                                    </tr>
-                                </c:if>
-                            </c:forEach>
-                        </c:if>
-                    </tbody>
-                </table>
-            </div>
+          
 		</div>
 	</form>
 
@@ -93,7 +63,7 @@
         	}
             return;
         } 
-         $.post("${requestUrl}?stNodeId=${nodeId}&method=draftCheckmeetFeedback&type="+type+"&stTaskStatus=${legislationProcessTask.stTaskStatus}",param,function(data){
+         $.post("${requestUrl}?stNodeId=${nodeId}&method=draftCheckmeetFeedback&type='"+type+"'&stTaskStatus=${legislationProcessTask.stTaskStatus}",param,function(data){
          $('#legislationProcessForm').modal('hide');
          submitForm(1);
             });
@@ -104,7 +74,7 @@
     }
     function uploadFile(id,type,stSampleId) {
         $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId='+stSampleId,
+            url: '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId='+stSampleId,
             type: 'post',
             secureuri: false,                       //是否启用安全提交,默认为false
             fileElementId: id,

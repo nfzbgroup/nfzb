@@ -30,11 +30,8 @@
 										<c:when test="${buttonStatus=='已发送'}">
 											<td ><a href="javascript:void(0);" onclick="nextProcess('${task.stNoticeId}','${task.stNoticeId}','nextChildProcess')" class="layer_full_link">接收</a></td>
 										</c:when>
-										<c:when test="${buttonStatus=='已接收'}">
-											<td ><a href="javascript:void(0);" onclick="openPage('depart_notice_feedback','${task.stNoticeId}','${nodeId}')" class="layer_full_link">反馈</a></td>
-										</c:when>
 										<c:otherwise>
-											<td ><a href="javaScript:void(0)" data-title="查看" onclick="openPage('depart_notice_feedback','${task.stNoticeId}','${nodeId}')" class="layer_full_link">查看</a></td>
+											<td ><a href="javascript:void(0);" onclick="openCitymeetingPage('city_meeting__TODO','${task.stNoticeId}')" class="layer_full_link">查看</a></td>
 										</c:otherwise>
 									</c:choose>
 						</tr>

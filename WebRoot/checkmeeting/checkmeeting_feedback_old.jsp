@@ -75,6 +75,10 @@
 			</table>
 
 			<br>
+			
+			<%@include file="/legislation/file/attachUpload.jsp" %>
+			
+			
 			<br>
 			<div class="form-body" align="center">
 				<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">

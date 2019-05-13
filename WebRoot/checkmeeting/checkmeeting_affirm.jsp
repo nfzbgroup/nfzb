@@ -19,9 +19,10 @@
 	</button>
 </div>
 <div class="modal-body">
-	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">反馈情况</h2>
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">反馈情况s</h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
+			<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body" align="center">
 			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
 				<tr class="text-center">
@@ -29,12 +30,6 @@
 						<label>会议名称：</label>
 					</td>
 					<td>${legislationCheckmeeting.stMeetingName}</td>
-				</tr>
-				<tr class="text-center">
-					<td class="text-right">
-						<label>会议类型：</label>
-					</td>
-					<td>${legislationCheckmeeting.stType}</td>
 				</tr>
 				<tr class="text-center">
 					<td class="text-right">
@@ -66,7 +61,7 @@
 			</table>
 		</div>
 
-		<div class="form-body" align="center">
+		<div class="form-body" align="center" hidden="hidden">
 			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
 				<tbody class="text-center" align="center">
 					<tr class="text-right" align="center">
@@ -132,6 +127,10 @@
 			</table>
 		</div>
 
+ 			<div class="form-group">
+				<label class="control-label">审核会议反馈材料 </label>
+			</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
 
 
 		<!-- 
@@ -286,7 +285,7 @@
 	};
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,

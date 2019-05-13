@@ -7,10 +7,10 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span>常务会议 > </span>
+			<span>审核会议待审事项 > </span>
 		</li>
 		<li>
-			<span>常务会议议题结果</span>
+			<span>发起</span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
@@ -19,53 +19,56 @@
 	</button>
 </div>
 <div class="modal-body">
-	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">常务会议议题结果</h2>
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议待审事项 </h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
-		<input type="hidden" name="stTopicId" value="${legislationCitymeeting.stTopicId}">
-			<input type="hidden" id="nodeStatus" value="${nodeStatus}">
+		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
+		<input type="hidden" name="stItemId" value="${iteminfo.stItemId}">
+		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
+		
 		<div class="form-body">
 			<div class="form-group">
-				<label class="col-sm-2 control-label">议题名称：</label>
+				<label class="col-sm-2 control-label">事项名称：</label>
 				<div class="col-sm-9">
-					<input type="text"  readonly="readonly" class="form-control" id="stTopicName" name="stTopicName" value="${legislationCitymeeting.stTopicName}">
+					<input type="text" class="form-control" id="stMeetingName" name="stMeetingName" value="${iteminfo.stItemName}">
 				</div>
 			</div>
-			
-			
 			<div class="form-group">
-				<label class="col-sm-2 control-label">议题说明：</label>
+				<label class="col-sm-2 control-label">事项类型：</label>
 				<div class="col-sm-9">
-					<input type="text"  readonly="readonly" class="form-control" id="stBak" name="stBak" value="${legislationCitymeetingTask.stBak}">
+					<select class="form-control" name="stType" id="stType">
+						<option value="规范性文件" <c:if test='${(iteminfo.stTypeName=="规范性文件")}'> selected="selected" </c:if>>规范性文件</option>
+						<option value="重大、复杂、疑难事件及案件" <c:if test='${(iteminfo.stTypeName=="重大、复杂、疑难事件及案件")}'> selected="selected" </c:if>>重大、复杂、疑难事件及案件</option>
+						<option value="其它需要提请审核会议的事项" <c:if test='${(iteminfo.stTypeName=="其它需要提请审核会议的事项")}'> selected="selected" </c:if>>其它需要提请审核会议的事项</option>
+					</select>
 				</div>
 			</div>
 			
-			
-			
-			
-			
+			<%--
 			<div class="form-group">
-				<label class="col-sm-2 control-label">议题结果：</label>
+				<label class="col-sm-2 control-label">事项时间：</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control" id="stType" name="stType" value="${legislationCitymeeting.stType}">
+					<input type="text" class="form-control" readonly id="dtBeginDate" name="dtBeginDate" value="<fmt:formatDate value="${iteminfo.dtCreateDate}"  pattern="yyyy-MM-dd"/>">
 				</div>
 			</div>
+			--%>	
 			<div class="form-group">
-				<label class="control-label col-md-2">选择发送处室：
-				</label>
-				<div class="col-md-8">
-					<s:select id="stBak3" name="stBak3" list="#request.teamList" 
-					 value="unitName" listKey="id" listValue="unitName" headerKey="" headerValue="=请选择="/>
+				<label class="col-sm-2 control-label">事项说明：</label>
+				<div class="col-sm-9">
+					<textarea class="form-control" id="stPersons" name="stPersons">${iteminfo.stContent}</textarea>
 				</div>
 			</div>
-			<div class="form-group">
-				<label class="control-label">常务会议材料接收 </label>
-			</div>	
+	
+			<%--	 <div class="form-group">
+				<label class="control-label">审核会议材料接收 </label>
+			</div>	--%>
 			<%@include file="/legislation/file/attachUpload.jsp" %>
+				
+	
+	
 			<div class="form-group text-center">
-				<input type="hidden" id="op" name="op">
-				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
+				<input  type="hidden" id="op" name="op">
 				&nbsp;&nbsp;
-				<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="确定议题">
+				<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="保存">
 				&nbsp;&nbsp;
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
@@ -79,7 +82,6 @@
 			format : 'yyyy-MM-dd',
 			calendar : true,
 		});
-		 $("#stBak3 option[value='${request.legislationCitymeetingTask.stBak3}']").attr("selected","selected");
 	});
 	function toUploadFile(obj) {
 		$(obj).next().click();
@@ -126,33 +128,24 @@
 		}
 	};
 	function saveAuditMeeting1(operation) {
-
 		layer.close(layer.index);
 		$('#op').val(operation);
 		var param = $('#auditMeetingForm').formToJson();
-		var stDocSource = "";
-		var checkedNum = 0;
-		$('[name="stDocSourceCheck"]:checked').each(function() {
-			stDocSource = stDocSource + "#" + this.value;
-			checkedNum++;
-		});
-		console.log(stDocSource);
-		if (checkedNum > 0) {
-			param.stDocSource = stDocSource.substring(1);
-		}
-		if (param.stTopicName == null || param.stTopicName == "") {
-			Duang.error("提示", "请输入议题名称");
-		}  else if (param.stBak == null || param.stBak == "") {
-			Duang.error("提示", "请输入议题说明");
-		}  else if (param.stType == null || param.stType == "") {
-			Duang.error("提示", "请输入议题结果");
-		}  else if (param.stBak3 == null || param.stBak3 == "") {
-			Duang.error("提示", "请选择议题发送的处室");
-		}else {
+		//alert(param.stItemIds);
+		
+		if (param.stMeetingName == null || param.stMeetingName == "") {
+			Duang.error("提示", "请输入事项名称");
+		} else if (param.stType == null || param.stType == "") {
+			Duang.error("提示", "请选择事项类型");
+		//} else if (param.dtBeginDate == null || param.dtBeginDate == "") {
+		//	Duang.error("提示", "请选择事项时间");
+		} else if (param.stPersons == null || param.stPersons == "") {
+			Duang.error("提示", "请输入事项说明");
+		} else {
 			if (operation == 'submit') {
 				layer.confirm('请确认操作！', function(index) {
 					layer.close(layer.index);
-					$.post("${requestUrl}?stTopicId=${stTopicId}&stNodeId=${nodeId}&method=saveCitymeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
+					$.post("${requestUrl}?stNodeId=${nodeId}&method=commitCheckmeetingItem&stTaskStatus=${stTaskStatus}", param, function(data) {
 						console.log(JSON.stringify(data));
 						if (data.success) {
 							if (operation == 'submit') {
@@ -165,18 +158,7 @@
 						}
 					});
 				});
-			} else {
-				$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCitymeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
-					console.log(JSON.stringify(data));
-					if (data.success) {
-						$('#legislationProcessForm').modal('hide');
-						submitForm(1);
-						Duang.success("提示", "操作成功");
-					} else {
-						Duang.error("提示", "操作失败");
-					}
-				});
-			}
+			} 
 		}
 	}
 

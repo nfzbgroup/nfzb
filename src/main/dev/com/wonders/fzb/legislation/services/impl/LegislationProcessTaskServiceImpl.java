@@ -356,40 +356,17 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 			return returnStatus;
 		}
 
-
 		List<LegislationProcessTask> list = findTaskByDocIdAndNodeId(stDocId, stNodeId);
 		for (LegislationProcessTask legislationProcessTask : list) {
-			LegislationProcessTaskdetail legislationProcessTaskdetail = legislationProcessTaskdetailService.findByTaskId(legislationProcessTask.getStTaskId());
-			String personIds = legislationProcessTaskdetail.getStPersonId();
-			//根据id字符串获取人员信息集合
-			List<UserInfo> userInfoList = legislationProcessDocService.findUserInfoListByString(personIds);
-			//发送领导
-			if (personIds.indexOf(",") > -1) {
-				String[] personIArray = personIds.split(",");
-				for (int i = 0; i < personIArray.length; i++) {
-					LegislationSendNotice legislationSendNotice = new LegislationSendNotice();
-					legislationSendNotice.setStDocId(legislationProcessTask.getStDocId());
-					legislationSendNotice.setStNoticeStatus("已发送");
-					legislationSendNotice.setDtOpenDate(new Date());
-					legislationSendNotice.setStUserId(userInfoList.get(i).getUserId());
-					legislationSendNotice.setStUserName(userInfoList.get(i).getName());
-					legislationSendNotice.setStModelName("立法过程");
-					legislationSendNotice.setStNodeName(legislationProcessTask.getStNodeName());
-					legislationSendNoticeService.add(legislationSendNotice);
-				}
-			} else {
-				LegislationSendNotice legislationSendNotice = new LegislationSendNotice();
-				legislationSendNotice.setStDocId(legislationProcessTask.getStDocId());
-				legislationSendNotice.setStNoticeStatus("已发送");
-				legislationSendNotice.setDtOpenDate(new Date());
-				legislationSendNotice.setStUserId(userInfoList.get(0).getUserId());
-				legislationSendNotice.setStUserName(userInfoList.get(0).getName());
-				legislationSendNotice.setStModelName("审核会议");
-				legislationSendNotice.setStNodeName(legislationProcessTask.getStNodeName());
-				legislationSendNoticeService.add(legislationSendNotice);
-			}
+			WegovSimpleNode node = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'").get(0);
 			String curStTaskStatus = legislationProcessTask.getStTaskStatus();
-
+			if ("TODO".equals(curStTaskStatus) &&( "NOD_0000000131".equals(legislationProcessTask.getStNodeId()) || "NOD_0000000141".equals(legislationProcessTask.getStNodeId()))) {
+				// 立法听证会、公开征求意见送审领导环节
+				LegislationProcessTaskdetail legislationProcessTaskdetail = legislationProcessTaskdetailService.findByTaskId(legislationProcessTask.getStTaskId());
+				String personIds = legislationProcessTaskdetail.getStPersonId();
+				//发送领导
+				legislationSendNoticeService.sendNotice(personIds, "立法过程", legislationProcessTask.getStDocId(),node.getStNodeName());
+			}
 			String[] stTaskStatusArray = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId ='" + stNodeId + "'").get(0).getStDoneName().split("#");
 			for (int i = 0; i < stTaskStatusArray.length; i++) {
 				if (curStTaskStatus.equals(stTaskStatusArray[i])) {
@@ -739,11 +716,11 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 		update(legislationProcessTask);
 
 		// 产生发送部门记录 legislationSendNotice
-        WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
-        WegovSimpleNode nextNode1 = wegovSimpleNodeService.findById(node.getStNextNode());
-        WegovSimpleNode nextNode2 = wegovSimpleNodeService.findById(node.getStExtendOne());
-        String userId = currentPerson.getUserId();
-        String userName = currentPerson.getName();
+		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
+		WegovSimpleNode nextNode1 = wegovSimpleNodeService.findById(node.getStNextNode());
+		WegovSimpleNode nextNode2 = wegovSimpleNodeService.findById(node.getStExtendOne());
+		String userId = currentPerson.getUserId();
+		String userName = currentPerson.getName();
 		if (teamId.indexOf(",") > -1) {
 			String[] teamIdArray = teamId.split(",");
 			for (int i = 0; i < teamIdArray.length; i++) {

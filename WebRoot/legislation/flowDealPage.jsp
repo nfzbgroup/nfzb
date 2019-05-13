@@ -311,7 +311,7 @@
 								</div>
 
 								<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_red">
-									<a href="javaScript:void(0)" id="NOD_0000000122" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
+									<a href="javaScript:void(0)" id="NOD_0000000124" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
 										<p class="font_color_black">
 											部门征求意见
 											</br>
@@ -546,9 +546,9 @@
 									</a>
 								</div>
 								<c:choose>
-									<c:when test="${nodeId=='NOD_0000000162'||nodeId=='NOD_0000000122'}">
+									<c:when test="${nodeId=='NOD_0000000164'||nodeId=='NOD_0000000122'}">
 										<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_red">
-											<a href="javaScript:void(0)" id="NOD_0000000162" handStatus="1" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
+											<a href="javaScript:void(0)" id="NOD_0000000164" handStatus="1" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
 												<p class="font_color_black">
 													部门会签结果
 													</br>
@@ -560,7 +560,7 @@
 									</c:when>
 									<c:otherwise>
 										<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_red">
-											<a href="javaScript:void(0)" id="NOD_0000000162" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
+											<a href="javaScript:void(0)" id="NOD_0000000164" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
 												<p class="font_color_black">
 													部门会签结果
 													</br>
@@ -819,6 +819,7 @@
 			}
 		}, "json")
 	};
+	
 	function uploadChildDemonstrationReport(stDocId, stNodeId, nodeStatus) {
 		$.post("../legislationProcessTask/uploadReport.do?stDocId=" + stDocId + "&stNode=" + stNodeId, function(data) {
 			//alert("附件数校验"+JSON.stringify(data));
@@ -829,7 +830,7 @@
 			}
 		}, "json")
 	};
-
+	
 	function nextDemonstrationProcess(stDocId, stNodeId, method, buttonId) {
 		layer.confirm('请确认操作！', function(index) {
 			layer.close(layer.index);
@@ -854,6 +855,7 @@
 			});
 		});
 	};
+	
 	function nextChildDemonstrationProcess(stDocId, stNodeId, method, nodeStatus) {
 		layer.confirm('请确认操作！', function(index) {
 			layer.close(layer.index);
@@ -910,7 +912,7 @@
 		//submitForm(1);
 		//}
 	}
-
+	 
 	//页面加载后，去后台获取所有节点的状态，连接等信息
 	//$(document).ready(function() {
 	$('#processIndexRootForm').on('shown.bs.modal', function(event) {	

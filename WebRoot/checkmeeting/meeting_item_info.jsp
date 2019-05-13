@@ -18,6 +18,7 @@
 <div class="modal-body">
 	<form id="legislationPlanForm" class="form-horizontal" novalidate="novalidate">
         <div class="form-body">
+        	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议事项 </h2>
         
         
             <div class="form-group">
@@ -26,12 +27,7 @@
                     <input type="text" class="form-control" name="stItemName" disabled value="${iteminfo.stItemName}"/>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">事项状态：</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" name="stItemName" disabled value="${iteminfo.stStatus}"/>
-                </div>
-            </div>
+
             <div class="form-group">
                 <label class="col-sm-3 control-label">事项类型：</label>
                 <div class="col-sm-9">
@@ -44,7 +40,17 @@
                     <input type="text" class="form-control" name="stItemName" disabled value="${iteminfo.stUserName}"/>
                 </div>
             </div>
-            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">事项说明：</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="stItemName" disabled value="${iteminfo.stContent}"/>
+                </div>
+            </div>  
+             <%--
+            <div class="form-group">
+				<label class="control-label">审核会议材料接收 </label>
+			</div>	--%>
+			<%@include file="/legislation/file/attachUpload.jsp" %>
             
 			<div class="form-group text-center">
 					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
@@ -105,8 +111,6 @@
             Duang.error("提示","请输入立法项目名称");
         }else if(param.stPlanId==null||param.stPlanId==""){
             Duang.error("提示","请选择征集通知");
-        }else if(param.stTypeName==null||param.stTypeName==""){
-            Duang.error("提示","请选择立法项目类型");
         }else if(param.stContent==null||param.stContent==""){
             Duang.error("提示","请输入建议立项理由");
         }else if(param.stStatus==null||param.stStatus==""){
@@ -123,43 +127,36 @@
     function toUploadFile(obj) {
         $(obj).next().click();
     }
-    function uploadFile(id,type,stSampleId) {
-        $.ajaxFileUpload({
-            url: '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId='+stSampleId,
-            type: 'post',
-            secureuri: false,                       //是否启用安全提交,默认为false
-            fileElementId: id,
-            dataType: 'JSON',
-            success: function (data, status) {        //服务器响应成功时的处理函数
-                data = data.replace(/<.*?>/ig, "");  //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
-                var file = JSON.parse(data);
-                if (file.success) {
-                    if(type==1){
-                        var html='<a target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
-                            +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
-                        +'<label  style="color: red" onclick="deleteAttach(this,1,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')" >删除</label>';
-                        $("#"+id).parent().prev().html('<span>'+file.name+'</span>');
-                        $("#"+id).parent().html(html);
-                    }else{
-                        var html='<tr class="text-center">'
-                            +'<td>立法项目材料</td>'
-                            +'<td>'+file.name+'</td>'
-                            +'<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name='+file.name+'&url='+file.url+'">下载</a>&nbsp;&nbsp;'
-                            +'<label  style="color: red" onclick="deleteAttach(this,2,\''+id+'\',\''+file.fileId+'\',\''+stSampleId+'\')">删除</label>'
-                            +'<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>'
-                            +'</td></tr>';
-                        $('#otherMaterial').append(html);
-                    }
-                    Duang.success("提示", "上传材料成功");
-                } else {
-                    Duang.error("提示", "上传材料失败");
-                }
-            },
-            error: function (data, status, e) { //服务器响应失败时的处理函数
-                Duang.error("提示", "上传材料失败");
-            }
-        });
-    }
+    function uploadFile(id, type, stSampleId) {
+    	$.ajaxFileUpload({
+    		url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
+    		type : 'post',
+    		secureuri : false, //是否启用安全提交,默认为false
+    		fileElementId : id,
+    		dataType : 'JSON',
+    		success : function(data, status) { //服务器响应成功时的处理函数
+    			data = data.replace(/<.*?>/ig, ""); //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+    			var file = JSON.parse(data);
+    			if (file.success) {
+    				if (type == 1) {
+    					var html = '<a target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '<label  style="color: red" onclick="deleteAttach(this,1,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId + '\')" >删除</label>';
+    					$("#" + id).parent().prev().html('<span>' + file.name + '</span>');
+    					$("#" + id).parent().html(html);
+    				} else {
+    					var html = '<tr class="text-center">' + '<td class="text-left">需要报送的其他材料</td>' + '<td>' + file.name + '</td>' + '<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<label  style="color: red" onclick="deleteAttach(this,2,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId
+    							+ '\')">删除</label>' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '</td></tr>';
+    					$('#otherMaterial').append(html);
+    				}
+    				Duang.success("提示", "上传材料成功");
+    			} else {
+    				Duang.error("提示", "上传材料失败");
+    			}
+    		},
+    		error : function(data, status, e) { //服务器响应失败时的处理函数
+    			Duang.error("提示", "上传材料失败");
+    		}
+    	});
+    };
     function deleteAttach(attachObj,type,id,fileId,stSampleId) {
         $.post('${basePath}/file/deleteAttach.do?fileId='+fileId);
 

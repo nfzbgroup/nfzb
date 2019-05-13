@@ -79,7 +79,9 @@
 										</c:otherwise>
 									</c:choose>
 								</div>
+								<span> &nbsp;&nbsp;&nbsp;&nbsp;</span>
 								<div class="pull-right">
+									<label class="btn btn-w-m btn-success" id="additem" onclick="openmeetingitem('checkmeeting_additem',null)">待审事项添加</label>
 									<label class="btn btn-w-m btn-success" id="add" onclick="openmeeting('checkmeeting_add',null)">审核会议发起</label>
 								</div>
 							</form>
@@ -217,6 +219,21 @@
 				});	  
 			}
 		}
+		/* 审核会议待审事项，添加无source事项 */
+		function openmeetingitem(){
+			var itemid = '';
+	 			$("#legislationProcessForm").modal({
+					remote : "${basePath}/legislationCheckmeeting/checkmeeting_info.do?stNodeId=${nodeId}&method=checkmeeting_additem&stItemId=" + itemid
+				});	  
+			}
+		/* 审核会议发起 参会人员 */
+		function openEditParticipants(showName) {
+		    var stPersonsId=$('#stPersonsId').val();
+		    var otherPersonsName=$('#otherPersonsName').val();
+            $("#processIndexForm").modal({
+                remote : "${basePath}/legislationSendNotice/openEditParticipants.do?showName="+showName+"&stPersonsId="+stPersonsId+"&otherPersonsName="+otherPersonsName
+            });
+        }
 		/* function openProMeetPage(method, stMeetingId, buttonStatus) {
 			$("#legislationProcessForm").modal({
 				remote : "${basePath}/legislationCheckmeeting/draft_doc_info.do?stNodeId=${nodeId}&method=" + method + "&stMeetingId=" + stMeetingId + "&stTaskStatus=" + buttonStatus

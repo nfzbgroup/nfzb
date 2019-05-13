@@ -22,7 +22,7 @@
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">会议纪要</h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
-
+		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 
 		<div class="form-body" align="center">
 			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
@@ -31,12 +31,6 @@
 						<label>会议名称：</label>
 					</th>
 					<td>${legislationCheckmeeting.stMeetingName}</td>
-				</tr>
-				<tr class="text-center">
-					<th class="text-right">
-						<label>会议类型：</label>
-					</th>
-					<td>${legislationCheckmeeting.stType}</td>
 				</tr>
 				<tr class="text-center">
 					<th class="text-right">
@@ -84,7 +78,7 @@
 					</th>
 					<td>&nbsp;&nbsp;${legislationCheckmeeting.stPersons}</td>
 				</tr>
-				<tr class="text-center">
+				<tr class="text-center" hidden="hidden">
 					<th class="text-right">
 						<label>草案文本：</label>
 					</th>
@@ -92,7 +86,7 @@
 						<span style="color: red">暂未上传</span>
 					</td>
 				</tr>
-				<tr class="text-center">
+				<tr class="text-center" hidden="hidden">
 					<th class="text-right">
 						<label>起草说明/审查报告：</label>
 					</th>
@@ -100,7 +94,7 @@
 						<span style="color: red">暂未上传</span>
 					</td>
 				</tr>
-				<tr class="text-center">
+				<tr class="text-center" hidden="hidden">
 					<th class="text-right">
 						<label>会议纪要：</label>
 					</th>
@@ -143,6 +137,14 @@
 				</div>
 			</div> 
 			-->
+			
+ 			<div class="form-group">
+				<label class="control-label">审核会议意见整理材料 </label>
+			</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
+			
+			
+			
 		<div class="form-group text-center">
 			<input type="hidden" id="op" name="op">
 			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
@@ -167,7 +169,7 @@
 	};
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,

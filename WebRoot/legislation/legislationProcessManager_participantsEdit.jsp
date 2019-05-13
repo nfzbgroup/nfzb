@@ -58,12 +58,14 @@
 		</table>
 	</c:forEach>
 </c:if>
-	<div class="form-group">
+    <c:if test="${otherPersons=='Y'}">
+	  <div class="form-group">
 		<label class="col-sm-2 control-label">外部人员：</label>
 		<div class="col-sm-9">
 			<textarea class="form-control" id="others" >${otherPersonsName}</textarea>
 		</div>
-	</div>
+	  </div>
+	</c:if>
 	<div class="form-group text-center">
 		<input type="button" class="btn btn-w-m btn-success" id="btnSave"
 			   name="btnSave" onclick="checkedParticipants()" value="确定"> &nbsp;&nbsp;
@@ -112,6 +114,7 @@
 	    var userId="";
 	    var userName="";
         var checkedNum=0;
+        var shut='${process}';
         var others=$('#others').val();
         $('input:checkbox[propertyType="staff"]:checked').each(function () {
             userId=userId+","+this.value;
@@ -122,7 +125,11 @@
             if(others!=null&&others!=''){
 				userName=userName+","+others
             }
-            $("#processIndexForm").modal('hide');
+            if(shut=='process'){
+            	$("#processIndexChildForm").modal('hide');
+            }else{
+            	$("#processIndexForm").modal('hide');
+            }
             $('#stPersons').val(userName.substring(1));
             $('#stPersonsId').val(userId.substring(1));
             $('#otherPersonsName').val(others);

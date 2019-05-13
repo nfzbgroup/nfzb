@@ -19,6 +19,7 @@
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">常务会议材料确认 </h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stTopicId" value="${legislationCitymeeting.stTopicId}">
+			<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body">
 			<div class="form-group">
 				<label class="col-sm-2 control-label">议题名称：</label>
@@ -87,6 +88,10 @@
 				</div>
 			</div>
 			
+			<div class="form-group">
+				<label class="control-label">常务会议材料接收 </label>
+			</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
 			
 			<div class="form-group text-center">
 			   <c:if test="${legislationCitymeetingTask.stTaskStatus=='AFFIRM'}">
@@ -145,7 +150,7 @@
 	};
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,

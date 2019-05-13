@@ -10,7 +10,7 @@
 			<span>常务会议 > </span>
 		</li>
 		<li>
-			<span>常务会议议题发起</span>
+			<span>常务会议议题<c:if test="${stNoticeId==null}">发起</c:if></span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
@@ -19,10 +19,27 @@
 	</button>
 </div>
 <div class="modal-body">
-	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">常务会议议题发起</h2>
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">常务会议议题<c:if test="${stNoticeId==null}">发起</c:if></h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stTopicId" value="${legislationCitymeeting.stTopicId}">
+		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body">
+		   <c:if test="${itemName!=null}">
+		    <div class="form-group">
+				<label class="col-sm-2 control-label">对应项目：</label>
+			  <div class="col-sm-2">
+				<label class="control-label">${itemName}</label>
+			  </div>
+			</div>
+		   </c:if>
+		   <c:if test="${itemName!=null}">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">项目类型：</label>
+			  <div class="col-sm-2">
+				<label class="control-label">${itemType}</label>
+			  </div>
+			</div>
+		   </c:if>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">议题标题：</label>
 				<div class="col-sm-9">
@@ -79,38 +96,14 @@
 				    <textarea id="stBak" name="stBak" class="form-control">${legislationCitymeetingTask.stBak!=null?legislationCitymeetingTask.stBak:''}</textarea>
 				</div>
 			</div>
+			
 			<div class="form-group">
-				<label class="col-sm-2 control-label">议题材料 ：</label>
-				<div class="col-sm-9">
-					<table class="table table-striped table-bordered table-hover text-center" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-						<thead align="center">
-							<tr class="text-center">
-								<th class="text-center" data-field="id" width="40%">文件类型</th>
-								<th class="text-center" data-field="district_name" width="40%">文件名称</th>
-								<th class="text-center" data-field="set" width="20%">操作</th>
-							</tr>
-						</thead>
-						<tbody class="text-center" align="center">
-							<tr class="text-center" align="center">
-								<td class="text-left">
-									材料
-									<span style="color: red"></span>
-									<span style="color: dodgerblue">(范本)</span>
-								</td>
-								<td>
-									<span style="color: red">暂未上传</span>
-								</td>
-								<td>
-									<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传</label>
-									<input id="upload" name="upload" type="file" style="display: none">
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+				<label class="control-label">常务会议材料接收 </label>
+			</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
+			
 			<div class="form-group text-center">
-			   <c:if test="${legislationCitymeetingTask.stTaskStatus=='TODO' or legislationCitymeetingTask.stTaskStatus==null}">
+			   <c:if test="${(legislationCitymeetingTask.stTaskStatus=='TODO' or legislationCitymeetingTask.stTaskStatus==null)&&(stNoticeId==null)}">
 				<input type="hidden" id="op" name="op">
 				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
 				&nbsp;&nbsp;
@@ -135,7 +128,7 @@
 	};
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,
@@ -197,7 +190,7 @@
 			if (operation == 'submit') {
 				layer.confirm('请确认操作！', function(index) {
 					layer.close(layer.index);
-					$.post("${requestUrl}?stNodeId=${nodeId}&method=saveCitymeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
+					$.post("${requestUrl}?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&method=saveCitymeeting&stTaskStatus=${stTaskStatus}", param, function(data) {
 						console.log(JSON.stringify(data));
 						if (data.success) {
 							if (operation == 'submit') {

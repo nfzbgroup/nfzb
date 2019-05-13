@@ -6,13 +6,16 @@
 <table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 	<thead>
 		<tr class="text-center">
+		
+			 <c:if test="${(taskStatus=='TODO')}">
 			<th class="text-center" data-field="id"><input type="checkbox" id="J_checkitem_all" onclick="chooseAll(this)"></th>
-			<th class="text-center" data-field="id">编号</th>
+			</c:if> 
+			<th class="text-center" data-field="id" hidden="hidden">${taskStatus}nodeId${taskStatus}编号</th>
 			<th class="text-center" data-field="district_name">事项名称</th>
-			<th class="text-center" data-field="district_name">事项状态</th>
+			<th class="text-center" data-field="district_name" hidden="hidden">事项状态</th>
 			<th class="text-center" data-field="created_at">事项类型</th>
 			<th class="text-center" data-field="st_user_name">发起人</th>
-			<th class="text-center" data-field="district_name">会议时间</th>
+			<th class="text-center" data-field="district_name">发起时间</th>
 			<th class="text-center" data-field="set">操作</th>
 		</tr>
 	</thead>
@@ -21,18 +24,32 @@
 			<c:when test="${retPage.totalSize > 0}">
 				<c:forEach items="${retPage.result}" var="item">
 					<tr class="text-center">
+						 <c:if test="${(item.stStatus=='TODO')}">
 						<td><input type="checkbox" name="J_checkitem" value="${item.stItemId}"></td>
-						<td>${item.stItemId}</td>
+ 						</c:if> 	
+						<td hidden="hidden">${item.stItemId}</td>
 						<td>${item.stItemName}</td>
-						<td>${item.stStatus}</td>
+						<td hidden="hidden">${item.stStatus}</td>
 						<td>${item.stTypeName}</td>
 						<td>${item.stUserName}</td>
 						<td>
 							<fmt:formatDate type="date" value="${item.dtCreateDate}" />
 						</td>
-						<td>
+							<c:choose>
+							<c:when test="${item.stStatus=='TODO'}">
+							<td>
 							<a href="javaScript:void(0)" data-title="查看" onclick="openPage('openItemInfoPage','${item.stItemId}')" class="layer_full_link">查看</a>
-						</td>
+							 <c:if test="${(item.stTypeName!='草案'&&item.stTypeName!='立法计划')}">
+								&nbsp;&nbsp;<a href="javaScript:void(0)" data-title="编辑" onclick="openPage('editItemInfoPage','${item.stItemId}')" class="layer_full_link">编辑</a>
+							 </c:if> 
+							
+							</td>							
+							</c:when>
+							<c:otherwise>
+							<td>
+							<a href="javaScript:void(0)" data-title="查看" onclick="openPage('openItemInfoPage','${item.stItemId}')" class="layer_full_link">查看</a>
+						</td>							</c:otherwise>
+						</c:choose>
 			<%-- 			
 						<c:choose>
 							<c:when test="${nodeId=='NOD_0000000101'}">
@@ -234,8 +251,10 @@
         var b = (type == 'TODO');//审核中、已审核状态是审核会议发起隐藏或无法点击
         if(b){
         	$("#add").show();
+        	$("#additem").show();
         }else{
         	$("#add").hide();
+        	$("#additem").hide();
         }
         submitForm(1);
     }

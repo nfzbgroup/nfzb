@@ -11,7 +11,7 @@
 	<thead>
 	<tr class="text-center">
 
-				<th class="text-center" data-field="id">议题编号</th>
+				<th class="text-center" data-field="id" hidden="hidden">议题编号</th>
 				<th class="text-center" data-field="district_name">议题名称</th>
 				<th class="text-center" data-field="created_at">类型</th>
 				<th class="text-center" data-field="district_name">时间</th>
@@ -26,7 +26,7 @@
 				<c:when test="${retPage.totalSize > 0}">
 					<c:forEach items="${retPage.result}" var="task">
 						<tr class="text-center">
-							<td >${task.stTopicId}</td>
+							<td hidden="hidden">${task.stTopicId}</td>
 							<td >${task.stTopicName}</td>
 							<td >${task.stNodeName}</td>
 							<td ><fmt:formatDate type="date" value="${task.dtCreateDate}" /></td>

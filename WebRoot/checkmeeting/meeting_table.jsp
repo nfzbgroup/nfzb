@@ -6,10 +6,10 @@
 <table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 	<thead>
 		<tr class="text-center">
-			<th class="text-center" data-field="id">编号</th>
+			<th class="text-center" data-field="id" hidden="hidden">编号</th>
 			<th class="text-center" data-field="district_name">会议名称</th>
-			<th class="text-center" data-field="district_name">对应草案</th>
-			<th class="text-center" data-field="created_at">会议类型</th>
+			<th class="text-center" data-field="district_name">会议地点</th>
+			<th class="text-center" data-field="created_at" hidden="hidden">会议类型</th>
 			<th class="text-center" data-field="district_name">会议时间</th>
 			<th class="text-center" data-field="set">操作</th>
 		</tr>
@@ -19,10 +19,10 @@
 			<c:when test="${retPage.totalSize > 0}">
 				<c:forEach items="${retPage.result}" var="task">
 					<tr class="text-center">
-						<td>${task.stMeetingId}</td>
+						<td hidden="hidden">${task.stMeetingId}</td>
 						<td>${task.stMeetingName}</td>
-						<td>${task.stDocSource}</td>
-						<td>${task.stUserName}</td>
+						<td>${task.stAddress}</td>
+						<td hidden="hidden">${task.stUserName}</td>
 						<td>
 							<fmt:formatDate type="date" value="${task.dtCreateDate}" />
 						</td>

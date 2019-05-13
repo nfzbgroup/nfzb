@@ -373,6 +373,7 @@
 				<div class="row" id="legislationProcessTaskTable">
 
 				</div>
+				</div>
 			</div>
 			<div class="modal inmodal fade" id="legislationProcessForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog">
@@ -400,7 +401,6 @@
 			</div>
 		</div>
 	</div>
-</div>
 
 	<script src="${basePath}/legislation/assets/js/jquery.min.js?v=2.1.4"></script>
 	<script src="${basePath}/legislation/assets/js/bootstrap.min.js?v=3.3.5"></script>
@@ -544,6 +544,13 @@
 		$("#processIndexRootForm").modal({
 			remote:  '${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method=openProcessIndexPage&stDocId='+stDocId+'&stDocName='+stDocName
 		});
+    }
+    function openEditParticipants(showName,otherPersons) {
+	    var stPersonsId=$('#stPersonsId').val();
+	    var otherPersonsName=$('#otherPersonsName').val();
+        $("#processIndexForm").modal({
+            remote : "${basePath}/legislationSendNotice/openEditParticipants.do?showName="+showName+"&stPersonsId="+stPersonsId+"&otherPersonsName="+otherPersonsName+"&otherPersons="+otherPersons
+        });
     }
 	</script>
 </body>

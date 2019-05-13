@@ -55,41 +55,11 @@
 				</div>
 			</div>
 			
-			
 			<div class="form-group">
-				<label class="col-sm-3 control-label">专家论证会发起材料: </label>
-				<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传 </label>
-				<input type="file" id="7" name="upload" style="display: none" onchange="uploadFile(this.id,2,null)">
-			</div>
-			<div class="form-group">
-				<table class="table table-striped table-hover" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-					<thead>
-						<tr class="text-center">
-							<th class="text-center" data-field="id">文件类型</th>
-							<th class="text-center" data-field="district_name">文件名称</th>
-							<th class="text-center" data-field="set">操作</th>
-						</tr>
-					</thead>
-					<tbody id="otherMaterial">
-						<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
-							<c:forEach var="file" items="${legislationFilesList}">
-								<c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
-									<tr class="text-center">
-										<td class="text-center">需要报送的其他材料</td>
-										<td>${file.stTitle}</td>
-										<td>
-											<a target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
-											&nbsp;&nbsp;
-											<label style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
-											<input type="hidden" id="${file.stFileId}" name="${file.stFileId}" value="${file.stFileId}">
-										</td>
-									</tr>
-								</c:if>
-							</c:forEach>
-						</c:if>
-					</tbody>
-				</table>
-			</div>
+				<label class="control-label">专家论证会反馈材料 </label>
+			</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
+		
 			<div class="form-group text-center">
 				<input ${stStyle} type="button" class="btn btn-w-m btn-success" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
 				&nbsp;&nbsp;

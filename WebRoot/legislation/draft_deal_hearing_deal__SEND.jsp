@@ -51,16 +51,10 @@
 					<textarea id="stComment2" name="stComment2" class="form-control">${legislationProcessTaskdetail.stBak1}</textarea>
 				</div>
 			</div>
-			<br>
 			<div class="form-group">
-				<label class="col-sm-2 control-label text-left">附件:</label>
-				<div class="col-sm-9">
-					<input type="file" class='file_input'>
-				</div>
-			</div>
-		</div>
-		<br>
-		<br>
+				<label class="control-label">立法听证会送审材料 </label>
+			</div>	
+		<%@include file="/legislation/file/attachUpload.jsp" %>
 		<div class="form-group text-center">
 			<input ${stStyle} type="button" class="btn btn-w-m btn-success" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
 			&nbsp;&nbsp;
@@ -73,7 +67,7 @@
 <script>
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,

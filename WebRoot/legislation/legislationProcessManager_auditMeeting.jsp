@@ -295,8 +295,8 @@
         }
         if(param.stDocName==null||param.stDocName==""){
             Duang.error("提示","请输入会议名称");
-        }else if(param.stDocNo==null||param.stDocNo==""){
-            Duang.error("提示","请选择会议类型");
+       // }else if(param.stDocNo==null||param.stDocNo==""){
+            //Duang.error("提示","请选择会议类型");
         }else if(param.stDocSource==null||param.stDocSource==""){
             Duang.error("提示","请选择对应草案");
         }else if(param.stNodeName==null||param.stNodeName==""){

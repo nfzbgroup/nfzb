@@ -87,7 +87,7 @@
 			<table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 				<thead>
 					<tr class="text-center">
-						<th class="text-center" data-field="id">草案编号</th>
+						<th class="text-center" data-field="id" hidden="hidden">草案编号</th>
 						<th class="text-center" data-field="district_name">法规规章草案</th>
 						<th class="text-center" data-field="district_name">处理环节</th>
 						<th class="text-center" data-field="district_name">发起人</th>
@@ -117,7 +117,7 @@
                     LegislationProcessDoc legislationProcessDoc=(LegislationProcessDoc)legislationProcessDocList.get(i);
                %>
                <tr class="text-center">
-                <td nowrap="" width="20%"><%=legislationProcessDoc.getStDocId()%></td>
+                <td nowrap="" width="20%" hidden="hidden"><%=legislationProcessDoc.getStDocId()%></td>
                 <td nowrap="" width="20%"><%=legislationProcessDoc.getStDocName()%></td>
                 <td nowrap="" width="20%"><%=legislationProcessDoc.getStNodeName()%></td>
                 <td nowrap="" width="20%"><%=legislationProcessDoc.getStUserName()%></td>
@@ -135,7 +135,7 @@
 			   <table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 				<thead>
 					<tr class="text-center">
-						<th class="text-center" data-field="id">计划编号</th>
+						<th class="text-center" data-field="id" hidden="hidden">计划编号</th>
 						<th class="text-center" data-field="district_name">计划名称</th>
 						<th class="text-center" data-field="district_name">处理环节</th>
 						<th class="text-center" data-field="district_name">发起人</th>
@@ -149,7 +149,7 @@
                 	  LegislationPlan legislationPlan=(LegislationPlan)legislationPlanList.get(i);
                %>
                <tr class="text-center">
-                <td nowrap="" width="20%"><%=legislationPlan.getStPlanId()%></td>
+                <td nowrap="" width="20%" hidden="hidden"><%=legislationPlan.getStPlanId()%></td>
                 <td nowrap="" width="20%"><%=legislationPlan.getStPlanName()%></td>
                 <td nowrap="" width="20%"><%=legislationPlan.getStNodeName()%></td>
                 <td nowrap="" width="20%"><%=legislationPlan.getStCreatorName()%></td>
@@ -161,9 +161,31 @@
 				</tbody>
 				</table>
 				
-			
-			<div class="modal inmodal fade" id="processIndexRootForm" data-backdrop="true" keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+			<div class="ibox-content">
+				<div class="row" id="legislationProcessTaskTable">
+
+				</div>
+			</div>
+			<div class="modal inmodal fade" id="legislationProcessForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					</div>
+				</div>
+			</div>
+			<div class="modal inmodal fade" id="processIndexRootForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog" style="margin-top: 0px">
+					<div class="modal-content">
+					</div>
+				</div>
+			</div>
+			<div class="modal inmodal fade" id="processIndexForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					</div>
+				</div>
+			</div>
+			<div class="modal inmodal fade" id="processIndexChildForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+				<div class="modal-dialog">
 					<div class="modal-content">
 					</div>
 				</div>
@@ -207,12 +229,33 @@
 	<script src="${basePath}/legislation/assets/page/common.js" type="text/javascript"></script>
 		<script type="text/javascript">
 		 
-		window.onload=function(){   
-               $('#processIndexRootForm').on('show.bs.modal', function () {
-                   $('#processIndexRootForm .wrapper').css('overflow', 'auto');
-                   $('#processIndexRootForm .wrapper').css('height', $(window).height());
-                   $('#processIndexRootForm .modal-dialog').css('width', $(window).width());
-               });  
+		window.onload=function(){  
+			 $('body').on('hidden.bs.modal', '.modal', function () {
+		            $(this).removeData('bs.modal');
+		        });
+		        $('#processIndexForm').on('hidden.bs.modal', function () {
+		            $(document.body).addClass("modal-open");
+		        });
+		        $('#legislationProcessForm').on('show.bs.modal', function () {
+		            $('#legislationProcessForm .modal-body').css('overflow', 'auto');
+		            $('#legislationProcessForm .modal-body').css('height', $(window).height());
+					$('#legislationProcessForm .modal-dialog').css('width', $(window).width()*0.96);
+		        });
+		        $('#processIndexRootForm').on('show.bs.modal', function () {
+		            $('#processIndexRootForm .wrapper').css('overflow', 'auto');
+		            $('#processIndexRootForm .wrapper').css('height', $(window).height());
+		            $('#processIndexRootForm .modal-dialog').css('width', $(window).width());
+		        });
+		        $('#processIndexChildForm').on('show.bs.modal', function () {
+		            $('#processIndexChildForm .modal-body').css('overflow', 'auto');
+		            $('#processIndexChildForm .modal-body').css('height', $(window).height());
+		            $('#processIndexChildForm .modal-dialog').css('width', $(window).width()*0.9);
+		        });
+		        $('#processIndexForm').on('show.bs.modal', function () {
+		            $('#processIndexForm .modal-body').css('overflow', 'auto');
+		            $('#processIndexForm .modal-body').css('height', $(window).height());
+		            $('#processIndexForm .modal-dialog').css('width', $(window).width()*0.9);
+		        }); 
 		}  
 		
 		 function openProcessIndex(stDocId,stDocName) {
@@ -222,10 +265,10 @@
 				});
 		    }
 		 
-		 function openLegislationPlanList(stDocId,stDocName) {
+		 function openLegislationPlanList(stPlanId,stPlanName) {
 			 //alert(2);
 				$("#processIndexRootForm").modal({
-					remote:  '${basePath}/legislationPlan/draft_plan_info.do?stNodeId=${nodeId}&method=flowDealPage&stDocId='+stDocId+'&stDocName='+stDocName
+					remote:  '${basePath}/legislationPlan/draft_plan_info.do?stNodeId=${nodeId}&method=flowDealPage&stPlanId='+stPlanId+'&stPlanName='+stPlanName
 				});
 		    }
 			

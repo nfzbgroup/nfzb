@@ -16,17 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
+import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.services.LegislationExampleService;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.report.beans.*;
 import com.wonders.fzb.report.services.*;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
@@ -64,6 +67,10 @@ public class LegislationReportAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationExampleService")
 	private LegislationExampleService legislationExampleService;
+	
+	@Autowired
+	@Qualifier("legislationProcessDocService")
+	private LegislationProcessDocService legislationProcessDocService;
 
 	private int pageNo = 1;
 	private int pageSize = 10;
@@ -127,10 +134,10 @@ public class LegislationReportAction extends BaseAction {
 
 		String stReportId = request.getParameter("stReportId");
 		LegislationReport legislationReport = legislationReportService.findById(stReportId);
-
 		List<LegislationReportTask> taskList = legislationReportTaskService.findByHQL("from LegislationReportTask t where t.stReportId='" + stReportId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
 		LegislationReportTask legislationReportTask = taskList.get(0);
-		
+		String stPersonsId = legislationReport.getStPersons();
+		List<UserInfo> userInfoList = legislationProcessDocService.findUserInfoListByString(stPersonsId);
 		String nodeStatus = request.getParameter("stTaskStatus");
 		if(true){
 			
@@ -169,6 +176,8 @@ public class LegislationReportAction extends BaseAction {
 		request.setAttribute("legislationReport", legislationReport);
 		request.setAttribute("legislationReportTask", legislationReportTask);
 		request.setAttribute("stTaskStatus", legislationReportTask.getStTaskStatus());
+		request.setAttribute("userInfoList", userInfoList);
+		request.setAttribute("stPersonsId", stPersonsId);
 	}
 
 	/**

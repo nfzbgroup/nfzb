@@ -38,7 +38,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="form-group">
+		<%-- 	<div class="form-group">
 				<label class="col-sm-2 control-label">对应草案：</label>
 				<div class="col-sm-9">
 					<table class="table table-bordered table-hover">
@@ -135,7 +135,9 @@
 						</tbody>
 					</table>
 				</div>
-			</div>
+			</div> --%>
+			
+			
 			<div class="form-group">
 				<label class="col-sm-2 control-label">会议地点：</label>
 				<div class="col-sm-9">
@@ -156,80 +158,37 @@
 				<input type="hidden" name="stPersonsId" id="stPersonsId" <c:if test="${stPersonsId!=null}">value="${stPersonsId}" </c:if>>
 				<input type="hidden" name="otherPersonsName" id="otherPersonsName" <c:if test="${otherPersonsName!=null}">value="${otherPersonsName}" </c:if>>
 			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">审核会议前材料 </label>
-				<div class="col-sm-9">
-					<table class="table table-striped table-bordered table-hover text-center" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-						<thead align="center">
-							<tr class="text-center">
-								<th class="text-center" data-field="id" width="40%">文件类型</th>
-								<th class="text-center" data-field="district_name" width="40%">文件名称</th>
-								<th class="text-center" data-field="set" width="20%">操作</th>
-							</tr>
-						</thead>
-						<tbody class="text-center" align="center">
-							<tr class="text-center" align="center">
-								<td class="text-left">
-									草案文本
-									<span style="color: red">(必须上传)</span>
-									<span style="color: dodgerblue">(范本)</span>
-								</td>
-								<td>
-									<span style="color: red">暂未上传</span>
-								</td>
-								<td>
-									<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传</label>
-									<input id="upload" name="upload" type="file" style="display: none">
-								</td>
-							</tr>
-							<tr class="text-center">
-								<td class="text-left">
-									起草说明/审查报告
-									<span style="color: red">(必须上传)</span>
-									<span style="color: dodgerblue">(范本)</span>
-								</td>
-								<td>
-									<span style="color: red">暂未上传</span>
-								</td>
-								<td>
-									<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传</label>
-									<input id="upload" name="upload" type="file" style="display: none">
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">审核会议前材料其他材料 </label>
-				<div class="col-sm-9">
-					<table class="table table-striped table-bordered table-hover text-center" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-						<thead align="center">
-							<tr class="text-center">
-								<th class="text-center" data-field="id" width="40%">文件类型</th>
-								<th class="text-center" data-field="district_name" width="40%">文件名称</th>
-								<th class="text-center" data-field="set" width="20%">操作</th>
-							</tr>
-						</thead>
-						<tbody class="text-center" align="center">
-							<tr class="text-center" align="center">
-								<td class="text-left">
-									其他材料
-									<span style="color: red"></span>
-									<span style="color: dodgerblue">(范本)</span>
-								</td>
-								<td>
-									<span style="color: red">暂未上传</span>
-								</td>
-								<td>
-									<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传</label>
-									<input id="upload" name="upload" type="file" style="display: none">
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+			<c:choose>
+				<c:when test="${legislationCheckmeetingItems!=null&&fn:length(legislationCheckmeetingItems)>0}">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">已选事项：</label>
+						<div class="col-sm-9">
+							<table class="table table-bordered table-hover">
+								<thead>
+									<th class="text-center" hidden="hidden">事项编号</th>
+									<th class="text-center">事项名称</th>
+									<th class="text-center">事项类型</th>
+								</thead>
+								<tbody>
+									<c:forEach items="${legislationCheckmeetingItems}" var="item">
+										<tr>
+											<td class="text-center" hidden="hidden">${item.stItemId}</td>
+											<td class="text-center">${item.stItemName}</td>
+											<td class="text-center">${item.stTypeName}</td>
+										</tr>
+									</c:forEach>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>				
+				</c:when>
+			</c:choose>
+			 <div class="form-group">
+				<label class="control-label">审核会议材料接收</label>
+			</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
+			
 			<div class="form-group text-center">
 				<input  type="hidden" id="op" name="op">
 				<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
@@ -254,7 +213,7 @@
 	};
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,
@@ -321,9 +280,9 @@
 			Duang.error("提示", "请输入会议名称");
 		} else if (param.stType == null || param.stType == "") {
 			Duang.error("提示", "请选择会议类型");
-		} else if (param.stDocSource == null || param.stDocSource == "") {
+		} /* else if (param.stDocSource == null || param.stDocSource == "") {
 			Duang.error("提示", "请选择对应草案");
-		} else if (param.stAddress == null || param.stAddress == "") {
+		} */ else if (param.stAddress == null || param.stAddress == "") {
 			Duang.error("提示", "请输入会议地点");
 		} else if (param.dtBeginDate == null || param.dtBeginDate == "") {
 			Duang.error("提示", "请选择会议时间");

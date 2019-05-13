@@ -47,48 +47,15 @@
 					<input class="form-control" readonly value="${legislationProcessTask.stBakTwo}"/>
 				</div>
 				<label class="col-sm-3 control-label text-left">送审领导:</label>
-				<div class="col-sm-9">
-					<textarea id="stComment2" name="stComment2" class="form-control">${legislationProcessTaskdetail.stBak1}</textarea>
-				</div>
+				    <div class="col-sm-9">
+						<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导')"><c:if test="${userInfoList!=null}"><c:forEach items="${userInfoList}" var="userInfo" varStatus="idx">${userInfo.name}<c:if test="${idx.count!=userInfoList.size()}">,</c:if></c:forEach></c:if></textarea>
+				    </div>
+				    <input type="hidden" name="stPersonsId" id="stPersonsId" <c:if test="${stPersonsId!=null}">value="${stPersonsId}" </c:if> />
 			</div>
-			<br>
-			<div class="form-group">
+		 <div class="form-group">
 				<label class="control-label">立法听证会接收材料 </label>
-				<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传 </label>
-				<input type="file" id="7" name="upload" style="display: none" onchange="uploadFile(this.id,2,null)">
-			</div>
-				<div class="form-group">
-				<table class="table table-striped table-hover" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-					<thead>
-						<tr class="text-center">
-							<th class="text-center" data-field="id">文件类型</th>
-							<th class="text-center" data-field="district_name">文件名称</th>
-							<th class="text-center" data-field="set">操作</th>
-						</tr>
-					</thead>
-					<tbody id="otherMaterial">
-						<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
-							<c:forEach var="file" items="${legislationFilesList}">
-								<c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
-									<tr class="text-center">
-										<td class="text-center">立法听证会接收的材料</td>
-										<td>${file.stTitle}</td>
-										<td>
-											<a target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
-											&nbsp;&nbsp;
-											<label style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
-											<input type="hidden" id="${file.stFileId}" name="${file.stFileId}" value="${file.stFileId}">
-										</td>
-									</tr>
-								</c:if>
-							</c:forEach>
-						</c:if>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<br>
-		<br>
+			</div>	
+		<%@include file="/legislation/file/attachUpload.jsp" %>
 		<div class="form-group text-center">
 			<input ${stStyle} type="button" class="btn btn-w-m btn-success" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
 			&nbsp;&nbsp;
@@ -131,8 +98,8 @@ function uploadFile(id, type, stSampleId) {
 };
 	function saveLegislationDemonstration() {
 		var param = $('#onlineDemonstrationForm').formToJson();
-		if (param.stComment2 == null || param.stComment2 == "") {
-			Duang.error("提示", "请输入经办部门意见");
+		if (param.stPersons == null || param.stPersons == "") {
+			Duang.error("提示", "请选择送审领导");
 		} else {
 			$.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration", param, function(data) {
 				if (data.success) {
@@ -148,8 +115,8 @@ function uploadFile(id, type, stSampleId) {
 	};
 	function confirmOnlineReport(stDocId, nodeId, nodeStatus) {
 		var param = $('#onlineDemonstrationForm').formToJson();
-		if (param.stComment2 == null || param.stComment2 == "") {
-			Duang.error("提示", "请输入经办部门意见");
+		if (param.stPersons == null || param.stPersons == "") {
+			Duang.error("提示", "请选择送审领导");
 		} else {
 			$.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration", param, function(data) {
 				//alert("保存返回：" + JSON.stringify(data));
@@ -162,5 +129,11 @@ function uploadFile(id, type, stSampleId) {
 		}
 	}
 
-	
+	function openEditParticipants(showName) {
+	    var stPersonsId=$('#stPersonsId').val();
+	    var otherPersonsName=$('#otherPersonsName').val();
+        $("#processIndexChildForm").modal({
+            remote : "${basePath}/legislationSendNotice/openEditParticipants.do?showName="+showName+"&stPersonsId="+stPersonsId+"&otherPersons=N&module=process"
+        });
+ }
 </script>

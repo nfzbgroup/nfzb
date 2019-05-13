@@ -97,7 +97,7 @@ public interface LegislationProcessDocService{
 	void draft_dist_info(HttpServletRequest request) throws ParseException;
 	
 	/**
-	 * 提交分办
+	 * 根据人员id字符串获得人员实体集合
 	 * @param request
 	 */
     public List<UserInfo> findUserInfoListByString(String personIds);

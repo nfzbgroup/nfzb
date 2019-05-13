@@ -112,33 +112,33 @@ public class LegislationReportAction extends BaseAction {
 		String state = request.getParameter("state") == null ? "" : request.getParameter("state");
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
 		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
-/*		if (legislationProcessTaskList.size() > 0) {
-			Map<String, Object> condMap = new HashMap<>();
-			Map<String, String> sortMap = new HashMap<>();
-			condMap.put("stParentId", stDocId);
-			condMap.put("stNodeId", stNodeId);
-			sortMap.put("dtPubDate", "ASC");
-			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-			} else {
-				String stStyle = "style ='display: none;'";
-				request.setAttribute("strDisplay", stStyle);
-			}
+		if (legislationProcessTaskList.size() > 0) {
+//			Map<String, Object> condMap = new HashMap<>();
+//			Map<String, String> sortMap = new HashMap<>();
+//			condMap.put("stParentId", stDocId);
+//			condMap.put("stNodeId", stNodeId);
+//			sortMap.put("dtPubDate", "ASC");
+//			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+//			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+//				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
+//				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+//			} else {
+//				String stStyle = "style ='display: none;'";
+//				request.setAttribute("strDisplay", stStyle);
+//			}
 			if("banli".equals(state)) {
 				//办理页面打开正在处理中的任务
 				String stStyle = "style ='display: none;'";
 				request.setAttribute("strDisplay", stStyle);
 				request.setAttribute("isbanli", "banli");//提示用户在对应模块中进行操作
 			}
-			request.setAttribute("legislationFilesList", legislationFilesList);
+			//request.setAttribute("legislationFilesList", legislationFilesList);
 			request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
 		} else {
 			List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, null);
 			request.setAttribute("legislationProcessTask", new LegislationProcessTask());
 			request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-		}*/
+		}
 
 		
 		//回显上传材料

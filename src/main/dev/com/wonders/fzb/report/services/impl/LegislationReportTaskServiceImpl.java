@@ -20,6 +20,7 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
+import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
 import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.beans.LegislationPlanDeal;
 import com.wonders.fzb.plan.beans.LegislationPlanTask;
@@ -81,6 +82,10 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
     @Autowired
     @Qualifier("legislationFilesService")
     private LegislationFilesService legislationFilesService;
+    
+    @Autowired
+    @Qualifier("legislationSendNoticeService")
+    private LegislationSendNoticeService legislationSendNoticeService;
 	/**
 	 * 添加实体对象
 	 */
@@ -186,7 +191,8 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 		System.out.println("allPersonFeedBackTime------------" + allPersonFeedBackTime);
 //		String stType = request.getParameter("stType");
 		String stAddress = request.getParameter("stAddress");
-		String stPersons = request.getParameter("stPersons");
+//		String stPersons = request.getParameter("stPersons");
+		String stPersonsId = request.getParameter("stPersonsId");
 		String stReportId = request.getParameter("stReportId");
 		String stReportName = request.getParameter("stReportName");
 		String stDocNo = request.getParameter("stDocNo");
@@ -236,10 +242,12 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 				legislationReport.setStTopic(stComent);
 				legislationReport.setStSourceDoc(stDocSource);// 包含的草案
 				legislationReport.setStAddress(stAddress);
-				legislationReport.setStPersons(stPersons);
+				legislationReport.setStPersons(stPersonsId);
 //				legislationReport.setDtBeginDate(formatter.parse(dtBeginDate));// 时间
 				legislationReportService.update(legislationReport);
 				if ("submit".equals(op)) {
+					//送审领导
+					legislationSendNoticeService.sendNotice(stPersonsId, "签报", stReportId, "签报件报OA审核");
 					legislationReportTask.setStTaskStatus("INPUT");
 					this.update(legislationReportTask);
 				}

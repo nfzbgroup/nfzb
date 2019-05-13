@@ -16,15 +16,10 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
+        	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议事项 </h2>
+
 	<form id="legislationPlanForm" class="form-horizontal" novalidate="novalidate">
         <div class="form-body">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">事项类型：</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" name="stItemName" disabled value="${iteminfo.stTypeName}"/>
-                </div>
-            </div>
-            
           <c:if test="${(iteminfo.stTypeName=='草案')}">
                         <div class="form-group">
                 <label class="col-sm-3 control-label">草案名称：</label>
@@ -33,12 +28,24 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="col-sm-3 control-label">事项类型：</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="stItemName" disabled value="${iteminfo.stTypeName}"/>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="col-sm-3 control-label">发起人：</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control" name="stItemName" disabled value="${iteminfo.stSource.stUserName}"/>
                 </div>
             </div>
-            
+            <div class="form-group">
+                <label class="col-sm-3 control-label">草案说明：</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" name="stItemName" disabled value="${iteminfo.stSource.stComent}"/>
+                </div>
+            </div>
+             <%-- 
              <div class="form-group">
 				<label class="col-sm-3 control-label">草案包含项目： </label>
 				<div class="col-sm-9">
@@ -68,7 +75,7 @@
 					</table>
 				</div>
 			</div>
-            
+             --%>	
             
             </c:if> 
             <c:if test="${(iteminfo.stTypeName=='立法计划')}">

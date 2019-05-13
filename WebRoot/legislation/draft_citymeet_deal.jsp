@@ -26,6 +26,7 @@
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">选择草案对应的议题</h2>
 	<form id="legislationProcessDocForm" class="form-horizontal" novalidate="novalidate">
 		<input hidden id="stDocId" name="stDocId" value="${stDocId}" >
+		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<input hidden id="stTaskId" name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}"</c:if>>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">草案名称：</label>
@@ -66,7 +67,7 @@
 
 		<div class="form-group text-center">
 		<label class="col-sm-3 control-label"></label>
-		<c:if test="${(legislationProcessTask.stTaskId == null)||(legislationProcessTask.stTaskStatus !='DONE')}">
+		<c:if test="${legislationProcessTask.stTaskStatus !='DONE'}">
 			<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveLegislationProcessDoc('save')" value="保存">
 			&nbsp;&nbsp;
 			<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveLegislationProcessDoc('submit')" value="提交">
@@ -75,50 +76,23 @@
 			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 		</div>
 
-		<div class="form-group" >
-			<label class="col-sm-3 control-label">报审材料上传 </label>
-			<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传 </label>
-			<input type="file" id="7" name="upload" style="display: none" onchange="uploadFile(this.id,2,null)">
-		</div>
-		<div class="form-group">
-			<table class="table table-striped table-hover" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-				<thead>
-					<tr class="text-center">
-						<th class="text-center" data-field="district_name">文件名称</th>
-						<th class="text-center" data-field="set">操作</th>
-					</tr>
-				</thead>
-				<tbody id="otherMaterial">
-					<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
-						<c:forEach var="file" items="${legislationFilesList}">
-							<c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
-								<tr class="text-center">
-									<td>${file.stTitle}</td>
-									<td>
-										<a target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
-										&nbsp;&nbsp;
-										<label style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
-										<input type="hidden" id="${file.stFileId}" name="${file.stFileId}" value="${file.stFileId}">
-									</td>
-								</tr>
-							</c:if>
-						</c:forEach>
-					</c:if>
-				</tbody>
-			</table>
-		</div>
+
+	
+ 			<div class="form-group">
+				<label class="control-label">上传材料接收 </label>
+			</div>	
+		<%@include file="/legislation/file/attachUpload.jsp" %>
+
+
+
 	</form>
 </div>
 <script>
-	$('#legislationProcessForm').on('shown.bs.modal', function(event) {
 		var isbanli = '${isbanli}';
 		if (isbanli == "banli") {
-			$('#legislationProcessForm').modal('hide');
-			Duang.success("提示", "【审核会议】处理中，请到【审核会议】中进行操作");
+			//$('#legislationProcessForm').modal('hide');
+			Duang.success("提示", "【常务会议】处理中，请到【常务会议】中进行操作");
 		}
-
-	});
-
 	function saveLegislationProcessDoc(type) {
 		var param = $('#legislationProcessDocForm').formToJson();
 		var status = '${legislationProcessTask.stTaskStatus}';
@@ -133,8 +107,8 @@
 		console.log(stComment2);
 		if (checkedNum != 1) {
 			Duang.error("提示", "请仅选择一个议题");
-			return;
-		}
+		return;
+			}
 		param.stComment2 = stComment2;
 		if (param.stComment1 == null || param.stComment1 == "") {
 			Duang.error("提示", "请输入说明");
@@ -157,7 +131,7 @@
 	}
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,
@@ -171,8 +145,8 @@
 						$("#" + id).parent().prev().html('<span>' + file.name + '</span>');
 						$("#" + id).parent().html(html);
 					} else {
-						var html = '<tr class="text-center">' + '<td>' + file.name + '</td>' + '<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<label  style="color: red" onclick="deleteAttach(this,2,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId + '\')">删除</label>'
-								+ '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '</td></tr>';
+						var html = '<tr class="text-center">' + '<td class="text-left">需要报送的其他材料</td>' + '<td>' + file.name + '</td>' + '<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<label  style="color: red" onclick="deleteAttach(this,2,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId
+								+ '\')">删除</label>' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '</td></tr>';
 						$('#otherMaterial').append(html);
 					}
 					Duang.success("提示", "上传材料成功");
@@ -184,7 +158,7 @@
 				Duang.error("提示", "上传材料失败");
 			}
 		});
-	}
+	};
 	function deleteAttach(attachObj, type, id, fileId, stSampleId) {
 		$.post('${basePath}/file/deleteAttach.do?fileId=' + fileId);
 

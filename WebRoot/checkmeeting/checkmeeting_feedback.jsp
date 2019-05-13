@@ -24,6 +24,7 @@
 		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
 		<input type="hidden" name="allPersonFeedBack" id="allPersonFeedBack" value="">
 		<input type="hidden" name="allPersonFeedBackTime" id="allPersonFeedBackTime" value="">
+		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body" align="center">
 			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
 				<tr class="text-center">
@@ -31,12 +32,6 @@
 						<label>会议名称：</label>
 					</td>
 					<td>${legislationCheckmeeting.stMeetingName}</td>
-				</tr>
-				<tr class="text-center">
-					<td class="text-right">
-						<label>会议类型：</label>
-					</td>
-					<td>${legislationCheckmeeting.stType}</td>
 				</tr>
 				<tr class="text-center">
 					<td class="text-right">
@@ -55,42 +50,55 @@
 				</table>
 				<c:choose>
 				<c:when test="${legislationCheckmeetingItems!=null&&fn:length(legislationCheckmeetingItems)>0}">
-					<div class="form-group">
-						<label class="col-sm-2 control-label">已选事项：</label>
-						<div class="col-sm-8">
-							<table class="table table-bordered table-hover">
-								<thead>
-									<th class="text-center">事项编号</th>
-									<th class="text-center">事项名称</th>
-									<th class="text-center">事项类型</th>
-								</thead>
-								<tbody>
-									<c:forEach items="${legislationCheckmeetingItems}" var="item">
-										<tr>
-											<td class="text-center">${item.stItemId}</td>
-											<td class="text-center">${item.stItemName}</td>
-											<td class="text-center">${item.stTypeName}</td>
-										</tr>
-									</c:forEach>
-									
-								</tbody>
-							</table>
-						</div>
-					</div>				
+					<div class="form-body" align="center">
+						<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+						<thead>
+							<th class="text-center" hidden="hidden">事项编号</th>
+							<th class="text-center">事项名称</th>
+							<th class="text-center">事项类型</th>
+							<th class="text-center">发起人</th>
+						</thead>
+						<tbody>
+							<c:forEach items="${legislationCheckmeetingItems}" var="item">
+								<tr>
+									<td class="text-center" hidden="hidden">${item.stItemId}</td>
+									<td class="text-center">${item.stItemName}</td>
+									<td class="text-center">${item.stTypeName}</td>
+									<td class="text-center">${item.stUserName}</td>
+								</tr>
+							</c:forEach>
+							
+						</tbody>
+					</table>
+				</div>				
 				</c:when>
 			</c:choose>
 			
-			<br>
-			<br>
 			<div class="form-body" align="center">
 				<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
 					<thead>
-						<th class="text-center" width="20%">参会人员</th>
-						<th class="text-center" width="50%">反馈信息</th>
-						<th class="text-center" width="30%">反馈时间</th>
+						<th class="text-center">参会人员</th>
+						<th class="text-center">反馈信息</th>
+						<th class="text-center">反馈时间</th>
 					</thead>
 					<tbody>
-						<c:forEach items="${mapListJson}" var="person" varStatus="status">
+						<c:if test="${legislationSendNotices!=null}">
+							<c:forEach items="${legislationSendNotices}" var="person" >
+								<tr>
+								<td class="text-center">
+									${person.stUserName}
+								</td>
+								<td class="text-center">
+									${person.stFeedbackContent}
+								</td>
+
+								<td class="text-center">
+									${person.dtFeekbackDate}
+								</td>
+								</tr>
+							</c:forEach>
+						</c:if>
+						<%-- <c:forEach items="${mapListJson}" var="person" varStatus="status">
 							<tr class="text-right">
 								<td class="text-right">
 									<label>${person.name}</label>
@@ -119,12 +127,17 @@
 									</td>
 								</tr>
 							</c:forEach>
-						</c:if>
+						</c:if> --%>
 					</tbody>
 				</table>
 
 			</div>
 		</div>
+
+ 			<div class="form-group">
+				<label class="control-label">审核会议反馈材料 </label>
+			</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
 
 		<div class="form-group text-center">
 			<input type="hidden" id="op" name="op">
@@ -160,7 +173,7 @@
 	};
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,

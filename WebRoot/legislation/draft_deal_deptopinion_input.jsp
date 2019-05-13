@@ -31,41 +31,36 @@
 					是否反馈
 				</th>
 				<th style="text-align: center">
+					反馈内容
+				</th>
+				<th style="text-align: center">
 					反馈时间
 				</th>
-				<c:if test="${allDone==false}" >
-				 <th id="conHead" style="text-align: center">
-					确认
-				 </th>
-				</c:if>
 			</tr>
 		</thead>
 		<tbody>
-		<c:if test="${legislationProcessTaskList !=null&&fn:length(legislationProcessTaskList)>0}">
-			<c:forEach var="legislationProcessTask" items="${legislationProcessTaskList}" >
+		<c:if test="${legislationSendNoticeList !=null&&fn:length(legislationSendNoticeList)>0}">
+			<c:forEach var="legislationSendNotice" items="${legislationSendNoticeList}" >
 			   <tr>
 					<td style="text-align: center">
-						${legislationProcessTask.stComment1}
+						${legislationSendNotice.stTeamName}
 					</td> 
 					<td style="text-align: center">
-						<c:if test="${legislationProcessTask.stTaskStatus=='TODO'}" >
-						未反馈</c:if>
-						<c:if test="${legislationProcessTask.stTaskStatus=='DONE'}" >
-						已反馈</c:if>
+						${legislationSendNotice.stNoticeStatus}
 					</td> 
 					<td style="text-align: center">
-						<c:if test="${legislationProcessTask.stTaskStatus=='TODO'}" >
+					 <c:choose>
+					  <c:when test="${legislationSendNotice.stNoticeStatus!='已反馈'}">---</c:when>
+					  <c:otherwise>${legislationSendNotice.stFeedbackContent}</c:otherwise>
+					 </c:choose>
+					</td> 
+					<td style="text-align: center">
+						<c:if test="${legislationSendNotice.stNoticeStatus!='已反馈'}" >
 						---</c:if>
-						<c:if test="${legislationProcessTask.stTaskStatus=='DONE'}" >
+						<c:if test="${legislationSendNotice.stNoticeStatus=='已反馈'}" >
 						<fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
-            value="${legislationProcessTask.dtDealDate}" /></c:if>
-					<c:if test="${allDone==false}" >
-					  <td style="text-align: center">
-						<input id="${legislationProcessTask.stTaskId}"
-						<c:if test="${legislationProcessTask.stTaskStatus=='DONE'}">disabled</c:if>
-						 name="confirm" type="button" onclick="confirm(this)" value="确认" />
-					  </td>
-					</c:if> 
+            value="${legislationSendNotice.dtFeekbackDate}" /></c:if>
+                    </td>
 			   </tr>
 			</c:forEach>
 		</c:if>
@@ -90,10 +85,6 @@
 	                 	dealDate = dealDate.replace("\"","").replace("\"","");
 	                 	 $(e).parent().prev().text(dealDate);
 	                 	 $(e).parent().prev().prev().text("已反馈");
-	                 	if(data.allDone){
-	                 		$('#${nodeId}').parent().removeClass('bcg_gray').removeClass('bcg_blue').removeClass('bcg_green').addClass('bcg_blue');
-	                 		$('[name="confirm"][id="conHead"]').attr("hidden","hidden");
-	                 	}
 	                 }else{
 	                     Duang.error("提示","操作失败");
 	                 }

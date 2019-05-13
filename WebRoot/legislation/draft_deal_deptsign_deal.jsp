@@ -16,7 +16,7 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
-<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">会签盖章</h2>
+<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">部门会签发送部门</h2>
 <form id="unitDemonstrationForm" class="form-horizontal"
       novalidate="novalidate">
     <input hidden id="stTaskId" name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>
@@ -37,98 +37,9 @@
 				</div>
 		</div>
         <div class="form-group">
-            <label class="control-label">材料：
-            </label>
-        </div>
-        <div class="form-group">
-            <table class="table table-striped table-bordered table-hover"
-                   data-toggle="table"
-                   data-mobile-responsive="true"
-                   data-card-view = "true"
-                   data-pagination="true">
-                <thead>
-                <tr class="text-center">
-                    <th class="text-center" data-field="id">文件类型</th>
-                    <th class="text-center" data-field="district_name">文件名称</th>
-                    <th class="text-center" data-field="set">操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <s:iterator value="#request.LegislationExampleList" var="example">
-                    <tr class="text-center">
-                        <td class="text-left">${example.stExampleName}
-                            <c:if test="${example.stNeed=='NEED'}">
-                                <span style="color: red">(必须上传)</span>
-                            </c:if>
-                            <span style="color: dodgerblue">(范本)</span>
-                        </td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${example.fileId !=null}">
-                                    <span >${example.fileName}</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span style="color: red">暂未上传</span>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td >
-                            <c:choose>
-                                <c:when test="${example.fileId !=null}">
-                                    <a target="_blank" href="${basePath}/file/downloadAttach.do?name=${example.fileName}&url=${example.fileUrl}">下载</a>&nbsp;&nbsp;
-                                    <input type="hidden" id="${example.fileId}"  name="${example.fileId}" value="${example.fileId}">
-                                    <label style="color: red" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')" >删除</label>
-                                </c:when>
-                                <c:otherwise>
-                                    <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
-                                    <input id="${example.stExampleId}" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1,'${example.stExampleId}')">
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                    </tr>
-                </s:iterator>
-                </tbody>
-            </table>
-        </div>
-        <div class="form-group">
-            <label class="control-label">单位意见其他材料
-            </label>
-            <label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传
-            </label>
-            <input  type="file" id="7" name="upload" style="display:none"  onchange="uploadFile(this.id,2,null)">
-        </div>
-        <div class="form-group">
-            <table class="table table-striped table-hover"
-                   data-toggle="table"
-                   data-mobile-responsive="true"
-                   data-card-view = "true"
-                   data-pagination="true">
-                <thead>
-                <tr class="text-center">
-                    <th class="text-center" data-field="id">文件类型</th>
-                    <th class="text-center" data-field="district_name">文件名称</th>
-                    <th class="text-center" data-field="set">操作</th>
-                </tr>
-                </thead>
-                <tbody id="otherMaterial">
-                <c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
-                    <c:forEach var="file" items="${legislationFilesList}">
-                        <c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
-                            <tr class="text-center">'
-                                <td class="text-left">需要报送的其他材料</td>
-                                <td>${file.stTitle}</td>
-                                <td>
-                                    <a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>&nbsp;&nbsp;
-                                    <label  style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
-                                    <input type="hidden" id="${file.stFileId}"  name="${file.stFileId}" value="${file.stFileId}">
-                                </td>
-                            </tr>
-                        </c:if>
-                    </c:forEach>
-                </c:if>
-                </tbody>
-            </table>
-        </div>
+				<label class="control-label">部门会签材料 </label>
+		</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
         </c:if>
         <c:if test="${legislationProcessTask.stTaskStatus == 'DONE'}">
          <table class="table table-border table-bordered">

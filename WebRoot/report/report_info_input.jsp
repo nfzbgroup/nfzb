@@ -22,6 +22,7 @@
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">签报件核稿OA审核结果</h2>
 	<form id="auditReportForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stReportId" value="${legislationReport.stReportId}">
+				<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body">
 			<div class="form-group">
 				<label class="col-sm-2 control-label">签报名称：</label>
@@ -32,7 +33,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">报送领导：</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control" id="stAddress" disabled name="stAddress" value="${legislationReport.stAddress}">
+					<input type="text" class="form-control" id="stAddress" disabled name="stPersons" value="<c:if test="${userInfoList!=null}"><c:forEach items="${userInfoList}" var="userInfo" varStatus="idx">${userInfo.name}<c:if test="${idx.count!=userInfoList.size()}">,</c:if></c:forEach></c:if>">
 				</div>
 			</div>
 			<div class="form-group">
@@ -41,36 +42,13 @@
 					<input type="text" class="form-control" id="stComment1" name="stComment1" value="${legislationReportTask.stComment1!=null?legislationReportTask.stComment1:''}">
 				</div>
 			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">材料：</label>
-				<div class="col-sm-9">
-					<table class="table table-striped table-bordered table-hover text-center" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-						<thead align="center">
-							<tr class="text-center">
-								<th class="text-center" data-field="id" width="40%">文件类型</th>
-								<th class="text-center" data-field="district_name" width="40%">文件名称</th>
-								<th class="text-center" data-field="set" width="20%">操作</th>
-							</tr>
-						</thead>
-						<tbody class="text-center" align="center">
-							<tr class="text-center" align="center">
-								<td class="text-left">
-									其他材料
-									<span style="color: red"></span>
-									<span style="color: dodgerblue">(范本)</span>
-								</td>
-								<td>
-									<span style="color: red">暂未上传</span>
-								</td>
-								<td>
-									<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传</label>
-									<input id="upload" name="upload" type="file" style="display: none">
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
+			
+					
+			 <div class="form-group">
+				<label class="control-label">材料接收 </label>
+			</div>	
+			<%@include file="/legislation/file/attachUpload.jsp" %>
+			
 			<div class="form-group text-center">
 				<input type="hidden" id="op" name="op">
 				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditReport1('save')" value="保存">
@@ -95,7 +73,7 @@
 	};
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,

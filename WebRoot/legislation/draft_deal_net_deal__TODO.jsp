@@ -29,23 +29,25 @@
 					<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 				</label>
 			</div>
-			<br>
+			<div class="form-group">
+			    <label class="col-sm-3 control-label text-left">送审领导:</label>
+				<div class="col-sm-9">
+					<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导')"><c:if test="${userInfoList!=null}"><c:forEach items="${userInfoList}" var="userInfo" varStatus="idx">${userInfo.name}<c:if test="${idx.count!=userInfoList.size()}">,</c:if></c:forEach></c:if></textarea>
+				</div>
+				<input type="hidden" name="stPersonsId" id="stPersonsId" <c:if test="${stPersonsId!=null}">value="${stPersonsId}" </c:if> />
+			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label text-left">送审说明:</label>
 				<div class="col-sm-9">
 					<textarea id="stComment2" name="stComment2" class="form-control">${legislationProcessTaskdetail.stBak1}</textarea>
 				</div>
 			</div>
-			<br>
-			<div class="form-group">
-				<label class="col-sm-2 control-label text-left">附件:</label>
-				<div class="col-sm-9">
-					<input type="file" class='file_input'>
-				</div>
-			</div>
 		</div>
-		<br>
-		<br>
+		
+		 <div class="form-group">
+				<label class="control-label">公开征求意见接收材料 </label>
+			</div>	
+		<%@include file="/legislation/file/attachUpload.jsp" %>
 		<div class="form-group text-center">
 			<input ${stStyle} type="button" class="btn btn-w-m btn-success" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
 			&nbsp;&nbsp;
@@ -55,10 +57,11 @@
 		</div>
 	</form>
 </div>
+</div>
 <script>
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,
@@ -118,6 +121,12 @@
 			});
 		}
 	}
-
+	function openEditParticipants(showName) {
+	    var stPersonsId=$('#stPersonsId').val();
+	    var otherPersonsName=$('#otherPersonsName').val();
+        $("#processIndexChildForm").modal({
+            remote : "${basePath}/legislationSendNotice/openEditParticipants.do?showName="+showName+"&stPersonsId="+stPersonsId+"&otherPersons=N&module=process"
+        });
+ }
 	
 </script>

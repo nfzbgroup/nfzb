@@ -173,7 +173,7 @@
 										</c:otherwise>
 									</c:choose>
 								</div>
-								<div class="pull-right">
+								<div class="pull-right"  hidden="hidden">
 									<label class="btn btn-w-m btn-success" id="add" onclick="openPage('checkmeeting_add',null)">审核会议发起</label>
 								</div>
 							</form>

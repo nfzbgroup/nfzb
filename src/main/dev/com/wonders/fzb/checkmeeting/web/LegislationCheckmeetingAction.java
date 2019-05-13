@@ -548,6 +548,31 @@ public class LegislationCheckmeetingAction extends BaseAction {
 			}
 		}
 		
+		//回显上传材料
+		String method = "checkmeeting_ARRIRM";
+		//String stDocId = auditMeeting.getStMeetingId();
+	//	String stNodeId = request.getParameter("stNodeId");// 图中的节点，再状态
+		String nodeIdStatus[] = method.split("_");
+		
+		String nodeStatus = nodeIdStatus[1];
+				if (true) {
+					Map<String, Object> condMaps = new HashMap<>();
+					Map<String, String> sortMaps = new HashMap<>();
+					condMaps.put("stParentId", stMeetingId);
+					condMaps.put("stNodeId", stNodeId);
+					condMaps.put("stNodeStatus", nodeStatus);
+					sortMaps.put("dtPubDate", "ASC");
+					List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMaps, sortMaps);
+						List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId, nodeStatus, legislationFilesList);
+						request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+					
+						String stStyle = "style ='display: none;'";
+						request.setAttribute("stStyle", stStyle);
+					request.setAttribute("nodeStatus", nodeStatus);
+					request.setAttribute("legislationFilesList", legislationFilesList);
+					//request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+				}
+		
 //		List<LegislationProcessDoc> legislationProcessDocAll = new ArrayList<LegislationProcessDoc>();
 //		Map<String, LegislationProcessTask> legislationProcessTaskMap = new HashMap<String, LegislationProcessTask>();
 //		String[] stDocIdArray = auditMeeting.getStDocSource().split("#");

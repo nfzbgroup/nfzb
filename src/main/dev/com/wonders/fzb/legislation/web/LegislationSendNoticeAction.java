@@ -322,6 +322,8 @@ public class LegislationSendNoticeAction extends BaseAction {
 	@Action(value = "openEditParticipants", results = { @Result(name = "openEditParticipants", location = "/legislation/legislationProcessManager_participantsEdit.jsp") })
 	public String openEditParticipants() {
 		String showName = request.getParameter("showName");
+		//是否需要外部人员填写框
+		String otherPersons = request.getParameter("otherPersons")==null?"Y":request.getParameter("otherPersons");
 		String stPersonsId = request.getParameter("stPersonsId");
 		String module = request.getParameter("module");
 		String otherPersonsName = request.getParameter("otherPersonsName");
@@ -331,6 +333,7 @@ public class LegislationSendNoticeAction extends BaseAction {
 			request.setAttribute("process", "process");
 		}
 		request.setAttribute("participantsList", participantsList);
+		request.setAttribute("otherPersons", otherPersons);
 		request.setAttribute("otherPersonsName", otherPersonsName);
 		return "openEditParticipants";
 	}

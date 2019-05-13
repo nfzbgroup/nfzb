@@ -2,6 +2,7 @@ package com.wonders.fzb.legislation.services;
 
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.beans.SendNoticeVO;
 
@@ -83,4 +84,8 @@ public interface LegislationSendNoticeService{
 			String columnNames, int pageNo, int pageSize) throws ParseException;
 
 	List<Map<String,Object>> findParticipantsList(String showName,String stPersonsId);
+	/**
+	 * 发送人员
+	 */
+	public void sendNotice(String personsId, String module, String stDocId, String nodeName);
 }

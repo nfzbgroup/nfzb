@@ -84,6 +84,9 @@
 								<c:if test="${isZhc}">
 									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=NOD_0000000103">立法办理</a></li>
 								</c:if>
+								<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=公开征求意见审核">公开征求意见审核</a></li>
+								<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=立法听证会审核">立法听证会审核</a></li>
+								<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=审核会前征询意见接收">审核会前征询意见接收</a></li>					
 								<s:iterator value="#request.draftNodeList" var="task">
 									<li>
 									<c:choose>
@@ -107,7 +110,7 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<s:iterator value="#request.assessNodeList" var="task">
-									<li><a class="J_menuItem" href="../legislationAssessTask/assess_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
 								</s:iterator>
 							</ul>
 						</li> 
@@ -156,6 +159,7 @@
 											</c:when>
 											<c:otherwise>
 												<a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
+											    <a class="J_menuItem" href="../legislationSendNotice/citymeeting_notice_list.do?method=list&stNodeId=${task.stNodeId}"><s:property value="常务会议议题接收"/>常务会议议题接收</a>
 											</c:otherwise>
 									</c:choose>
 									</li>

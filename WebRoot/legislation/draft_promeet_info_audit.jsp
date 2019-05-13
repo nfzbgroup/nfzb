@@ -6,122 +6,115 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="page-bar">
 	<ul class="page-breadcrumb">
-		<li>
-		    <c:choose>
-		       <c:when test="${infoPage==true}"><span>审核会议待审草案->查看</span></c:when>
-		       <c:otherwise><span>OA审核 </span></c:otherwise>
-		    </c:choose>
-		</li>
+		<li><c:choose>
+				<c:when test="${infoPage==true}">
+					<span>审核会议待审草案->查看</span>
+				</c:when>
+				<c:otherwise>
+					<span>OA审核 </span>
+				</c:otherwise>
+			</c:choose></li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
-		<span aria-hidden="true">&times;</span>
-		<span class="sr-only">Close</span>
+	<button style="padding-right: 5px" type="button" class="close"
+		data-dismiss="modal">
+		<span aria-hidden="true">&times;</span> <span class="sr-only">Close</span>
 	</button>
 </div>
 <div class="modal-body">
 	<c:choose>
-		<c:when test="${legislationProcessTask.stTaskStatus==statusCodeArray[0]}">
-			<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会前征询意见</h2>
+		<c:when
+			test="${legislationProcessTask.stTaskStatus==statusCodeArray[0]}">
+			<h2
+				style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会前征询意见</h2>
 		</c:when>
-		<c:when test="${legislationProcessTask.stTaskStatus==statusCodeArray[1]}">
-			<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会征询</h2>
+		<c:when
+			test="${legislationProcessTask.stTaskStatus==statusCodeArray[1]}">
+			<h2
+				style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会征询</h2>
 		</c:when>
 		<c:otherwise>
-		    <h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会前征询意见</h2>
+			<h2
+				style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会前征询意见</h2>
 		</c:otherwise>
 	</c:choose>
-	<form id="legislationProcessDocForm" class="form-horizontal" novalidate="novalidate">
+	<form id="legislationProcessDocForm" class="form-horizontal"
+		novalidate="novalidate">
 		<input hidden id="stDocId" name="stDocId" value="${stDocId}">
+			<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<c:choose>
 			<c:when test="${legislationProcessTask.stTaskStatus=='TODO'}">
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">说明：</label>
 					<div class="col-sm-9">
-						<textarea id="stComent" name="stComent" class="form-control"><c:if test="${legislationProcessTask.stBakOne !=null}">${legislationProcessTask.stBakOne}</c:if></textarea>
+						<textarea id="stComent" name="stComent" class="form-control"><c:if
+								test="${legislationProcessTask.stBakOne !=null}">${legislationProcessTask.stBakOne}</c:if></textarea>
 					</div>
 				</div>
-
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">送审领导：</label>
 					<div class="col-sm-9">
-						<textarea id="reportLeadershipReview" name="reportLeadershipReview" class="form-control"><c:if test="${legislationProcessTask.stBakTwo !=null}">${legislationProcessTask.stBakTwo}</c:if></textarea>
+						<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导','N')"><c:if test="${userInfoList!=null}"><c:forEach items="${userInfoList}" var="userInfo" varStatus="idx">${userInfo.name}<c:if test="${idx.count!=userInfoList.size()}">,</c:if></c:forEach></c:if></textarea>
 					</div>
+					<input type="hidden" name="stPersonsId" id="stPersonsId"
+						<c:if test="${stPersonsId!=null}">value="${stPersonsId}" </c:if>>
 				</div>
 			</c:when>
-			<c:when test="${legislationProcessTask.stTaskStatus==statusCodeArray[1]}">
+			<c:when
+				test="${legislationProcessTask.stTaskStatus==statusCodeArray[1]}">
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">领导意见：</label>
 					<div class="col-sm-9">
-						<textarea id="stComent" name="stComent" class="form-control"><c:if test="${legislationProcessTask.stComment1!=null}">${legislationProcessTask.stComment1}</c:if></textarea>
+						<textarea id="stComent" name="stComent" class="form-control"><c:if
+								test="${legislationProcessTask.stComment1!=null}">${legislationProcessTask.stComment1}</c:if></textarea>
 					</div>
 				</div>
 			</c:when>
-            <c:otherwise>
-               <div class="form-group">
+			<c:otherwise>
+				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">说明：</label>
 					<div class="col-sm-9">
-						<textarea id="stComent" name="stComent" class="form-control"><c:if test="${legislationProcessTask.stBakOne !=null}">${legislationProcessTask.stBakOne}</c:if></textarea>
+						<textarea id="stComent" name="stComent" class="form-control"><c:if
+								test="${legislationProcessTask.stBakOne !=null}">${legislationProcessTask.stBakOne}</c:if></textarea>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">送审领导：</label>
 					<div class="col-sm-9">
-						<textarea id="reportLeadershipReview" name="reportLeadershipReview" class="form-control"><c:if test="${legislationProcessTask.stBakTwo !=null}">${legislationProcessTask.stBakTwo}</c:if></textarea>
+						<textarea id="reportLeadershipReview"
+							name="reportLeadershipReview" class="form-control"><c:if
+								test="${legislationProcessTask.stBakTwo !=null}">${legislationProcessTask.stBakTwo}</c:if></textarea>
 					</div>
 				</div>
-            </c:otherwise>
+			</c:otherwise>
 		</c:choose>
- 
+
 		<div class="form-group text-center">
-		  <c:if test="${(infoPage==false and legislationProcessTask.stTaskId==null) or (legislationProcessTask.stTaskStatus!=null and legislationProcessTask.stTaskStatus!='DONE') and isbanli!='banli'}">
-			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveLegislationProcessDoc('save')" value="保存">
+			<c:if test="${(infoPage==false and legislationProcessTask.stTaskId==null) or (legislationProcessTask.stTaskStatus!=null and legislationProcessTask.stTaskStatus!='DONE') and isbanli!='banli'}">
+				<input ${strDisplay} type="button" class="btn btn-w-m btn-success"	id="btnSave" name="btnSave"	onclick="saveLegislationProcessDoc('save')" value="保存">
 			&nbsp;&nbsp;
-			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveLegislationProcessDoc('submit')" value="提交">
+			<input ${strDisplay} type="button" class="btn btn-w-m btn-success"	id="btnSubmit" name="btnSubmit"	onclick="saveLegislationProcessDoc('submit')" value="提交">
 			&nbsp;&nbsp;
 		  </c:if>
 			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 		</div>
 
-		<div class="form-group">
-			<label class="control-label">报审材料上传 </label>
-			<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传 </label>
-			<input type="file" id="7" name="upload" style="display: none" onchange="uploadFile(this.id,2,null)">
-		</div>
-		<div class="form-group">
-			<table class="table table-striped table-hover" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-				<thead>
-					<tr class="text-center">
-						<th class="text-center" data-field="district_name">文件名称</th>
-						<th class="text-center" data-field="set">操作</th>
-					</tr>
-				</thead>
-				<tbody id="otherMaterial">
-					<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
-						<c:forEach var="file" items="${legislationFilesList}">
-							<c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
-								<tr class="text-center">
-									<td>${file.stTitle}</td>
-									<td>
-										<a target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
-										&nbsp;&nbsp;
-										<label style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
-										<input type="hidden" id="${file.stFileId}" name="${file.stFileId}" value="${file.stFileId}">
-									</td>
-								</tr>
-							</c:if>
-						</c:forEach>
-					</c:if>
-				</tbody>
-			</table>
-		</div>
+		
+					
+ 			<div class="form-group">
+				<label class="control-label">上传材料接收</label>
+			</div>	
+		<%@include file="/legislation/file/attachUpload.jsp" %>
+		
+		
+		
 	</form>
 </div>
 <script>
 	//$('#legislationProcessForm').on('shown.bs.modal', function(event) {
-		var isbanli = '${isbanli}';
-		if (isbanli == "banli") {
-			Duang.success("提示", "【审核会议】处理中，请到【审核会议】中进行操作");
-		}
+	var isbanli = '${isbanli}';
+	if (isbanli == "banli") {
+		Duang.success("提示", "【审核会议】处理中，请到【审核会议】中进行操作");
+	}
 	//});
 
 	function saveLegislationProcessDoc(type) {
@@ -136,16 +129,15 @@
 			}
 
 			return;
-		} else if (status == statusCodeArray[0] && (param.reportLeadershipReview == null || param.reportLeadershipReview == "")) {
+		} else if (status == statusCodeArray[0] && (param.stPersons == null || param.stPersons == "")) {
 			Duang.error("提示", "请输入报审领导");
 			return;
 		}
 		var taskid = '${legislationProcessTask.stTaskId}';
-
 		$.post("${requestUrl}?stNodeId=${nodeId}&method=draftPromeetInfo&type=" + type + "&stTaskStatus=${legislationProcessTask.stTaskStatus}", param, function(data) {
 			if (taskid == null || taskid == "") {
 				Duang.success("提示", "后续操作请到【审核会议】中进行");
-			}else{
+			} else {
 				Duang.success("提示", "操作成功");
 			}
 			$('#legislationProcessForm').modal('hide');
@@ -158,7 +150,7 @@
 	}
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,
@@ -172,8 +164,8 @@
 						$("#" + id).parent().prev().html('<span>' + file.name + '</span>');
 						$("#" + id).parent().html(html);
 					} else {
-						var html = '<tr class="text-center">' + '<td>' + file.name + '</td>' + '<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<label  style="color: red" onclick="deleteAttach(this,2,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId + '\')">删除</label>'
-								+ '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '</td></tr>';
+						var html = '<tr class="text-center">' + '<td class="text-left">需要报送的其他材料</td>' + '<td>' + file.name + '</td>' + '<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<label  style="color: red" onclick="deleteAttach(this,2,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId
+								+ '\')">删除</label>' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '</td></tr>';
 						$('#otherMaterial').append(html);
 					}
 					Duang.success("提示", "上传材料成功");
@@ -185,7 +177,9 @@
 				Duang.error("提示", "上传材料失败");
 			}
 		});
-	}
+	};
+
+	
 	function deleteAttach(attachObj, type, id, fileId, stSampleId) {
 		$.post('${basePath}/file/deleteAttach.do?fileId=' + fileId);
 

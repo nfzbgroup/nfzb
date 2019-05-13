@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="Y5OVOmDep8d96uDKyDf7EsLvELGUUrPLSimrCRo8" />
-    <title>立法计划流程展示</title>
+    <title>立法计划流程展示-废弃</title>
     <link href="assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
     <link href="assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
     <link href="assets/css/animate.min.css" rel="stylesheet">

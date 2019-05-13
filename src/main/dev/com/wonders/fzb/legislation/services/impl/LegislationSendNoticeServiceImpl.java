@@ -6,9 +6,11 @@ import com.wonders.fzb.framework.beans.MOR;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.framework.services.UserInfoService;
+import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.beans.SendNoticeVO;
 import com.wonders.fzb.legislation.dao.LegislationSendNoticeDao;
+import com.wonders.fzb.legislation.services.LegislationProcessDocService;
 import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class LegislationSendNoticeServiceImpl implements LegislationSendNoticeSe
 
 	@Autowired
 	private UserInfoService userInfoService;
+	
+	@Autowired
+	private LegislationProcessDocService legislationProcessDocService;
 	
 	/**
 	 * 添加实体对象
@@ -169,5 +174,36 @@ public class LegislationSendNoticeServiceImpl implements LegislationSendNoticeSe
 	@Override
 	public Page<SendNoticeVO> findSendNoticeCitymeetingList(String wheresql, String mainTableName, String columnNames, int pageNo, int pageSize) throws ParseException {
 		return legislationSendNoticeDao.findSendNoticeCitymeetingList(wheresql, mainTableName, columnNames, pageNo, pageSize);
+	}
+
+	@Override
+	public void sendNotice(String personsId, String module, String stDocId, String nodeName) {
+		// 根据id字符串获取人员信息集合
+		List<UserInfo> userInfoList = legislationProcessDocService.findUserInfoListByString(personsId);
+		// 发送领导
+		if (personsId.indexOf(",") > -1) {
+			String[] personIArray = personsId.split(",");
+			for (int i = 0; i < personIArray.length; i++) {
+				LegislationSendNotice legislationSendNotice = new LegislationSendNotice();
+				legislationSendNotice.setStDocId(stDocId);
+				legislationSendNotice.setStNoticeStatus("已发送");
+				legislationSendNotice.setDtOpenDate(new Date());
+				legislationSendNotice.setStUserId(userInfoList.get(i).getUserId());
+				legislationSendNotice.setStUserName(userInfoList.get(i).getName());
+				legislationSendNotice.setStModelName(module);
+				legislationSendNotice.setStNodeName(nodeName);
+				add(legislationSendNotice);
+			}
+		} else {
+			LegislationSendNotice legislationSendNotice = new LegislationSendNotice();
+			legislationSendNotice.setStDocId(stDocId);
+			legislationSendNotice.setStNoticeStatus("已发送");
+			legislationSendNotice.setDtOpenDate(new Date());
+			legislationSendNotice.setStUserId(userInfoList.get(0).getUserId());
+			legislationSendNotice.setStUserName(userInfoList.get(0).getName());
+			legislationSendNotice.setStModelName(module);
+			legislationSendNotice.setStNodeName(nodeName);
+			add(legislationSendNotice);
+		}
 	}
 }

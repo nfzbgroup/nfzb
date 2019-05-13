@@ -28,6 +28,7 @@
 </style>
 </head>
 <body class="gray-bg">
+
 	<div class="page-bar">
 		<ul class="page-breadcrumb">
 			<li>
@@ -51,65 +52,25 @@
 							<input type="hidden" name="stDocId" id="stDocId" value="${stDocId}">
 							<input type="hidden" name="stNodeId" id="stNodeId" value="${stNodeId}">
 							<input type="hidden" name="stTaskId" id="stTaskId" <c:if test="${legislationProcessTask.stTaskId!=null}"> value="${legislationProcessTask.stTaskId}" </c:if> > 
+							<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 							<div class="form-body">
-								<div class="form-group">
-										<div class="form-group text-center">
-											<label class="col-sm-3 control-label text-left">法规规章草案：</label>
+									<div class="form-group text-center">
+										 <label class="col-sm-3 control-label text-left">法规规章草案：</label>
 											<label class="col-sm-6 control-label" style="text-align: left;">
 												<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 											</label>
-										</div>
-									<label class="col-sm-3 control-label text-left">法律规章草案报审材料说明：</label>
-									<div class="col-sm-6">
-										<textarea id="stComment2" name=stComment2 class="form-control form_control">${legislationProcessTask.stComment2}</textarea>
 									</div>
-								</div>
-							<div class="form-group">
-								<table class="table table-striped table-bordered table-hover" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-									<thead>
-										<tr class="text-center">
-											<th class="text-center" data-field="id">文件类型</th>
-											<th class="text-center" data-field="district_name">文件名称</th>
-											<th class="text-center" data-field="set">操作</th>
-										</tr>
-									</thead>
-									<tbody>
-										<s:iterator value="#request.LegislationExampleList" var="example">
-											<tr class="text-center">
-												<td class="text-left">${example.stExampleName}
-													<c:if test="${example.stNeed=='NEED'}">
-														<span style="color: red">(必须上传)</span>
-													</c:if>
-													<span style="color: dodgerblue">(范本)</span>
-												</td>
-												<td>
-													<c:choose>
-														<c:when test="${example.fileId !=null}">
-															<span>${example.fileName}</span>
-														</c:when>
-														<c:otherwise>
-															<span style="color: red">暂未上传</span>
-														</c:otherwise>
-													</c:choose>
-												</td>
-												<td>
-													<c:choose>
-														<c:when test="${example.fileId !=null}">
-															<a target="_blank" href="${basePath}/file/downloadAttach.do?name=${example.fileName}&url=${example.fileUrl}">下载</a>&nbsp;&nbsp;
-				                                    <input type="hidden" id="${example.fileId}" name="${example.fileId}" value="${example.fileId}">
-															<label style="color: red" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')">删除</label>
-														</c:when>
-														<c:otherwise>
-															<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传</label>
-															<input id="${example.stExampleId}" name="upload" type="file" style="display: none" onchange="uploadFile(this.id,1,'${example.stExampleId}')">
-														</c:otherwise>
-													</c:choose>
-												</td>
-											</tr>
-										</s:iterator>
-									</tbody>
-								</table>
-							</div>
+									<div class="form-group text-center">
+									     <label class="col-sm-3 control-label text-left">法律规章草案报审材料说明：</label>
+									     <div class="col-sm-6">
+										    <textarea id="stComment2" name=stComment2 class="form-control form_control">${legislationProcessTask.stComment2}</textarea>
+									     </div>
+									</div>
+							    <div class="form-group">
+									<label class="control-label">上传材料接收 </label>
+								</div>	
+								<%@include file="/legislation/file/attachUpload.jsp" %>
+							
 								<div class="form-group text-center">
 									<input type="hidden" id="op" name="op">
 									<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" value="保存">
@@ -137,24 +98,9 @@
 		$('#btnSave').click(function() {
 			$('#op').val('save');
 			var param = $('#legislationProcessDocForm').formToJson();
-			$.post("../legislationReport/saveSendMayorDatum.do", param, function(data) {
-				if (data.success) {
-					$('#legislationProcessForm').modal('hide');
-					if($('#stTaskId').val()!=null){
-						Duang.success("提示", "操作成功");
-					}else{
-						Duang.success("提示", "后续操作请到【报签】中进行");
-					}
-				} else {
-					Duang.error("提示", "保存失败！");
-				}
-			});
-		});
-		$('#btnNext').click(function() {
-			layer.confirm('请确认操作！', function(index) {
-				layer.close(layer.index);
-				$('#op').val('submit');
-				var param = $('#legislationProcessDocForm').formToJson();
+			if (param.stComment2 == null || param.stComment2 == "") {
+				Duang.error("提示", "请输入报审材料说明");
+			}else{
 				$.post("../legislationReport/saveSendMayorDatum.do", param, function(data) {
 					if (data.success) {
 						$('#legislationProcessForm').modal('hide');
@@ -166,15 +112,41 @@
 					} else {
 						Duang.error("提示", "保存失败！");
 					}
-					submitForm(1);
 				});
+			}
+		});
+		$('#btnNext').click(function() {
+			layer.confirm('请确认操作！', function(index) {
+				layer.close(layer.index);
+				$('#op').val('submit');
+				var param = $('#legislationProcessDocForm').formToJson();
+				if (param.stComment2 == null || param.stComment2 == "") {
+					Duang.error("提示", "请输入报审材料说明");
+				}else{
+					$.post("../legislationReport/saveSendMayorDatum.do", param, function(data) {
+						if (data.success) {
+							$('#legislationProcessForm').modal('hide');
+							if($('#stTaskId').val()!=null){
+								Duang.success("提示", "操作成功");
+							}else{
+								Duang.success("提示", "后续操作请到【报签】中进行");
+							}
+						} else {
+							Duang.error("提示", "保存失败！");
+						}
+						submitForm(1);
+					});
+				}
 			});
 		});
 	});
 
+	function toUploadFile(obj) {
+		$(obj).next().click();
+	};
 	function uploadFile(id, type, stSampleId) {
 		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
+			url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
 			type : 'post',
 			secureuri : false, //是否启用安全提交,默认为false
 			fileElementId : id,
@@ -201,5 +173,16 @@
 				Duang.error("提示", "上传材料失败");
 			}
 		});
+	};
+	function deleteAttach(attachObj, type, id, fileId, stSampleId) {
+		$.post('${basePath}/file/deleteAttach.do?fileId=' + fileId);
+		var obj = $(attachObj);
+		if (type == 1) {
+			obj.parent().prev().html('<span style="color: red">暂未上传</span>');
+			var html = '<label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>' + '<input id="' + id + '" name="upload" type="file" style="display:none"  onchange="uploadFile(\'' + id + '\',1,\'' + stSampleId + '\')">';
+			obj.parent().html(html);
+		} else {
+			obj.parent().parent().remove();
+		}
 	};
 </script>

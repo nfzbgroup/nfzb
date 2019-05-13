@@ -29,7 +29,7 @@
 						<div class="col-md-12">
 							<form action="${basePath}/${requestUrl}" id="legislationProcessTask" method="post" role="form" class="form-horizontal form-bordered">
 								<input type="hidden" id="taskStatus" value="TODO">
-								<input type="hidden" id="stNodeId" value="${nodeId}">
+								<input type="hidden" id="stNodeId" value="${stNodeName}">
 								<input type="hidden" id="requestUrl" value="${requestUrl}">
 
 										<div class="col-md-5">
@@ -162,7 +162,7 @@
                 }
             }
         });
-        $.post("${requestUrl}?stNodeId=${nodeId}&type=queryTable",function(data){
+        $.post("${requestUrl}?stNodeId=${stNodeName}&taskStatus=已发送&method=queryTable",function(data){
             $('#legislationProcessTaskTable').html(data);
         });
         $('body').on('hidden.bs.modal', '.modal', function () {

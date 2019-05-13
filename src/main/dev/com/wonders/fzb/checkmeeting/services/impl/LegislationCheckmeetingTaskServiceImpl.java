@@ -732,7 +732,7 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 			this.update(legislationCheckmeetingTask);
 		}
 
-		//legislationFilesService.updateParentIdById(request,stMeetingId);
+		legislationFilesService.updateParentIdById(request,stMeetingId);
 		return stMeetingId;
 	}
 	/**
