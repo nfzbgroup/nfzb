@@ -14,6 +14,7 @@ import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -172,11 +173,27 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 			newLegislationAssessTask.setStFlowId(legislationAssessTask.getStFlowId());
 			newLegislationAssessTask.setStTaskStatus("TODO");
 			newLegislationAssessTask.setDtOpenDate(legislationAssessTask.getDtOpenDate());
-			newLegislationAssessTask.setStNodeId(nextNode.getStNodeId());
-			newLegislationAssessTask.setStNodeName(nextNode.getStNodeName());
 			newLegislationAssessTask.setStUserId(legislationAssessTask.getStUserId());
 			newLegislationAssessTask.setStUserName(legislationAssessTask.getStUserName());
 			newLegislationAssessTask.setStParentId(legislationAssessTask.getStParentId());
+			//生成第一季度反馈评估进度任务
+			if("NOD_0000000257".equals(stNodeId)){
+				newLegislationAssessTask.setStActive("1");
+				LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
+				newLegislationAssessTask.setStTeamId(legislationAssessItem.getStUnitId());
+			}
+			//生成第2,3,4季度反馈评估进度任务
+			if("NOD_0000000258".equals(stNodeId)&&StringUtils.isNotEmpty(legislationAssessTask.getStActive())
+					&&Integer.parseInt(legislationAssessTask.getStActive())<4){
+				newLegislationAssessTask.setStActive(Integer.parseInt(legislationAssessTask.getStActive())+1+"");
+				LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
+				newLegislationAssessTask.setStTeamId(legislationAssessItem.getStUnitId());
+				newLegislationAssessTask.setStNodeId(node.getStNodeId());
+				newLegislationAssessTask.setStNodeName(node.getStNodeName());
+			}else{
+				newLegislationAssessTask.setStNodeId(nextNode.getStNodeId());
+				newLegislationAssessTask.setStNodeName(nextNode.getStNodeName());
+			}
 			addObj(newLegislationAssessTask);
 		}
 
@@ -250,8 +267,13 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 			LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
 			legislationAssessDeal.setStAssessId(legislationAssessItem.getStItemId());
 			legislationAssessDeal.setStBakOne(legislationAssessItem.getStItemName());
-			legislationAssessDeal.setStBakTwo(legislationAssessItem.getStBak());
-			if (!"END".equals(node.getStNextNode())) {
+			if("NOD_0000000258".equals(stNodeId)){
+				legislationAssessDeal.setStBakTwo("第"+legislationAssessTask.getStActive()+"季度反馈评估进度");
+			}else{
+				legislationAssessDeal.setStBakTwo(legislationAssessItem.getStBak());
+			}
+			if (!"END".equals(node.getStNextNode())&&!("NOD_0000000258".equals(stNodeId)&&StringUtils.isNotEmpty(legislationAssessTask.getStActive())
+					&&Integer.parseInt(legislationAssessTask.getStActive())<4)) {
 				legislationAssessItem.setStNodeId(nextNode.getStNodeId());
 				legislationAssessItem.setStNodeName(nextNode.getStNodeName());
 				legislationAssessItemService.update(legislationAssessItem);
