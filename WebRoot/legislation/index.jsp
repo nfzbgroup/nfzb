@@ -110,7 +110,7 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<s:iterator value="#request.assessNodeList" var="task">
-									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+									<li><a class="J_menuItem" href="../legislationAssessTask/assess_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
 								</s:iterator>
 							</ul>
 						</li> 

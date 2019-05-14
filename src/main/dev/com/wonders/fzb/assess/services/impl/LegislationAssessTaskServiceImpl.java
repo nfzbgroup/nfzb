@@ -178,8 +178,8 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 			newLegislationAssessTask.setStParentId(legislationAssessTask.getStParentId());
 			newLegislationAssessTask.setStNodeId(nextNode.getStNodeId());
 			newLegislationAssessTask.setStNodeName(nextNode.getStNodeName());
-			if("NOD_0000000256".equals(stNodeId)){
-				//评估方案建议的处理单位是立法处初审时的处室
+			if("NOD_0000000256".equals(stNodeId)||"NOD_0000000260".equals(stNodeId)){
+				//评估方案建议/评估报告接收的处理单位是立法处初审时的处室
 				LegislationAssessTask legislationAssessTaskExamine=findByHQL("from LegislationAssessTask t where 1=1 and t.stParentId='"+legislationAssessTask.getStParentId()+"' and t.stNodeId='NOD_0000000254' and t.stEnable is null").get(0);
 				newLegislationAssessTask.setStTeamId(legislationAssessTaskExamine.getStTeamId());
 			}
@@ -211,7 +211,8 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 		legislationAssessDeal.setStUserId(userId);
 		legislationAssessDeal.setStUserName(userName);
 		legislationAssessDeal.setDtDealDate(new Date());
-		if("NOD_0000000251".equals(stNodeId)||"NOD_0000000253".equals(stNodeId)||"NOD_0000000255".equals(stNodeId)){
+		if("NOD_0000000251".equals(stNodeId)||"NOD_0000000253".equals(stNodeId)||"NOD_0000000255".equals(stNodeId)
+				||"NOD_0000000262".equals(stNodeId)){
 			LegislationAssess legislationAssess=legislationAssessService.findById(legislationAssessTask.getStParentId());
 			legislationAssessDeal.setStAssessId(legislationAssess.getStAssessId());
 			legislationAssessDeal.setStBakOne(legislationAssess.getStAssessName());

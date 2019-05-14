@@ -178,6 +178,7 @@ public class LegislationAssessItemAction extends BaseAction {
 				}else if("NOD_0000000255".equals(stNodeId)){
 					condMap.put("stNodeId","NOD_0000000254");
 				}else {
+					//stNodeId=NOD_0000000262
 					condMap.put("stNodeId","NOD_0000000261");
 				}
 				condMap.put("stEnableIsNull","null");

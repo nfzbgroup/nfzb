@@ -36,10 +36,10 @@
                     <td>
                     	 <c:set var="theString" value='${assessItem.stStatus}' />
 	                   	 <c:if test="${fn:contains(theString,'已处理')}" var="flag" scope="session">
-							 <p><c:out value="${assessItem.stStatus}"/><p>
+							 <p><span style="color:green;"><c:out value="${assessItem.stStatus}"/></span><p>
 						 </c:if>
 					 	 <c:if test="${not flag}">
-						 	  <p> <span style="color:red;"><c:out value="${assessItem.stStatus}" /></span>	 <p>
+						 	  <p><span style="color:red;"><c:out value="${assessItem.stStatus}"/></span><p>
 						 </c:if>
                     </td>
                     <c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
