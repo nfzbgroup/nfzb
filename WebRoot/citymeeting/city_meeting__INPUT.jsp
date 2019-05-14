@@ -7,10 +7,10 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb"> 
 		<li>
-			<span>常务会议会议记要></span>
+			<span>常务会议></span>
 		</li>
 		<li>
-			<span>会议记要 </span>
+			<span>审议意见 </span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
@@ -40,38 +40,6 @@
 			</div>
 			
 			
-			
-			
-			<div class="form-group">
-				<label class="col-sm-2 control-label">议题材料： </label>
-				<div class="col-sm-9">
-					<table class="table table-striped table-bordered table-hover text-center" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
-						<thead align="center">
-							<tr class="text-center">
-								<th class="text-center" data-field="id" width="40%">文件类型</th>
-								<th class="text-center" data-field="district_name" width="40%">文件名称</th>
-								<th class="text-center" data-field="set" width="20%">操作</th>
-							</tr>
-						</thead>
-						<tbody class="text-center" align="center">
-							<tr class="text-center" align="center">
-								<td class="text-left">
-									材料
-									<span style="color: red"></span>
-									<span style="color: dodgerblue">(范本)</span>
-								</td>
-								<td>
-									<span style="color: red">暂未上传</span>
-								</td>
-								<td>
-									<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传</label>
-									<input id="upload" name="upload" type="file" style="display: none">
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">材料说明：</label>
 				<div class="col-sm-9">
@@ -216,14 +184,14 @@
 			Duang.error("提示", "请输入议题名称");
 		} else if (param.stBak == null || param.stBak == "") {
 			Duang.error("提示", "请输入议题说明");
-		} else if (param.stBak1 == null || param.stBak1 == "") {
-			Duang.error("提示", "请输入材料说明");
+		//} else if (param.stBak1 == null || param.stBak1 == "") {
+		//	Duang.error("提示", "请输入材料说明");
 		} else if (param.stAddress == null || param.stAddress == "") {
 			Duang.error("提示", "请输入会议地点");
 		} else if (param.dtBeginDate == null || param.dtBeginDate == "") {
 			Duang.error("提示", "请选择会议时间");
 		} else if (param.stPersons == null || param.stPersons == "") {
-			Duang.error("提示", "请输入会议人员");
+			Duang.error("提示", "请输入参会人员");
 		}else if (param.stBak2 == null || param.stBak2 == "") {
 			Duang.error("提示", "请输入会议记要");
 		} else if (param.stType == null || param.stType == "") {

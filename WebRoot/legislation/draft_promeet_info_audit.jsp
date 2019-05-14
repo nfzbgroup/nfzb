@@ -42,7 +42,7 @@
 		<input hidden id="stDocId" name="stDocId" value="${stDocId}">
 			<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<c:choose>
-			<c:when test="${legislationProcessTask.stTaskStatus=='TODO'}">
+			<c:when test="${legislationProcessTask.stTaskStatus=='TODO' or isbanli=='banli'}">
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">说明：</label>
 					<div class="col-sm-9">
@@ -53,21 +53,60 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">送审领导：</label>
 					<div class="col-sm-9">
-						<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导','N')"><c:if test="${userInfoList!=null}"><c:forEach items="${userInfoList}" var="userInfo" varStatus="idx">${userInfo.name}<c:if test="${idx.count!=userInfoList.size()}">,</c:if></c:forEach></c:if></textarea>
+						<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导','N')">${legislationProcessTaskdetail.stPersonName}</textarea>
 					</div>
 					<input type="hidden" name="stPersonsId" id="stPersonsId"
-						<c:if test="${stPersonsId!=null}">value="${stPersonsId}" </c:if>>
+						<c:if test="${legislationProcessTaskdetail.stPersonId!=null}">value="${legislationProcessTaskdetail.stPersonId}" </c:if>>
 				</div>
 			</c:when>
-			<c:when
-				test="${legislationProcessTask.stTaskStatus==statusCodeArray[1]}">
-				<div class="form-group">
+			<c:when test="${legislationProcessTask.stTaskStatus==statusCodeArray[1]}">
+				<!--<div class="form-group">
 					<label class="col-sm-3 control-label text-left">领导意见：</label>
 					<div class="col-sm-9">
 						<textarea id="stComent" name="stComent" class="form-control"><c:if
 								test="${legislationProcessTask.stComment1!=null}">${legislationProcessTask.stComment1}</c:if></textarea>
 					</div>
+				</div>  -->
+				<div class="form-group">
+				<label class="col-sm-3 control-label text-left">领导审核意见:</label>
+				<div class="col-sm-9">
+				   <table class="table table-border table-bordered">
+						<thead>
+							<tr>
+								<th style="text-align: center">领导姓名</th>
+								<th style="text-align: center">是否反馈</th>
+								<th style="text-align: center">反馈内容</th>
+								<th style="text-align: center">反馈时间</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:if
+								test="${legislationSendNoticeList !=null&&fn:length(legislationSendNoticeList)>0}">
+								<c:forEach var="legislationSendNotice"
+									items="${legislationSendNoticeList}">
+									<tr>
+										<td style="text-align: center">
+											${legislationSendNotice.stUserName}</td>
+										<td style="text-align: center">
+											${legislationSendNotice.stNoticeStatus}</td>
+										<td style="text-align: center"><c:choose>
+												<c:when
+													test="${legislationSendNotice.stNoticeStatus!='已反馈'}">---</c:when>
+												<c:otherwise>${legislationSendNotice.stFeedbackContent}</c:otherwise>
+											</c:choose></td>
+										<td style="text-align: center"><c:if
+												test="${legislationSendNotice.stNoticeStatus!='已反馈'}">
+						---</c:if> <c:if test="${legislationSendNotice.stNoticeStatus=='已反馈'}">
+												<fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
+													value="${legislationSendNotice.dtFeekbackDate}" />
+											</c:if></td>
+									</tr>
+								</c:forEach>
+							</c:if>
+						</tbody>
+					</table>
 				</div>
+			</div>
 			</c:when>
 			<c:otherwise>
 				<div class="form-group">
@@ -121,17 +160,19 @@
 		var param = $('#legislationProcessDocForm').formToJson();
 		var status = '${legislationProcessTask.stTaskStatus}';
 		var statusCodeArray = '${statusCodeArray}';
-		if (param.stComent == null || param.stComent == "") {
-			if (status == statusCodeArray[0]) {
-				Duang.error("提示", "请输入说明");
-			} else if (status == statusCodeArray[1]) {
-				Duang.error("提示", "请输入领导意见");
-			}
+		if(status=='TODO'){
+			if (param.stComent == null || param.stComent == "") {
+				if (status == statusCodeArray[0]) {
+					Duang.error("提示", "请输入说明");
+				} else if (status == statusCodeArray[1]) {
+					Duang.error("提示", "请输入领导意见");
+				}
 
-			return;
-		} else if (status == statusCodeArray[0] && (param.stPersons == null || param.stPersons == "")) {
-			Duang.error("提示", "请输入报审领导");
-			return;
+				return;
+			} else if (status == statusCodeArray[0] && (param.stPersons == null || param.stPersons == "")) {
+				Duang.error("提示", "请输入报审领导");
+				return;
+			}
 		}
 		var taskid = '${legislationProcessTask.stTaskId}';
 		$.post("${requestUrl}?stNodeId=${nodeId}&method=draftPromeetInfo&type=" + type + "&stTaskStatus=${legislationProcessTask.stTaskStatus}", param, function(data) {

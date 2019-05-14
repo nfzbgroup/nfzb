@@ -33,16 +33,49 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">报送领导：</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control" id="stAddress" disabled name="stPersons" value="<c:if test="${userInfoList!=null}"><c:forEach items="${userInfoList}" var="userInfo" varStatus="idx">${userInfo.name}<c:if test="${idx.count!=userInfoList.size()}">,</c:if></c:forEach></c:if>">
+					<input type="text" class="form-control" id="stAddress" disabled name="stPersons" value="<c:if test="${legislationReportTaskdetail.stPersonName!=null}">${legislationReportTaskdetail.stPersonName}</c:if>">
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">领导意见：</label>
+				<label class="col-sm-2 control-label text-left">领导审核意见:</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control" id="stComment1" name="stComment1" value="${legislationReportTask.stComment1!=null?legislationReportTask.stComment1:''}">
+				   <table class="table table-border table-bordered">
+						<thead>
+							<tr>
+								<th style="text-align: center">领导姓名</th>
+								<th style="text-align: center">是否反馈</th>
+								<th style="text-align: center">反馈内容</th>
+								<th style="text-align: center">反馈时间</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:if
+								test="${legislationSendNoticeList !=null&&fn:length(legislationSendNoticeList)>0}">
+								<c:forEach var="legislationSendNotice"
+									items="${legislationSendNoticeList}">
+									<tr>
+										<td style="text-align: center">
+											${legislationSendNotice.stUserName}</td>
+										<td style="text-align: center">
+											${legislationSendNotice.stNoticeStatus}</td>
+										<td style="text-align: center"><c:choose>
+												<c:when
+													test="${legislationSendNotice.stNoticeStatus!='已反馈'}">---</c:when>
+												<c:otherwise>${legislationSendNotice.stFeedbackContent}</c:otherwise>
+											</c:choose></td>
+										<td style="text-align: center"><c:if
+												test="${legislationSendNotice.stNoticeStatus!='已反馈'}">
+						---</c:if> <c:if test="${legislationSendNotice.stNoticeStatus=='已反馈'}">
+												<fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
+													value="${legislationSendNotice.dtFeekbackDate}" />
+											</c:if></td>
+									</tr>
+								</c:forEach>
+							</c:if>
+						</tbody>
+					</table>
 				</div>
 			</div>
-			
 					
 			 <div class="form-group">
 				<label class="control-label">材料接收 </label>

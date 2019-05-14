@@ -17,13 +17,18 @@ import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.legislation.services.LegislationProcessDocService;
+import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
 import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.beans.LegislationPlanItem;
 import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.beans.LegislationPlanTaskdetail;
 import com.wonders.fzb.plan.services.LegislationPlanItemService;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskdetailService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
@@ -81,6 +86,15 @@ public class LegislationPlanAction extends BaseAction {
 	@Autowired
 	@Qualifier("wegovSimpleNodeService")
 	private WegovSimpleNodeService wegovSimpleNodeService;
+	@Autowired
+	@Qualifier("legislationProcessDocService")
+	private LegislationProcessDocService legislationProcessDocService;
+	@Autowired
+	@Qualifier("legislationSendNoticeService")
+	private LegislationSendNoticeService legislationSendNoticeService;
+	@Autowired
+	@Qualifier("legislationPlanTaskdetailService")
+	private LegislationPlanTaskdetailService legislationPlanTaskdetailService;
 //	private int pageNo = 1;
 //	private int pageSize = 10;
 
@@ -199,12 +213,12 @@ public class LegislationPlanAction extends BaseAction {
 			return null;
 		}
 		private String plan_item_upload() throws ParseException, FzbDaoException {
-			queryNoticeList();
+			queryItemList();
 			return "QueryTable";
 		}
 		
 		@SuppressWarnings("unchecked")
-		private void queryNoticeList() throws ParseException, FzbDaoException {
+		private void queryItemList() throws ParseException, FzbDaoException {
 			String pageSize = request.getParameter("pageSize");
 			String pageNo = request.getParameter("pageNo");
 			//String stNodeId = "NOD_0000000205";
@@ -227,7 +241,7 @@ public class LegislationPlanAction extends BaseAction {
 			sortMap.put("dtCreateDate", "DESC");
 			@SuppressWarnings("unchecked")
 			Page<LegislationPlanItem> infoPage;
-			infoPage = legislationPlanItemService.findByPage(condMap, sortMap, 1, 10);
+			infoPage = legislationPlanItemService.findByPage(condMap, sortMap, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
 
 			request.setAttribute("nodeInfo", nodeInfo);
 			request.setAttribute("pageNo", pageNo);
@@ -260,6 +274,12 @@ public class LegislationPlanAction extends BaseAction {
 			return pageController();
 		}
 		
+		
+		private String planItemEditPage() {
+			
+			
+			return pageController();
+		}
 		private String plan_item_recv(){
 			String stNodeId=request.getParameter("stNodeId");
 			String stPlanId=request.getParameter("stPlanId");
@@ -783,6 +803,18 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	@SuppressWarnings("unused")
 	private String openPlanCheckExplainPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationPlanTask legislationPlanTask = legislationPlanTaskService.findById(stTaskId);
+		if("DOING".equals(legislationPlanTask.getStTaskStatus())) {
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stDocId", legislationPlanTask.getStPlanId());
+			//获得计划通知反馈集合
+			List<LegislationSendNotice> legislationSendNoticeList = legislationSendNoticeService.findByList(condMap, sortMap);
+			
+			request.setAttribute("legislationSendNoticeList", legislationSendNoticeList);
+		}
+		request.setAttribute("legislationPlanTask", legislationPlanTask);
 		return pageController();
 	}
 

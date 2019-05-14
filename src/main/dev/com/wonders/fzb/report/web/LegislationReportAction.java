@@ -27,11 +27,14 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.services.LegislationExampleService;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
+import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
 import com.wonders.fzb.report.beans.*;
 import com.wonders.fzb.report.services.*;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
 import dm.jdbc.util.StringUtil;
@@ -71,6 +74,14 @@ public class LegislationReportAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationProcessDocService")
 	private LegislationProcessDocService legislationProcessDocService;
+	
+	@Autowired
+	@Qualifier("legislationSendNoticeService")
+	private LegislationSendNoticeService legislationSendNoticeService;
+	
+	@Autowired
+	@Qualifier("legislationReportTaskdetailService")
+	private LegislationReportTaskdetailService legislationReportTaskdetailService;
 
 	private int pageNo = 1;
 	private int pageSize = 10;
@@ -136,9 +147,17 @@ public class LegislationReportAction extends BaseAction {
 		LegislationReport legislationReport = legislationReportService.findById(stReportId);
 		List<LegislationReportTask> taskList = legislationReportTaskService.findByHQL("from LegislationReportTask t where t.stReportId='" + stReportId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
 		LegislationReportTask legislationReportTask = taskList.get(0);
-		String stPersonsId = legislationReport.getStPersons();
-		List<UserInfo> userInfoList = legislationProcessDocService.findUserInfoListByString(stPersonsId);
+		List<LegislationReportTaskdetail> taskdetailList = legislationReportTaskdetailService.findByHQL("from LegislationReportTaskdetail t where t.stTaskId='" + legislationReportTask.getStTaskId() + "' and t.stTaskStatus='TODO'");
+		LegislationReportTaskdetail legislationReportTaskdetail=null;
+		if(taskdetailList.size()>0) {
+        	legislationReportTaskdetail = taskdetailList.get(0);
+        }
 		String nodeStatus = request.getParameter("stTaskStatus");
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stDocId", stReportId);
+		condMap.put("stNodeName","签报件报OA审核");
+		List<LegislationSendNotice> legislationSendNoticeList = legislationSendNoticeService.findByList(condMap, sortMap);
 		if(true){
 			
 			//String nodeIdStatus[] = method.split("__");	
@@ -155,8 +174,7 @@ public class LegislationReportAction extends BaseAction {
 		
 			//回显上传材料
 			if (true) {
-				Map<String, Object> condMap = new HashMap<>();
-				Map<String, String> sortMap = new HashMap<>();
+				condMap.clear();
 				condMap.put("stParentId", stReportId);
 				condMap.put("stNodeId", stNodeId);
 				condMap.put("stNodeStatus", nodeStatus);
@@ -176,8 +194,8 @@ public class LegislationReportAction extends BaseAction {
 		request.setAttribute("legislationReport", legislationReport);
 		request.setAttribute("legislationReportTask", legislationReportTask);
 		request.setAttribute("stTaskStatus", legislationReportTask.getStTaskStatus());
-		request.setAttribute("userInfoList", userInfoList);
-		request.setAttribute("stPersonsId", stPersonsId);
+		request.setAttribute("legislationReportTaskdetail", legislationReportTaskdetail);
+		request.setAttribute("legislationSendNoticeList", legislationSendNoticeList);
 	}
 
 	/**

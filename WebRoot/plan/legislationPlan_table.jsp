@@ -150,7 +150,7 @@
 										<c:if test="${nodeId=='NOD_0000000207'}">
 											<td>
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
-												<a href="javaScript:void(0)" data-title="下一步" onclick="openPlanPage('openPlanCheckExplainPage','${plan.stTaskId}')" class="layer_full_link">录入意见</a>
+												<a href="javaScript:void(0)" data-title="下一步" onclick="openPlanPage('openPlanCheckExplainPage','${plan.stTaskId}')" class="layer_full_link">意见反馈</a>
 											</td>
 										</c:if>
 									</c:when>

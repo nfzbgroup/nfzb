@@ -29,9 +29,11 @@ import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
 import com.wonders.fzb.report.beans.LegislationReport;
 import com.wonders.fzb.report.beans.LegislationReportTask;
+import com.wonders.fzb.report.beans.LegislationReportTaskdetail;
 import com.wonders.fzb.report.dao.LegislationReportTaskDao;
 import com.wonders.fzb.report.services.LegislationReportService;
 import com.wonders.fzb.report.services.LegislationReportTaskService;
+import com.wonders.fzb.report.services.LegislationReportTaskdetailService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
@@ -86,6 +88,10 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
     @Autowired
     @Qualifier("legislationSendNoticeService")
     private LegislationSendNoticeService legislationSendNoticeService;
+    
+    @Autowired
+    @Qualifier("legislationReportTaskdetailService")
+    private LegislationReportTaskdetailService legislationReportTaskdetailService;
 	/**
 	 * 添加实体对象
 	 */
@@ -191,7 +197,7 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 		System.out.println("allPersonFeedBackTime------------" + allPersonFeedBackTime);
 //		String stType = request.getParameter("stType");
 		String stAddress = request.getParameter("stAddress");
-//		String stPersons = request.getParameter("stPersons");
+		String stPersons = request.getParameter("stPersons");
 		String stPersonsId = request.getParameter("stPersonsId");
 		String stReportId = request.getParameter("stReportId");
 		String stReportName = request.getParameter("stReportName");
@@ -245,6 +251,11 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 				legislationReport.setStPersons(stPersonsId);
 //				legislationReport.setDtBeginDate(formatter.parse(dtBeginDate));// 时间
 				legislationReportService.update(legislationReport);
+				//保存送审领导id和姓名
+				LegislationReportTaskdetail legislationReportTaskdetail = legislationReportTaskdetailService.findByHQL("from LegislationReportTaskdetail t where t.stTaskId='" + legislationReportTask.getStTaskId() + "' and t.stTaskStatus='TODO'").get(0);
+				legislationReportTaskdetail.setStPersonId(stPersonsId);
+				legislationReportTaskdetail.setStPersonName(stPersons);
+				legislationReportTaskdetailService.update(legislationReportTaskdetail);
 				if ("submit".equals(op)) {
 					//送审领导
 					legislationSendNoticeService.sendNotice(stPersonsId, "签报", stReportId, "签报件报OA审核");
@@ -344,5 +355,11 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 		}
 
 		legislationFilesService.updateParentIdById(request,stReportId);
+	}
+
+	@Override
+	public List<LegislationReportTask> findTaskByDocIdAndNodeId(String stReportId, String stNodeId) {
+		return findByHQL("from LegislationReportTask t where 1=1 and t.stReportId='" + stReportId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
+		
 	}
 }

@@ -464,7 +464,15 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 				legislationProcessTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
 				legislationProcessTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
 				meetingTaskId=addObj(legislationProcessTask);
-
+                //审核会议参会人员添加
+//				LegislationCheckmeetingTaskd legislationCheckmeetingTaskd=new LegislationCheckmeetingTaskd();
+//				legislationCheckmeetingTaskd.setStTaskId(meetingTaskId);
+//				legislationCheckmeetingTaskd.setStPersonId(stPersonsId);
+//				legislationCheckmeetingTaskd.setStPersonName(stPersons);
+//				legislationCheckmeetingTaskd.setStTaskStatus(legislationProcessTask.getStTaskStatus());
+//				legislationCheckmeetingTaskd.setDtOpenDate(new Date());
+//				legislationCheckmeetingTaskd.setStNodeId("NOD_0000000170");
+//				legislationCheckmeetingTaskdService.add(legislationCheckmeetingTaskd);
 				// 用户一个操作，只用增加一条经办记录就可以了，草案可以作为记录的备注，不用象原来多个记录。
 				LegislationCheckmeetingDeal legislationProcessDeal = new LegislationCheckmeetingDeal();
 				legislationProcessDeal.setStMeetingId(stMeetingId);

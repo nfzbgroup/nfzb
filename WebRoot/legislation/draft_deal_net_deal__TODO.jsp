@@ -32,9 +32,9 @@
 			<div class="form-group">
 			    <label class="col-sm-3 control-label text-left">送审领导:</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导')"><c:if test="${userInfoList!=null}"><c:forEach items="${userInfoList}" var="userInfo" varStatus="idx">${userInfo.name}<c:if test="${idx.count!=userInfoList.size()}">,</c:if></c:forEach></c:if></textarea>
+					<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导')">${legislationProcessTaskdetail.stPersonName}</textarea>
 				</div>
-				<input type="hidden" name="stPersonsId" id="stPersonsId" <c:if test="${stPersonsId!=null}">value="${stPersonsId}" </c:if> />
+				<input type="hidden" name="stPersonsId" id="stPersonsId" <c:if test="${legislationProcessTaskdetail.stPersonId!=null}">value="${legislationProcessTaskdetail.stPersonId}" </c:if> />
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label text-left">送审说明:</label>

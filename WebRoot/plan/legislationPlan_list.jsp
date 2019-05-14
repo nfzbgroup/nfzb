@@ -140,6 +140,11 @@
 					</div>
 				</div>
 			</div>
+			<div class="modal inmodal fade" id="processIndexForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content"></div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -207,6 +212,11 @@
             $('#legislationProcessForm .modal-body').css('height', $(window).height());
 			$('#legislationProcessForm .modal-dialog').css('width', $(window).width()*0.96);
         });
+        $('#processIndexForm').on('show.bs.modal', function() {
+			$('#processIndexForm .modal-body').css('overflow', 'auto');
+			$('#processIndexForm .modal-body').css('height', $(window).height());
+			$('#processIndexForm .modal-dialog').css('width', $(window).width() * 0.9);
+		});
 	});
     function openPlanPage(method,stTaskId) {
         $("#legislationProcessForm").modal({

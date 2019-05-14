@@ -66,7 +66,7 @@
 			</div>	
 			<%@include file="/legislation/file/attachUpload.jsp" %>
 			
-			<div class="form-group">
+	<%--		<div class="form-group" hidden="hidden">
 				<label class="col-sm-2 control-label">上传扫描件：</label>
 				<div class="col-sm-9">
 					<table class="table table-striped table-bordered table-hover text-center" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
@@ -95,7 +95,7 @@
 						</tbody>
 					</table>
 				</div>
-			</div>
+			</div>       --%>
 			<div class="form-group text-center">
 				<input type="hidden" id="op" name="op">
 				<input type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditReport1('save')" value="保存">

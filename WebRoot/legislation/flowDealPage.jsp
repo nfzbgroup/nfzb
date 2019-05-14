@@ -821,14 +821,14 @@
 	};
 	
 	function uploadChildDemonstrationReport(stDocId, stNodeId, nodeStatus) {
-		$.post("../legislationProcessTask/uploadReport.do?stDocId=" + stDocId + "&stNode=" + stNodeId, function(data) {
+		//$.post("../legislationProcessTask/uploadReport.do?stDocId=" + stDocId + "&stNode=" + stNodeId, function(data) {
 			//alert("附件数校验"+JSON.stringify(data));
-			if (data.success) {
+			//if (data.success) {
 				nextChildDemonstrationProcess(stDocId, stNodeId, "nextChildProcess", nodeStatus);
-			} else {
-				Duang.error("提示", "请补全必填材料！");
-			}
-		}, "json")
+			//} else {
+				//Duang.error("提示", "请补全必填材料！");
+			//}
+		//}, "json")
 	};
 	
 	function nextDemonstrationProcess(stDocId, stNodeId, method, buttonId) {

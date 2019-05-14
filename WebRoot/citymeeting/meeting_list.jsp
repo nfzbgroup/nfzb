@@ -435,7 +435,7 @@
     };
     function openCitymeetingPage(method,stTopicId) {
         $("#legislationProcessForm").modal({
-            remote: "${basePath}/legislationCitymeeting/city_meeting_info.do?stNodeId=${nodeId}&method="+method+"&stTaskStatus="+stTopicId
+            remote: "${basePath}/legislationCitymeeting/city_meeting_info.do?stNodeId=${nodeId}&method="+method+"&stTopicId="+stTopicId
         });
     };
     

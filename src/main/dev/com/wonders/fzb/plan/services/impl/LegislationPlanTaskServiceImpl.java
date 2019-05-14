@@ -1,29 +1,41 @@
 package com.wonders.fzb.plan.services.impl;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingItem;
+import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingItemService;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
-import com.wonders.fzb.plan.beans.*;
+import com.wonders.fzb.plan.beans.LegislationPlan;
+import com.wonders.fzb.plan.beans.LegislationPlanDeal;
+import com.wonders.fzb.plan.beans.LegislationPlanItem;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.beans.LegislationPlanTaskdetail;
 import com.wonders.fzb.plan.dao.LegislationPlanTaskDao;
-import com.wonders.fzb.plan.services.*;
+import com.wonders.fzb.plan.services.LegislationPlanDealService;
+import com.wonders.fzb.plan.services.LegislationPlanItemService;
+import com.wonders.fzb.plan.services.LegislationPlanService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskdetailService;
 import com.wonders.fzb.report.beans.LegislationReport;
 import com.wonders.fzb.report.beans.LegislationReportTask;
 import com.wonders.fzb.report.dao.LegislationReportDao;
 import com.wonders.fzb.report.dao.LegislationReportTaskDao;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -65,6 +77,9 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 	
 	@Autowired
 	private LegislationReportTaskDao legislationReportTaskDao;
+	
+	@Autowired
+	private LegislationCheckmeetingItemService legislationCheckmeetingItemService;
 	/**
 	 * 添加实体对象
 	 */
@@ -210,6 +225,16 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 				legislationSendNotice.setStNoticeStatus("已反馈");
 				legislationSendNoticeService.update(legislationSendNotice);
 			}
+			//添加立法计划送审核会议checkmeetingitem表的sourceid变更
+			if("NOD_0000000209".equals(stNodeId)) {
+				LegislationCheckmeetingItem legislationCheckmeetingItem = new LegislationCheckmeetingItem();
+				legislationCheckmeetingItem.setStItemName(legislationPlanTask.getStFlowId());
+				legislationCheckmeetingItem.setStSourceId(legislationPlanTask.getStPlanId());
+				legislationCheckmeetingItem.setStStatus("TODO");
+				legislationCheckmeetingItem.setStTypeName("立法计划");
+				legislationCheckmeetingItem.setDtCreateDate(new Date());
+				legislationCheckmeetingItemService.add(legislationCheckmeetingItem);
+			}
 			addObj(newLegislationPlanTask);
 		}
 		if("NOD_0000000211".endsWith(stNodeId)) {//编辑草案修改说明生成报签数据
@@ -280,6 +305,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		String stTaskId = request.getParameter("stTaskId");
 		String stNodeId = request.getParameter("stNodeId");
 		String stContent = request.getParameter("stContent");
+		String stPersonsId = request.getParameter("stPersonsId");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String teamId=currentPerson.getTeamInfos().get(0).getId();
 		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
@@ -301,11 +327,16 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanTaskdetail.setStNodeId(stNodeId);
 		legislationPlanTaskdetail.setStPersonId(userId);
 		legislationPlanTaskdetail.setStPersonName(userName);
+		legislationPlanTaskdetail.setStBak1(stPersonsId);
 		legislationPlanTaskdetail.setDtOpenDate(new Date());
 		String taskdetailId = legislationPlanTaskdetailService.addObj(legislationPlanTaskdetail);
 		legislationFilesService.updateParentIdById(request,taskdetailId);
 
 		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
+		if("NOD_0000000207".equals(stNodeId)) {
+			//计划外立项--送审领导
+        	legislationSendNoticeService.sendNotice(stPersonsId, "立法计划", legislationPlanTask.getStPlanId(), node.getStNodeName());
+        }
 		String[] statusArray=node.getStDoneName().split("#");
 		for (int i = 0; i < statusArray.length; i++) {
 			if (legislationPlanTask.getStTaskStatus().equals(statusArray[i])) {
@@ -431,5 +462,11 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 	@Override
 	public Page findWithEnableByPage(Map<String, Object> condMap, Map<String, String> sortMap, int pageNo, int pageSize) throws FzbDaoException {
 		return legislationPlanTaskDao.findWithEnableByPage(condMap, sortMap, pageNo, pageSize);
+	}
+
+	@Override
+	public List<LegislationPlanTask> findTaskByDocIdAndNodeId(String stPlanId, String stNodeId) {
+		return findByHQL("from LegislationPlanTask t where 1=1 and t.stPlanId='" + stPlanId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
+		
 	}
 }

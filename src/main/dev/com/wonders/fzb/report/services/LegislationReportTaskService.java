@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.report.beans.LegislationReport;
 import com.wonders.fzb.report.beans.LegislationReportTask;
 
@@ -84,6 +85,8 @@ public interface LegislationReportTaskService{
 
 	void saveReport(HttpServletRequest request, HttpSession session)
 			throws Exception;
+	
+	List<LegislationReportTask> findTaskByDocIdAndNodeId(String stReportId, String stNodeId);
 
 
 }

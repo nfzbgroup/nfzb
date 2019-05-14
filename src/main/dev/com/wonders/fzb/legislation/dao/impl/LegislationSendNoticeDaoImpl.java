@@ -132,8 +132,16 @@ public class LegislationSendNoticeDaoImpl extends BaseSupportDao implements Legi
 	@Override
 	public Page<SendNoticeVO> findSendNoticeList(String wheresql,String mainTableName,String columnNames, int pageNo, int pageSize) throws ParseException {
 		String baseSql = " FROM "+mainTableName+ " d ";
+		String mainId="d.st_doc_id";
+		if(mainTableName.equals("LEGISLATION_CHECKMEETING")) {
+			mainId="d.st_meeting_id";
+		}if(mainTableName.equals("LEGISLATION_REPORT")) {
+			mainId="d.st_report_id";
+		}if(mainTableName.equals("LEGISLATION_PLAN")) {
+			mainId="d.st_plan_id";
+		}
 		baseSql += " INNER JOIN LEGISLATION_SEND_NOTICE t ";
-		baseSql += " ON d.ST_DOC_ID = t.ST_DOC_ID ";
+		baseSql += " ON "+mainId+ "= t.ST_DOC_ID ";
 		baseSql += wheresql;
 //		String propView = "SELECT d.st_topic_id,d.st_topic_name,d.st_node_name,t.st_node_id,d.DT_CREATE_DATE,d.ST_USER_NAME,d.ST_TOPIC";
 		String propView = "SELECT "+columnNames;

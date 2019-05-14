@@ -10,8 +10,10 @@ import com.wonders.fzb.legislation.beans.*;
 import com.wonders.fzb.legislation.services.*;
 import com.wonders.fzb.report.beans.LegislationReport;
 import com.wonders.fzb.report.beans.LegislationReportTask;
+import com.wonders.fzb.report.beans.LegislationReportTaskdetail;
 import com.wonders.fzb.report.services.LegislationReportService;
 import com.wonders.fzb.report.services.LegislationReportTaskService;
+import com.wonders.fzb.report.services.LegislationReportTaskdetailService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
@@ -67,6 +69,10 @@ public class LegislationReportAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationReportTaskService")
 	private LegislationReportTaskService legislationReportTaskService;
+	
+	@Autowired
+	@Qualifier("legislationReportTaskdetailService")
+	private LegislationReportTaskdetailService legislationReportTaskdetailService;
 	
 
 	String stDocId = "";
@@ -251,7 +257,13 @@ public class LegislationReportAction extends BaseAction {
 			reportTask.setStRoleId(nodeReport.getStSubmitRole());
 			reportTask.setDtOpenDate(nowDate);
 			reportTask.setStTaskStatus("TODO");
-			legislationReportTaskService.addObj(reportTask);
+			String reportTaskId = legislationReportTaskService.addObj(reportTask);
+			LegislationReportTaskdetail reportTaskdetail=new LegislationReportTaskdetail();
+			reportTaskdetail.setStTaskId(reportTaskId);
+			reportTaskdetail.setStTaskStatus("TODO");
+			reportTaskdetail.setDtOpenDate(new Date());
+			reportTaskdetail.setStNodeId("NOD_0000000190");
+			legislationReportTaskdetailService.add(reportTaskdetail);
 		}
 
 		

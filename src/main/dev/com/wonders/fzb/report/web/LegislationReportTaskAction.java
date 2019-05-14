@@ -144,8 +144,8 @@ public class LegislationReportTaskAction extends BaseAction {
 		//baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
 
 		String orderSql = " order by c.dt_create_date DESC";
-		orderSql = "";
-		System.out.println("baseSql + orderSql------------" + baseSql + orderSql);
+		//orderSql = "";
+		//System.out.println("baseSql + orderSql------------" + baseSql + orderSql);
 		infoPage = legislationReportTaskService.findReportTasksByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
  
  

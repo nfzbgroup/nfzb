@@ -38,17 +38,57 @@
 		
 						</div>
 					</div>
+			</div>
+			<div class="form-group">
 			    <label class="col-sm-3 control-label">地点：</label>
 				<div class="col-sm-9">
 					<input class="form-control" readonly value="${legislationProcessTask.stBakOne}"/>
 				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-sm-3 control-label">参与人员：</label>
 				<div class="col-sm-9">
 					<input class="form-control" readonly value="${legislationProcessTask.stBakTwo}"/>
 				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-sm-3 control-label text-left">领导审核意见:</label>
 				<div class="col-sm-9">
-					<textarea id="stComment2" name="stComment2" class="form-control">${legislationProcessTaskdetail.stBak1}</textarea>
+				   <table class="table table-border table-bordered">
+						<thead>
+							<tr>
+								<th style="text-align: center">领导姓名</th>
+								<th style="text-align: center">是否反馈</th>
+								<th style="text-align: center">反馈内容</th>
+								<th style="text-align: center">反馈时间</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:if
+								test="${legislationSendNoticeList !=null&&fn:length(legislationSendNoticeList)>0}">
+								<c:forEach var="legislationSendNotice"
+									items="${legislationSendNoticeList}">
+									<tr>
+										<td style="text-align: center">
+											${legislationSendNotice.stUserName}</td>
+										<td style="text-align: center">
+											${legislationSendNotice.stNoticeStatus}</td>
+										<td style="text-align: center"><c:choose>
+												<c:when
+													test="${legislationSendNotice.stNoticeStatus!='已反馈'}">---</c:when>
+												<c:otherwise>${legislationSendNotice.stFeedbackContent}</c:otherwise>
+											</c:choose></td>
+										<td style="text-align: center"><c:if
+												test="${legislationSendNotice.stNoticeStatus!='已反馈'}">
+						---</c:if> <c:if test="${legislationSendNotice.stNoticeStatus=='已反馈'}">
+												<fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
+													value="${legislationSendNotice.dtFeekbackDate}" />
+											</c:if></td>
+									</tr>
+								</c:forEach>
+							</c:if>
+						</tbody>
+					</table>
 				</div>
 			</div>
 			<div class="form-group">

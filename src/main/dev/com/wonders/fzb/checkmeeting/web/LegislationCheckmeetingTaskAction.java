@@ -178,7 +178,7 @@ public class LegislationCheckmeetingTaskAction extends BaseAction {
 		baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
 
 		String orderSql = " order by c.dt_create_date DESC";
-		orderSql = "";
+		//orderSql = "";
 		//System.out.println("baseSql + orderSql------------" + baseSql + orderSql);
 		infoPage = legislationCheckmeetingTaskService.findCheckMeetingByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
  

@@ -192,7 +192,18 @@ public class LegislationSendNoticeAction extends BaseAction {
 				String baseSql = "WHERE 1=1 ";
 
 				// if (null != stNodeId && !"".equals(stNodeId)) {
-				baseSql += "and t.ST_MODEL_NAME = '立法过程' and t.ST_NODE_NAME='" + stNodeName + "'  ";
+				String tableName = "LEGISLATION_PROCESS_DOC";
+				String columnNames = "t.st_notice_id,d.st_doc_id, d.st_doc_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";
+				
+				if(stNodeName.equals("计划外立项")) {
+					baseSql += "and t.ST_MODEL_NAME = '立法计划' and t.ST_NODE_NAME='" + stNodeName + "'  ";						
+					tableName="LEGISLATION_PLAN";
+				    columnNames = "t.st_notice_id,d.st_plan_id, d.st_plan_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";
+						
+				}else {
+					baseSql += "and t.ST_MODEL_NAME = '立法过程' and t.ST_NODE_NAME='" + stNodeName + "'  ";
+					
+				}
 				// }
 				if (null != startTime && !"".equals(startTime)) {
 					baseSql += "and t.dt_open_date >= TO_DATE('" + startTime + "','yyyy-mm-dd')";
@@ -214,12 +225,21 @@ public class LegislationSendNoticeAction extends BaseAction {
 				// baseSql += "and d.st_node_Id = 'NOD_0000000101' ";
 				// baseSql += "and t.st_enable is null ";
 				// if ("NOD_0000000101".equals(stNodeId)) {
-				baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
+				//baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
 				// }
-
+  
 				String orderSql = " order by t.dt_open_date DESC";
-				String tableName = "LEGISLATION_PROCESS_DOC";
-				String columnNames = "t.st_notice_id,d.st_doc_id, d.st_doc_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";
+				
+				if(stNodeName.equals("审核会议审核")) {
+					tableName="LEGISLATION_CHECKMEETING";
+					 columnNames = "t.st_notice_id,d.st_meeting_id, d.st_meeting_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";
+					
+				}if(stNodeName.equals("报签审核")) {
+					tableName="LEGISLATION_REPORT";
+					 columnNames = "t.st_notice_id,d.st_report_id, d.st_report_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";
+					
+				}
+				
 				infoPage = legislationSendNoticeService.findSendNoticeList(baseSql + orderSql, tableName, columnNames, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
 
 				if (StringUtil.isEmpty(taskStatus)) {

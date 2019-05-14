@@ -298,6 +298,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 		String stNoticeId = request.getParameter("stNoticeId");
 		String newDocName = request.getParameter("newDocName");
 		String stPersonsId = request.getParameter("stPersonsId");
+		String stPersons = request.getParameter("stPersons");
 		String nodeStatus = request.getParameter("nodeStatus");// 可能有状态过来
 
 		String userId = currentPerson.getUserId();
@@ -380,6 +381,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 						newDetail.setStBak1(stComment2);
 						newDetail.setDtBak1(new Date());
 						newDetail.setStPersonId(stPersonsId);
+						newDetail.setStPersonName(stPersons);
 						legislationProcessTaskdetailService.update(newDetail);
 					} else {
 						LegislationProcessTaskdetail newDetail = new LegislationProcessTaskdetail();
@@ -394,7 +396,6 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 				} else {
 						legislationProcessTask.setStBakOne(stBakOne);
 						legislationProcessTask.setStBakTwo(stBakTwo);
-						
 					if (StringUtil.isNotEmpty(dtBakDate)) {
 						legislationProcessTask.setDtBakDate(DateUtils.parseDate(dtBakDate, "yyyy-MM-dd"));
 					} else {
@@ -440,7 +441,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 		}
 		
 		// 处理附件内容
-		legislationFilesService.updateParentIdById(request, stDocId);
+		//legislationFilesService.updateParentIdById(request, stDocId);
 		return stTaskId;
 	}
 

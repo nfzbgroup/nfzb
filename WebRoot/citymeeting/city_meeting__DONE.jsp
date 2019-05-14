@@ -40,6 +40,7 @@
 <div class="modal-body">
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">常务会议查看 </h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
+		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<input type="hidden" name="stTopicId" value="${legislationCitymeeting.stTopicId}">
 		<div class="form-body">
 			<div class="form-group">
@@ -48,18 +49,12 @@
 					<input type="text"  readonly="readonly" class="form-control" id="stTopicName" name="stTopicName" value="${legislationCitymeeting.stTopicName}">
 				</div>
 			</div>
-			
-			
 		<div class="form-group">
 				<label class="col-sm-2 control-label">议题说明：</label>
 				<div class="col-sm-9">
 					<input type="text"  readonly="readonly" class="form-control" id="stBak" name="stBak" value="${legislationCitymeetingTask.stBak}">
 				</div>
 			</div>
-			
-			
-			
-			
 			
 			<div class="form-group">
 				<label class="col-sm-2 control-label">材料说明：</label>
@@ -103,6 +98,13 @@
 				&nbsp;&nbsp;
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
+			
+ 	<div class="form-group">
+		<label class="control-label">上传材料接收 </label>
+	</div>	
+	<%@include file="/legislation/file/attachUpload.jsp" %>
+
+			
 			<div class="form-group">
 				<label class="col-sm-2 control-label">常务会议议后的立法：</label>
 				<div class="col-sm-9">

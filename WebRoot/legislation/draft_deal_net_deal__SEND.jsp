@@ -22,21 +22,59 @@
 		<input type="hidden" name="stDocId" value="${legislationProcessDoc.stDocId}">
 		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body">
-			<br>
 			<div class="form-group text-center">
 				<label class="col-sm-3 control-label text-left">法规规章草案：</label>
 				<label class="col-sm-9 control-label" style="text-align: left;">
 					<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 				</label>
 			</div>
-			<br>
-			<div class="form-group">
+			<!--<div class="form-group">
 				<label class="col-sm-3 control-label text-left">领导意见内容说明:</label>
 				<div class="col-sm-9">
 					<textarea id="stComment2" name="stComment2" class="form-control">${legislationProcessTaskdetail.stBak1}</textarea>
 				</div>
-			</div>
+			</div>  -->
 		</div>
+		<div class="form-group">
+				<label class="col-sm-3 control-label text-left">领导审核意见:</label>
+				<div class="col-sm-9">
+				   <table class="table table-border table-bordered">
+						<thead>
+							<tr>
+								<th style="text-align: center">领导姓名</th>
+								<th style="text-align: center">是否反馈</th>
+								<th style="text-align: center">反馈内容</th>
+								<th style="text-align: center">反馈时间</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:if
+								test="${legislationSendNoticeList !=null&&fn:length(legislationSendNoticeList)>0}">
+								<c:forEach var="legislationSendNotice"
+									items="${legislationSendNoticeList}">
+									<tr>
+										<td style="text-align: center">
+											${legislationSendNotice.stUserName}</td>
+										<td style="text-align: center">
+											${legislationSendNotice.stNoticeStatus}</td>
+										<td style="text-align: center"><c:choose>
+												<c:when
+													test="${legislationSendNotice.stNoticeStatus!='已反馈'}">---</c:when>
+												<c:otherwise>${legislationSendNotice.stFeedbackContent}</c:otherwise>
+											</c:choose></td>
+										<td style="text-align: center"><c:if
+												test="${legislationSendNotice.stNoticeStatus!='已反馈'}">
+						---</c:if> <c:if test="${legislationSendNotice.stNoticeStatus=='已反馈'}">
+												<fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
+													value="${legislationSendNotice.dtFeekbackDate}" />
+											</c:if></td>
+									</tr>
+								</c:forEach>
+							</c:if>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		<div class="form-group">
 				<label class="control-label">公开征求意见送审材料 </label>
 			</div>	
@@ -83,9 +121,9 @@
 	};
 	function saveLegislationDemonstration() {
 		var param = $('#onlineDemonstrationForm').formToJson();
-		if (param.stComment2 == null || param.stComment2 == "") {
-			Duang.error("提示", "请输入经办部门意见");
-		} else {
+//		if (param.stComment2 == null || param.stComment2 == "") {
+//			Duang.error("提示", "请输入经办部门意见");
+//		} else {
 			$.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration", param, function(data) {
 				if (data.success) {
 					$('#processIndexForm').modal('hide');
@@ -96,13 +134,13 @@
 					Duang.error("提示", "操作失败");
 				}
 			});
-		}
+//		}
 	};
 	function confirmOnlineReport(stDocId, nodeId, nodeStatus) {
 		var param = $('#onlineDemonstrationForm').formToJson();
-		if (param.stComment2 == null || param.stComment2 == "") {
-			Duang.error("提示", "请输入经办部门意见");
-		} else {
+//		if (param.stComment2 == null || param.stComment2 == "") {
+//			Duang.error("提示", "请输入经办部门意见");
+//		} else {
 			$.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration", param, function(data) {
 				//alert("保存返回：" + JSON.stringify(data));
 				if (data.success) {
@@ -111,6 +149,6 @@
 					Duang.error("提示", "操作失败");
 				}
 			});
-		}
+//		}
 	}
 </script>
