@@ -21,7 +21,7 @@
             <tr class="text-center">
                 <th class="text-center">项目名称</th>
                 <th class="text-center">项目状态</th>
-                <c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
+                <c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
                     <th class="text-center">审核意见</th>
                 </c:if>
                 <th class="text-center">发起人</th>
@@ -42,7 +42,7 @@
 						 	  <p><span style="color:red;"><c:out value="${assessItem.stStatus}"/></span><p>
 						 </c:if>
                     </td>
-                    <c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
+                    <c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
                         <td>${assessItem.stActive}</td>
                     </c:if>
                     <td>${assessItem.stUserName}</td>

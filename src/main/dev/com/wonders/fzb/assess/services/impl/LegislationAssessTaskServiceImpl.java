@@ -212,7 +212,7 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 		legislationAssessDeal.setStUserName(userName);
 		legislationAssessDeal.setDtDealDate(new Date());
 		if("NOD_0000000251".equals(stNodeId)||"NOD_0000000253".equals(stNodeId)||"NOD_0000000255".equals(stNodeId)
-				||"NOD_0000000262".equals(stNodeId)){
+				||"NOD_0000000262".equals(stNodeId)||"NOD_0000000263".equals(stNodeId)){
 			LegislationAssess legislationAssess=legislationAssessService.findById(legislationAssessTask.getStParentId());
 			legislationAssessDeal.setStAssessId(legislationAssess.getStAssessId());
 			legislationAssessDeal.setStBakOne(legislationAssess.getStAssessName());

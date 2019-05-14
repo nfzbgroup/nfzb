@@ -35,7 +35,7 @@
 	</thead>
 	<tbody>
 		<c:choose>
-			<c:when test="${nodeId=='NOD_0000000251'||nodeId=='NOD_0000000253'||nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
+			<c:when test="${nodeId=='NOD_0000000251'||nodeId=='NOD_0000000253'||nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
 				<c:choose>
 					<c:when test="${retPage.totalSize > 0}">
 						<c:forEach items="${retPage.result}" var="plan">
@@ -50,23 +50,33 @@
 									<c:when test="${buttonStatus=='TODO'}">
 										<td>
 											<c:if test="${nodeId=='NOD_0000000251'}">
-												<a href="javaScript:void(0)" data-title="编辑" onclick="openAssessPage('openAssessEditPage','${plan.stTaskId}')" class="layer_full_link">编辑</a>
+												<a href="javaScript:void(0)" data-title="编辑评估规划" onclick="openAssessPage('openAssessEditPage','${plan.stTaskId}')" class="layer_full_link">编辑评估规划</a>
 												<a href="javaScript:void(0)" data-title="启动" onclick="nextAssessProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">启动</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000253'}">
-												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="查看评估规划" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估规划</a>
 												<a href="javaScript:void(0)" data-title="项目详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
+												<br/>
 												<a href="javaScript:void(0)" data-title="评估汇总分送" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">评估汇总分送</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000255'}">
-												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="查看评估规划" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估规划</a>
 												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
+												<br/>
 												<a href="javaScript:void(0)" data-title="纳入后评估计划" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">纳入后评估计划</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000262'}">
-												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="查看评估规划" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估规划</a>
 												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
+												<br/>
 												<a href="javaScript:void(0)" data-title="完成情况报告" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">完成情况报告</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000263'}">
+												<a href="javaScript:void(0)" data-title="查看评估规划" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估规划</a>
+												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
+												<br/>
+												<a href="javaScript:void(0)" data-title="编辑市政府反馈" onclick="openAssessPage('openAssessFeedbackPage','${plan.stTaskId}')" class="layer_full_link">编辑市政府反馈</a>
+												<a href="javaScript:void(0)" data-title="下一步" onclick="checkAssessFeedback('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">下一步</a>
 											</c:if>
 										</td>
 									</c:when>
@@ -75,12 +85,16 @@
 											<fmt:formatDate type="date" value="${plan.dtDealDate}" />
 										</td>
 										<td>
-											<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+											<a href="javaScript:void(0)" data-title="查看评估规划" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估规划</a>
 											<c:if test="${nodeId=='NOD_0000000253'}">
 												<a href="javaScript:void(0)" data-title="项目详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
 											</c:if>
-											<c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
+											<c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
 												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000263'}">
+												<br/>
+												<a href="javaScript:void(0)" data-title="查看市政府反馈" onclick="openAssessPage('openAssessFeedbackPage','${plan.stTaskId}')" class="layer_full_link">查看市政府反馈</a>
 											</c:if>
 										</td>
 									</c:otherwise>
@@ -234,6 +248,18 @@
 
     function checkAssessItemPlan(stTaskId,stNodeId) {
         $.post("../legislationAssessItem/checkAssessItemPlan.do?stTaskId="+stTaskId+"&stNodeId="+stNodeId,
+            function (data) {
+                if(data.success) {
+                    nextAssessProcess(stTaskId,stNodeId);
+                }else{
+                    Duang.error("提示", data.message);
+                }
+            },
+            "json")
+    }
+
+    function checkAssessFeedback(stTaskId,stNodeId) {
+        $.post("../legislationAssess/checkAssessFeedback.do?stTaskId="+stTaskId+"&stNodeId="+stNodeId,
             function (data) {
                 if(data.success) {
                     nextAssessProcess(stTaskId,stNodeId);

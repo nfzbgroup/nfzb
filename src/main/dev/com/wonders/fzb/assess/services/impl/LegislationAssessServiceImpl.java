@@ -184,13 +184,19 @@ public class LegislationAssessServiceImpl implements LegislationAssessService {
 			LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
 			stAssessId=legislationAssessTask.getStParentId();
 			LegislationAssess legislationAssess=findById(stAssessId);
-			//修改评估规划任务
-			legislationAssessTask.setStFlowId(stAssessName);
+			if("NOD_0000000263".equals(stNodeId)){
+				//市政府反馈
+				String stComment1=request.getParameter("stComment1");
+				legislationAssessTask.setStComment1(stComment1);
+			}else{
+				//修改评估规划
+				legislationAssess.setStAssessName(stAssessName);
+				legislationAssess.setStRemark(stRemark);
+				update(legislationAssess);
+				//修改评估规划任务
+				legislationAssessTask.setStFlowId(stAssessName);
+			}
 			legislationAssessTaskService.update(legislationAssessTask);
-			//修改评估规划
-			legislationAssess.setStAssessName(stAssessName);
-			legislationAssess.setStRemark(stRemark);
-			update(legislationAssess);
 		}
 		//处理附件内容
 		legislationFilesService.updateParentIdById(request,stAssessId);

@@ -1,5 +1,6 @@
 package com.wonders.fzb.assess.web;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.assess.beans.LegislationAssess;
 import com.wonders.fzb.assess.beans.LegislationAssessTask;
 import com.wonders.fzb.assess.services.LegislationAssessItemService;
@@ -11,6 +12,7 @@ import com.wonders.fzb.framework.beans.MOR;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +78,8 @@ public class LegislationAssessAction extends BaseAction {
 			@Result(name = "openAssessEditPage", location = "/assess/legislationAssess_form.jsp"),
 			@Result(name = "openAssessInfoPage", location = "/assess/legislationAssess_form.jsp"),
 			@Result(name = "openAssessProjectInfoPage", location = "/assess/legislationAssess_projectInfo.jsp"),
-			@Result(name = "openAssessDistributePage", location = "/assess/legislationAssess_distribute.jsp")
+			@Result(name = "openAssessDistributePage", location = "/assess/legislationAssess_distribute.jsp"),
+			@Result(name = "openAssessFeedbackPage", location = "/assess/legislationAssess_feedback.jsp")
 	})
 	public String legislationAssess() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -183,5 +187,46 @@ public class LegislationAssessAction extends BaseAction {
 	private String saveLegislationAssessDistribute(){
 		legislationAssessTaskService.nextAssessProcess(request,session);
 		return null;
+	}
+
+	/**
+	 * 跳转编辑/查看市政府反馈页面
+	 * @return
+	 */
+	private String openAssessFeedbackPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
+		LegislationAssess legislationAssess=legislationAssessService.findById(legislationAssessTask.getStParentId());
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId", legislationAssess.getStAssessId());
+		condMap.put("stNodeId", "NOD_0000000263");
+		sortMap.put("dtPubDate", "ASC");
+		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("legislationAssess",legislationAssess);
+		request.setAttribute("legislationAssessTask",legislationAssessTask);
+		return pageController();
+	}
+
+	/**
+	 * 检查是否已编辑市政府反馈
+	 * @throws IOException
+	 */
+	@Action(value = "checkAssessFeedback")
+	public void checkAssessFeedback() throws IOException {
+		JSONObject jsonObject = new JSONObject();
+		String stTaskId = request.getParameter("stTaskId");
+		LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
+		Boolean success=true;
+		String message="";
+		if(StringUtils.isEmpty(legislationAssessTask.getStComment1())){
+			success=false;
+			message="请先编辑市政府反馈信息!";
+		}
+		jsonObject.put("message",message);
+		jsonObject.put("success",success);
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(jsonObject);
 	}
 }
