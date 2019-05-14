@@ -140,6 +140,12 @@
 					</div>
 				</div>
 			</div>
+			<div class="modal inmodal fade" id="legislationProcessChildForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -199,13 +205,18 @@
         $('body').on('hidden.bs.modal', '.modal', function () {
             $(this).removeData('bs.modal');
         });
-        $('#processIndexForm').on('hidden.bs.modal', function () {
+        $('#legislationProcessForm').on('hidden.bs.modal', function () {
             $(document.body).addClass("modal-open");
         });
         $('#legislationProcessForm').on('show.bs.modal', function () {
             $('#legislationProcessForm .modal-body').css('overflow', 'auto');
             $('#legislationProcessForm .modal-body').css('height', $(window).height());
 			$('#legislationProcessForm .modal-dialog').css('width', $(window).width()*0.96);
+        });
+        $('#legislationProcessChildForm').on('show.bs.modal', function () {
+            $('#legislationProcessChildForm .modal-body').css('overflow', 'auto');
+            $('#legislationProcessChildForm .modal-body').css('height', $(window).height());
+            $('#legislationProcessChildForm .modal-dialog').css('width', $(window).width()*0.96);
         });
 	});
     function openAssessPage(method,stTaskId) {
@@ -215,6 +226,11 @@
     };
     function openAssessItemPage(method,stTaskId) {
         $("#legislationProcessForm").modal({
+            remote: "${basePath}/legislationAssessItem/assess_item_plan_info.do?stNodeId=${nodeId}&method="+method+"&stTaskId="+stTaskId
+        });
+    };
+    function openAssessItemChildPage(method,stTaskId) {
+        $("#legislationProcessChildForm").modal({
             remote: "${basePath}/legislationAssessItem/assess_item_plan_info.do?stNodeId=${nodeId}&method="+method+"&stTaskId="+stTaskId
         });
     };

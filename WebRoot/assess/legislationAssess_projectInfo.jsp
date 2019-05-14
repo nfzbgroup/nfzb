@@ -10,7 +10,7 @@
             <span >评估规划 > </span>
         </li>
         <li>
-            <span >项目详情</span>
+            <span ><c:choose><c:when test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">意见</c:when><c:otherwise>项目</c:otherwise></c:choose>详情</span>
         </li>
     </ul>
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -21,7 +21,7 @@
             <tr class="text-center">
                 <th class="text-center">项目名称</th>
                 <th class="text-center">项目状态</th>
-                <c:if test="${nodeId=='NOD_0000000255'}">
+                <c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
                     <th class="text-center">审核意见</th>
                 </c:if>
                 <th class="text-center">发起人</th>
@@ -42,7 +42,7 @@
 						 	  <p> <span style="color:red;"><c:out value="${assessItem.stStatus}" /></span>	 <p>
 						 </c:if>
                     </td>
-                    <c:if test="${nodeId=='NOD_0000000255'}">
+                    <c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
                         <td>${assessItem.stActive}</td>
                     </c:if>
                     <td>${assessItem.stUserName}</td>
@@ -55,11 +55,4 @@
     <div class="form-group text-center">
         <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
     </div>
-	<div class="modal inmodal fade" id="legislationProcessChildForm"
-		data-backdrop keyboard tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content"></div>
-		</div>
-	</div>
 </div>

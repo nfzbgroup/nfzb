@@ -63,6 +63,11 @@
 												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
 												<a href="javaScript:void(0)" data-title="纳入后评估计划" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">纳入后评估计划</a>
 											</c:if>
+											<c:if test="${nodeId=='NOD_0000000262'}">
+												<a href="javaScript:void(0)" data-title="查看" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
+												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
+												<a href="javaScript:void(0)" data-title="完成情况报告" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">完成情况报告</a>
+											</c:if>
 										</td>
 									</c:when>
 									<c:otherwise>
@@ -74,7 +79,7 @@
 											<c:if test="${nodeId=='NOD_0000000253'}">
 												<a href="javaScript:void(0)" data-title="项目详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
 											</c:if>
-											<c:if test="${nodeId=='NOD_0000000255'}">
+											<c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">
 												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
 											</c:if>
 										</td>
@@ -138,7 +143,7 @@
 												<a href="javaScript:void(0)" data-title="查看评估方案建议" onclick="openAssessItemPage('openAssessItemSuggestPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案建议</a>
 												<a href="javaScript:void(0)" data-title="查看评估进度" onclick="openAssessItemPage('openAssessItemScheduleListPage','${plan.stTaskId}')" class="layer_full_link">查看评估进度</a>
 												<br/>
-												<a href="javaScript:void(0)" data-title="提交评估报告" onclick="checkAssessItemPlan('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">下一步</a>
+												<a href="javaScript:void(0)" data-title="提交评估报告" onclick="nextAssessProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">提交评估报告</a>
 											</c:if>
 										</td>
 									</c:when>

@@ -74,7 +74,8 @@ public class LegislationAssessItemAction extends BaseAction {
 			@Result(name = "openAssessItemAuditPage", location = "/assess/legislationAssessItem_audit.jsp"),
 			@Result(name = "openAssessItemPlanPage", location = "/assess/legislationAssessItem_plan.jsp"),
             @Result(name = "openAssessItemSuggestPage", location = "/assess/legislationAssessItem_suggest.jsp"),
-            @Result(name = "openAssessItemSchedulePage", location = "/assess/legislationAssessItem_schedule.jsp")
+            @Result(name = "openAssessItemSchedulePage", location = "/assess/legislationAssessItem_schedule.jsp"),
+			@Result(name = "openAssessItemScheduleListPage", location = "/assess/legislationAssessItem_scheduleList.jsp")
 
 	})
 	public String legislationAssess() throws Exception {
@@ -174,13 +175,15 @@ public class LegislationAssessItemAction extends BaseAction {
 				condMap.put("stParentId",legislationAssessItem.getStItemId());
 				if("NOD_0000000253".equals(stNodeId)){
 					condMap.put("stNodeId","NOD_0000000252");
-				}else{
+				}else if("NOD_0000000255".equals(stNodeId)){
 					condMap.put("stNodeId","NOD_0000000254");
+				}else {
+					condMap.put("stNodeId","NOD_0000000261");
 				}
 				condMap.put("stEnableIsNull","null");
-				condMap.put("stTaskStatus","TODO");
+				condMap.put("stTaskStatus","DONE");
 				List<LegislationAssessTask> legislationAssessTaskList=legislationAssessTaskService.findByList(condMap,sortMap);
-				if(legislationAssessTaskList.size()>0){
+				if(legislationAssessTaskList.size()==0){
 					success=false;
 					message="该评估规划有项目未处理完";
 					break;
@@ -317,4 +320,22 @@ public class LegislationAssessItemAction extends BaseAction {
         request.setAttribute("legislationAssessTask",legislationAssessTask);
 	    return pageController();
     }
+
+	/**
+	 * 查看一个评估方案中4个季度评估进度页面
+	 * @return
+	 */
+	private String openAssessItemScheduleListPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId", legislationAssessTask.getStParentId());
+		condMap.put("stNodeId", "NOD_0000000258");
+		condMap.put("stEnableIsNull", "null");
+		sortMap.put("stActive", "ASC");
+		List<LegislationAssessTask> legislationAssessTaskList=legislationAssessTaskService.findByList(condMap,sortMap);
+		request.setAttribute("legislationAssessTaskList",legislationAssessTaskList);
+    	return pageController();
+	}
 }

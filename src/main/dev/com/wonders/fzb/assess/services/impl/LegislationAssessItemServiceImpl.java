@@ -228,7 +228,7 @@ public class LegislationAssessItemServiceImpl implements LegislationAssessItemSe
 			}else{
 				stStatus=stStatus+"(已处理)";
 			}
-			if("NOD_0000000255".equals(stNodeId)){
+			if("NOD_0000000255".equals(stNodeId)||"NOD_0000000262".equals(stNodeId)){
 				LegislationAssessTask legislationAssessTaskActive=legislationAssessTaskService.findByHQL("from LegislationAssessTask t where 1=1 and t.stParentId='"+legislationAssessItem.getStItemId()+"' and t.stNodeId='NOD_0000000254' and t.stEnable is null").get(0);
 				map.put("stActive",legislationAssessTaskActive.getStActive());
 			}

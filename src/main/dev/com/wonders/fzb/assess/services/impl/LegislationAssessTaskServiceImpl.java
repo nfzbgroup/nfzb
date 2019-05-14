@@ -176,23 +176,30 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 			newLegislationAssessTask.setStUserId(legislationAssessTask.getStUserId());
 			newLegislationAssessTask.setStUserName(legislationAssessTask.getStUserName());
 			newLegislationAssessTask.setStParentId(legislationAssessTask.getStParentId());
-			//生成第一季度反馈评估进度任务
+			newLegislationAssessTask.setStNodeId(nextNode.getStNodeId());
+			newLegislationAssessTask.setStNodeName(nextNode.getStNodeName());
+			if("NOD_0000000256".equals(stNodeId)){
+				//评估方案建议的处理单位是立法处初审时的处室
+				LegislationAssessTask legislationAssessTaskExamine=findByHQL("from LegislationAssessTask t where 1=1 and t.stParentId='"+legislationAssessTask.getStParentId()+"' and t.stNodeId='NOD_0000000254' and t.stEnable is null").get(0);
+				newLegislationAssessTask.setStTeamId(legislationAssessTaskExamine.getStTeamId());
+			}
+			//生成第一季度反馈评估进度任务,处理单位是发起单位
 			if("NOD_0000000257".equals(stNodeId)){
 				newLegislationAssessTask.setStActive("1");
 				LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
 				newLegislationAssessTask.setStTeamId(legislationAssessItem.getStUnitId());
 			}
-			//生成第2,3,4季度反馈评估进度任务
-			if("NOD_0000000258".equals(stNodeId)&&StringUtils.isNotEmpty(legislationAssessTask.getStActive())
-					&&Integer.parseInt(legislationAssessTask.getStActive())<4){
-				newLegislationAssessTask.setStActive(Integer.parseInt(legislationAssessTask.getStActive())+1+"");
+			//处理单位是发起单位
+			if("NOD_0000000258".equals(stNodeId)){
+				//生成第2,3,4季度反馈评估进度任务
+				if(StringUtils.isNotEmpty(legislationAssessTask.getStActive())
+						&&Integer.parseInt(legislationAssessTask.getStActive())<4){
+					newLegislationAssessTask.setStActive(Integer.parseInt(legislationAssessTask.getStActive())+1+"");
+					newLegislationAssessTask.setStNodeId(node.getStNodeId());
+					newLegislationAssessTask.setStNodeName(node.getStNodeName());
+				}
 				LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
 				newLegislationAssessTask.setStTeamId(legislationAssessItem.getStUnitId());
-				newLegislationAssessTask.setStNodeId(node.getStNodeId());
-				newLegislationAssessTask.setStNodeName(node.getStNodeName());
-			}else{
-				newLegislationAssessTask.setStNodeId(nextNode.getStNodeId());
-				newLegislationAssessTask.setStNodeName(nextNode.getStNodeName());
 			}
 			addObj(newLegislationAssessTask);
 		}
