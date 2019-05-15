@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,11 @@ import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.citymeeting.beans.LegislationCitymeeting;
 import com.wonders.fzb.citymeeting.beans.LegislationCitymeetingTask;
+import com.wonders.fzb.citymeeting.beans.LegislationCitymeetingTaskd;
 import com.wonders.fzb.citymeeting.dao.LegislationCitymeetingTaskDao;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingService;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingTaskService;
+import com.wonders.fzb.citymeeting.services.LegislationCitymeetingTaskdService;
 import com.wonders.fzb.framework.beans.TeamInfo;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
@@ -79,6 +82,10 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
     @Autowired
     @Qualifier("legislationFilesService")
     private LegislationFilesService legislationFilesService;
+    
+    @Autowired
+    @Qualifier("legislationCitymeetingTaskdService")
+    private LegislationCitymeetingTaskdService legislationCitymeetingTaskdService;
 
 	
 	/**
@@ -206,13 +213,17 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 		String stBak1 = request.getParameter("stBak1");
 		String stBak2 = request.getParameter("stBak2");
 		String stBak3 = request.getParameter("stBak3");
+		String stBak4 = request.getParameter("stBak4");
+		String stBak5 = request.getParameter("stBak5");
+		String stBak6 = request.getParameter("stBak6");
+		String stContent = request.getParameter("stContent");
+		String dtBak1 = request.getParameter("dtBak1");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String userId = currentPerson.getUserId();
 		String userName = currentPerson.getName();
 		String unitId = currentPerson.getTeamInfos().get(0).getId();
 		String unitName = currentPerson.getTeamInfos().get(0).getUnitName();
 		LegislationCitymeeting auditMeeting = new LegislationCitymeeting();
-		
 
 		
 		if ("TODO".equals(stTaskStatus)) {
@@ -237,25 +248,40 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 				auditMeeting.setStUnitName(unitName);
 				stTopicId = legislationCitymeetingService.addObj(auditMeeting);
 
-				LegislationCitymeetingTask legislationProcessTask = new LegislationCitymeetingTask();
-				legislationProcessTask.setStTopicId(stTopicId);
-				legislationProcessTask.setStNodeId("NOD_0000000180");
-				legislationProcessTask.setStNodeName("常务会议");
-				legislationProcessTask.setStTaskStatus("TODO");
-				legislationProcessTask.setStBak(stBak);
+				LegislationCitymeetingTask legislationCitymeetingTask = new LegislationCitymeetingTask();
+				legislationCitymeetingTask.setStTopicId(stTopicId);
+				legislationCitymeetingTask.setStNodeId("NOD_0000000180");
+				legislationCitymeetingTask.setStNodeName("常务会议");
+				legislationCitymeetingTask.setStTaskStatus("TODO");
+				legislationCitymeetingTask.setStBak(stBak);
 				if ("submit".equals(op)) {
-					legislationProcessTask.setStTaskStatus("RESULT");
+					legislationCitymeetingTask.setStTaskStatus("RESULT");
 				}
-				legislationProcessTask.setStFlowId("");
-				legislationProcessTask.setDtOpenDate(new Date());
-				legislationProcessTask.setStUserId(userId);
-				legislationProcessTask.setStUserName(userName);
+				legislationCitymeetingTask.setStFlowId("");
+				legislationCitymeetingTask.setDtOpenDate(new Date());
+				legislationCitymeetingTask.setStUserId(userId);
+				legislationCitymeetingTask.setStUserName(userName);
 				// 一个任务的角色由节点配置定，而不是当前人，万一当前人多个角色呢？LJ
-				legislationProcessTask.setStRoleId(session.getAttribute("userRoleId").toString());
-				legislationProcessTask.setStRoleName(session.getAttribute("userRole").toString());
-				legislationProcessTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
-				legislationProcessTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
-				add(legislationProcessTask);
+				legislationCitymeetingTask.setStRoleId(session.getAttribute("userRoleId").toString());
+				legislationCitymeetingTask.setStRoleName(session.getAttribute("userRole").toString());
+				legislationCitymeetingTask.setStTeamId((currentPerson.getTeamInfos().get(0)).getId());
+				legislationCitymeetingTask.setStTeamName((currentPerson.getTeamInfos().get(0)).getTeamName());
+				String citymeetingTaskId = addObj(legislationCitymeetingTask);
+				//保存相关信息到detail表中
+				LegislationCitymeetingTaskd legislationCitymeetingTaskd=new LegislationCitymeetingTaskd();
+				legislationCitymeetingTaskd.setStTaskId(citymeetingTaskId);
+				legislationCitymeetingTaskd.setStNodeId(auditMeeting.getStNodeId());
+				legislationCitymeetingTaskd.setDtOpenDate(new Date());
+				legislationCitymeetingTaskd.setStTaskStatus("TODO");
+				legislationCitymeetingTaskd.setStBak1(stBak1);
+				legislationCitymeetingTaskd.setStBak2(stBak2);
+				legislationCitymeetingTaskd.setStBak3(stBak3);
+				legislationCitymeetingTaskd.setStBak4(stBak4);
+				legislationCitymeetingTaskd.setStBak5(stBak5);
+				legislationCitymeetingTaskd.setStBak6(stBak6);
+				legislationCitymeetingTaskd.setStContent(stContent);
+				legislationCitymeetingTaskd.setDtBak1(DateUtils.parseDate(dtBak1, "yyyy-MM-dd"));
+				legislationCitymeetingTaskdService.add(legislationCitymeetingTaskd);
 			} else {
 				// 如果是TODO的修改
 				auditMeeting.setStNodeName("常务会议");
@@ -277,6 +303,16 @@ public class LegislationCitymeetingTaskServiceImpl implements LegislationCitymee
 					
 				}
 				this.update(legislationCitymeetingTask);
+				LegislationCitymeetingTaskd legislationCitymeetingTaskd = legislationCitymeetingTaskdService.findByHQL("from LegislationCitymeetingTaskd t where t.stTaskId='" + legislationCitymeetingTask.getStTaskId() + "' and t.stTaskStatus='TODO'").get(0);
+				legislationCitymeetingTaskd.setStBak1(stBak1);
+				legislationCitymeetingTaskd.setStBak2(stBak2);
+				legislationCitymeetingTaskd.setStBak3(stBak3);
+				legislationCitymeetingTaskd.setStBak4(stBak4);
+				legislationCitymeetingTaskd.setStBak5(stBak5);
+				legislationCitymeetingTaskd.setStBak6(stBak6);
+				legislationCitymeetingTaskd.setStContent(stContent);
+				legislationCitymeetingTaskd.setDtBak1(DateUtils.parseDate(dtBak1, "yyyy-MM-dd"));
+				legislationCitymeetingTaskdService.update(legislationCitymeetingTaskd);
 			}
 
 		} else if ("RESULT".equals(stTaskStatus)) {

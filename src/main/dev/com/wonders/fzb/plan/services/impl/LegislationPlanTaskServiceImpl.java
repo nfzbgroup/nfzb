@@ -1,5 +1,16 @@
 package com.wonders.fzb.plan.services.impl;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingItem;
@@ -8,24 +19,23 @@ import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
-import com.wonders.fzb.plan.beans.*;
+import com.wonders.fzb.plan.beans.LegislationPlan;
+import com.wonders.fzb.plan.beans.LegislationPlanDeal;
+import com.wonders.fzb.plan.beans.LegislationPlanItem;
+import com.wonders.fzb.plan.beans.LegislationPlanTask;
+import com.wonders.fzb.plan.beans.LegislationPlanTaskdetail;
 import com.wonders.fzb.plan.dao.LegislationPlanTaskDao;
-import com.wonders.fzb.plan.services.*;
+import com.wonders.fzb.plan.services.LegislationPlanDealService;
+import com.wonders.fzb.plan.services.LegislationPlanItemService;
+import com.wonders.fzb.plan.services.LegislationPlanService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import com.wonders.fzb.plan.services.LegislationPlanTaskdetailService;
 import com.wonders.fzb.report.beans.LegislationReport;
 import com.wonders.fzb.report.beans.LegislationReportTask;
 import com.wonders.fzb.report.dao.LegislationReportDao;
 import com.wonders.fzb.report.dao.LegislationReportTaskDao;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -182,9 +192,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 			legislationPlanTask.setStActive(stActive);
 			legislationPlanTask.setStComment1(stComment1);
 		}
-		if("NOD_0000000202".equals(stNodeId)||"NOD_0000000204".equals(stNodeId)){
-			legislationPlanTask.setStActive(null);
-		}
+
 		update(legislationPlanTask);//修改任务状态
 		
 		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
@@ -225,6 +233,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 				legislationCheckmeetingItem.setStStatus("TODO");
 				legislationCheckmeetingItem.setStTypeName("立法计划");
 				legislationCheckmeetingItem.setDtCreateDate(new Date());
+				legislationCheckmeetingItem.setStUserName(userName);
 				legislationCheckmeetingItemService.add(legislationCheckmeetingItem);
 			}
 			addObj(newLegislationPlanTask);
@@ -346,7 +355,6 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 	public void goBackPlanProcess(HttpServletRequest request, HttpSession session) {
 		String stTaskId = request.getParameter("stTaskId");
 		String stNodeId = request.getParameter("stNodeId");
-		String stActive=request.getParameter("stActive");
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String teamId=currentPerson.getTeamInfos().get(0).getId();
 		String teamName=currentPerson.getTeamInfos().get(0).getTeamName();
@@ -363,7 +371,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanTask.setStRoleName(userRole);
 		legislationPlanTask.setStTeamId(teamId);
 		legislationPlanTask.setStTeamName(teamName);
-		legislationPlanTask.setStActive("退回原因: "+stActive);
+		legislationPlanTask.setStActive("退回");
 		update(legislationPlanTask);
 		String oldNodeId;
 		if("NOD_0000000203".equals(stNodeId)){
@@ -373,7 +381,6 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		}
 		LegislationPlanTask oldLegislationPlanTask=findByHQL("from LegislationPlanTask t where 1=1 and t.stParentId='"+legislationPlanTask.getStParentId()+"' and t.stNodeId='"+oldNodeId+"' and t.stEnable is null").get(0);
 		oldLegislationPlanTask.setStTaskStatus("TODO");
-		oldLegislationPlanTask.setStActive(stActive);
 		update(oldLegislationPlanTask);
 
 		LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
@@ -392,7 +399,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanDeal.setDtDealDate(new Date());
 		legislationPlanDeal.setStPlanId(legislationPlanItem.getStItemId());
 		legislationPlanDeal.setStBakOne(legislationPlanItem.getStItemName());
-		legislationPlanDeal.setStBakTwo("退回原因: "+stActive);
+		legislationPlanDeal.setStBakTwo("退回");
 		legislationPlanDealService.add(legislationPlanDeal);
 	}
 
@@ -417,7 +424,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanTask.setStRoleName(userRole);
 		legislationPlanTask.setStTeamId(teamId);
 		legislationPlanTask.setStTeamName(teamName);
-		legislationPlanTask.setStActive("删除原因: "+stActive);
+		legislationPlanTask.setStActive(stActive);
 		update(legislationPlanTask);
 
 		LegislationPlanItem legislationPlanItem=legislationPlanItemService.findById(legislationPlanTask.getStParentId());
@@ -434,7 +441,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationPlanDeal.setDtDealDate(new Date());
 		legislationPlanDeal.setStPlanId(legislationPlanItem.getStItemId());
 		legislationPlanDeal.setStBakOne(legislationPlanItem.getStItemName());
-		legislationPlanDeal.setStBakTwo("删除原因: "+stActive);
+		legislationPlanDeal.setStBakTwo("删除");
 		legislationPlanDealService.add(legislationPlanDeal);
 	}
 
@@ -459,7 +466,7 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 	}
 
 	@Override
-	public List<LegislationPlanTask> findTaskByDocIdAndNodeId(String stPlanId, String stNodeId) {
+	public List<LegislationPlanTask> findTaskByPlanIdAndNodeId(String stPlanId, String stNodeId) {
 		return findByHQL("from LegislationPlanTask t where 1=1 and t.stPlanId='" + stPlanId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
 		
 	}

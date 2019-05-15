@@ -200,9 +200,20 @@ public class LegislationSendNoticeAction extends BaseAction {
 					tableName="LEGISLATION_PLAN";
 				    columnNames = "t.st_notice_id,d.st_plan_id, d.st_plan_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";
 						
-				}else {
-					baseSql += "and t.ST_MODEL_NAME = '立法过程' and t.ST_NODE_NAME='" + stNodeName + "'  ";
+				}else if(stNodeName.equals("签报件报OA审核")){
+					baseSql += "and t.ST_MODEL_NAME = '签报' and t.ST_NODE_NAME='" + stNodeName + "'  ";	
+					tableName="LEGISLATION_REPORT";
+				    columnNames = "t.st_notice_id,d.st_report_id, d.st_report_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";							
+				}else if(stNodeName.equals("审核会议征询意见")){
+					baseSql += "and t.ST_MODEL_NAME = '审核会议' and t.ST_NODE_NAME='" + stNodeName + "'  ";	
 					
+				}else if(stNodeName.equals("审核会议发送通知")){
+					baseSql += "and t.ST_MODEL_NAME = '审核会议' and t.ST_NODE_NAME='" + stNodeName + "'  ";	
+					tableName="LEGISLATION_CHECKMEETING";
+					columnNames = "t.st_notice_id,d.st_meeting_id, d.st_meeting_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";
+				
+				}else {
+					baseSql += "and t.ST_MODEL_NAME = '立法过程' and t.ST_NODE_NAME='" + stNodeName + "'  ";				
 				}
 				// }
 				if (null != startTime && !"".equals(startTime)) {
@@ -225,20 +236,12 @@ public class LegislationSendNoticeAction extends BaseAction {
 				// baseSql += "and d.st_node_Id = 'NOD_0000000101' ";
 				// baseSql += "and t.st_enable is null ";
 				// if ("NOD_0000000101".equals(stNodeId)) {
-				//baseSql += "and t.st_team_Id = '" + session.getAttribute("unitCode") + "' ";
+			
+				UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+				baseSql += "and t.st_user_Id = '" + currentPerson.getUserId() + "' ";
 				// }
   
 				String orderSql = " order by t.dt_open_date DESC";
-				
-				if(stNodeName.equals("审核会议审核")) {
-					tableName="LEGISLATION_CHECKMEETING";
-					 columnNames = "t.st_notice_id,d.st_meeting_id, d.st_meeting_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";
-					
-				}if(stNodeName.equals("报签审核")) {
-					tableName="LEGISLATION_REPORT";
-					 columnNames = "t.st_notice_id,d.st_report_id, d.st_report_name,'4','5',t.st_model_name,'7','8',t.dt_open_date,null";
-					
-				}
 				
 				infoPage = legislationSendNoticeService.findSendNoticeList(baseSql + orderSql, tableName, columnNames, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
 

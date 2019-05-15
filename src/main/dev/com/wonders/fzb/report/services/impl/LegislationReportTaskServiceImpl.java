@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -210,6 +211,8 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 		String stComment2 = request.getParameter("stComment2");//报审说明
 		String stBakOne = request.getParameter("stBakOne");//结果说明
 		String stBakTwo = request.getParameter("stBakTwo");//报送市领导
+		String stBak1 = request.getParameter("stBak1");//报审-文号
+		String dtBak1 = request.getParameter("dtBak1");//报审-日期
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String stUserId = currentPerson.getUserId();
 		String stUserName = currentPerson.getName();
@@ -252,10 +255,24 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 //				legislationReport.setDtBeginDate(formatter.parse(dtBeginDate));// 时间
 				legislationReportService.update(legislationReport);
 				//保存送审领导id和姓名
-				LegislationReportTaskdetail legislationReportTaskdetail = legislationReportTaskdetailService.findByHQL("from LegislationReportTaskdetail t where t.stTaskId='" + legislationReportTask.getStTaskId() + "' and t.stTaskStatus='TODO'").get(0);
-				legislationReportTaskdetail.setStPersonId(stPersonsId);
-				legislationReportTaskdetail.setStPersonName(stPersons);
-				legislationReportTaskdetailService.update(legislationReportTaskdetail);
+				
+				List<LegislationReportTaskdetail> LegislationReportTaskdetailList = legislationReportTaskdetailService.findByHQL("from LegislationReportTaskdetail t where t.stTaskId='" + legislationReportTask.getStTaskId() + "' and t.stTaskStatus='TODO'");
+                if(LegislationReportTaskdetailList.size()>0) {
+                	LegislationReportTaskdetail legislationReportTaskdetail =LegislationReportTaskdetailList.get(0);
+                	legislationReportTaskdetail.setStPersonId(stPersonsId);
+    				legislationReportTaskdetail.setStPersonName(stPersons);
+    				legislationReportTaskdetailService.update(legislationReportTaskdetail);
+				}else {
+					LegislationReportTaskdetail legislationReportTaskdetail=new LegislationReportTaskdetail();
+					legislationReportTaskdetail.setStTaskId(legislationReportTask.getStTaskId());
+					legislationReportTaskdetail.setStTaskStatus("TODO");
+					legislationReportTaskdetail.setStNodeId("NOD_0000000190");
+					legislationReportTaskdetail.setDtOpenDate(new Date());
+					legislationReportTaskdetail.setStPersonId(stPersonsId);
+					legislationReportTaskdetail.setStPersonName(stPersons);
+					legislationReportTaskdetailService.add(legislationReportTaskdetail);
+				}
+				
 				if ("submit".equals(op)) {
 					//送审领导
 					legislationSendNoticeService.sendNotice(stPersonsId, "签报", stReportId, "签报件报OA审核");
@@ -296,6 +313,23 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 				legislationReportTask.setStTaskStatus("RESULT");
 			}
 			this.update(legislationReportTask);
+			//报审相关信息保存
+			List<LegislationReportTaskdetail> LegislationReportTaskdetailList = legislationReportTaskdetailService.findByHQL("from LegislationReportTaskdetail t where t.stTaskId='" + legislationReportTask.getStTaskId() + "' and t.stTaskStatus='"+stTaskStatus+"'");
+            if(LegislationReportTaskdetailList.size()>0) {
+            	LegislationReportTaskdetail legislationReportTaskdetail=LegislationReportTaskdetailList.get(0);
+            	legislationReportTaskdetail.setStBak1(stBak1);
+    			legislationReportTaskdetail.setDtBak1(DateUtils.parseDate(dtBak1, "yyyy-MM-dd"));
+    			legislationReportTaskdetailService.update(legislationReportTaskdetail);
+            }else {
+            	LegislationReportTaskdetail legislationReportTaskdetail=new LegislationReportTaskdetail();
+    			legislationReportTaskdetail.setStTaskId(legislationReportTask.getStTaskId());
+    			legislationReportTaskdetail.setStTaskStatus("DOING");
+    			legislationReportTaskdetail.setStNodeId("NOD_0000000190");
+    			legislationReportTaskdetail.setDtOpenDate(new Date());
+    			legislationReportTaskdetail.setStBak1(stBak1);
+    			legislationReportTaskdetail.setDtBak1(DateUtils.parseDate(dtBak1, "yyyy-MM-dd"));
+    			legislationReportTaskdetailService.add(legislationReportTaskdetail);
+            }
 		}
 		// 如果不是TODO，是另一个环节
 		else if ("RESULT".equals(stTaskStatus)) {
@@ -358,7 +392,7 @@ public class LegislationReportTaskServiceImpl implements LegislationReportTaskSe
 	}
 
 	@Override
-	public List<LegislationReportTask> findTaskByDocIdAndNodeId(String stReportId, String stNodeId) {
+	public List<LegislationReportTask> findTaskByReportIdAndNodeId(String stReportId, String stNodeId) {
 		return findByHQL("from LegislationReportTask t where 1=1 and t.stReportId='" + stReportId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
 		
 	}

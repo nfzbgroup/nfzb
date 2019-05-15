@@ -142,17 +142,24 @@ public class LegislationReportAction extends BaseAction {
 	private void reportPage() {
 		String stNodeId = request.getParameter("stNodeId");
 		request.setAttribute("LegislationExampleList", legislationExampleService.queryLegislationExampleFilesList(stNodeId, null));
-
+		String nodeStatus = request.getParameter("stTaskStatus");
 		String stReportId = request.getParameter("stReportId");
 		LegislationReport legislationReport = legislationReportService.findById(stReportId);
 		List<LegislationReportTask> taskList = legislationReportTaskService.findByHQL("from LegislationReportTask t where t.stReportId='" + stReportId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
 		LegislationReportTask legislationReportTask = taskList.get(0);
-		List<LegislationReportTaskdetail> taskdetailList = legislationReportTaskdetailService.findByHQL("from LegislationReportTaskdetail t where t.stTaskId='" + legislationReportTask.getStTaskId() + "' and t.stTaskStatus='TODO'");
+		List<LegislationReportTaskdetail> taskdetailList=new ArrayList<LegislationReportTaskdetail>();
+		if(!"DOING".equals(nodeStatus)) {
+			//送审领导信息
+			taskdetailList = legislationReportTaskdetailService.findByHQL("from LegislationReportTaskdetail t where t.stTaskId='" + legislationReportTask.getStTaskId() + "' and t.stTaskStatus='TODO'");
+		}else {
+			//报审相关信息
+			taskdetailList = legislationReportTaskdetailService.findByHQL("from LegislationReportTaskdetail t where t.stTaskId='" + legislationReportTask.getStTaskId() + "' and t.stTaskStatus='DOING'");
+		}
 		LegislationReportTaskdetail legislationReportTaskdetail=null;
 		if(taskdetailList.size()>0) {
         	legislationReportTaskdetail = taskdetailList.get(0);
         }
-		String nodeStatus = request.getParameter("stTaskStatus");
+		
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();
 		condMap.put("stDocId", stReportId);
@@ -224,6 +231,11 @@ public class LegislationReportAction extends BaseAction {
 	 * @return
 	 */
 	private String report_info_doing() {
+		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		String stUserName = currentPerson.getName();
+		String stTeamName = currentPerson.getTeamInfos().get(0).getTeamName();
+		request.setAttribute("stUserName", stUserName);
+		request.setAttribute("stTeamName", stTeamName);
 		reportPage();
 		return pageController();
 	}

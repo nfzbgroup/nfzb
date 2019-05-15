@@ -95,6 +95,10 @@ public class LegislationCitymeetingAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationSendNoticeService")
 	private LegislationSendNoticeService legislationSendNoticeService;
+	
+	@Autowired
+	@Qualifier("legislationCitymeetingTaskdService")
+	private LegislationCitymeetingTaskdService legislationCitymeetingTaskdService;
 
 	private int pageNo = 1;
 	private int pageSize = 10;
@@ -224,13 +228,14 @@ public class LegislationCitymeetingAction extends BaseAction {
 			} else {
 				LegislationCitymeeting auditMeeting = legislationCitymeetingService.findById(stTopicId);
 				request.setAttribute("legislationCitymeeting", auditMeeting);
-				
 			}
 			if("TODO".equals(stTopicId)){
 				request.setAttribute("legislationCitymeetingTask", new LegislationCitymeetingTask());
 			}else{
 				LegislationCitymeetingTask legislationCitymeetingTask = legislationCitymeetingTaskService.findByHQL("from LegislationCitymeetingTask t where t.stTopicId='" + stTopicId + "' and t.stNodeId='NOD_0000000180'").get(0);
+				LegislationCitymeetingTaskd legislationCitymeetingTaskd = legislationCitymeetingTaskdService.findByHQL("from LegislationCitymeetingTaskd t where t.stTaskId='" + legislationCitymeetingTask.getStTaskId() + "' and t.stTaskStatus='TODO'").get(0);
 				request.setAttribute("legislationCitymeetingTask", legislationCitymeetingTask);
+				request.setAttribute("legislationCitymeetingTaskd", legislationCitymeetingTaskd);
 			}
 			request.setAttribute("stTaskStatus", "TODO");
 		}

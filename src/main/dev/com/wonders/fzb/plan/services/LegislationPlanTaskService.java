@@ -77,7 +77,7 @@ public interface LegislationPlanTaskService{
 	 */
 	public List<LegislationPlanTask> findByHQL(String hql);
 	
-	public List<LegislationPlanTask> findTaskByDocIdAndNodeId(String stPlanId, String stNodeId);
+	public List<LegislationPlanTask> findTaskByPlanIdAndNodeId(String stPlanId, String stNodeId);
 
 	/**
 	 * 立法计划大节点流转

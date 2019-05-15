@@ -86,7 +86,7 @@ public interface LegislationReportTaskService{
 	void saveReport(HttpServletRequest request, HttpSession session)
 			throws Exception;
 	
-	List<LegislationReportTask> findTaskByDocIdAndNodeId(String stReportId, String stNodeId);
+	List<LegislationReportTask> findTaskByReportIdAndNodeId(String stReportId, String stNodeId);
 
 
 }
