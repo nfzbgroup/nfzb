@@ -8,7 +8,12 @@
 		<tr class="text-center">
 			<c:choose>
 				<c:when test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'||nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000213'||nodeId=='NOD_0000000215'}">
-					<th class="text-center" data-field="district_name">通知名称</th>
+					<c:if test="${nodeId=='NOD_0000000209'||nodeId=='NOD_0000000211'||nodeId=='NOD_0000000213'||nodeId=='NOD_0000000215'}">
+						<th class="text-center" data-field="district_name">计划名称</th>
+					</c:if>
+					<c:if test="${nodeId=='NOD_0000000201'||nodeId=='NOD_0000000208'}">
+						<th class="text-center" data-field="district_name">通知名称</th>
+					</c:if>
 					<c:if test="${nodeId=='NOD_0000000201'}">
 						<th class="text-center" data-field="district_name">处理环节</th>
 					</c:if>

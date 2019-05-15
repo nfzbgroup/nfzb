@@ -35,16 +35,16 @@
                                         <c:if test="${example.stNodeStatus==nodeStatus&&example.stNodeStatus!=null}">
                                             <a target="_blank" href="${basePath}/file/downloadAttach.do?fileId=${example.fileId}&name=${example.fileName}&url=${example.fileUrl}">下载</a>&nbsp;&nbsp;
                                             <input type="hidden" id="${example.fileId}"  name="${example.fileId}" value="${example.fileId}">
-                                            <label style="color: red" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')" >删除</label>                                        
+                                            <label style="color: red" name="fileBtn" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')" >删除</label>                                        
                                         </c:if>
                                          <c:if test="${example.stNodeStatus==null}">
                                             <a target="_blank" href="${basePath}/file/downloadAttach.do?fileId=${example.fileId}&name=${example.fileName}&url=${example.fileUrl}">下载</a>&nbsp;&nbsp;
                                             <input type="hidden" id="${example.fileId}"  name="${example.fileId}" value="${example.fileId}">
-                                            <label style="color: red" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')" >删除</label>                                        
+                                            <label style="color: red" name="fileBtn" onclick="deleteAttach(this,1,'${example.stExampleId}','${example.fileId}','${example.stExampleId}')" >删除</label>                                        
                                         </c:if>
                                         </c:when>
                                         <c:otherwise>
-                                            <label class="btn btn-w-m btn-success"  onclick="toUploadFile(this)">点击上传</label>
+                                            <label class="btn btn-w-m btn-success" name="fileBtn" onclick="toUploadFile(this)">点击上传</label>
                                             <input id="${example.stExampleId}" name="upload" type="file" style="display:none"  onchange="uploadFile(this.id,1,'${example.stExampleId}')">
                                         </c:otherwise>
                                     </c:choose>
@@ -56,7 +56,7 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label">其他材料 </label>
-				<label class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传 </label>
+				<label name="fileBtn" class="btn btn-w-m btn-success" onclick="toUploadFile(this)">点击上传 </label>
 				<input type="file" id="7" name="upload" style="display: none" onchange="uploadFile(this.id,2,null)">
 			</div>
 			<div class="form-group">
@@ -78,7 +78,7 @@
 										<td>
 											<a target="_blank" href="${basePath}/file/downloadAttach.do?fileId=${file.stFileId}&name=${file.stTitle}&url=${file.stFileUrl}">下载</a>
 											&nbsp;&nbsp;
-											<label style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
+											<label  name="fileBtn" style="color: red" onclick="deleteAttach(this,2,null,'${file.stFileId}',null)">删除</label>
 											<input type="hidden" id="${file.stFileId}" name="${file.stFileId}" value="${file.stFileId}">
 										</td>
 									</tr>
@@ -88,3 +88,15 @@
 					</tbody>
 				</table>
 			</div>
+			<script>
+			   $(function(){
+				   //alert();
+				     if($("#btnSave")[0]||$("#btnSubmit")[0]) {
+				    	// alert('2');
+				     }else{
+				    	 //alert($("[name='fileBtn']")[0]);
+				    	 $("[name='fileBtn']").hide();
+				     }
+			   })
+			    
+			</script>

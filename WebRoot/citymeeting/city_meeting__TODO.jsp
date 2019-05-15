@@ -49,51 +49,51 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">入库人：</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" id="stBak1" name="stBak1" value="<c:if test="${legislationCitymeetingTaskd.stBak1!=null}">${legislationCitymeetingTaskd.stBak1}</c:if>" />
 				</div>
 				<label class="col-sm-2 control-label">入库时间：</label>
 				<div class="col-md-3">
-					<input type="text" class="form-control" id="dtBeginDate" value="" />
+					<input type="text" class="form-control" id="dtBak1" name="dtBak1" value="<fmt:formatDate value="${legislationCitymeetingTaskd.dtBak1}"/>" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">议题来源：</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control" >
+					<input type="text" class="form-control" id="stBak2" name="stBak2" value="<c:if test="${legislationCitymeetingTaskd.stBak2!=null}">${legislationCitymeetingTaskd.stBak2}</c:if>" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">上常委会建议：</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control" >
+					<input type="text" class="form-control" id="stBak3" name="stBak3" value="<c:if test="${legislationCitymeetingTaskd.stBak3!=null}">${legislationCitymeetingTaskd.stBak3}</c:if>" / >
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">汇报单位：</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" >
+					<input type="text" class="form-control" id="stBak4" name="stBak4" value="<c:if test="${legislationCitymeetingTaskd.stBak4!=null}">${legislationCitymeetingTaskd.stBak4}</c:if>" />
 				</div>
 				<label class="col-sm-2 control-label">汇报人：</label>
 				<div class="col-sm-3">
-					<input type="text" class="form-control" >
+					<input type="text" class="form-control" id="stBak5" name="stBak5" value="<c:if test="${legislationCitymeetingTaskd.stBak5!=null}">${legislationCitymeetingTaskd.stBak5}</c:if>" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">列席单位：</label>
 				<div class="col-sm-9">
-					<textarea class="form-control"></textarea>
+					<textarea class="form-control" id="stBak6" name="stBak6">${legislationCitymeetingTaskd.stBak6}</textarea>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">议题简介：</label>
 				<div class="col-sm-9">
-				    <textarea class="form-control"></textarea>
+				    <textarea id="stBak" name="stBak" class="form-control">${legislationCitymeetingTask.stBak}</textarea>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-2 control-label">备注：</label>
 				<div class="col-sm-9">
-				    <textarea id="stBak" name="stBak" class="form-control">${legislationCitymeetingTask.stBak!=null?legislationCitymeetingTask.stBak:''}</textarea>
+				    <textarea id="stContent" name="stContent" class="form-control">${legislationCitymeetingTaskd.stContent}</textarea>
 				</div>
 			</div>
 			
@@ -118,7 +118,7 @@
 <script>
 	$(function() {
 		laydate.render({
-			elem : '#dtBeginDate',
+			elem : '#dtBak1',
 			format : 'yyyy-MM-dd',
 			calendar : true,
 		});

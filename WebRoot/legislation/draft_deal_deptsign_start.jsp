@@ -7,7 +7,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >部门会签编辑 > </span>
+            <span >部门会签 > </span>
         </li>
         <li>
             <span >会签编辑</span>

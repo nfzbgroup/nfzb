@@ -30,8 +30,8 @@
 					<input type="text" class="form-control" disabled id="stReportName" name="stReportName" value="${legislationReport.stReportName}">
 				</div>
 				<label class="col-sm-2 control-label">经办处室：</label>
-				<div class="col-sm-3">
-					<input type="text" class="form-control" >
+				<div class="col-sm-2">
+				    <input type="text" class="form-control" disabled id="stTeamName" name="stTeamName" value="${stTeamName}">
 				</div>
 			 </div>
 			 <div class="form-group">
@@ -41,17 +41,17 @@
 				</div>
 				<label class="col-sm-2 control-label">文号：</label>
 				<div class="col-sm-3">
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" id="stBak1" name="stBak1" value="${legislationReportTaskdetail.stBak1!=null?legislationReportTaskdetail.stBak1:''}">
 				</div>
 			 </div>
 			 <div class="form-group">
 				<label class="col-sm-2 control-label">经办人：</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" >
+				    <input type="text" class="form-control" disabled id="stUserName" name="stUserName" value="${stUserName}">
 				</div>
 				<label class="col-sm-2 control-label">日期：</label>
 				<div class="col-md-3">
-							<input type="text" class="form-control" id="dtBeginDate" value="" />
+							<input type="text" class="form-control" id="dtBak1" name="dtBak1" value="<fmt:formatDate value="${legislationReportTaskdetail.dtBak1}"/>" />
 				</div>
 			 </div>
 			<div class="form-group">
@@ -110,7 +110,7 @@
 <script>
 	$(function() {
 		laydate.render({
-			elem : '#dtBeginDate',
+			elem : '#dtBak1',
 			format : 'yyyy-MM-dd',
 			calendar : true,
 		});

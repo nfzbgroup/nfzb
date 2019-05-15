@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="renderer" content="webkit">
 	<meta http-equiv="Cache-Control" content="no-siteapp" />
-	<title>上海市政府立法平台</title>
+	<title>上海市立法平台</title>
 	<link href="${basePath}/legislation/assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
 	<link href="${basePath}/legislation/assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
 	<link href="${basePath}/legislation/assets/css/animate.min.css" rel="stylesheet">
@@ -26,7 +26,7 @@
 		<div class="row border-bottom">
 			<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
 				<div class="navbar-header">
-					<h1 class="app-name">上海市政府立法平台</h1>
+					<h1 class="app-name">上海市立法平台</h1>
 				</div>
 				<ul class="nav navbar-top-links navbar-right">
                         <li class="userimg J_menuItem">
@@ -88,9 +88,9 @@
 									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=NOD_0000000103">立法办理</a></li>
 								</c:if>
 								<c:if test="${userRole=='局领导'}">
-									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=公开征求意见审核">公开征求意见审核</a></li>
-									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=立法听证会审核">立法听证会审核</a></li>
-									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=审核会前征询意见接收">审核会前征询意见接收</a></li>
+									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=公开征求意见处理">公开征求意见审核</a></li>
+									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=立法听证会处理">立法听证会审核</a></li>
+									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=审核会议征询意见">审核会前征询意见接收</a></li>
 								</c:if>					
 								<s:iterator value="#request.draftNodeList" var="task">
 									<li>
@@ -146,9 +146,7 @@
 									</c:choose>
 									</li>
 								</s:iterator>
-								<c:if test="${userRole=='局领导'}">
-								<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=审核会议审核">报审核会议前审核</a></li>
-								</c:if>	
+								<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=审核会议发送通知">审核会议通知</a></li>
 							</ul>
 						</li> 
 						
@@ -194,7 +192,10 @@
 									</c:choose>
 									</li>
 								</s:iterator>
-								<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=报签审核">报签审核</a></li>
+								
+								<c:if test="${userRole=='局领导'}">
+									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=签报件报OA审核">报签审核</a></li>
+								</c:if>
 							</ul>
 						</li> 
 						

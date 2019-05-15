@@ -7,7 +7,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <span >部门会签盖章 > </span>
+            <span >部门会签 > </span>
         </li>
         <li>
             <span >会签盖章</span>
@@ -16,7 +16,7 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
-<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">部门会签发送部门</h2>
+<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">部门会签盖章</h2>
 <form id="unitDemonstrationForm" class="form-horizontal"
       novalidate="novalidate">
     <input hidden id="stTaskId" name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}" </c:if>>

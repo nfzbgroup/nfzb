@@ -464,7 +464,9 @@
 														<!--<c:if test="${isZhc eq false}">
 															<a href="javascript:void(0);" onclick="openLeaderIdeaPage('openLeaderIdeaPage','${task.stDocId}','${task.stNodeId}')" class="layer_full_link" title="有校验流程状态">办理完成&nbsp;&nbsp;</a>
 														</c:if>-->
+														<c:if test="${isZhc eq false}">
 														    <a href="javascript:void(0);" onclick="openLeaderIdeaPage('openLeaderIdeaPage','${task.stDocId}','${task.stNodeId}')" class="layer_full_link" title="无校验，临时使用">提交正式文本&nbsp;&nbsp;</a>
+														</c:if>
 													</div >
 													<c:if test="${isZhc eq false}">
 														<div style="width:60% ;float:right">

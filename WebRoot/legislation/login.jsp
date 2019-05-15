@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title >上海市政府立法平台-登录</title>
+    <title >上海市立法平台-登录</title>
     <link href="${basePath}/legislation/assets/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
     <link href="${basePath}/legislation/assets/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
     <link href="${basePath}/legislation/assets/css/animate.min.css" rel="stylesheet">
@@ -19,7 +19,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
-                        欢迎使用上海市政府立法平台
+                        欢迎使用上海市立法平台
                     </h3>
                 </div>
                 <div class="panel-body">

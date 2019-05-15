@@ -67,11 +67,6 @@
 		</tbody>
 	</table>
 	
- 	<div class="form-group">
-		<label class="control-label">上传材料接收 </label>
-	</div>	
-	<%@include file="/legislation/file/attachUpload.jsp" %>
-	
 	
 	<div class="form-group text-center">
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
