@@ -5,18 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
-import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
-import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
 import com.wonders.fzb.citymeeting.beans.LegislationCitymeeting;
-import com.wonders.fzb.citymeeting.beans.LegislationCitymeetingTask;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingService;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingTaskService;
 import com.wonders.fzb.framework.beans.TeamInfo;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
-import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
-import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
@@ -24,17 +19,13 @@ import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
 import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.beans.LegislationPlanItem;
 import com.wonders.fzb.plan.beans.LegislationPlanTask;
-import com.wonders.fzb.plan.beans.LegislationPlanTaskdetail;
 import com.wonders.fzb.plan.services.LegislationPlanItemService;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskdetailService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
-
 import dm.jdbc.util.StringUtil;
-
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -139,7 +130,8 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "openProjectAscriptionPage", location = "/plan/legislationPlan_projectAscription.jsp"),
 			@Result(name = "flowDealPage", location = "/plan/flowPlanDealPage.jsp"),
 			@Result(name = "legislation_plan_flow", location = "/plan/flowPlanPage.jsp"),
-			@Result(name = "openPlanDeleteReasonPage", location = "/plan/legislationPlan_deleteReason.jsp")
+			@Result(name = "openPlanDeleteReasonPage", location = "/plan/legislationPlan_deleteReason.jsp"),
+			@Result(name = "openPlanBackReasonPage", location = "/plan/legislationPlan_deleteReason.jsp")
 	})
 	public String legislationPlan() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -528,7 +520,7 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	@SuppressWarnings("unused")
 	private String openPlanAddPage(){
-		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId = 'NOD_0000000208' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
 		request.setAttribute("legislationPlanItem",new LegislationPlanItem());
 		request.setAttribute("legislationPlanTask",new LegislationPlanTask());
@@ -554,7 +546,7 @@ public class LegislationPlanAction extends BaseAction {
 		}
 		sortMap.put("dtPubDate", "ASC");
 		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId < 'NOD_0000000209' order by t.dtCreateDate desc");
+		List<LegislationPlan> legislationPlanList=legislationPlanService.findByHQL("from LegislationPlan t where 1=1 and t.stNodeId = 'NOD_0000000208' order by t.dtCreateDate desc");
 		request.setAttribute("legislationPlanList",legislationPlanList);
 		request.setAttribute("legislationFilesList",legislationFilesList);
 		request.setAttribute("legislationPlanItem",legislationPlanItem);
@@ -863,7 +855,17 @@ public class LegislationPlanAction extends BaseAction {
 	 * @return
 	 */
 	private String openPlanDeleteReasonPage(){
+		request.setAttribute("button","delete");
     	return pageController();
+	}
+
+	/**
+	 * 跳转项目退回原因页面
+	 * @return
+	 */
+	private String openPlanBackReasonPage(){
+		request.setAttribute("button","back");
+		return pageController();
 	}
 
 	/**
@@ -872,6 +874,15 @@ public class LegislationPlanAction extends BaseAction {
 	 */
 	private String saveLegislationPlanDeleteReason(){
 		legislationPlanTaskService.deletePlan(request,session);
+		return null;
+	}
+
+	/**
+	 * 确认退回项目
+	 * @return
+	 */
+	private String goBackPlanProcess(){
+		legislationPlanTaskService.goBackPlanProcess(request,session);
 		return null;
 	}
 }

@@ -128,7 +128,7 @@
 											<c:if test="${nodeId=='NOD_0000000203'}">
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
 												<a href="javaScript:void(0)" data-title="接收" onclick="nextPlanProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">接收</a>
-												<a href="javaScript:void(0)" data-title="退回" onclick="goBackPlanProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">退回</a>
+												<a href="javaScript:void(0)" data-title="退回" onclick="openPlanPage('openPlanBackReasonPage','${plan.stTaskId}')" class="layer_full_link">退回</a>
 												<a href="javaScript:void(0)" data-title="删除" onclick="openPlanPage('openPlanDeleteReasonPage','${plan.stTaskId}')" class="layer_full_link">删除</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000204'}">
@@ -137,7 +137,7 @@
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000205'}">
 												<a href="javaScript:void(0)" data-title="查看" onclick="openPlanPage('openPlanInfoPage','${plan.stTaskId}')" class="layer_full_link">查看</a>
-												<a href="javaScript:void(0)" data-title="退回" onclick="goBackPlanProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">退回</a>
+												<a href="javaScript:void(0)" data-title="退回" onclick="openPlanPage('openPlanBackReasonPage','${plan.stTaskId}')" class="layer_full_link">退回</a>
 												<a href="javaScript:void(0)" data-title="审核" onclick="openPlanPage('openPlanAuditPage','${plan.stTaskId}')" class="layer_full_link">审核</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000207'}">
@@ -212,14 +212,6 @@
         layer.confirm('请确认操作！',function(index){
             layer.close(layer.index);
             $.post("../"+$('#requestUrl').val()+"?stTaskId="+stTaskId+"&stNodeId="+stNodeId+"&method=nextPlanProcess");
-            submitForm(1);
-        });
-    }
-
-    function goBackPlanProcess(stTaskId,stNodeId) {
-        layer.confirm('请确认操作！',function(index){
-            layer.close(layer.index);
-            $.post("../"+$('#requestUrl').val()+"?stTaskId="+stTaskId+"&stNodeId="+stNodeId+"&method=goBackPlanProcess");
             submitForm(1);
         });
     }

@@ -81,7 +81,8 @@ function submitForm(pageNo) {
         stUserName:$('#stUserName').val(),
         title:$('#title').val(),
         address:$('#address').val(),
-        opinionType:$('#opinionType').val()
+        opinionType:$('#opinionType').val(),
+        stPlanName:$('#stPlanName').val()
     },function(data){
         $('#legislationProcessTaskTable').html(data);
     });
