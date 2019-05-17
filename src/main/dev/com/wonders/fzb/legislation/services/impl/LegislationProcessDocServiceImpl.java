@@ -390,6 +390,8 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 						newDetail.setStTaskStatus(legislationProcessTask.getStTaskStatus());
 						newDetail.setStBak1(stComment2);
 						newDetail.setDtOpenDate(new Date());
+						newDetail.setStPersonId(stPersonsId);
+						newDetail.setStPersonName(stPersons);
 						legislationProcessTaskdetailService.add(newDetail);
 						// return stTaskId;
 					}
@@ -441,7 +443,7 @@ public class LegislationProcessDocServiceImpl implements LegislationProcessDocSe
 		}
 		
 		// 处理附件内容
-		//legislationFilesService.updateParentIdById(request, stDocId);
+		legislationFilesService.updateParentIdById(request, stDocId);
 		return stTaskId;
 	}
 

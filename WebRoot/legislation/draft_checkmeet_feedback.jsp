@@ -21,7 +21,7 @@
         
                 <div class="form-group">
 					<label class="col-sm-3 control-label text-left">会议名称：</label>
-					<label class="col-sm-5 control-label" style="text-align:left"><c:if test="${legislationCheckmeeting.stMeetingName !=null}">${legislationCheckmeeting.stMeetingName}</c:if></label>
+					<label class="col-sm-5 control-label" style="text-align:left">${legislationCheckmeeting.stMeetingName}</label>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">草案名称：</label>

@@ -334,9 +334,9 @@ public class LegislationPlanTaskServiceImpl implements LegislationPlanTaskServic
 		legislationFilesService.updateParentIdById(request,taskdetailId);
 
 		WegovSimpleNode node = wegovSimpleNodeService.findById(stNodeId);
-		if("NOD_0000000207".equals(stNodeId)) {
+		if("NOD_0000000207".equals(stNodeId)&&"TODO".equals(legislationPlanTask.getStTaskStatus())) {
 			//计划外立项--送审领导
-        	legislationSendNoticeService.sendNotice(stPersonsId, "立法计划", legislationPlanTask.getStPlanId(), node.getStNodeName());
+        	legislationSendNoticeService.sendNotice(stPersonsId, "立法计划", legislationPlanTask.getStParentId(), node.getStNodeName());
         }
 		String[] statusArray=node.getStDoneName().split("#");
 		for (int i = 0; i < statusArray.length; i++) {

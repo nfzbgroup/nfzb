@@ -119,19 +119,19 @@ public class LegislationReportAction extends BaseAction {
 		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
 		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
 		if (legislationProcessTaskList.size() > 0) {
-//			Map<String, Object> condMap = new HashMap<>();
-//			Map<String, String> sortMap = new HashMap<>();
-//			condMap.put("stParentId", stDocId);
-//			condMap.put("stNodeId", stNodeId);
-//			sortMap.put("dtPubDate", "ASC");
-//			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-//			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
-//				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
-//				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
-//			} else {
-//				String stStyle = "style ='display: none;'";
-//				request.setAttribute("strDisplay", stStyle);
-//			}
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", stDocId);
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			if ("TODO".equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
+				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+			} else {
+				String stStyle = "style ='display: none;'";
+				request.setAttribute("strDisplay", stStyle);
+			}
 			if("banli".equals(state)) {
 				//办理页面打开正在处理中的任务
 				String stStyle = "style ='display: none;'";

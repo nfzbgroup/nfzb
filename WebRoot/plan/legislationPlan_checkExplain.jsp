@@ -105,11 +105,19 @@
 <script>
 	function savePlanTaskCheck() {
 		var param = $('#legislationPlanTaskCheckForm').formToJson();
-		stContent
-
-		if (param.stPersons == null || param.stPersons == "") {
-			Duang.error("提示", "请选择送审的领导！");
-		} else {
+		var status='${legislationPlanTask.stTaskStatus}';
+		alert(status);
+		if(status=='TODO'){
+			if (param.stPersons == null || param.stPersons == "") {
+				Duang.error("提示", "请选择送审的领导！");
+			}else{
+				$.post("../${requestUrl}?stNodeId=${nodeId}&method=savePlanTaskCheck", param, function(data) {
+					$('#legislationProcessForm').modal('hide');
+					submitForm(1);
+					Duang.success("提示", "操作成功");
+				});
+			} 
+		}else {
 			$.post("../${requestUrl}?stNodeId=${nodeId}&method=savePlanTaskCheck", param, function(data) {
 				$('#legislationProcessForm').modal('hide');
 				submitForm(1);

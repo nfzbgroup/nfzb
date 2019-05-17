@@ -121,7 +121,7 @@
         .row1.five_row .arrow_2,.row1.five_row_01 .arrow_2{left:291px;}
         .row1.two_row .arrow3,.row1.three_row .arrow3, .row1.four_row .arrow3
         ,.row1.five_row .arrow3,.row1.six_row .arrow3 {left:418px;}
-
+        
         .row1 div{width:126px;height:39px;text-align: center;}
         .row1 div p{width:126px;height:39px;display: table-cell;vertical-align: middle;}
         .row1 div span{display:inline-block;width:91px;height:15px;line-height:15px;text-align: center;
@@ -148,6 +148,7 @@
         .arrow_down.arrow_down_05 {top: 358px;}
         .arrow_down.arrow_down_06 {top: 423px;}
         .arrow_down.arrow_down_07 {top: 483px;}
+        .divright { position:absolute; color:#fff;z-index: 99; font-size: 1.2em; background-color: #aa0007;width: 1.5em !important;height: 1.5em !important;left : 85%;top : -12px;text-align: center;-webkit-border-radius: 2.75em;border-radius: 2.75em;}
     </style>
 </head>
 <body class="white-bg1">
@@ -174,36 +175,40 @@
 
                             </ul>
                         </div>
-                        <div class="guj_img"><img src="img/arrow_block_01.png" alt=""></div>
-                        <div class="arrow_down arrow_down_01"><img src="img/arrow_down.png" alt=""></div>
-                        <div class="arrow_down arrow_down_02"><img src="img/arrow_down.png" alt=""></div>
-                        <div class="arrow_down arrow_down_03"><img src="img/arrow_down.png" alt=""></div>
-                        <div class="arrow_down arrow_down_04"><img src="img/arrow_down.png" alt=""></div>
-                        <div class="arrow_down arrow_down_05"><img src="img/arrow_down.png" alt=""></div>
-                        <div class="arrow_down arrow_down_06"><img src="img/arrow_down.png" alt=""></div>
-                        <div class="arrow_down arrow_down_07"><img src="img/arrow_down.png" alt=""></div>
+                        <div class="guj_img"><img src="../legislation/assets/demo/arrow_block_01.png" alt=""></div>
+                        <div class="arrow_down arrow_down_01"><img src="../legislation/assets/demo/arrow_down.png" alt=""></div>
+                        <div class="arrow_down arrow_down_02"><img src="../legislation/assets/demo/arrow_down.png" alt=""></div>
+                        <div class="arrow_down arrow_down_03"><img src="../legislation/assets/demo/arrow_down.png" alt=""></div>
+                        <div class="arrow_down arrow_down_04"><img src="../legislation/assets/demo/arrow_down.png" alt=""></div>
+                        <div class="arrow_down arrow_down_05"><img src="../legislation/assets/demo/arrow_down.png" alt=""></div>
+                        <div class="arrow_down arrow_down_06"><img src="../legislation/assets/demo/arrow_down.png" alt=""></div>
+                        <div class="arrow_down arrow_down_07"><img src="../legislation/assets/demo/arrow_down.png" alt=""></div>
                         <div class="row1 two_row">
                             <div class="row_child">
-                                <img src="img/arrow_right.png" class="arrow arrow1" alt="">
-                                <img src="img/arrow_right.png" class="arrow arrow2" alt="">
-                                <img src="img/arrow_right.png" class="arrow arrow3" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow1" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow2" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow3" alt="">
                                 <div class="cell row_items row_item1 bcg_blue1">
                                     <a href="#">
                                         <p class="font_color_white">立法计划申报</p>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_color_blue">
-                                    <a href="#">
-                                        <p class="font_color_black">发布征集通知</p>
+                                    <div class="divright"></div>
+                                    <a href="javaScript:void(0)" id="NOD_0000000201" class="removeHand" onclick="openDemonstrationPage(this.id)">
+									    <p class="font_color_black">发布征集通知</p>
                                         <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
+                                
                                 <div nodeHref=""  class="cell row_items row_item3 bcg_gray border_width border_style border_color_red">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000202" class="removeHand" onclick="openDemonstrationPage(this.id)">
 									    <p class="font_color_black">立法项目建议</br>申报</p>
                                     </a>
                                 </div>
                                 <div nodeHref=""  class="cell row_items row_item4 bcg_gray border_width border_style border_color_blue">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000203" class="removeHand" onclick="openDemonstrationPage(this.id)">
 									     <p class="font_color_black">立法项目建议</br>接收</p>
                                         <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -214,9 +219,9 @@
                         </div>
                         <div class="row1 three_row">
                             <div class="row_child">
-                                <img src="img/arrow_right.png" class="arrow arrow1 line_top1" alt="">
-                                <img src="img/arrow_right.png" class="arrow arrow2 line_top1" alt="">
-                                <img src="img/arrow_right.png" class="arrow arrow3 line_top1" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow1 line_top1" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow2 line_top1" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow3 line_top1" alt="">
                                 <div class="cell row_items row_item1 bcg_blue1">
                                     <a href="#">
                                         <p class="font_color_white">立法计划分办</p>
@@ -224,12 +229,14 @@
                                 </div>
                                 <!--草案第二行-->
                                 <div class="cell row_items row_item2 row_item_top1 bcg_gray border_width border_style border_color_blue">
+                                   <div class="divright"></div>
                                    <a nodeHref=""  href="javaScript:void(0)" id="NOD_0000000204" class="removeHand" onclick="openDemonstrationPage(this.id)">
 									    <p class="font_color_black">立法项目建议</br>分办</p>
                                         <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item3 row_item_top1 bcg_gray border_width border_style border_color_blue">
+                                    <div class="divright"></div>
                                     <a nodeHref=""  href="javaScript:void(0)" id="NOD_0000000205" class="removeHand" onclick="openDemonstrationPage(this.id)">
 									   <p class="font_color_black">立法项目建议</br>审核</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
@@ -252,20 +259,22 @@
                         </div>
                         <div class="row1 four_row">
                             <div class="row_child">
-                                <img src="img/arrow_right.png" class="arrow arrow1" alt="">
-                                <img src="img/arrow_right.png" class="arrow arrow2" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow1" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow2" alt="">
                                 <div class="cell row_items row_item1 bcg_blue1">
                                     <a href="#">
                                         <p class="font_color_white">立法计划汇总</p>
                                     </a>
                                 </div>
                                 <div nodeHref=""  class="cell row_items row_item2 bcg_gray border_width border_style border_color_blue">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000208" class="removeHand" onclick="openDemonstrationPage(this.id)">
 									   <p class="font_color_black">立法项目汇总</p>
                                         <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div nodeHref=""  class="cell row_items row_item3 bcg_gray border_width border_style border_color_blue">
+                                     <div class="divright"></div>
                                      <a href="javaScript:void(0)" id="NOD_0000000209" class="removeHand" onclick="openDemonstrationPage(this.id)">
 									     <p class="font_color_black">立法计划草案</br>及说明</p>
                                         <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -275,18 +284,20 @@
                         </div>
                         <div class="row1 five_row">
                             <div class="row_child">
-                                <img src="img/arrow_right.png" class="arrow arrow_2" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow_2" alt="">
                                 <div class="cell row_items row_item1 bcg_blue1">
                                     <a href="#">
                                         <p class="font_color_white">审核会议审核</p>
                                     </a>
                                 </div>
                                 <div nodeHref=""  class="cell row_items row_item_notes1">
+                                   <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000210" class="removeHand" onclick="openDemonstrationPage(this.id)">
 									    <i class="notes1">立法过程-审核会议</br>（审核会议题汇总）</i>
                                     </a>
                                 </div>
                                 <div nodeHref=""  class="cell row_items row_item_3 bcg_gray border_width border_style border_color_blue">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000211" class="removeHand" onclick="openDemonstrationPage(this.id)">
 									    <p class="font_color_black">立法计划草案</br>修改</p>
                                         <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -296,7 +307,7 @@
                         </div>
                         <div class="row1 five_row_01">
                             <div class="row_child">
-                                <img src="img/arrow_right.png" class="arrow arrow_2" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow_2" alt="">
                                 <div class="cell row_items row_item1 bcg_blue1">
                                     <a href="#">
                                         <p class="font_color_white">报审（签报）</p>
@@ -308,8 +319,9 @@
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item_3 bcg_gray border_width border_style border_color_blue">
-                                    <a href="#">
-                                        <p class="font_color_black">形成立法计划</br>草案送审稿</p>
+                                   <div class="divright"></div>
+                                    <a href="javaScript:void(0)" id="NOD_0000000213" class="removeHand" onclick="openDemonstrationPage(this.id)">
+									   <p class="font_color_black">形成立法计划</br>草案送审稿</p>
                                         <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
@@ -319,22 +331,23 @@
                             <div class="row_child">
                                 <div class="cell row_items row_item1 bcg_blue1">
                                     <a href="#">
-                                        <p class="font_color_white">报审（签报）</p>
+                                        <p class="font_color_white">常务会议审议</p>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item_notes1">
                                     <a href="#">
-                                        <i class="notes1">立法过程-报审审签</br>（签报）</i>
+                                        <i class="notes1">立法过程-常务会议</br>（常委会）</i>
                                     </a>
                                 </div>
                             </div>
                         </div>
                         <div class="row1 seven_row">
                             <div class="row_child">
-                                <img src="img/arrow_right.png" class="arrow arrow2" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow2" alt="">
                                 <div class="cell row_items row_item1 bcg_blue1 border_radius">
-                                    <a href="#">
-                                        <p class="font_color_white">计划外立项</p>
+                                     <div class="divright"></div>
+                                    <a href="javaScript:void(0)" id="NOD_0000000207" class="removeHand" onclick="openDemonstrationPage(this.id)">
+									    <p class="font_color_white">计划外立项</p>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_green border_width border_style border_radius border_color_g">
@@ -347,7 +360,7 @@
                         </div>
                         <div class="row1 eight_row">
                             <div class="row_child">
-                                <img src="img/arrow_right.png" class="arrow arrow2" alt="">
+                                <img src="../legislation/assets/demo/arrow_right.png" class="arrow arrow2" alt="">
                                 <div class="cell row_items row_item1 bcg_blue1 border_radius">
                                     <a href="#">
                                         <p class="font_color_white">立法计划公布</p>
@@ -373,7 +386,6 @@
     </div>
 </div>
 <script>
-
 function openDemonstrationPage(buttonId) {
 	$("#processIndexForm").modal({
 		remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?method=sampleList&stNodeId="+buttonId
@@ -388,6 +400,23 @@ function openDemonstrationChildPage(method,stExampleId,stNodeId) {
 function closeProcessIndex() {
 	$('#processIndexRootForm').modal('hide');
 }
+
+
+//页面加载后，去后台获取所有节点的状态，连接等信息
+$('#processIndexRootForm').on('shown.bs.modal', function(event) {	
+	<!--Ajax请求-->
+	$.post("../legislationPlan/draft_plan_info.do?method=openPlanAttachNum_ajax", function(data) {
+		if (data.success) {
+			//alert(JSON.stringify(data));
+			$.each(data.nodeInfoArray, function(index, item) {
+					$('#' + item.node).parent().addClass("bcg_green");
+					$('#' + item.node).parent().children(":first").html(item.num);
+				    //$('#' + item.node).addClass('addHand');
+			});
+		}
+	});
+
+});
 </script>
 </body>
 </html>

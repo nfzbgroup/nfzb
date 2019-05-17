@@ -40,46 +40,54 @@
 			</div>
 			<%@include file="/legislation/file/attachUpload.jsp" %>
 			<div class="form-group text-center">
-				<input ${stStyle} type="button" class="btn btn-w-m btn-success" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
+			 <c:if test="${legislationProcessTask.stTaskStatus=='TODO'||legislationProcessTask==null}">
+				<input type="button" class="btn btn-w-m btn-success" name="btnSave" id="btnSave" value="保存" onclick="saveLegislationDemonstration()">
 				&nbsp;&nbsp;
-				<input ${stStyle} type="button" class="btn btn-w-m btn-success" onclick="confirmOnlineReport('${stDocId}','${nodeId}','${buttonId}')" value="提交">
+				<input  type="button" class="btn btn-w-m btn-success" onclick="confirmOnlineReport('${stDocId}','${nodeId}','${buttonId}')" value="提交">
 				&nbsp;&nbsp;
+				 </c:if>
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 		</div>
 	</form>
 </div>
 <script>
-	function uploadFile(id, type, stSampleId) {
-		$.ajaxFileUpload({
-			url : '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId=' + stSampleId,
-			type : 'post',
-			secureuri : false, //是否启用安全提交,默认为false
-			fileElementId : id,
-			dataType : 'JSON',
-			success : function(data, status) { //服务器响应成功时的处理函数
-				data = data.replace(/<.*?>/ig, ""); //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
-				var file = JSON.parse(data);
-				if (file.success) {
-					if (type == 1) {
-						var html = '<a target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '<label  style="color: red" onclick="deleteAttach(this,1,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId + '\')" >删除</label>';
-						$("#" + id).parent().prev().html('<span>' + file.name + '</span>');
-						$("#" + id).parent().html(html);
-					} else {
-						var html = '<tr class="text-center">' + '<td class="text-left">需要报送的其他材料</td>' + '<td>' + file.name + '</td>' + '<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<label  style="color: red" onclick="deleteAttach(this,2,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId
-								+ '\')">删除</label>' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '</td></tr>';
-						$('#otherMaterial').append(html);
-					}
-					Duang.success("提示", "上传材料成功");
+//上传按钮点击事件
+function toUploadFile(obj) {
+	$(obj).next().click();
+};
+//上传材料到数据库表LEGISLATION_FILES事件
+function uploadFile(id, type, stSampleId) {
+	$.ajaxFileUpload({
+		url : '${basePath}/file/upload.do?nodeStatus=${nodeStatus}&stNodeId=${nodeId}&stSampleId=' + stSampleId,
+		type : 'post',
+		secureuri : false, //是否启用安全提交,默认为false
+		fileElementId : id,
+		dataType : 'JSON',
+		success : function(data, status) { //服务器响应成功时的处理函数
+			data = data.replace(/<.*?>/ig, ""); //ajaxFileUpload会对服务器响应回来的text内容加上<pre>text</pre>前后缀
+			var file = JSON.parse(data);
+			if (file.success) {
+				if (type == 1) {
+					var html = '<a target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '<label  style="color: red" onclick="deleteAttach(this,1,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId + '\')" >删除</label>';
+					$("#" + id).parent().prev().html('<span>' + file.name + '</span>');
+					$("#" + id).parent().html(html);
 				} else {
-					Duang.error("提示", "上传材料失败");
+					var html = '<tr class="text-center">' + '<td class="text-left">需要报送的其他材料</td>' + '<td>' + file.name + '</td>' + '<td><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=' + file.name + '&url=' + file.url + '">下载</a>&nbsp;&nbsp;' + '<label  style="color: red" onclick="deleteAttach(this,2,\'' + id + '\',\'' + file.fileId + '\',\'' + stSampleId
+							+ '\')">删除</label>' + '<input type="hidden" id="'+file.fileId+'"  name="'+file.fileId+'" value='+file.fileId+'>' + '</td></tr>';
+					$('#otherMaterial').append(html);
 				}
-			},
-			error : function(data, status, e) { //服务器响应失败时的处理函数
+				Duang.success("提示", "上传材料成功");
+			} else {
 				Duang.error("提示", "上传材料失败");
 			}
-		});
-	};
+		},
+		error : function(data, status, e) { //服务器响应失败时的处理函数
+			Duang.error("提示", "上传材料失败");
+		}
+	});
+};
+
 	function saveLegislationDemonstration() {
 		var param = $('#onlineDemonstrationForm').formToJson();
 		if (param.stComment2 == null || param.stComment2 == "") {

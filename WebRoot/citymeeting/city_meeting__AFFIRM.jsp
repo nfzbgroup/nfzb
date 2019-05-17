@@ -7,7 +7,7 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb"> 
 		<li>
-			<span>常务会议议题->材料确认></span>
+			<span>常务会议议题->材料确认</span>
 		</li>
 	</ul>
 	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
@@ -54,7 +54,7 @@
 				<div class="col-sm-9">
 					<table class="table table-bordered table-hover">
 						<thead>
-							<th class="text-center">议题名称</th>
+							<th class="text-center">草案名称</th>
 						</thead>
 						<tbody>
 							<c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
@@ -69,11 +69,11 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">议题对应的立法：</label>
+				<label class="col-sm-2 control-label">议题对应的计划：</label>
 				<div class="col-sm-9">
 					<table class="table table-bordered table-hover">
 						<thead>
-							<th class="text-center">立法名称</th>
+							<th class="text-center">计划名称</th>
 						</thead>
 						<tbody>
 							<c:if test="${legislationPlanTaskList !=null&&fn:length(legislationPlanTaskList)>0}">

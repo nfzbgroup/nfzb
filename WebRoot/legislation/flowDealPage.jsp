@@ -46,7 +46,7 @@
         .font_color_gray{color: #adadad;}
         .border_radius_circle{-webkit-border-radius: 100%;-moz-border-radius: 100%;border-radius: 100%;  }
         .white-bg1{background-color: #fff;}
-        .flowPic {position: relative;}
+        .flowPic {position: relative; height:850px; background-color:white}
         .ibox-title_inner{background-color:#d05353;}
         .ibox-title_inner .row_title_inner{font-size:24px;font-weight:700;color:#fff;}
         .row_title{line-height:50px;text-align: center;font-size:16px;font-weight:700;  color: #333333;  }
@@ -160,7 +160,7 @@
     </style>
 </head>
 <body class="gray-bg white-bg1">
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight" >
     <div class="row">
         <div class="ibox float-e-margins">
             <div class="ibox-title_inner">

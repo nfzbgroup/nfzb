@@ -49,10 +49,12 @@
 			</div>	
 		<%@include file="/legislation/file/attachUpload.jsp" %>
 		<div class="form-group text-center">
-			<input ${stStyle} type="button" class="btn btn-w-m btn-success" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
+		 <c:if test="${legislationProcessTask.stTaskStatus=='TODO'}">
+			<input ${stStyle} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
 			&nbsp;&nbsp;
 			<input ${stStyle} type="button" class="btn btn-w-m btn-success" onclick="confirmOnlineReport('${stDocId}','${nodeId}','${nodeStatus}')" value="上报">
 			&nbsp;&nbsp;
+			 </c:if>
 			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 		</div>
 	</form>
@@ -92,8 +94,10 @@
 	function saveLegislationDemonstration() {
 		var param = $('#onlineDemonstrationForm').formToJson();
 		if (param.stComment2 == null || param.stComment2 == "") {
-			Duang.error("提示", "请输入经办部门意见");
-		} else {
+			Duang.error("提示", "请输入送审说明");
+		} else if (param.stPersonsId == null || param.stPersonsId == "") {
+			Duang.error("提示", "请输入送审领导");
+		} else{
 			$.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration", param, function(data) {
 				if (data.success) {
 					$('#processIndexForm').modal('hide');
@@ -109,7 +113,7 @@
 	function confirmOnlineReport(stDocId, nodeId, nodeStatus) {
 		var param = $('#onlineDemonstrationForm').formToJson();
 		if (param.stComment2 == null || param.stComment2 == "") {
-			Duang.error("提示", "请输入经办部门意见");
+			Duang.error("提示", "请输入送审说明");
 		} else {
 			$.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationDemonstration", param, function(data) {
 				//alert("保存返回：" + JSON.stringify(data));

@@ -77,11 +77,30 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">议题待处理立法：</label>
+				<label class="col-sm-2 control-label">议题待处理草案：</label>
 				<div class="col-sm-9">
 					<table class="table table-bordered table-hover">
 						<thead>
-							<th class="text-center">立法名称</th>
+							<th class="text-center">草案名称</th>
+						</thead>
+						<tbody>
+							<c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
+								<c:forEach items="${legislationProcessDocList}" var="doc">
+									<tr>
+										<td class="text-center">${doc.stDocName}</td>
+									</tr>
+								</c:forEach>
+							</c:if>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">议题待处理计划：</label>
+				<div class="col-sm-9">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<th class="text-center">计划名称</th>
 						</thead>
 						<tbody>
 							<c:if test="${legislationPlanTaskList !=null&&fn:length(legislationPlanTaskList)>0}">

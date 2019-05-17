@@ -92,25 +92,31 @@
 					<input type="text"  readonly="readonly" class="form-control" id="stBak2" name="stBak2" value="${legislationCitymeetingTask.stBak2}">
 				</div>
 			</div>
-			<div class="form-group text-center">
-				<input type="hidden" id="op" name="op">
-				&nbsp;&nbsp;
-				&nbsp;&nbsp;
-				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
-			</div>
-			
- 	<div class="form-group">
-		<label class="control-label">上传材料接收 </label>
-	</div>	
-	<%@include file="/legislation/file/attachUpload.jsp" %>
-
-			
 			<div class="form-group">
-				<label class="col-sm-2 control-label">常务会议议后的立法：</label>
+				<label class="col-sm-2 control-label">议题对应的草案：</label>
 				<div class="col-sm-9">
 					<table class="table table-bordered table-hover">
 						<thead>
-							<th class="text-center">立法名称</th>
+							<th class="text-center">草案名称</th>
+						</thead>
+						<tbody>
+							<c:if test="${legislationProcessDocList !=null&&fn:length(legislationProcessDocList)>0}">
+								<c:forEach items="${legislationProcessDocList}" var="doc">
+									<tr>
+										<td class="text-center">${doc.stDocName}</td>
+									</tr>
+								</c:forEach>
+							</c:if>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">议题对应的计划：</label>
+				<div class="col-sm-9">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<th class="text-center">计划名称</th>
 						</thead>
 						<tbody>
 							<c:if test="${legislationPlanTaskList !=null&&fn:length(legislationPlanTaskList)>0}">
@@ -124,7 +130,18 @@
 					</table>
 				</div>
 			</div>
-		</div>
+			<div class="form-group text-center">
+				<input type="hidden" id="op" name="op">
+				&nbsp;&nbsp;
+				&nbsp;&nbsp;
+				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
+			</div>
+			
+ 	<div class="form-group">
+		<label class="control-label">上传材料接收 </label>
+	</div>	
+	<%@include file="/legislation/file/attachUpload.jsp" %>
+	</div>
 	</form>
 </div>
 <script>

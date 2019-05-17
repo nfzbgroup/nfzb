@@ -141,9 +141,9 @@ public class LegislationCitymeetingAction extends BaseAction {
 		//String stTopicId = request.getParameter("stTopicId");
 		String stNoticeId = request.getParameter("stNoticeId");
 		// 可选择的草案
-		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
-		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
-		String stTopicId = request.getParameter("stTopicId");
+		//List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
+		//request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+		String stTopicId = request.getParameter("stTopicId")==null?"":request.getParameter("stTopicId");
 		if(stTopicId.equals("TODO")){
 
 			//回显上传材料
@@ -310,10 +310,10 @@ public class LegislationCitymeetingAction extends BaseAction {
 	private String city_meeting__AFFIRM() {
 		String stNodeId = request.getParameter("stNodeId");
 		String stTopicId = request.getParameter("stTopicId");
-		// 可选择的草案
+		// 议题对应的草案
 		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000110' and t.stTaskStatus='DONE' and t.stComment2='"+stTopicId+"' and t.stEnable is null order by d.dtCreateDate desc");
 		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
-		// 议题对应的立法
+		// 议题对应的计划
 		List<LegislationPlanTask> legislationPlanTaskList = legislationPlanTaskService.findByHQL("from LegislationPlanTask t where t.stNodeId='NOD_0000000214' and t.stTaskStatus='TODO' and t.stTopicId='"+stTopicId+"' order by t.dtOpenDate desc");
 		if(legislationPlanTaskList.size()>0){
 			request.setAttribute("legislationPlanTaskList", legislationPlanTaskList);
@@ -362,14 +362,15 @@ public class LegislationCitymeetingAction extends BaseAction {
 	private String city_meeting__INPUT() {
 		String stNodeId = request.getParameter("stNodeId");
 		// 可选择的草案
-		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
-		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
-		
-		String stTopicId = request.getParameter("stTopicId");		
+		//List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
+		//request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+		String stTopicId = request.getParameter("stTopicId");	
+		//待处理计划
 		List<LegislationPlanTask> legislationPlanTaskList = legislationPlanTaskService.findByHQL("from LegislationPlanTask t where t.stNodeId='NOD_0000000214' and t.stTaskStatus='DOING' and t.stTopicId='"+stTopicId+"' order by t.dtOpenDate desc");
-		if(legislationPlanTaskList.size()>0){
-			request.setAttribute("legislationPlanTaskList", legislationPlanTaskList);
-		}
+		request.setAttribute("legislationPlanTaskList", legislationPlanTaskList);
+		//待处理草案
+		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000110' and t.stTaskStatus='DONE' and t.stComment2='"+stTopicId+"' and t.stEnable is null order by d.dtCreateDate desc");
+		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
 		if (StringUtil.isEmpty(stTopicId)) {
 			request.setAttribute("legislationCitymeeting", new LegislationCitymeeting());
 		} else {
@@ -413,15 +414,16 @@ public class LegislationCitymeetingAction extends BaseAction {
 	private String city_meeting__DONE() {
 		String stNodeId = request.getParameter("stNodeId");
 		// 可选择的草案
-		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
-		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+		//List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000105' and t.stTaskStatus='TODO' and t.stEnable is null order by d.dtCreateDate desc");
+		//request.setAttribute("legislationProcessDocList", legislationProcessDocList);
 		
 		String stTopicId = request.getParameter("stTopicId");
-		
+		//待处理草案
+		List<LegislationProcessDoc> legislationProcessDocList = legislationProcessDocService.findByHQL("select d from LegislationProcessDoc d inner join LegislationProcessTask t on d.stDocId=t.stDocId where 1=1 and t.stNodeId='NOD_0000000110' and t.stTaskStatus='DONE' and t.stComment2='"+stTopicId+"' and t.stEnable is null order by d.dtCreateDate desc");
+		request.setAttribute("legislationProcessDocList", legislationProcessDocList);
+		//待处理计划
 		List<LegislationPlanTask> legislationPlanTaskList = legislationPlanTaskService.findByHQL("from LegislationPlanTask t where t.stNodeId='NOD_0000000214' and t.stTaskStatus='DOING' and t.stTopicId='"+stTopicId+"' order by t.dtOpenDate desc");
-		if(legislationPlanTaskList.size()>0){
-			request.setAttribute("legislationPlanTaskList", legislationPlanTaskList);
-		}
+		request.setAttribute("legislationPlanTaskList", legislationPlanTaskList);
 		if (StringUtil.isEmpty(stTopicId)) {
 			request.setAttribute("legislationCitymeeting", new LegislationCitymeeting());
 		} else {

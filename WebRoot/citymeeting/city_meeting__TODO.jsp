@@ -185,7 +185,7 @@
 		if (param.stTopicName == null || param.stTopicName == "") {
 			Duang.error("提示", "请输入议题名称");
 		}  else if (param.stBak == null || param.stBak == "") {
-			Duang.error("提示", "请输入议题说明");
+			Duang.error("提示", "请输入所有内容");
 		}  else {
 			if (operation == 'submit') {
 				layer.confirm('请确认操作！', function(index) {

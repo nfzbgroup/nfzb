@@ -80,12 +80,12 @@
 					</div>				
 				</c:when>
 			</c:choose>
-			
+			<%-- 	
 			 <div class="form-group">
 				<label class="control-label">审核会议材料 </label>
 			</div>	
 			<%@include file="/legislation/file/attachUpload.jsp" %>
-			
+			 --%>
 			<div class="form-group text-center">
 				<input  type="hidden" id="op" name="op">
 				<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">

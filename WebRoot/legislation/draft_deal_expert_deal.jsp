@@ -61,10 +61,12 @@
 			<%@include file="/legislation/file/attachUpload.jsp" %>
 		
 			<div class="form-group text-center">
-				<input ${stStyle} type="button" class="btn btn-w-m btn-success" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
+				 <c:if test="${legislationProcessTask.stTaskStatus=='TODO'}">
+				<input ${stStyle} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" value="保存" onclick="saveLegislationDemonstration()">
 				&nbsp;&nbsp;
 				<input ${stStyle} type="button" class="btn btn-w-m btn-success" <c:if test="${legislationProcessTask.stTaskId !=null}"> onclick="confirmOnlineReport('${stDocId}','${nodeId}','${buttonId}')"</c:if> <c:if test="${legislationProcessTask.stTaskId ==null}">disabled="disabled"</c:if> value="提交">
 				&nbsp;&nbsp;
+					 </c:if>
 				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 		</div>

@@ -19,12 +19,12 @@
 	</button>
 </div>
 <div class="modal-body">
-	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议s</h2>
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议</h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
 		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body" align="center">
-			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 				<tr class="text-center">
 					<td class="text-right" width="20%">
 						<label>会议名称：</label>
@@ -54,7 +54,7 @@
 				</tr>
 				<tr class="text-center">
 					<td class="text-right">
-						<label>会议内容概述</label>
+						<label>会议内容概述：</label>
 					</td>
 					<td>${legislationCheckmeetingTask.stSummary}</td>
 				</tr>
@@ -64,7 +64,7 @@
 		
 
 		<div class="form-body" align="center">
-			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 				<tbody class="text-center" align="center">
 					<%-- <tr class="text-center">
 						<th class="text-right" width="20%">草案名称</th>
@@ -77,20 +77,20 @@
 						</tr>
 					</c:forEach> --%>
 					<tr class="text-center">
-						<th class="text-right" width="20%">事项名称</th>
+						<th class="text-center">事项名称</th>
 						<th class="text-center">事项类型</th>
 						<th class="text-center">事项反馈</th>
 					</tr>
 					<c:forEach items="${checkmeetingItem}" var="doc">
 						<tr class="text-center">
-							<th class="text-right" width="20%">${doc.stItemName}</th>
+							<td class="text-center">${doc.stItemName}</td>
 							<td class="text-center">${doc.stTypeName}</td>
 							<c:choose>
 								<c:when test="${doc.stSource!=null && doc.stTypeName=='草案'}">
 									<td class="text-center">${doc.stSource.stComment1} </td>
 								</c:when>
 								<c:when test="${doc.stSource!=null && doc.stTypeName=='立法计划'}">
-									<td class="text-center">${doc.stSource.stRemark} </td>
+									<td class="text-center">/</td>
 								</c:when>
 								<c:otherwise>
 									<td></td>

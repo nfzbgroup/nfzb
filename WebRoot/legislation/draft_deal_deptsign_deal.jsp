@@ -103,7 +103,7 @@
         <div class="form-group text-center">
           <c:if test="${legislationProcessTask.stTaskStatus == 'TODO'}">
             <input type="button" class="btn btn-w-m btn-success"
-                   name="btnSave" onclick="saveLegislationDemonstration()" value="保存"> &nbsp;&nbsp;
+                 id="btnSave"   name="btnSave" onclick="saveLegislationDemonstration()" value="保存"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSend" <c:if test="${legislationProcessTask.stTaskId !=null &&( legislationProcessTask.stComment1==null|| empty legislationProcessTask.stComment1)}"> onclick="sendOA()"</c:if>
                    <c:if test="${legislationProcessTask.stTaskId ==null ||(legislationProcessTask.stComment1!=null||not empty legislationProcessTask.stComment1)}"> disabled="disabled"</c:if> value="发OA盖章"> &nbsp;&nbsp;

@@ -146,7 +146,8 @@
         .flow8_span1{background:#008cdc url("${basePath}/legislation/assets/demo/icon01.png") no-repeat center;}
         .flow8_span2{background:#008cdc url("${basePath}/legislation/assets/demo/icon02.png") no-repeat center;}
         .flow8_span3{background:#008cdc url("${basePath}/legislation/assets/demo/icon03.png") no-repeat center;}
-
+        .divright { position:absolute; color:#fff;z-index: 99; font-size: 1.2em; background-color: #aa0007;width: 1.5em !important;height: 1.5em !important;left : 85%;top : -12px;text-align: center;-webkit-border-radius: 2.75em;border-radius: 2.75em;}
+   
     </style>
 </head>
 <body class="gray-bg white-bg1">
@@ -175,6 +176,7 @@
                             <div class="nav_line"><img src="${basePath}/legislation/assets/demo/nav_meun.png" alt=""></div>
                             <ul>
                                 <li nodeHref="draft_create_info">
+                                <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000101"  onclick="openDemonstrationPage(this.id)">
                                         <p class="font_color_white">法规规章</br>草案起草</p>
                                         <span class="border_radius flow1_span"></span>
@@ -270,6 +272,7 @@
 									</a>
 								</div>
 								<div nodeHref="" class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000120" class="removeHand" handStatus="1" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											部门征求意见
@@ -280,6 +283,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_yellow">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000121" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											部门征求意见
@@ -290,6 +294,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_red">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000123" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											部门征求意见
@@ -301,6 +306,7 @@
 								</div>
 
 								<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_red">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000122" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											部门征求意见
@@ -332,6 +338,7 @@
 									</a>
 								</div>
 								<div nodeHref="" class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000130" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											公开征求意见
@@ -342,6 +349,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_red">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000131__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											公开征求意见
@@ -352,6 +360,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_yellow">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000131__SEND" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											公开征求意见
@@ -362,6 +371,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_purple">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000131__PUBLISH" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											网上征求意见
@@ -372,12 +382,14 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item6 bcg_gray border_width border_style border_radius border_color_purple">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000131__GATHER" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">汇总整理分析</p>
 										<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
 									</a>
 								</div>
 								<div class="cell row_items row_item7 bcg_gray border_width border_style border_radius border_color_purple">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000131__RESULT" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">采纳意见发布</p>
 										<span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -398,6 +410,7 @@
 									</a>
 								</div>
 								<div nodeHref="" class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000150" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											专家论证会发
@@ -408,6 +421,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_t">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000151" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											专家论证会结
@@ -436,6 +450,7 @@
 									</a>
 								</div>
 								<div nodeHref="" class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000140" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											立法听证会
@@ -446,6 +461,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_red">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000141__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											立法听证会发
@@ -456,6 +472,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_yellow">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000141__SEND" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											立法听证会
@@ -466,6 +483,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_purple">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000141__PUBLISH" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											立法听证会上
@@ -476,6 +494,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item6 bcg_gray border_width border_style border_radius border_color_purple">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000141__GATHER" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											立法听证会网
@@ -486,6 +505,7 @@
 									</a>
 								</div>
 								<div class="cell row_items row_item7 bcg_gray border_width border_style border_radius border_color_t">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000141__RESULT" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											立法听证会结
@@ -514,18 +534,21 @@
 									</a>
 								</div>
 								<div nodeHref="" class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000160" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">部门会签编辑</p>
 										<span class="img_style img_style1 font_color_blue border_blue border_radius_circle">立</span>
 									</a>
 								</div>
 								<div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_yellow">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000161" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">部门会签盖章</p>
 										<span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
 									</a>
 								</div>
 								<div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_red">
+									<div class="divright"></div>
 									<a href="javaScript:void(0)" id="NOD_0000000163" class="removeHand" onclick="openDemonstrationPage(this.id)">
 										<p class="font_color_black">
 											部门会签发起
@@ -538,6 +561,7 @@
 								<c:choose>
 									<c:when test="${nodeId=='NOD_0000000162'||nodeId=='NOD_0000000122'}">
 										<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_red">
+											<div class="divright"></div>
 											<a href="javaScript:void(0)" id="NOD_0000000162" handStatus="1" class="removeHand" onclick="openDemonstrationPage(this.id)">
 												<p class="font_color_black">
 													部门会签结果
@@ -550,6 +574,7 @@
 									</c:when>
 									<c:otherwise>
 										<div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_red">
+											<div class="divright"></div>
 											<a href="javaScript:void(0)" id="NOD_0000000162" class="removeHand" onclick="openDemonstrationPage(this.id)">
 												<p class="font_color_black">
 													部门会签结果
@@ -580,24 +605,28 @@
                                 <i class="arrow_line line2"></i>
                                 <i class="arrow_line line3"></i>
                                 <div class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_yellow">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000104__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                         <p class="font_color_black">审核会前征询</br>意见发起</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_yellow">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000104__DOING" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                          <p class="font_color_black">审核会前征询</br>意见反馈汇总</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div nodeHref="" class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_t">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000170__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                      <p class="font_color_black">审核会议发起</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_t">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000170__FEEDBACK" class="removeHand" onclick="openDemonstrationPage(this.id)">
 
                                         <p class="font_color_black">审核会议汇总</p>
@@ -605,6 +634,7 @@
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_t">
+                                   <div class="divright"></div>
                                    <a href="javaScript:void(0)" id="NOD_0000000170__INPUT" class="removeHand" onclick="openDemonstrationPage(this.id)">
 
                                         <p class="font_color_black">审核会议安排</p>
@@ -612,13 +642,14 @@
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item6 bcg_gray border_width border_style border_radius border_color_yellow">
+                                  <div class="divright"></div>
                                    <a href="javaScript:void(0)" id="NOD_0000000170__AFFIRM" class="removeHand" onclick="openDemonstrationPage(this.id)">
-
                                         <p class="font_color_black">审核会议通知</br>发送</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item7 bcg_gray border_width border_style border_radius border_color_t">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000170__AFFIRM" class="removeHand" onclick="openDemonstrationPage(this.id)">
 
                                         <p class="font_color_black">审核会议意见整理</p>
@@ -626,12 +657,14 @@
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item8 bcg_gray border_width border_style border_radius border_color_t">
+                                   <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000170__DONE" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                          <p class="font_color_black">审核会议意见发送</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item9 bcg_gray border_width border_style border_radius border_color_t">
+                                   <div class="divright"></div>
                                    <a href="javaScript:void(0)" id="NOD_0000000109__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
 
                                         <p class="font_color_black">审核会议意见<br>采纳情况说明</p>
@@ -722,18 +755,21 @@
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow3" alt="">
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow4" alt="">
                                 <div nodeHref=""  class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_t">
+                                 <div class="divright"></div>
                                  <a href="javaScript:void(0)" id="NOD_0000000114" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                         <p class="font_color_black">校对/复核</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle two_work">立<b>/调</b></span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
+                                    <div class="divright"></div>
                                      <a href="javaScript:void(0)" id="NOD_0000000115__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                         <p class="font_color_black">送印</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_t">
+                                  <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000115__PRINT" class="removeHand" onclick="openDemonstrationPage(this.id)">
 
                                         <p class="font_color_black">正式文本</p>
@@ -741,6 +777,7 @@
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_t">
+                            <div class="divright"></div>
                             <a href="javaScript:void(0)" id="NOD_0000000115__ONLINE" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                         <p class="font_color_black">确定上网</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
@@ -753,6 +790,7 @@
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow1" alt="">
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow2" alt="">
                                 <div class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_t width_p">
+                                    <div class="divright"></div>
                                     <a href="javaScript:void(0)" id="NOD_0000000116__TODO" class="removeHand" onclick="openDemonstrationPage(this.id)">
 
                                         <p class="font_color_black width_p">规章文本向司法部和</br>市人大委员会报备</p>
@@ -760,6 +798,7 @@
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
+                                    <div class="divright"></div>
                                      <a href="javaScript:void(0)" id="NOD_0000000116__DOING" class="removeHand" onclick="openDemonstrationPage(this.id)">
 
                                         <p class="font_color_black">备案审查意见</br>处理</p>
@@ -789,6 +828,23 @@
 	function closeProcessIndex() {
 		$('#processIndexRootForm').modal('hide');
 	}
+	
+	
+	//页面加载后，去后台获取所有节点的状态，连接等信息
+	$('#processIndexRootForm').on('shown.bs.modal', function(event) {	
+		<!--Ajax请求-->
+		$.post("../legislationProcessDoc/draft_doc_info.do?method=openDocAttachNum_ajax", function(data) {
+			if (data.success) {
+				//alert(JSON.stringify(data));
+				$.each(data.nodeInfoArray, function(index, item) {
+						$('#' + item.node).parent().addClass("bcg_green");
+						$('#' + item.node).parent().children(":first").html(item.num);
+
+				});
+			}
+		});
+
+	});
 
 </script>
 <!--js区 end-->

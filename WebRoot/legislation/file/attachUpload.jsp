@@ -91,7 +91,9 @@
 			<script>
 			   $(function(){
 				   //alert();
-				     if($("#btnSave")[0]||$("#btnSubmit")[0]) {
+				   var displayStyle=$("#btnSave").css("display");
+				   //alert(displayStyle);
+				     if(($("#btnSave")[0]||$("#btnSubmit")[0])&&displayStyle!='none') {
 				    	// alert('2');
 				     }else{
 				    	 //alert($("[name='fileBtn']")[0]);

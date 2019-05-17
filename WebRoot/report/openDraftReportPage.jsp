@@ -38,10 +38,10 @@
 				<span>>法规规章草案报审材料准备</span>
 			</li>
 		</ul>
-		<!--<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
+		<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
 			<span aria-hidden="true">&times;</span>
 			<span class="sr-only">Close</span>
-		</button>-->
+		</button>
 	</div>
 	<div class="modal-body" id="draftReport">
 		<div class="ibox float-e-margins">

@@ -156,7 +156,7 @@
         <div class="form-group text-center">
           <c:if test="${legislationProcessTask.stTaskStatus == 'TODO'||legislationProcessTask.stTaskStatus == null}">
             <input type="button" class="btn btn-w-m btn-success"
-                   name="btnSave" onclick="saveLegislationDemonstration()" value="保存"> &nbsp;&nbsp;
+                id="btnSave"    name="btnSave" onclick="saveLegislationDemonstration()" value="保存"> &nbsp;&nbsp;
             <input type="button" class="btn btn-w-m btn-success"
                    name="btnSave"  onclick="confirmReport('${stDocId}','${nodeId}','${buttonId}')"
                   value="提交"> &nbsp;&nbsp; 
