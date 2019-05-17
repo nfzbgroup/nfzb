@@ -145,7 +145,7 @@ public class LegislationReportAction extends BaseAction {
 		String nodeStatus = request.getParameter("stTaskStatus");
 		String stReportId = request.getParameter("stReportId");
 		LegislationReport legislationReport = legislationReportService.findById(stReportId);
-		List<LegislationReportTask> taskList = legislationReportTaskService.findByHQL("from LegislationReportTask t where t.stReportId='" + stReportId + "' and t.stNodeId='" + stNodeId + "' and t.stEnable is null");
+		List<LegislationReportTask> taskList = legislationReportTaskService.findByHQL("from LegislationReportTask t where t.stReportId='" + stReportId + "' and t.stEnable is null");
 		LegislationReportTask legislationReportTask = taskList.get(0);
 		List<LegislationReportTaskdetail> taskdetailList=new ArrayList<LegislationReportTaskdetail>();
 		if(!"DOING".equals(nodeStatus)) {
@@ -183,7 +183,7 @@ public class LegislationReportAction extends BaseAction {
 			if (true) {
 				condMap.clear();
 				condMap.put("stParentId", stReportId);
-				condMap.put("stNodeId", stNodeId);
+				condMap.put("stNodeId", "NOD_0000000190");
 				condMap.put("stNodeStatus", nodeStatus);
 				sortMap.put("dtPubDate", "ASC");
 				List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);

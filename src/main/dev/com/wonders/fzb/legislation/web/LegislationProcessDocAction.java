@@ -12,7 +12,9 @@ import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingItemService;
 import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingService;
 import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingTaskService;
 import com.wonders.fzb.citymeeting.beans.LegislationCitymeeting;
+import com.wonders.fzb.citymeeting.beans.LegislationCitymeetingTask;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingService;
+import com.wonders.fzb.citymeeting.services.LegislationCitymeetingTaskService;
 import com.wonders.fzb.framework.beans.TeamInfo;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
@@ -23,7 +25,9 @@ import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.beans.LegislationPlanTask;
 import com.wonders.fzb.plan.services.LegislationPlanService;
 import com.wonders.fzb.plan.services.LegislationPlanTaskService;
+import com.wonders.fzb.report.beans.LegislationReport;
 import com.wonders.fzb.report.beans.LegislationReportTask;
+import com.wonders.fzb.report.services.LegislationReportService;
 import com.wonders.fzb.report.services.LegislationReportTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
@@ -126,6 +130,14 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationSendNoticeService")
 	private LegislationSendNoticeService legislationSendNoticeService;
+	
+	@Autowired
+	@Qualifier("legislationCitymeetingTaskService")
+	private LegislationCitymeetingTaskService legislationCitymeetingTaskService;
+	
+	@Autowired
+	@Qualifier("legislationReportService")
+	private LegislationReportService legislationReportService;
 
 	private File upload;
 
@@ -302,6 +314,28 @@ public class LegislationProcessDocAction extends BaseAction {
 		// List<LegislationProcessTask>
 		// unitEditList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
 		LegislationProcessDoc docInfo = legislationProcessDocService.findById(stDocId);
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		// 报审对象
+		condMap.put("stSourceDoc", stDocId);
+		condMap.put("stType", "NOD_0000000106");
+		List<LegislationReport> legislationReportList1 = legislationReportService.findByList(condMap, sortMap);
+		if (legislationReportList1.size() > 0) {
+			request.setAttribute("legislationReport1", legislationReportList1.get(0));
+		}
+		// 报市长对象
+		condMap.put("stType", "NOD_0000000112");
+		List<LegislationReport> legislationReportList2 = legislationReportService.findByList(condMap, sortMap);
+		if (legislationReportList2.size() > 0) {
+			request.setAttribute("legislationReport2", legislationReportList2.get(0));
+		}
+		// 常务会议对象
+		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, "NOD_0000000110");
+		if (legislationProcessTaskList.size() > 0) {
+			String citymeetingId = legislationProcessTaskList.get(0).getStComment2();
+			LegislationCitymeeting legislationCitymeeting = legislationCitymeetingService.findById(citymeetingId);
+			request.setAttribute("legislationCitymeeting", legislationCitymeeting);
+		}
 		request.setAttribute("docInfo", docInfo);
 		request.setAttribute("requestUrl", request.getRequestURI());
 		return pageController();
@@ -454,73 +488,215 @@ public class LegislationProcessDocAction extends BaseAction {
 
 		JSONObject retJson = new JSONObject();
 		JSONArray nodeInfoArray = new JSONArray();
-		
+		// 审核会议节点
 		Map<String, Object> condMap1 = new HashMap<>();
 		Map<String, String> sortMap1 = new HashMap<>();
 		condMap1.put("stDocSource", stDocId);
 		List<LegislationCheckmeeting> findByList = legislationCheckmeetingService.findByList(condMap1, sortMap1);
-		String stMeetingId="";
-		if(findByList.size()>0) {
-			  LegislationCheckmeeting legislationCheckmeeting = findByList.get(0);
-			   stMeetingId = legislationCheckmeeting.getStMeetingId();
-		  }
+		String stMeetingId = "";
+		if (findByList.size() > 0) {
+			LegislationCheckmeeting legislationCheckmeeting = findByList.get(0);
+			stMeetingId = legislationCheckmeeting.getStMeetingId();
+		}
 		condMap1.clear();
 		sortMap1.clear();
 		condMap1.put("stMeetingId", stMeetingId);
 		List<LegislationCheckmeetingTask> findByList2 = legislationCheckmeetingTaskService.findByList(condMap1, sortMap1);
-		String stTaskStatus="";
-		String stNodeId1="";
-		if(findByList2.size()>0) {
+		String stTaskStatus = "";
+		String stNodeId1 = "";
+		if (findByList2.size() > 0) {
 			LegislationCheckmeetingTask legislationCheckmeetingTask = findByList2.get(0);
-			stTaskStatus= legislationCheckmeetingTask.getStTaskStatus();
+			stTaskStatus = legislationCheckmeetingTask.getStTaskStatus();
 			stNodeId1 = legislationCheckmeetingTask.getStNodeId();
-		WegovSimpleNode node1 = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId='" + stNodeId1 + "'").get(0);	
-		JSONObject nodeChange1 = new JSONObject();
-		if (node1.getStDoneName().split("#").length > 2) {
-			nodeChange1.put("node", stNodeId1);
-			nodeChange1.put("colorSet", "bcg_blue");
-			nodeChange1.put("nodeHref", node1.getStInfoUrl());
-			nodeInfoArray.add(nodeChange1);
-			System.out.println("此节点是多个状态!" + node1.getStDoneName());
-			String nodeStatusArr[] = node1.getStDoneName().split("#");
-			for (int i = 0; i < nodeStatusArr.length; i++) {
-				nodeChange1 = new JSONObject();
-				// 当前节点task状态和 simpleNode 表中的状态字段做比对
-				if (stTaskStatus.equals(nodeStatusArr[i])) {
-					System.out.println("each.getStTaskStatus()-------" + stTaskStatus);
-					// 如果当前task的状态与节点状态一致
-					nodeChange1.put("node", stNodeId1 + "__" + nodeStatusArr[i]);
-					nodeChange1.put("colorSet", "bcg_green");
-					// nodeChange.put("otherSet", "sdfesfwec");
-					System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_green");
-					// 当前正在做的，用权限控制一下 如果权限表里 处室单位不为空，并且处室单位 包含这个处室
-					if (node1.getStSubmitRole() != null && (node1.getStSubmitRole().indexOf(userRole) >= 0)) {
+			WegovSimpleNode node1 = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId='" + stNodeId1 + "'").get(0);
+			JSONObject nodeChange1 = new JSONObject();
+			if (node1.getStDoneName().split("#").length > 2) {
+				nodeChange1.put("node", stNodeId1);
+				nodeChange1.put("colorSet", "bcg_blue");
+				nodeChange1.put("nodeHref", node1.getStInfoUrl());
+				nodeInfoArray.add(nodeChange1);
+				System.out.println("此节点是多个状态!" + node1.getStDoneName());
+				String nodeStatusArr[] = node1.getStDoneName().split("#");
+				for (int i = 0; i < nodeStatusArr.length; i++) {
+					nodeChange1 = new JSONObject();
+					// 当前节点task状态和 simpleNode 表中的状态字段做比对
+					if (stTaskStatus.equals(nodeStatusArr[i])) {
+						System.out.println("each.getStTaskStatus()-------" + stTaskStatus);
+						// 如果当前task的状态与节点状态一致
+						nodeChange1.put("node", stNodeId1 + "__" + nodeStatusArr[i]);
+						nodeChange1.put("colorSet", "bcg_green");
+						// nodeChange.put("otherSet", "sdfesfwec");
+						System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_green");
+						// 当前正在做的，用权限控制一下 如果权限表里 处室单位不为空，并且处室单位 包含这个处室
+						if (node1.getStSubmitRole() != null && (node1.getStSubmitRole().indexOf(userRole) >= 0)) {
+							nodeChange1.put("nodeHref", node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
+							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[URL]：" + node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
+						}
+						nodeInfoArray.add(nodeChange1);
+						break;// 等于后，后面没出来的状态就不要了
+					} else {
+						System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_blue");
+						nodeChange1.put("node", stNodeId1 + "__" + nodeStatusArr[i]);
+						nodeChange1.put("colorSet", "bcg_blue");
+						// nodeChange.put("nodeHref", node.getStInfoUrl() + "__"
+						// + nodeStatusArr[i]);
+						// 当前正在做的，用权限控制一下 这里注释一下 只有绿色的需要控制 蓝色的可以打开
+						// 2019年4月10日15:14:45 sy
+						// if (node.getStSubmitRole() != null &&
+						// (node.getStSubmitRole().indexOf(userRole) >= 0)) {
 						nodeChange1.put("nodeHref", node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
 						System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[URL]：" + node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
+						// }
+						nodeInfoArray.add(nodeChange1);
 					}
-					nodeInfoArray.add(nodeChange1);
-					break;// 等于后，后面没出来的状态就不要了
-				} else {
-					System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_blue");
-					nodeChange1.put("node", stNodeId1 + "__" + nodeStatusArr[i]);
-					nodeChange1.put("colorSet", "bcg_blue");
-					// nodeChange.put("nodeHref", node.getStInfoUrl() + "__"
-					// + nodeStatusArr[i]);
-					// 当前正在做的，用权限控制一下 这里注释一下 只有绿色的需要控制 蓝色的可以打开
-					// 2019年4月10日15:14:45 sy
-					// if (node.getStSubmitRole() != null &&
-					// (node.getStSubmitRole().indexOf(userRole) >= 0)) {
-					nodeChange1.put("nodeHref", node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
-					System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[URL]：" + node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
-					// }
-					nodeInfoArray.add(nodeChange1);
 				}
 			}
+
 		}
-		
-	}
-		
-		
+		// 报签节点
+		condMap1.clear();
+		sortMap1.clear();
+		condMap1.put("stSourceDoc", stDocId);
+		condMap1.put("stType", "NOD_0000000106");
+		List<LegislationReport> reportList = legislationReportService.findByList(condMap1, sortMap1);
+		String stReportId1 = "";
+		String stReportId2 = "";
+		if (reportList.size() > 0) {
+			LegislationReport legislationReport = reportList.get(0);
+			stReportId1 = legislationReport.getStReportId();
+		}
+		condMap1.clear();
+		sortMap1.clear();
+		condMap1.put("stSourceDoc", stDocId);
+		condMap1.put("stType", "NOD_0000000112");
+		List<LegislationReport> reportList2 = legislationReportService.findByList(condMap1, sortMap1);
+		if (reportList2.size() > 0) {
+			LegislationReport legislationReport = reportList2.get(0);
+			stReportId2 = legislationReport.getStReportId();
+		}
+		List<LegislationReportTask> legislationReportTaskList = legislationReportTaskService
+				.findByHQL("from LegislationReportTask t where 1=1 and t.stReportId in('" + stReportId1 + "','" + stReportId2 + "')");
+		stTaskStatus = "";
+		stNodeId1 = "";
+		if (legislationReportTaskList.size() > 0) {
+			for (LegislationReportTask legislationReportTask : legislationReportTaskList) {
+				stTaskStatus = legislationReportTask.getStTaskStatus();
+				stNodeId1 = legislationReportTask.getStNodeId();
+				WegovSimpleNode node1 = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId='" + stNodeId1 + "'").get(0);
+				JSONObject nodeChange1 = new JSONObject();
+				if (node1.getStDoneName().split("#").length > 2) {
+					nodeChange1.put("node", stNodeId1);
+					nodeChange1.put("colorSet", "bcg_blue");
+					nodeChange1.put("nodeHref", node1.getStInfoUrl());
+					nodeInfoArray.add(nodeChange1);
+					System.out.println("此节点是多个状态!" + node1.getStDoneName());
+					String nodeStatusArr[] = node1.getStDoneName().split("#");
+					for (int i = 0; i < nodeStatusArr.length; i++) {
+						nodeChange1 = new JSONObject();
+						// 当前节点task状态和 simpleNode 表中的状态字段做比对
+						if (stTaskStatus.equals(nodeStatusArr[i])) {
+							System.out.println("each.getStTaskStatus()-------" + stTaskStatus);
+							// 如果当前task的状态与节点状态一致
+							if (stReportId1.equals(legislationReportTask.getStReportId())) {
+								nodeChange1.put("node", "NOD_0000000106" + "__" + nodeStatusArr[i]);
+							} else {
+								nodeChange1.put("node", "NOD_0000000112" + "__" + nodeStatusArr[i]);
+							}
+							nodeChange1.put("colorSet", "bcg_green");
+							// nodeChange.put("otherSet", "sdfesfwec");
+							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_green");
+							// 当前正在做的，用权限控制一下 如果权限表里 处室单位不为空，并且处室单位 包含这个处室
+							// if (node1.getStSubmitRole() != null &&
+							// (node1.getStSubmitRole().indexOf(userRole) >= 0))
+							// {
+							// nodeChange1.put("nodeHref", node1.getStInfoUrl()
+							// + "__" + nodeStatusArr[i]);
+							// System.out.println(stNodeId1 + "__" +
+							// nodeStatusArr[i] + "[URL]：" +
+							// node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
+							// }
+							nodeInfoArray.add(nodeChange1);
+							break;// 等于后，后面没出来的状态就不要了
+						} else {
+							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_blue");
+							if (stReportId1.equals(legislationReportTask.getStReportId())) {
+								nodeChange1.put("node", "NOD_0000000106" + "__" + nodeStatusArr[i]);
+							} else {
+								nodeChange1.put("node", "NOD_0000000112" + "__" + nodeStatusArr[i]);
+							}
+							nodeChange1.put("colorSet", "bcg_blue");
+							nodeChange1.put("nodeHref", node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
+							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[URL]：" + node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
+							nodeInfoArray.add(nodeChange1);
+						}
+					}
+				}
+
+			}
+
+		}
+		// 常务会议节点
+		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, "NOD_0000000110");
+		String citymeetingId = "";
+		if (legislationProcessTaskList.size() > 0) {
+			citymeetingId = legislationProcessTaskList.get(0).getStComment2();
+		}
+		condMap1.clear();
+		sortMap1.clear();
+		condMap1.put("stTopicId", citymeetingId);
+		List<LegislationCitymeetingTask> legislationCitymeetingTaskList = legislationCitymeetingTaskService.findByList(condMap1, sortMap1);
+		stTaskStatus = "";
+		stNodeId1 = "";
+		if (legislationCitymeetingTaskList.size() > 0) {
+			for (LegislationCitymeetingTask legislationCitymeetingTask : legislationCitymeetingTaskList) {
+				stTaskStatus = legislationCitymeetingTask.getStTaskStatus();
+				stNodeId1 = legislationCitymeetingTask.getStNodeId();
+				WegovSimpleNode node1 = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId='" + stNodeId1 + "'").get(0);
+				JSONObject nodeChange1 = new JSONObject();
+				if (node1.getStDoneName().split("#").length > 2) {
+					nodeChange1.put("node", stNodeId1);
+					nodeChange1.put("colorSet", "bcg_blue");
+					nodeChange1.put("nodeHref", node1.getStInfoUrl());
+					nodeInfoArray.add(nodeChange1);
+					System.out.println("此节点是多个状态!" + node1.getStDoneName());
+					String nodeStatusArr[] = node1.getStDoneName().split("#");
+					for (int i = 0; i < nodeStatusArr.length; i++) {
+						nodeChange1 = new JSONObject();
+						// 当前节点task状态和 simpleNode 表中的状态字段做比对
+						if (stTaskStatus.equals(nodeStatusArr[i])) {
+							System.out.println("each.getStTaskStatus()-------" + stTaskStatus);
+							// 如果当前task的状态与节点状态一致
+							nodeChange1.put("node", stNodeId1 + "__" + nodeStatusArr[i]);
+							nodeChange1.put("colorSet", "bcg_green");
+							// nodeChange.put("otherSet", "sdfesfwec");
+							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_green");
+							// 当前正在做的，用权限控制一下 如果权限表里 处室单位不为空，并且处室单位 包含这个处室
+							// if (node1.getStSubmitRole() != null &&
+							// (node1.getStSubmitRole().indexOf(userRole) >= 0))
+							// {
+							// nodeChange1.put("nodeHref", node1.getStInfoUrl()
+							// + "__" + nodeStatusArr[i]);
+							// System.out.println(stNodeId1 + "__" +
+							// nodeStatusArr[i] + "[URL]：" +
+							// node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
+							// }
+							nodeInfoArray.add(nodeChange1);
+							break;// 等于后，后面没出来的状态就不要了
+						} else {
+							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_blue");
+							nodeChange1.put("node", stNodeId1 + "__" + nodeStatusArr[i]);
+							nodeChange1.put("colorSet", "bcg_blue");
+							nodeChange1.put("nodeHref", node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
+							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[URL]：" + node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
+							nodeInfoArray.add(nodeChange1);
+						}
+					}
+				}
+
+			}
+
+		}
+
 		// 找出当前草案下的所有任务，设置到节点的状态上
 		Map<String, Object> condMap = new HashMap<>();
 		Map<String, String> sortMap = new HashMap<>();

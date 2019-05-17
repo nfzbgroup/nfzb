@@ -656,19 +656,19 @@
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow2" alt="">
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow3" alt="">
                                 <div class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="#">
+                                    <a href="javaScript:void(0)" id="NOD_0000000106" class="removeHand" onclick="openReportPage(this.id,'openDraftReportPage','${request.docInfo.stDocId}')">                                        
                                         <p class="font_color_black">法规规章草案</br>报审材料准备</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_yellow">
-                                    <a href="#">
+                                    <a href="javaScript:void(0)" id="NOD_0000000106__TODO" class="removeHand" onclick="openReportPage1(this.id,'report_info_add','${request.docInfo.stDocId}','${legislationReport1.stReportId}')">                                        
                                         <p class="font_color_black">法规规章草案</br>报审审批</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_red">
-                                    <a href="#">
+                                    <a href="javaScript:void(0)" id="NOD_0000000106__RESULT" class="removeHand" onclick="openReportPage1(this.id,'report_info_result','${request.docInfo.stDocId}','${legislationReport1.stReportId}')">                                        
                                         <p class="font_color_black">法规规章草案</br>报审（签报）</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
@@ -682,25 +682,25 @@
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow3" alt="">
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow4" alt="">
                                 <div class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_red">
-                                    <a href="#">
+                                    <a href="javaScript:void(0)" id="NOD_0000000180__TODO" class="removeHand" onclick="openCitymeetingPage(this.id,'','${request.docInfo.stDocId}')">
                                         <p class="font_color_black">常务会议议题</br>发起</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="#">
+                                    <a href="javaScript:void(0)" id="NOD_0000000110" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
                                         <p class="font_color_black">常务会议议题</br>议题材料准备</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="#">
+                                    <a href="javaScript:void(0)" id="NOD_0000000180__AFFIRM" class="removeHand" onclick="openCitymeetingPage(this.id,'','${request.docInfo.stDocId}')">
                                         <p class="font_color_black">议题材料报送</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="#">
+                                    <a href="javaScript:void(0)" id="NOD_0000000180__INPUT" class="removeHand" onclick="openCitymeetingPage(this.id,'','${request.docInfo.stDocId}')">
                                         <p class="font_color_black">常务会审议</br>意见</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
@@ -712,13 +712,13 @@
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow1" alt="">
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow2" alt="">
                                 <div class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="#">
+                                    <a href="javaScript:void(0)" id="NOD_0000000112" class="removeHand" onclick="openReportPage(this.id,'openDraftReportPage','${request.docInfo.stDocId}')">
                                         <p class="font_color_black">法规规章草案报</br>市长审签材料</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_red">
-                                    <a href="#">
+                                    <a href="javaScript:void(0)" id="NOD_0000000112__RESULT" class="removeHand" onclick="openReportPage1(this.id,'report_info_result','${request.docInfo.stDocId}','${legislationReport2.stReportId}')">
                                         <p class="font_color_black">法规规章草案</br>报市长审签</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
@@ -807,6 +807,67 @@
 		console.log("method=" + method);
 		$("#processIndexForm").modal({
 			remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=" + buttonId + "&method=" + method + "&stDocId=" + stDocId
+		});
+	};
+	function openCitymeetingPage(buttonId, method, stDocId) {
+		var nodeHref = $('#' + buttonId).parent().attr('nodeHref');
+		var isGray = $('#' + buttonId).parent().hasClass("bcg_gray");
+		var isGreen = $('#' + buttonId).parent().hasClass("bcg_green");
+		//alert(nodeHref);
+		//console.info(method);
+		var index = method.indexOf("__");
+		if (method == '' || index == 0)
+			method = nodeHref;
+		    var arr=new Array();
+		    arr=buttonId.split('__');
+		if (method == '' || typeof (method) == "undefined"||isGray||isGreen) {
+			alert('当前节点不可以操作！');
+			return false;
+		}
+		//alert("method=" + method);
+		console.log("method=" + method);
+		$("#processIndexForm").modal({
+			remote : "${basePath}/legislationCitymeeting/city_meeting_info.do?stNodeId=" + arr[0] + "&method=" + method + "&stDocId=" + stDocId + "&stTopicId=${legislationCitymeeting.stTopicId}"
+		});
+	};
+	function openReportPage(buttonId, method, stDocId) {
+		var nodeHref = $('#' + buttonId).parent().attr('nodeHref');
+		var isGray = $('#' + buttonId).parent().hasClass("bcg_gray");
+		var isGreen = $('#' + buttonId).parent().hasClass("bcg_green");
+		//alert(nodeHref);
+		//console.info(method);
+		var index = method.indexOf("__");
+		if (method == '' || index == 0)
+			method = nodeHref;
+		if (method == '' || typeof (method) == "undefined"||isGray||isGreen) {
+			alert('当前节点不可以操作！');
+			return false;
+		}
+		//alert("method=" + method);
+		console.log("method=" + method);
+		$("#processIndexForm").modal({
+			remote : "${basePath}/legislationReport/" + method + ".do?stNodeId=" + buttonId + "&stDocId=" + stDocId
+		});
+	};
+	function openReportPage1(buttonId, method, stDocId, type) {
+		var nodeHref = $('#' + buttonId).parent().attr('nodeHref');
+		var isGray = $('#' + buttonId).parent().hasClass("bcg_gray");
+		var isGreen = $('#' + buttonId).parent().hasClass("bcg_green");
+		//alert(nodeHref);
+		//console.info(method);
+		var index = method.indexOf("__");
+		if (method == '' || index == 0)
+			method = nodeHref;
+		    var arr=new Array();
+	        arr=buttonId.split('__');
+		if (method == '' || typeof (method) == "undefined"||isGray||isGreen) {
+			alert('当前节点不可以操作！');
+			return false;
+		}
+		//alert("method=" + method);
+		console.log("method=" + method);
+		$("#processIndexForm").modal({
+			remote : "${basePath}/legislationReport/report_doc_info.do?method=" + method + "&stDocId=" + stDocId + "&stReportId="+type+"&stNodeId="+arr[0]+"&stTaskStatus="+arr[1]
 		});
 	};
 	function uploadDemonstrationReport(stDocId, stNodeId, buttonId) {

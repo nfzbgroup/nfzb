@@ -58,14 +58,14 @@
 								<td>立法评估</td>
 								<td>*</td>
 								<td>*</td>
-								<td><a href="#" onclick="alert('待开发');">处理</a></td>
+								<td><a href="#" onclick="openFlowAssess()">处理(可点击)</a></td>
 							</tr>
 												<tr>
 								<td>4</td>
 								<td>立法清理</td>
 								<td>*</td>
 								<td>*</td>
-								<td><a href="#" onclick="alert('待开发');">处理</a></td>
+								<td><a href="#" onclick="openFlowAssessClean()">处理(可点击)</a></td>
 							</tr>
 					</tbody>
 				</table>
@@ -152,6 +152,18 @@
         function openPlanPage() {
 			$("#processIndexRootForm").modal({
 				remote: "${basePath}/legislationPlan/draft_plan_info.do?method=legislation_plan_flow"
+			});
+        };
+        //打开立法立法评估样本流程图
+        function openFlowAssess() {
+			$("#processIndexRootForm").modal({
+				remote: "${basePath}/legislationAssess/assess_plan_info.do?method=legislation_assess_flow"
+			});
+        };
+        //打开立法立法清理样本流程图
+        function openFlowAssessClean() {
+			$("#processIndexRootForm").modal({
+				remote: "${basePath}/legislationClean/clean_plan_info.do?method=legislation_clean_flow"
 			});
         };
 	</script>

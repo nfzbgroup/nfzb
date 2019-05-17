@@ -156,6 +156,10 @@
     <div class="row">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
+             <button style="padding-right: 5px" type="button" class="close" onclick="closeProcessIndex()">
+					<span aria-hidden="true">&times;</span>
+					<span class="sr-only">Close</span>
+				</button>
                 <div class="row">
                     <div class="row_title">立法计划样本管理(点击修改节点样本)</div>
                     <div class="flowPic">
