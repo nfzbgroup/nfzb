@@ -83,5 +83,7 @@ public interface LegislationAssessTaskService{
 	 */
 	void nextAssessProcess(HttpServletRequest request, HttpSession session);
 
+	List<LegislationAssessTask> findByParentIdAndNodeId(String stParentId,String stNodeId);
+
 
 }

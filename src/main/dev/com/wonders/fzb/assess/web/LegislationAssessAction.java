@@ -2,6 +2,7 @@ package com.wonders.fzb.assess.web;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.assess.beans.LegislationAssess;
+import com.wonders.fzb.assess.beans.LegislationAssessItem;
 import com.wonders.fzb.assess.beans.LegislationAssessTask;
 import com.wonders.fzb.assess.services.LegislationAssessItemService;
 import com.wonders.fzb.assess.services.LegislationAssessService;
@@ -12,8 +13,6 @@ import com.wonders.fzb.framework.beans.MOR;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
-import com.wonders.fzb.plan.beans.LegislationPlan;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -190,6 +189,15 @@ public class LegislationAssessAction extends BaseAction {
 		condMap.put("showNameLike","立法");
 		sortMap.put("sort","ASC");
 		List<MOR> morList=teamInfoService.findMorList(condMap,sortMap);
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
+		condMap.clear();
+		sortMap.clear();
+		condMap.put("stAssessId", legislationAssessTask.getStParentId());
+		condMap.put("stIsDeleteIsNull", "null");
+		sortMap.put("dtCreateDate","ASC");
+		List<LegislationAssessItem> legislationAssessItemList=legislationAssessItemService.findByList(condMap,sortMap);
+		request.setAttribute("legislationAssessItemList",legislationAssessItemList);
 		request.setAttribute("morList",morList);
 		return pageController();
 	}

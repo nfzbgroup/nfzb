@@ -157,7 +157,8 @@
 												<a href="javaScript:void(0)" data-title="查看评估方案建议" onclick="openAssessItemPage('openAssessItemSuggestPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案建议</a>
 												<a href="javaScript:void(0)" data-title="查看评估进度" onclick="openAssessItemPage('openAssessItemScheduleListPage','${plan.stTaskId}')" class="layer_full_link">查看评估进度</a>
 												<br/>
-												<a href="javaScript:void(0)" data-title="提交评估报告" onclick="nextAssessProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">提交评估报告</a>
+												<a href="javaScript:void(0)" data-title="录入评估报告" onclick="openAssessItemPage('openAssessItemReportPage','${plan.stTaskId}')" class="layer_full_link">录入评估报告</a>
+												<a href="javaScript:void(0)" data-title="提交评估报告" onclick="checkAssessItemPlan('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">提交评估报告</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000260'}">
 												<a href="javaScript:void(0)" data-title="查看评估项目" onclick="openAssessItemPage('openAssessItemInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估项目</a>
@@ -166,6 +167,7 @@
 												<a href="javaScript:void(0)" data-title="查看评估方案建议" onclick="openAssessItemPage('openAssessItemSuggestPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案建议</a>
 												<a href="javaScript:void(0)" data-title="查看评估进度" onclick="openAssessItemPage('openAssessItemScheduleListPage','${plan.stTaskId}')" class="layer_full_link">查看评估进度</a>
 												<br/>
+												<a href="javaScript:void(0)" data-title="查看评估报告" onclick="openAssessItemPage('openAssessItemReportPage','${plan.stTaskId}')" class="layer_full_link">查看评估报告</a>
 												<a href="javaScript:void(0)" data-title="评估报告分送" onclick="nextAssessProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">评估报告分送</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000261'}">
@@ -175,6 +177,7 @@
 												<a href="javaScript:void(0)" data-title="查看评估方案建议" onclick="openAssessItemPage('openAssessItemSuggestPage','${plan.stTaskId}')" class="layer_full_link">查看评估方案建议</a>
 												<a href="javaScript:void(0)" data-title="查看评估进度" onclick="openAssessItemPage('openAssessItemScheduleListPage','${plan.stTaskId}')" class="layer_full_link">查看评估进度</a>
 												<br/>
+												<a href="javaScript:void(0)" data-title="查看评估报告" onclick="openAssessItemPage('openAssessItemReportPage','${plan.stTaskId}')" class="layer_full_link">查看评估报告</a>
 												<a href="javaScript:void(0)" data-title="评估报告接收" onclick="nextAssessProcess('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">评估报告接收</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000264'}">
@@ -204,6 +207,8 @@
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000259'||nodeId=='NOD_0000000260'||nodeId=='NOD_0000000261'}">
 												<a href="javaScript:void(0)" data-title="查看评估进度" onclick="openAssessItemPage('openAssessItemScheduleListPage','${plan.stTaskId}')" class="layer_full_link">查看评估进度</a>
+												<br/>
+												<a href="javaScript:void(0)" data-title="查看评估报告" onclick="openAssessItemPage('openAssessItemReportPage','${plan.stTaskId}')" class="layer_full_link">查看评估报告</a>
 											</c:if>
 										</td>
 									</c:otherwise>

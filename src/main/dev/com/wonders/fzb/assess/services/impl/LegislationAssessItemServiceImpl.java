@@ -197,8 +197,8 @@ public class LegislationAssessItemServiceImpl implements LegislationAssessItemSe
 				//评估方案建议
                 String stSuggest=request.getParameter("stSuggest");
                 legislationAssessItem.setStSuggest(stSuggest);
-            }else if("NOD_0000000258".equals(stNodeId)){
-				//反馈评估进度
+            }else if("NOD_0000000258".equals(stNodeId)||"NOD_0000000259".equals(stNodeId)){
+				//反馈评估进度/录入评估报告
 				String stComment1=request.getParameter("stComment1");
 				legislationAssessTask.setStComment1(stComment1);
 				legislationAssessTaskService.update(legislationAssessTask);
@@ -221,7 +221,7 @@ public class LegislationAssessItemServiceImpl implements LegislationAssessItemSe
 			Map<String, Object> map=new HashMap<>();
 			map.put("stItemId",legislationAssessItem.getStItemId());
 			map.put("stItemName",legislationAssessItem.getStItemName());
-			LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findByHQL("from LegislationAssessTask t where 1=1 and t.stParentId='"+legislationAssessItem.getStItemId()+"' and t.stNodeId='"+legislationAssessItem.getStNodeId()+"' and t.stEnable is null").get(0);
+			LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findByParentIdAndNodeId(legislationAssessItem.getStItemId(),legislationAssessItem.getStNodeId()).get(0);
 			String stStatus=legislationAssessTask.getStNodeName();
 			if("TODO".equals(legislationAssessTask.getStTaskStatus())){
 				stStatus=stStatus+"(待处理)";
@@ -229,7 +229,7 @@ public class LegislationAssessItemServiceImpl implements LegislationAssessItemSe
 				stStatus=stStatus+"(已处理)";
 			}
 			if("NOD_0000000255".equals(stNodeId)||"NOD_0000000262".equals(stNodeId)){
-				LegislationAssessTask legislationAssessTaskActive=legislationAssessTaskService.findByHQL("from LegislationAssessTask t where 1=1 and t.stParentId='"+legislationAssessItem.getStItemId()+"' and t.stNodeId='NOD_0000000254' and t.stEnable is null").get(0);
+				LegislationAssessTask legislationAssessTaskActive=legislationAssessTaskService.findByParentIdAndNodeId(legislationAssessItem.getStItemId(),"NOD_0000000254").get(0);
 				map.put("stActive",legislationAssessTaskActive.getStActive());
 			}
 			map.put("stStatus",stStatus);

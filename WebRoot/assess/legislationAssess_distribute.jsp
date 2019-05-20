@@ -19,37 +19,49 @@
 	<form id="legislationAssessDistributeForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden name="stTaskId" value="${stTaskId}" >
-        <div class="form-body">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">选择办理处：</label>
-                <div class="col-sm-9">
-                    <select class="form-control" name="stTeamId" >
-                       <c:if test="${morList!=null&&fn:length(morList)>0}">
-                           <c:forEach var="mor" items="${morList}">
-                               <option value="${mor.teamCid}" >${mor.showName}</option>
-                           </c:forEach>
-                       </c:if>
-                    </select>
-                </div>
-            </div>
-			<div class="form-group text-center">
-                    <input type="button" class="btn btn-w-m btn-success"  value="确认分送" onclick="saveLegislationAssessDistribute()"> &nbsp;&nbsp;
-					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
-			</div>
-		</div>
+        <table class="table table-border table-bordered table-bg table-hover">
+            <thead>
+            <tr class="text-center">
+                <th class="text-center">项目名称</th>
+                <th class="text-center">发起人</th>
+                <th class="text-center">发起时间</th>
+                <th class="text-center">选择办理处</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:if test="${legislationAssessItemList !=null&&fn:length(legislationAssessItemList)>0}">
+                <c:forEach var="assessItem" items="${legislationAssessItemList}">
+                    <tr class="text-center">
+                        <td>${assessItem.stItemName}</td>
+                        <td>${assessItem.stUserName}</td>
+                        <td><fmt:formatDate type="date" value="${assessItem.dtCreateDate}" /></td>
+                        <td>
+                            <select class="form-control" name="stTeamId${assessItem.stItemId}" >
+                                <c:if test="${morList!=null&&fn:length(morList)>0}">
+                                    <c:forEach var="mor" items="${morList}">
+                                        <option value="${mor.teamCid}" >${mor.showName}</option>
+                                    </c:forEach>
+                                </c:if>
+                            </select>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </c:if>
+            </tbody>
+        </table>
+        <div class="form-group text-center">
+                <input type="button" class="btn btn-w-m btn-success"  value="确认分送" onclick="saveLegislationAssessDistribute()"> &nbsp;&nbsp;
+                <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
+        </div>
 	</form>
 
 </div>
 <script>
     function saveLegislationAssessDistribute() {
         var param=$('#legislationAssessDistributeForm').formToJson();
-        if(param.stTeamId==null||param.stTeamId==""){
-            Duang.error("提示","请选择办理处");
-        }else {
-            $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationAssessDistribute",param,function(data){
-                $('#legislationProcessForm').modal('hide');
-                submitForm(1);
-            });
-        }
+        $.post("../${requestUrl}?stNodeId=${nodeId}&method=saveLegislationAssessDistribute",param,function(data){
+            $('#legislationProcessForm').modal('hide');
+            submitForm(1);
+        });
     }
 </script>

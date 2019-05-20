@@ -75,7 +75,8 @@ public class LegislationAssessItemAction extends BaseAction {
 			@Result(name = "openAssessItemPlanPage", location = "/assess/legislationAssessItem_plan.jsp"),
             @Result(name = "openAssessItemSuggestPage", location = "/assess/legislationAssessItem_suggest.jsp"),
             @Result(name = "openAssessItemSchedulePage", location = "/assess/legislationAssessItem_schedule.jsp"),
-			@Result(name = "openAssessItemScheduleListPage", location = "/assess/legislationAssessItem_scheduleList.jsp")
+			@Result(name = "openAssessItemScheduleListPage", location = "/assess/legislationAssessItem_scheduleList.jsp"),
+			@Result(name = "openAssessItemReportPage", location = "/assess/legislationAssessItem_report.jsp")
 
 	})
 	public String legislationAssess() throws Exception {
@@ -267,13 +268,20 @@ public class LegislationAssessItemAction extends BaseAction {
                 success=false;
                 message="请补全评估方案建议!";
             }
+        }else if("NOD_0000000258".equals(stNodeId)){
+			if(legislationAssessTask.getStComment1()!=null){
+				success=true;
+			}else{
+				success=false;
+				message="请先反馈评估进度!";
+			}
         }else {
-            //stNodeId=NOD_0000000258
+            //stNodeId=NOD_0000000259
             if(legislationAssessTask.getStComment1()!=null){
                 success=true;
             }else{
                 success=false;
-                message="请先反馈评估进度!";
+                message="请先录入评估报告!";
             }
         }
         jsonObject.put("success",success);
@@ -338,5 +346,26 @@ public class LegislationAssessItemAction extends BaseAction {
 		List<LegislationAssessTask> legislationAssessTaskList=legislationAssessTaskService.findByList(condMap,sortMap);
 		request.setAttribute("legislationAssessTaskList",legislationAssessTaskList);
     	return pageController();
+	}
+
+	/**
+	 * 跳转录入/查看评估报告页面
+	 * @return
+	 */
+	private String openAssessItemReportPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
+		LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
+		LegislationAssessTask legislationAssessTaskReport=legislationAssessTaskService.findByParentIdAndNodeId(legislationAssessItem.getStItemId(),"NOD_0000000259").get(0);
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId", legislationAssessItem.getStItemId());
+		condMap.put("stNodeId", "NOD_0000000259");
+		sortMap.put("dtPubDate", "ASC");
+		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("legislationAssessItem",legislationAssessItem);
+		request.setAttribute("legislationAssessTask",legislationAssessTaskReport);
+		return pageController();
 	}
 }

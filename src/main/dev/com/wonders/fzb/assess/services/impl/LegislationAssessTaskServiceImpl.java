@@ -180,7 +180,7 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 			newLegislationAssessTask.setStNodeName(nextNode.getStNodeName());
 			if("NOD_0000000256".equals(stNodeId)||"NOD_0000000260".equals(stNodeId)){
 				//评估方案建议/评估报告接收的处理单位是立法处初审时的处室
-				LegislationAssessTask legislationAssessTaskExamine=findByHQL("from LegislationAssessTask t where 1=1 and t.stParentId='"+legislationAssessTask.getStParentId()+"' and t.stNodeId='NOD_0000000254' and t.stEnable is null").get(0);
+				LegislationAssessTask legislationAssessTaskExamine=findByParentIdAndNodeId(legislationAssessTask.getStParentId(),"NOD_0000000254").get(0);
 				newLegislationAssessTask.setStTeamId(legislationAssessTaskExamine.getStTeamId());
 			}
 			//生成第一季度反馈评估进度任务,处理单位是发起单位
@@ -224,13 +224,13 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 			}
 			//评估汇总分送
 			if("NOD_0000000253".equals(stNodeId)){
-				String stTeamId=request.getParameter("stTeamId");
 				Map<String, Object> condMap = new HashMap<>();
 				Map<String, String> sortMap = new HashMap<>();
 				condMap.put("stAssessId", legislationAssessTask.getStParentId());
 				condMap.put("stIsDeleteIsNull", "null");
 				List<LegislationAssessItem> legislationAssessItemList=legislationAssessItemService.findByList(condMap,sortMap);
 				legislationAssessItemList.forEach((LegislationAssessItem legislationAssessItem)->{
+					String stTeamId=request.getParameter("stTeamId"+legislationAssessItem.getStItemId());
 					LegislationAssessTask legislationAssessTaskDistribute=new LegislationAssessTask();
 					legislationAssessTaskDistribute.setStFlowId(legislationAssessItem.getStItemName());
 					legislationAssessTaskDistribute.setStTaskStatus("TODO");
@@ -288,5 +288,10 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 			}
 		}
 		legislationAssessDealService.add(legislationAssessDeal);
+	}
+
+	@Override
+	public List<LegislationAssessTask> findByParentIdAndNodeId(String stParentId, String stNodeId) {
+		return findByHQL("from LegislationAssessTask t where 1=1 and t.stParentId='"+stParentId+"' and t.stNodeId='"+stNodeId+"' and t.stEnable is null");
 	}
 }
