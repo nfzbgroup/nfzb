@@ -74,6 +74,8 @@ public interface LegislationExampleService{
 	 */
 	public List<LegislationExample> findByList(Map<String, Object> condMap, Map<String, String> sortMap);
 
+	
+	public int queryExampleNum(String sql);
 	/**
 	 * 根据HQL进行查询.
 	 */

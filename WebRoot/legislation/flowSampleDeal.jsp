@@ -12,7 +12,7 @@
 
 	</div>
 	<div class="form-group text-center">
-		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
+		<input type="button" class="btn btn-w-m btn-success"  data-dismiss="modal" value="关闭">
 	</div>
 </div>
 <script>
@@ -24,4 +24,5 @@
             $('#sampleTable').html(data);
         });
     }
+	
 </script>

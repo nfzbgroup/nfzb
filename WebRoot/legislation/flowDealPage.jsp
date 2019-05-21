@@ -590,59 +590,59 @@
                                 <i class="arrow_line line2"></i>
                                 <i class="arrow_line line3"></i>
                                 <div class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_yellow">
-                                    <a href="javaScript:void(0)" id="NOD_0000000104__TODO" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000104__TODO" class="removeHand" onclick="openDemonstrationPage1(this.id,'','${request.docInfo.stDocId}')">								                                  
                                         <p class="font_color_black">审核会前征询</br>意见发起</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_yellow">
-                                    <a href="javaScript:void(0)" id="NOD_0000000104__DOING" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000104__DOING" class="removeHand" onclick="openDemonstrationPage1(this.id,'','${request.docInfo.stDocId}')">								                                  
                                          <p class="font_color_black">审核会前征询</br>意见反馈汇总</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div nodeHref="" class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="javaScript:void(0)" id="NOD_0000000170__TODO" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000170__TODO" class="removeHand" onclick="openCheckmeetingPage(this.id,'checkmeeting_add','${request.docInfo.stDocId}')">								                                  
                                      <p class="font_color_black">审核会议发起</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item4 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="javaScript:void(0)" id="NOD_0000000170__FEEDBACK" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000170__FEEDBACK" class="removeHand" onclick="openCheckmeetingPage(this.id,'checkmeeting_add','${request.docInfo.stDocId}')">								                                  
                                      
                                         <p class="font_color_black">审核会议汇总</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item5 bcg_gray border_width border_style border_radius border_color_t">
-                                   <a href="javaScript:void(0)" id="NOD_0000000170__INPUT" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								                                  
+                                   <a href="javaScript:void(0)" id="NOD_0000000170__INPUT" class="removeHand" onclick="openCheckmeetingPage(this.id,'checkmeeting_add','${request.docInfo.stDocId}')">								                                  
                                      
                                         <p class="font_color_black">审核会议安排</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item6 bcg_gray border_width border_style border_radius border_color_yellow">
-                                   <a href="javaScript:void(0)" id="NOD_0000000170__AFFIRM" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								                                  
+                                   <a href="javaScript:void(0)" id="NOD_0000000170__AFFIRM" class="removeHand" onclick="openCheckmeetingPage(this.id,'checkmeeting_feedback','${request.docInfo.stDocId}')">								                                  
                                      
                                         <p class="font_color_black">审核会议通知</br>发送</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item7 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="javaScript:void(0)" id="NOD_0000000170__AFFIRM" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000170__INPUT" class="removeHand" onclick="openCheckmeetingPage(this.id,'checkmeeting_input','${request.docInfo.stDocId}')">								                                  
                                      
                                         <p class="font_color_black">审核会议意见整理</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item8 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="javaScript:void(0)" id="NOD_0000000170__DONE" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								                                  
+                                    <a href="javaScript:void(0)" id="NOD_0000000170__INPUT" class="removeHand" onclick="openCheckmeetingPage(this.id,'checkmeeting_input','${request.docInfo.stDocId}')">								                                  
                                          <p class="font_color_black">审核会议意见发送</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item9 bcg_gray border_width border_style border_radius border_color_t">
-                                   <a href="javaScript:void(0)" id="NOD_0000000109__TODO" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								                                  
+                                   <a href="javaScript:void(0)" id="NOD_0000000109__TODO" class="removeHand" onclick="openDemonstrationPage1('NOD_0000000109','draftCheckmeetFeedback','${request.docInfo.stDocId}')">								                                  
                                     
                                         <p class="font_color_black">审核会议意见<br>采纳情况说明</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
@@ -795,7 +795,7 @@
 	function openDemonstrationPage(buttonId, method, stDocId) {
 		var nodeHref = $('#' + buttonId).parent().attr('nodeHref');
 		//alert(nodeHref);
-		//console.info(method);
+		console.info(method);
 		var index = method.indexOf("__");
 		if (method == '' || index == 0)
 			method = nodeHref;
@@ -809,7 +809,26 @@
 			remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=" + buttonId + "&method=" + method + "&stDocId=" + stDocId
 		});
 	};
-	function openCitymeetingPage(buttonId, method, stDocId) {
+	function openDemonstrationPage1(buttonId, method, stDocId) {
+		var nodeHref = $('#' + buttonId).parent().attr('nodeHref');
+		var isGray = $('#' + buttonId).parent().hasClass("bcg_gray");
+		var isGreen = $('#' + buttonId).parent().hasClass("bcg_green");
+		//alert(nodeHref);
+		console.info(method);
+		var index = method.indexOf("__");
+		if (method == '' || index == 0)
+			method = nodeHref;
+		if (method == '' || typeof (method) == "undefined"||isGray||isGreen) {
+			alert('当前节点不可以操作！');
+			return false;
+		}
+		//alert("method=" + method);
+		console.log("method=" + method);
+		$("#processIndexForm").modal({
+			remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=" + buttonId + "&method=" + method + "&stDocId=" + stDocId
+		});
+	};
+	function openCheckmeetingPage(buttonId, method, stDocId) {
 		var nodeHref = $('#' + buttonId).parent().attr('nodeHref');
 		var isGray = $('#' + buttonId).parent().hasClass("bcg_gray");
 		var isGreen = $('#' + buttonId).parent().hasClass("bcg_green");
@@ -818,8 +837,30 @@
 		var index = method.indexOf("__");
 		if (method == '' || index == 0)
 			method = nodeHref;
+		if (method == '' || typeof (method) == "undefined"||isGray||isGreen) {
+			alert('当前节点不可以操作！');
+			return false;
+		}
+		var arr=new Array();
+		arr=buttonId.split('__');
+		//alert("method=" + method);
+		console.log("method=" + method);
+		$("#processIndexForm").modal({
+			remote : "${basePath}/legislationCheckmeeting/checkmeeting_info.do?stNodeId=" + arr[0] + "&method=" + method + "&stDocId=" + stDocId+"&stMeetingId=${legislationCheckmeetingItem.stMeetingId}"
+		});
+	};
+	function openCitymeetingPage(buttonId, method, stDocId) {
+		var nodeHref = $('#' + buttonId).parent().attr('nodeHref');
+		var isGray = $('#' + buttonId).parent().hasClass("bcg_gray");
+		var isGreen = $('#' + buttonId).parent().hasClass("bcg_green");
+		//alert(nodeHref);
+		//console.info(method);
+		var index = method.indexOf("__");
+		if (method == '' || index == 0){
+			method = nodeHref;
 		    var arr=new Array();
 		    arr=buttonId.split('__');
+		}
 		if (method == '' || typeof (method) == "undefined"||isGray||isGreen) {
 			alert('当前节点不可以操作！');
 			return false;
@@ -836,8 +877,8 @@
 		var isGreen = $('#' + buttonId).parent().hasClass("bcg_green");
 		//alert(nodeHref);
 		//console.info(method);
-		var index = method.indexOf("__");
-		if (method == '' || index == 0)
+		//var index = method.indexOf("__");
+		if (method == '')
 			method = nodeHref;
 		if (method == '' || typeof (method) == "undefined"||isGray||isGreen) {
 			alert('当前节点不可以操作！');
@@ -855,17 +896,19 @@
 		var isGreen = $('#' + buttonId).parent().hasClass("bcg_green");
 		//alert(nodeHref);
 		//console.info(method);
-		var index = method.indexOf("__");
-		if (method == '' || index == 0)
+		//var index = method.indexOf("__");
+		if (method == ''){
 			method = nodeHref;
-		    var arr=new Array();
-	        arr=buttonId.split('__');
+		}
 		if (method == '' || typeof (method) == "undefined"||isGray||isGreen) {
 			alert('当前节点不可以操作！');
 			return false;
 		}
+		var arr=new Array();
+		arr=buttonId.split('__');
 		//alert("method=" + method);
 		console.log("method=" + method);
+		
 		$("#processIndexForm").modal({
 			remote : "${basePath}/legislationReport/report_doc_info.do?method=" + method + "&stDocId=" + stDocId + "&stReportId="+type+"&stNodeId="+arr[0]+"&stTaskStatus="+arr[1]
 		});
@@ -989,7 +1032,7 @@
 					//如果不是绿的，可以覆盖。部门多个接收任务，可以绿盖蓝。
 					if (!$('#' + item.node).parent().hasClass("bcg_green")) {
 						$('#' + item.node).parent().addClass(item.colorSet);
-					}
+					} 
 					$('#' + item.node).parent().attr('nodeHref', item.nodeHref);
 					$('#' + item.node).addClass('addHand');
 				});

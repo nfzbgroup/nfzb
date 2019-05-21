@@ -168,17 +168,10 @@ public class LegislationPlanAction extends BaseAction {
 			for (WegovSimpleNode wegovSimpleNode : nodeList) {
 				JSONObject nodeChange = new JSONObject();
 				String stNodeId = wegovSimpleNode.getStNodeId();
-				nodeChange.put("node", stNodeId);
-				
-				condMap.clear();
-				sortMap.clear();
-				condMap.put("stNode", stNodeId);
-				condMap.put("stStatus", "USED");
-				sortMap.put("dtCreateDate", "ASC");
-				int num=0; 
-				List<LegislationExample> exampleList = legislationExampleService.findByList(condMap, sortMap);
-				num=exampleList.size();
-				nodeChange.put("num", num);
+				nodeChange.put("node", stNodeId);	
+				String sql="SELECT COUNT(1) FROM LEGISLATION_EXAMPLE WHERE ST_NODE='"+stNodeId+"' AND ST_STATUS='USED'";
+				int queryExampleNum = legislationExampleService.queryExampleNum(sql);
+				nodeChange.put("num", queryExampleNum);
 				nodeInfoArray.add(nodeChange);
 			}
 			

@@ -68,8 +68,9 @@
 			font-size: 18px;
 			font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 		}
-	</style>
+		
 
+	</style>
 	<body class="gray-bg">
 
 		<div class="ibox-title">
@@ -83,7 +84,16 @@
    <form name="form1"  action="${basePath}/${requestUrl}"  method="post">
    <input type="hidden" id="requestUrl" value="${requestUrl}">
 		<div class="ibox-title">
-			<div id="t-title">立法办理中的草案</div>
+<ul id="account_discount_div1_tab_ul1" class="nav nav-tabs">
+  <li class="active" id="account_discount_div1_tab_li1">
+     <a href="#home" data-toggle="tab" class="account_discount_div1_tab_1">&nbsp;&nbsp;&nbsp;立法办理中的草案</a>
+  </li>
+  <li>
+  <a href="#div2" data-toggle="tab" class="account_discount_div1_tab_2">&nbsp;&nbsp;&nbsp;立法计划管理</a>
+  </li>
+</ul>       <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="home" >
+			<!-- <div id="t-title">立法办理中的草案</div> -->
 			<table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 				<thead>
 					<tr class="text-center">
@@ -128,9 +138,11 @@
              <%}%>  
 				</tbody>
 				</table>
-				<div class="clearfix">
+				</div>
+				<!-- <div class="clearfix">
 				   <div class="list-page" id="listPage"></div>
-			    </div>
+			    </div> -->
+			    <div class="tab-pane fade" id="div2" >
 				<div id="t-title">立法计划管理</div>
 			   <table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 				<thead>
@@ -160,6 +172,7 @@
              <%}%> 
 				</tbody>
 				</table>
+				</div></div>
 				
 			<div class="ibox-content">
 				<div class="row" id="legislationProcessTaskTable">
@@ -256,8 +269,8 @@
 		            $('#processIndexForm .modal-body').css('height', $(window).height());
 		            $('#processIndexForm .modal-dialog').css('width', $(window).width()*0.9);
 		        }); 
+		       
 		}  
-		
 		 function openProcessIndex(stDocId,stDocName) {
 			 //alert(1);
 				$("#processIndexRootForm").modal({

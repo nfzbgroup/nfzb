@@ -18,71 +18,16 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
-<c:choose>
-<c:when test="${nodeId=='NOD_0000000122'}"><h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">部门征求意见反馈</h2></c:when>
-<c:otherwise><h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">审核意见反馈</h2></c:otherwise>
-</c:choose>
+<div class="ibox-content" id="sampleTable">
+</div>
+<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">审核意见反馈</h2>
 
 <form id="unitDemonstrationForm" class="form-horizontal"
       novalidate="novalidate">
     <input hidden id="stNoticeId" name="stNoticeId" <c:if test="${legislationSendNotice.stNoticeId !=null}">value="${legislationSendNotice.stNoticeId}" </c:if>>
     <div class="form-body">
+    
     <table class="table table-border table-bordered">
-		<tr>
-			<td class="text-right tab-left" width="300px">
-				<label style="white-space: nowrap">对应草案:</label>
-			</td>
-			<td class="text-center">
-				${legislationProcessTask.stFlowId}
-			</td>
-		</tr>
-		<tr>
-			<td class="text-right tab-left">
-				<label style="white-space: nowrap">类型:</label>
-			</td>
-			<td class="text-center">
-				${legislationProcessTask.stBakOne}
-			</td>
-		</tr>
-		<tr>
-			<td class="text-right tab-left">
-				<label style="white-space: nowrap">渠道:</label>
-			</td>
-			<td class="text-center">
-				${legislationProcessTask.stBakTwo}
-			</td>
-		</tr>
-		<tr>
-			<td class="text-right tab-left">
-				<label style="white-space: nowrap">单位意见相关材料:</label>
-			</td>
-			<td class="text-center">
-				<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
-					<c:forEach var="file" items="${legislationFilesList}">
-						<c:if test="${file.stSampleId !=null&&file.stSampleId !='null'}">
-							<label class="col-md-12 text-center"><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">${file.stTitle}</a></label>
-						</c:if>
-					</c:forEach>
-				</c:if>
-				<c:if test="${legislationFilesList ==null||fn:length(legislationFilesList)==0}">无</c:if>
-			</td>
-		</tr>
-		<tr>
-			<td class="text-right tab-left">
-				<label style="white-space: nowrap">单位意见其他材料:</label>
-			</td>
-			<td class="text-center">
-			<c:if test="${legislationFilesList !=null&&fn:length(legislationFilesList)>0}">
-				<c:forEach var="file" items="${legislationFilesList}">
-					<c:if test="${file.stSampleId==null||file.stSampleId=='null'}">
-						<label class="col-md-12 text-center"><a  target="_blank" href="${basePath}/file/downloadAttach.do?name=${file.stTitle}&url=${file.stFileUrl}">${file.stTitle}</a></label>
-					</c:if>
-				</c:forEach>
-			</c:if>
-			<c:if test="${legislationFilesList ==null||fn:length(legislationFilesList)==0}">无</c:if>
-			</td>
-		</tr>
-		<tr>
 			<td class="text-right tab-left">
 				<label style="white-space: nowrap">反馈意见:</label>
 			</td>
@@ -217,6 +162,34 @@
 </form>
 </div>
 <script>
+
+$(function () {
+		querySampleTable('${mainId}','${nodeName}');
+		$("#btnClose").hide();
+				
+				     
+    });
+	function querySampleTable(mainId,nodeName) {
+	     //alert(mainId);
+	     //alert(nodeName);
+	     if(nodeName=="公开征求意见处理"){
+            $.post("${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=NOD_0000000130&method=draft_deal_net_start&stDocId="+mainId,function(data){
+            $('#sampleTable').html(data);
+              });
+        }if(nodeName=="立法听证会处理"){
+            $.post("${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=NOD_0000000140&method=draft_deal_hearing_start&stDocId="+mainId,function(data){
+            $('#sampleTable').html(data);
+              });
+        }if(nodeName=="审核会议征询意见"){
+            $.post("${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=NOD_0000000104__TODO&method=draft_promeet_info__TODO&stDocId="+mainId,function(data){
+            $('#sampleTable').html(data);
+              });
+        }if(nodeName=="审核会议发送通知"){
+            $.post("${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=NOD_0000000170__TODO&method=check_meeting__TODO&stDocId="+mainId,function(data){
+            $('#sampleTable').html(data);
+              });
+        }
+    }
     function uploadFile(id,type,stSampleId) {
         $.ajaxFileUpload({
             url: '${basePath}/file/upload.do?stNodeId=${nodeId}&stSampleId='+stSampleId,

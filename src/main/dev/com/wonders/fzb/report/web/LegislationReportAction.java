@@ -187,7 +187,7 @@ public class LegislationReportAction extends BaseAction {
 				condMap.put("stNodeStatus", nodeStatus);
 				sortMap.put("dtPubDate", "ASC");
 				List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
-					List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus(stNodeId, nodeStatus, legislationFilesList);
+					List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesListByNodeStatus("NOD_0000000190", nodeStatus, legislationFilesList);
 					request.setAttribute("LegislationExampleList", legislationExampleFilesList);
 				
 					String stStyle = "style ='display: none;'";

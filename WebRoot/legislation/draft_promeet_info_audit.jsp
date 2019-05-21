@@ -119,10 +119,10 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">送审领导：</label>
 					<div class="col-sm-9">
-						<textarea id="reportLeadershipReview"
-							name="reportLeadershipReview" class="form-control"><c:if
-								test="${legislationProcessTask.stBakTwo !=null}">${legislationProcessTask.stBakTwo}</c:if></textarea>
+						<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导','N')">${legislationProcessTaskdetail.stPersonName}</textarea>
 					</div>
+					<input type="hidden" name="stPersonsId" id="stPersonsId"
+						<c:if test="${legislationProcessTaskdetail.stPersonId!=null}">value="${legislationProcessTaskdetail.stPersonId}" </c:if>>
 				</div>
 			</c:otherwise>
 		</c:choose>
@@ -134,7 +134,7 @@
 			<input ${strDisplay} type="button" class="btn btn-w-m btn-success"	id="btnSubmit" name="btnSubmit"	onclick="saveLegislationProcessDoc('submit')" value="提交">
 			&nbsp;&nbsp;
 		  </c:if>
-			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
+			<input type="button" id="btnClose" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 		</div>
 
 		

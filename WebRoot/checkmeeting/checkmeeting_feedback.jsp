@@ -26,7 +26,7 @@
 		<input type="hidden" name="allPersonFeedBackTime" id="allPersonFeedBackTime" value="">
 		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body" align="center">
-			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 				<tr class="text-center">
 					<td class="text-right" width="20%">
 						<label>会议名称：</label>
@@ -51,7 +51,7 @@
 				<c:choose>
 				<c:when test="${legislationCheckmeetingItems!=null&&fn:length(legislationCheckmeetingItems)>0}">
 					<div class="form-body" align="center">
-						<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+						<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 						<thead>
 							<th class="text-center" hidden="hidden">事项编号</th>
 							<th class="text-center">事项名称</th>
@@ -75,7 +75,7 @@
 			</c:choose>
 			
 			<div class="form-body" align="center">
-				<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+				<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 					<thead>
 						<th class="text-center">参会人员</th>
 						<th class="text-center">反馈信息</th>
@@ -93,7 +93,7 @@
 								</td>
 
 								<td class="text-center">
-									${person.dtFeekbackDate}
+									<fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss" value="${person.dtFeekbackDate}" />
 								</td>
 								</tr>
 							</c:forEach>
@@ -140,11 +140,13 @@
 			<%@include file="/legislation/file/attachUpload.jsp" %>
 
 		<div class="form-group text-center">
+		  <c:if test="${stTaskStatus=='FEEDBACK'}">
 			<input type="hidden" id="op" name="op">
 			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
 			&nbsp;&nbsp;
 			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="提交">
 			&nbsp;&nbsp;
+		  </c:if>
 			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 		</div>
 	</form>

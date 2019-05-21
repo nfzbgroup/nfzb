@@ -78,7 +78,7 @@
 				<input  type="button" class="btn btn-w-m btn-success" onclick="confirmOnlineReport('${stDocId}','${nodeId}','${buttonId}')" value="提交">
 				&nbsp;&nbsp;
 				 </c:if>
-				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
+				<input type="button" id="btnClose" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 		</div>
 	</form>

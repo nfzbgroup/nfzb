@@ -25,7 +25,10 @@
 						<td>
 						  <c:choose>
 						     <c:when test="${fn:contains(task.stSourceDoc, 'PLA')}">立法计划</c:when>
-						     <c:when test="${fn:contains(task.stSourceDoc, 'DFT')}">立法草案</c:when>
+						     <c:when test="${fn:contains(task.stSourceDoc, 'DFT')}">立法草案
+						         <c:if test="${task.stType=='NOD_0000000106'}">（报审报签）</c:if>
+						         <c:if test="${task.stType=='NOD_0000000112'}">（报市长审签）</c:if>
+						     </c:when>
 						  </c:choose>
 						</td>
 						<!--<td>${task.stUserName}</td>  -->

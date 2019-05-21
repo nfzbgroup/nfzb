@@ -232,4 +232,9 @@ public class LegislationExampleServiceImpl implements LegislationExampleService 
 			update(legislationExample);
 		}
 	}
+
+	@Override
+	public int queryExampleNum(String sql) {
+		return legislationExampleDao.queryExampleNum(sql);
+	}
 }

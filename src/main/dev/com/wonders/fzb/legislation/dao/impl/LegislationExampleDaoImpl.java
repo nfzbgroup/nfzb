@@ -10,6 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,12 @@ public class LegislationExampleDaoImpl extends BaseSupportDao implements Legisla
 		List<LegislationExample> result = query.list();
 		session.flush();
 		return result;
+	}
+
+	@Override
+	public int queryExampleNum(String sql) {
+		int totalSize = ((BigDecimal) (Object) executeSqlQueryWithoutPage(sql).get(0)).intValue();
+		return totalSize;
 	}
 
 }

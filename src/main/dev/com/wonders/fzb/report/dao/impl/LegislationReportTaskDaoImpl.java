@@ -107,7 +107,7 @@ public class LegislationReportTaskDaoImpl extends BaseSupportDao implements Legi
 		baseSql += " INNER JOIN LEGISLATION_REPORT_TASK t ";
 		baseSql += " ON c.st_report_id = t.st_report_id ";
 		baseSql += wheresql;
-		String propView = "SELECT c.st_report_id,c.st_report_name,c.st_node_name,c.st_node_id,c.DT_CREATE_DATE,c.st_source_doc";
+		String propView = "SELECT c.st_report_id,c.st_report_name,c.st_node_name,c.st_node_id,c.DT_CREATE_DATE,c.st_source_doc,c.st_type";
 		String totalView = "SELECT COUNT(1) ";
 
 		List<LegislationReport> users = packageReportBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));
@@ -130,6 +130,7 @@ public class LegislationReportTaskDaoImpl extends BaseSupportDao implements Legi
 			docInfo.setStNodeId(array[3] == null ? "" : array[3].toString());
 			docInfo.setDtCreateDate(array[4] == null ? null : dateFormat.parse(array[4].toString()));
 			docInfo.setStSourceDoc(array[5] == null ? "" : array[5].toString());
+			docInfo.setStType(array[6] == null ? "" : array[6].toString());
 			docInfos.add(docInfo);
 		}
 		return docInfos;

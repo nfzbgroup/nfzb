@@ -151,6 +151,7 @@ public class LegislationCheckmeetingAction extends BaseAction {
 			request.setAttribute("legislationCheckmeeting", auditMeeting);
 			List<LegislationCheckmeetingTask> legislationCheckmeetingTaskList = legislationCheckmeetingTaskService.findByHQL("from LegislationCheckmeetingTask t where t.stMeetingId='" + stMeetingId + "' and t.stNodeId='NOD_0000000170'");
 			if(legislationCheckmeetingTaskList.size()>0){
+				request.setAttribute("legislationCheckmeetingTask",legislationCheckmeetingTaskList.get(0));
 				List<LegislationCheckmeetingTaskd> legislationCheckmeetingTaskdList=legislationCheckmeetingTaskdService.findByHQL("from LegislationCheckmeetingTaskd t where 1=1 and t.stTaskId='"+legislationCheckmeetingTaskList.get(0).getStTaskId()+"' and t.stTaskStatus='TODO'");
 				if(legislationCheckmeetingTaskdList.size()>0){
 					request.setAttribute("stPersonsId",legislationCheckmeetingTaskdList.get(0).getStPersonId());

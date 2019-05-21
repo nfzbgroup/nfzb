@@ -63,7 +63,7 @@
         	}
             return;
         } 
-         $.post("${requestUrl}?stNodeId=${nodeId}&method=draftCheckmeetFeedback&type='"+type+"'&stTaskStatus=${legislationProcessTask.stTaskStatus}",param,function(data){
+         $.post("${requestUrl}?stNodeId=${nodeId}&method=draftCheckmeetFeedback&type="+type+"&stTaskStatus=${legislationProcessTask.stTaskStatus}",param,function(data){
          $('#legislationProcessForm').modal('hide');
          submitForm(1);
             });

@@ -29,15 +29,6 @@
 					<input type="text" class="form-control" id="stMeetingName" name="stMeetingName" value="${legislationCheckmeeting.stMeetingName}">
 				</div>
 			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">会议类型：</label>
-				<div class="col-sm-9">
-					<select class="form-control" name="stType" id="stType">
-						<option value="草案审核会议类型A">草案审核会议类型A</option>
-						<option value="草案审核会议类型B">草案审核会议类型B</option>
-					</select>
-				</div>
-			</div>
 		<%-- 	<div class="form-group">
 				<label class="col-sm-2 control-label">对应草案：</label>
 				<div class="col-sm-9">
@@ -190,12 +181,14 @@
 			<%@include file="/legislation/file/attachUpload.jsp" %>
 			
 			<div class="form-group text-center">
+			  <c:if test="${legislationCheckmeetingTask.stTaskStatus=='TODO'}">
 				<input  type="hidden" id="op" name="op">
 				<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
 				&nbsp;&nbsp;
 				<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="发送通知">
 				&nbsp;&nbsp;
-				<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
+			  </c:if>
+				<input type="button"  id="btnClose" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 			</div>
 		</div>
 	</form>
@@ -278,8 +271,8 @@
 		}
 		if (param.stMeetingName == null || param.stMeetingName == "") {
 			Duang.error("提示", "请输入会议名称");
-		} else if (param.stType == null || param.stType == "") {
-			Duang.error("提示", "请选择会议类型");
+		///} else if (param.stType == null || param.stType == "") {
+		//	Duang.error("提示", "请选择会议类型");
 		} /* else if (param.stDocSource == null || param.stDocSource == "") {
 			Duang.error("提示", "请选择对应草案");
 		} */ else if (param.stAddress == null || param.stAddress == "") {

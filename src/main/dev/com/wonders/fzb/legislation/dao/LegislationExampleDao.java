@@ -26,4 +26,6 @@ public abstract interface LegislationExampleDao extends BaseDao {
 	public List<LegislationExample> findByList(Map<String, Object> condMap, Map<String, String> sortMap);
 
 	public List<LegislationExample> findByHQL(String hql);
+	
+	public int queryExampleNum(String sql);
 }

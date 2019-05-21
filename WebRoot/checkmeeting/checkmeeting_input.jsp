@@ -25,7 +25,7 @@
 		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 
 		<div class="form-body" align="center">
-			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 				<tr class="text-center">
 					<th class="text-right" width="20%">
 						<label>会议名称：</label>
@@ -106,7 +106,7 @@
 		</div>
 
 		<div class="form-body" align="center">
-			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 				<tbody class="text-center" align="center">
 					<tr class="text-center">
 						<td class="text-right" width="20%">
@@ -146,11 +146,13 @@
 			
 			
 		<div class="form-group text-center">
+		  <c:if test="${stTaskStatus=='INPUT'}">
 			<input type="hidden" id="op" name="op">
 			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSave" name="btnSave" onclick="saveAuditMeeting1('save')" value="保存">
 			&nbsp;&nbsp;
 			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="提交">
 			&nbsp;&nbsp;
+		  </c:if>
 			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 		</div>
 	</form>
