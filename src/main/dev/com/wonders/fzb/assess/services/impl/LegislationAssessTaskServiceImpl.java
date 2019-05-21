@@ -200,6 +200,19 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 				}
 				LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
 				newLegislationAssessTask.setStTeamId(legislationAssessItem.getStUnitId());
+				//生成NOD_0000000264查看任务
+				LegislationAssessTask legislationAssessTaskShow=new LegislationAssessTask();
+				legislationAssessTaskShow.setStFlowId(legislationAssessTask.getStFlowId());
+				legislationAssessTaskShow.setStTaskStatus("TODO");
+				legislationAssessTaskShow.setDtOpenDate(legislationAssessTask.getDtOpenDate());
+				legislationAssessTaskShow.setStUserId(legislationAssessTask.getStUserId());
+				legislationAssessTaskShow.setStUserName(legislationAssessTask.getStUserName());
+				legislationAssessTaskShow.setStParentId(legislationAssessTask.getStParentId());
+				legislationAssessTaskShow.setStNodeId("NOD_0000000264");
+				legislationAssessTaskShow.setStNodeName("反馈评估进度查看");
+				legislationAssessTaskShow.setStActive(legislationAssessTask.getStActive());
+				legislationAssessTaskShow.setStComment1(legislationAssessTask.getStComment1());
+				addObj(legislationAssessTaskShow);
 			}
 			addObj(newLegislationAssessTask);
 		}
@@ -277,7 +290,9 @@ public class LegislationAssessTaskServiceImpl implements LegislationAssessTaskSe
 			legislationAssessDeal.setStBakOne(legislationAssessItem.getStItemName());
 			if("NOD_0000000258".equals(stNodeId)){
 				legislationAssessDeal.setStBakTwo("第"+legislationAssessTask.getStActive()+"季度反馈评估进度");
-			}else{
+			}else if ("NOD_0000000264".equals(stNodeId)){
+				legislationAssessDeal.setStBakTwo("查看第"+legislationAssessTask.getStActive()+"季度评估进度");
+			}else {
 				legislationAssessDeal.setStBakTwo(legislationAssessItem.getStBak());
 			}
 			if (!"END".equals(node.getStNextNode())&&!("NOD_0000000258".equals(stNodeId)&&StringUtils.isNotEmpty(legislationAssessTask.getStActive())

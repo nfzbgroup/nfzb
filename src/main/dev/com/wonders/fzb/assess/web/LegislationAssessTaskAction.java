@@ -119,11 +119,7 @@ public class LegislationAssessTaskAction extends BaseAction {
 		WegovSimpleNode nodeInfo = wegovSimpleNodeService.findById(stNodeId);
 
 		if (StringUtil.isNotEmpty(stNodeId)) {
-			if("NOD_0000000264".equals(stNodeId)){
-				condMap.put("stNodeId","NOD_0000000258");
-			}else{
-				condMap.put("stNodeId",stNodeId);
-			}
+			condMap.put("stNodeId",stNodeId);
 			if("NOD_0000000252".equals(stNodeId)||"NOD_0000000254".equals(stNodeId)||"NOD_0000000256".equals(stNodeId)||"NOD_0000000257".equals(stNodeId)
 					||"NOD_0000000258".equals(stNodeId)||"NOD_0000000259".equals(stNodeId)||"NOD_0000000261".equals(stNodeId)){
 				condMap.put("stTeamId",session.getAttribute("unitCode"));

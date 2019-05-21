@@ -320,8 +320,16 @@ public class LegislationAssessItemAction extends BaseAction {
      */
     private String openAssessItemSchedulePage(){
         String stTaskId=request.getParameter("stTaskId");
+        String stNodeId=request.getParameter("stNodeId");
         LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
         LegislationAssessItem legislationAssessItem=legislationAssessItemService.findById(legislationAssessTask.getStParentId());
+		if("NOD_0000000264".equals(stNodeId)){
+			if("TODO".equals(legislationAssessTask.getStTaskStatus())){
+				legislationAssessTaskService.nextAssessProcess(request,session);
+			}
+			LegislationAssessTask legislationAssessTaskReal=legislationAssessTaskService.findByHQL("from LegislationAssessTask t where 1=1 and t.stParentId='"+legislationAssessItem.getStItemId()+"' and t.stNodeId='NOD_0000000258' and t.stActive='"+legislationAssessTask.getStActive()+"' and t.stEnable is null").get(0);
+			stTaskId=legislationAssessTaskReal.getStTaskId();
+		}
         Map<String, Object> condMap = new HashMap<>();
         Map<String, String> sortMap = new HashMap<>();
         condMap.put("stParentId", stTaskId);

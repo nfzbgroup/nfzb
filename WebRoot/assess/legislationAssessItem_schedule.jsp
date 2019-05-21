@@ -13,7 +13,7 @@
             <span ><c:choose><c:when test="${nodeId=='NOD_0000000258'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">编辑</c:when><c:otherwise>查看</c:otherwise></c:choose></span>
         </li>
     </ul>
-    <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <button style="padding-right: 5px" type="button" class="close" <c:if test="${nodeId !='NOD_0000000264'}">data-dismiss="modal"</c:if> <c:if test="${nodeId=='NOD_0000000264'}">onclick="closeSchedule()"</c:if>><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
 	<form id="legislationAssessItemForm" class="form-horizontal"
@@ -66,7 +66,7 @@
                 <c:if test="${nodeId=='NOD_0000000258'&&(legislationAssessTask.stTaskStatus ==null||legislationAssessTask.stTaskStatus=='TODO')}">
                     <input type="button" class="btn btn-w-m btn-success"  value="保存" onclick="saveLegislationAssessItem()"> &nbsp;&nbsp;
                 </c:if>
-					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
+                <input type="button" class="btn btn-w-m btn-success" value="关闭"  <c:if test="${nodeId !='NOD_0000000264'}">data-dismiss="modal"</c:if> <c:if test="${nodeId=='NOD_0000000264'}">onclick="closeSchedule()"</c:if>>
 			</div>
             <div class="form-group">
                 <label class="control-label">评估进度材料
@@ -128,6 +128,10 @@
             });
         }
     };
+    function closeSchedule() {
+        $('#legislationProcessForm').modal('hide');
+        submitForm(1);
+    }
     function toUploadFile(obj) {
         $(obj).next().click();
     }
