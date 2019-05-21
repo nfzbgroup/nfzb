@@ -10,7 +10,7 @@
             <span >评估规划 > </span>
         </li>
         <li>
-            <span ><c:choose><c:when test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'}">意见</c:when><c:otherwise>项目</c:otherwise></c:choose>详情</span>
+            <span ><c:choose><c:when test="${nodeId=='NOD_0000000255'}">意见</c:when><c:when test="${nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">评估报告</c:when><c:otherwise>项目</c:otherwise></c:choose>列表</span>
         </li>
     </ul>
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -24,8 +24,14 @@
                 <c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
                     <th class="text-center">审核意见</th>
                 </c:if>
+                <c:if test="${nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
+                    <th class="text-center">评估报告内容</th>
+                </c:if>
                 <th class="text-center">发起人</th>
                 <th class="text-center">发起时间</th>
+                <c:if test="${nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
+                    <th class="text-center">操作</th>
+                </c:if>
             </tr>
         </thead>
         <tbody>
@@ -45,8 +51,21 @@
                     <c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
                         <td>${assessItem.stActive}</td>
                     </c:if>
+                    <c:if test="${nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
+                        <td>
+                            <c:if test="${assessItem.stComment!=null&&assessItem.stComment!=''}">
+                                ${assessItem.stComment}
+                            </c:if>
+                            <c:if test="${assessItem.stComment==null||assessItem.stComment==''}">
+                                <span style="color: red">还未提交评估报告</span>
+                            </c:if>
+                        </td>
+                    </c:if>
                     <td>${assessItem.stUserName}</td>
                     <td><fmt:formatDate type="date" value="${assessItem.dtCreateDate}" /></td>
+                    <c:if test="${(nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263')&&assessItem.stComment!=null&&assessItem.stComment!=''}">
+                        <td><a href="javaScript:void(0)" data-title="评估报告详情" onclick="openAssessItemChildPage('openAssessItemReportPage','${assessItem.stTaskId}')" class="layer_full_link">评估报告详情</a></td>
+                    </c:if>
                 </tr>
             </c:forEach>
         </c:if>

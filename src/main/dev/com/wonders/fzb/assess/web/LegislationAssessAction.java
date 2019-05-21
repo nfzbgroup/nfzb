@@ -81,7 +81,8 @@ public class LegislationAssessAction extends BaseAction {
 			@Result(name = "openAssessProjectInfoPage", location = "/assess/legislationAssess_projectInfo.jsp"),
 			@Result(name = "openAssessDistributePage", location = "/assess/legislationAssess_distribute.jsp"),
 			@Result(name = "openAssessFeedbackPage", location = "/assess/legislationAssess_feedback.jsp"),
-			@Result(name = "legislation_assess_flow", location = "/assess/legislation_assess_flow.jsp")
+			@Result(name = "legislation_assess_flow", location = "/assess/legislation_assess_flow.jsp"),
+			@Result(name = "openAssessReportPage", location = "/assess/legislationAssess_report.jsp")
 	})
 	public String legislationAssess() throws Exception {
 		String methodStr = request.getParameter("method");
@@ -250,5 +251,26 @@ public class LegislationAssessAction extends BaseAction {
 		jsonObject.put("success",success);
 		response.setContentType("application/json; charset=UTF-8");
 		response.getWriter().print(jsonObject);
+	}
+
+	/**
+	 * 跳转录入情况报告页面
+	 * @return
+	 */
+	private String openAssessReportPage(){
+		String stTaskId=request.getParameter("stTaskId");
+		LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
+		LegislationAssess legislationAssess=legislationAssessService.findById(legislationAssessTask.getStParentId());
+		LegislationAssessTask legislationAssessTaskReport=legislationAssessTaskService.findByParentIdAndNodeId(legislationAssess.getStAssessId(),"NOD_0000000262").get(0);
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stParentId", legislationAssess.getStAssessId());
+		condMap.put("stNodeId", "NOD_0000000262");
+		sortMap.put("dtPubDate", "ASC");
+		List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+		request.setAttribute("legislationFilesList",legislationFilesList);
+		request.setAttribute("legislationAssess",legislationAssess);
+		request.setAttribute("legislationAssessTask",legislationAssessTaskReport);
+		return pageController();
 	}
 }

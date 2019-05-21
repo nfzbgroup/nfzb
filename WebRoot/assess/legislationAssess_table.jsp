@@ -67,15 +67,18 @@
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000262'}">
 												<a href="javaScript:void(0)" data-title="查看评估规划" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估规划</a>
-												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
+												<a href="javaScript:void(0)" data-title="查看评估报告" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估报告</a>
 												<br/>
-												<a href="javaScript:void(0)" data-title="完成情况报告" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">完成情况报告</a>
+												<a href="javaScript:void(0)" data-title="录入情况报告" onclick="openAssessPage('openAssessReportPage','${plan.stTaskId}')" class="layer_full_link">录入情况报告</a>
+												<a href="javaScript:void(0)" data-title="报市政府" onclick="checkAssessItem('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">报市政府</a>
 											</c:if>
 											<c:if test="${nodeId=='NOD_0000000263'}">
 												<a href="javaScript:void(0)" data-title="查看评估规划" onclick="openAssessPage('openAssessInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估规划</a>
-												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
+												<a href="javaScript:void(0)" data-title="查看评估报告" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估报告</a>
 												<br/>
+												<a href="javaScript:void(0)" data-title="查看情况报告" onclick="openAssessPage('openAssessReportPage','${plan.stTaskId}')" class="layer_full_link">查看情况报告</a>
 												<a href="javaScript:void(0)" data-title="编辑市政府反馈" onclick="openAssessPage('openAssessFeedbackPage','${plan.stTaskId}')" class="layer_full_link">编辑市政府反馈</a>
+												<br/>
 												<a href="javaScript:void(0)" data-title="下一步" onclick="checkAssessFeedback('${plan.stTaskId}','${plan.stNodeId}')" class="layer_full_link">下一步</a>
 											</c:if>
 										</td>
@@ -89,11 +92,17 @@
 											<c:if test="${nodeId=='NOD_0000000253'}">
 												<a href="javaScript:void(0)" data-title="项目详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">项目详情</a>
 											</c:if>
-											<c:if test="${nodeId=='NOD_0000000255'||nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
+											<c:if test="${nodeId=='NOD_0000000255'}">
 												<a href="javaScript:void(0)" data-title="意见详情" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">意见详情</a>
 											</c:if>
-											<c:if test="${nodeId=='NOD_0000000263'}">
+											<c:if test="${nnodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
+												<a href="javaScript:void(0)" data-title="查看评估报告" onclick="openAssessPage('openAssessProjectInfoPage','${plan.stTaskId}')" class="layer_full_link">查看评估报告</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000262'||nodeId=='NOD_0000000263'}">
 												<br/>
+												<a href="javaScript:void(0)" data-title="查看情况报告" onclick="openAssessPage('openAssessReportPage','${plan.stTaskId}')" class="layer_full_link">查看情况报告</a>
+											</c:if>
+											<c:if test="${nodeId=='NOD_0000000263'}">
 												<a href="javaScript:void(0)" data-title="查看市政府反馈" onclick="openAssessPage('openAssessFeedbackPage','${plan.stTaskId}')" class="layer_full_link">查看市政府反馈</a>
 											</c:if>
 										</td>

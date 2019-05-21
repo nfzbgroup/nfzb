@@ -184,8 +184,8 @@ public class LegislationAssessServiceImpl implements LegislationAssessService {
 			LegislationAssessTask legislationAssessTask=legislationAssessTaskService.findById(stTaskId);
 			stAssessId=legislationAssessTask.getStParentId();
 			LegislationAssess legislationAssess=findById(stAssessId);
-			if("NOD_0000000263".equals(stNodeId)){
-				//市政府反馈
+			if("NOD_0000000262".equals(stNodeId)||"NOD_0000000263".equals(stNodeId)){
+				//录入情况报告/市政府反馈
 				String stComment1=request.getParameter("stComment1");
 				legislationAssessTask.setStComment1(stComment1);
 			}else{

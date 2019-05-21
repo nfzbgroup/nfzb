@@ -228,9 +228,19 @@ public class LegislationAssessItemServiceImpl implements LegislationAssessItemSe
 			}else{
 				stStatus=stStatus+"(已处理)";
 			}
-			if("NOD_0000000255".equals(stNodeId)||"NOD_0000000262".equals(stNodeId)){
+			if("NOD_0000000255".equals(stNodeId)||"NOD_0000000262".equals(stNodeId)||"NOD_0000000263".equals(stNodeId)){
 				LegislationAssessTask legislationAssessTaskActive=legislationAssessTaskService.findByParentIdAndNodeId(legislationAssessItem.getStItemId(),"NOD_0000000254").get(0);
 				map.put("stActive",legislationAssessTaskActive.getStActive());
+			}
+			if("NOD_0000000262".equals(stNodeId)||"NOD_0000000263".equals(stNodeId)){
+				List<LegislationAssessTask> legislationAssessTaskCommentList=legislationAssessTaskService.findByParentIdAndNodeId(legislationAssessItem.getStItemId(),"NOD_0000000259");
+				if(legislationAssessTaskCommentList.size()>0){
+					map.put("stComment",legislationAssessTaskCommentList.get(0).getStComment1());
+					map.put("stTaskId",legislationAssessTaskCommentList.get(0).getStTaskId());
+				}else{
+					map.put("stComment","");
+					map.put("stTaskId","");
+				}
 			}
 			map.put("stStatus",stStatus);
 			map.put("stUserName",legislationAssessItem.getStUserName());

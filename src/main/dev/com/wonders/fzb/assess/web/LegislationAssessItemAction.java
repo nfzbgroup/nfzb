@@ -185,11 +185,15 @@ public class LegislationAssessItemAction extends BaseAction {
 				condMap.put("stEnableIsNull","null");
 				condMap.put("stTaskStatus","DONE");
 				List<LegislationAssessTask> legislationAssessTaskList=legislationAssessTaskService.findByList(condMap,sortMap);
-				if(legislationAssessTaskList.size()==0){
+				if(legislationAssessTaskList.size() ==0){
 					success=false;
 					message="该评估规划有项目未处理完";
 					break;
 				}
+			}
+			if("NOD_0000000262".equals(stNodeId)&&null==legislationAssessTask.getStComment1()){
+				success=false;
+				message="请先录入情况报告";
 			}
 		}else{
 			message="该评估规划还没有项目";
