@@ -411,11 +411,12 @@ $('#processIndexRootForm').on('shown.bs.modal', function(event) {
 			//alert(JSON.stringify(data));
 			$.each(data.nodeInfoArray, function(index, item) {
 				//改变当前按钮的背景颜色
-				$('#' + item.node).parent().removeClass('bcg_gray');//.removeClass('bcg_blue').removeClass('bcg_green');
+				$('#' + item.node).parent().removeClass('bcg_blue');
 				//如果不是绿的，可以覆盖。部门多个接收任务，可以绿盖蓝。
-				if (!$('#' + item.node).parent().hasClass("bcg_green")) {
+				 if (!$('#' + item.node).parent().hasClass("bcg_green")) {
 					$('#' + item.node).parent().addClass(item.colorSet);
-				}
+				} 
+				//$('#' + item.node).parent().addClass("bcg_green");
 				$('#' + item.node).parent().attr('nodeHref', item.nodeHref);
 				$('#' + item.node).addClass('addHand');
 			});

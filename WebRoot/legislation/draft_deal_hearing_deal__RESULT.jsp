@@ -7,13 +7,13 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
+			<span>立法听证会 > </span>
+		</li>
+		<li>
 			<span>结果归档</span>
 		</li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
-		<span aria-hidden="true">&times;</span>
-		<span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 </div>
 <div class="modal-body">
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">听证会结果</h2>
@@ -29,24 +29,29 @@
 					<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 				</label>
 			</div>
-			<br>
 			<div class="form-group">
-			    <label class="col-md-3 control-label">发起时间:</label>
-				     <div class="col-md-9">
+			    <label class="col-md-3 control-label">发起时间：</label>
+				<div class="col-md-9">
 						<div class="input-group input-large">
 							<input type="text" class="form-control"  readonly value="<fmt:formatDate value="${legislationProcessTask.dtBakDate}"/>"/>
 		
 						</div>
-					</div>
+				</div>
+			</div>
+			<div class="form-group">
 			    <label class="col-sm-3 control-label">地点：</label>
 				<div class="col-sm-9">
 					<input class="form-control" readonly value="${legislationProcessTask.stBakOne}"/>
 				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-sm-3 control-label">参与人员：</label>
 				<div class="col-sm-9">
 					<input class="form-control" readonly value="${legislationProcessTask.stBakTwo}"/>
 				</div>
-				<label class="col-sm-3 control-label text-left">结果归档:</label>
+		    </div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label text-left">结果归档：</label>
 				<div class="col-sm-9">
 					<textarea id="stComment2" name="stComment2" class="form-control">${legislationProcessTaskdetail.stBak1}</textarea>
 				</div>
@@ -64,6 +69,7 @@
 				 </c:if>
 			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 		</div>
+	   </div>
 	</form>
 </div>
 <script>

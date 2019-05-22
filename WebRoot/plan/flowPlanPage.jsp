@@ -295,8 +295,7 @@
                                     </a>
                                 </div>
                                 <div nodeHref=""  class="cell row_items row_item_notes1">
-                                   <div class="divright"></div>
-                                    <a href="javaScript:void(0)" id="NOD_0000000210" class="removeHand" onclick="openDemonstrationPage(this.id)">
+                                  <a href="#">
 									    <i class="notes1">立法过程-审核会议</br>（审核会议题汇总）</i>
                                     </a>
                                 </div>

@@ -144,6 +144,9 @@
         .arrow_down.arrow_down_02 {top: 187px;}
         .arrow_down.arrow_down_03 {top: 311px;}
         .arrow_down.arrow_down_04 {top: 425px;}
+        .divright { position:absolute; color:#fff;z-index: 99; font-size: 1.2em; background-color: #aa0007;width: 1.5em !important;height: 1.5em !important;left : 85%;top : -12px;text-align: center;-webkit-border-radius: 2.75em;border-radius: 2.75em;}
+        
+        
     </style>
 </head>
 <body class="white-bg1">
@@ -188,7 +191,8 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item_1">
-                                        <a href="#">
+                                        <div class="divright"></div>
+										<a href="javaScript:void(0)" id="NOD_0000000301" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <i class="notes">正式通知</i>
                                         </a>
                                     </div>
@@ -207,7 +211,8 @@
                                     </div>
                                     <!--草案第二行-->
                                     <div class="cell row_items row_item2 row_item_top1 bcg_gray border_width border_style border_color_red">
-                                        <a href="#">
+                                        <div class="divright"></div>
+										<a href="javaScript:void(0)" id="NOD_0000000302" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">清理情况报送</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                         </a>
@@ -218,21 +223,24 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item3 row_item_top1 bcg_gray border_width border_style border_color_red">
-                                        <a href="#">
+                                        <div class="divright"></div>
+										<a href="javaScript:void(0)" id="NOD_0000000303" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">分办立法处</p>
                                             <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
 
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item4 row_item_top1 bcg_gray border_width border_style border_color_red">
-                                        <a href="#">
+                                        <div class="divright"></div>
+										<a href="javaScript:void(0)" id="NOD_0000000304" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">立法处初审</p>
                                             <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
 
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item5 row_item_top1 bcg_gray border_width border_style border_color_blue">
-                                        <a href="#">
+                                        <div class="divright"></div>
+										<a href="javaScript:void(0)" id="NOD_0000000305" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">清理情况汇报</p>
                                             <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
 
@@ -254,12 +262,13 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item_notes1">
-                                        <a href="#">
+                                       <a href="#">
                                             <i class="notes1">立法过程-审核会议</br>（审核会议题汇总）</i>
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item_3 bcg_gray border_width border_style border_color_blue">
-                                        <a href="#">
+                                         <div class="divright"></div>
+										<a href="javaScript:void(0)" id="NOD_0000000307" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">审核会意见整理</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                         </a>
@@ -275,12 +284,13 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item_notes1">
-                                        <a href="#">
+                                         <a href="#">
                                             <i class="notes1">立法过程-常务会议</br>（常委会）</i>
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item_3 bcg_gray border_width border_style border_color_blue">
-                                        <a href="#">
+                                        <div class="divright"></div>
+										<a href="javaScript:void(0)" id="NOD_0000000309" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">常务会（常委会）</br><审核意见整理></审核意见整理></p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                         </a>
@@ -296,7 +306,8 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_blue">
-                                        <a href="#">
+                                        <div class="divright"></div>
+										<a href="javaScript:void(0)" id="NOD_0000000310" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">送市人大常委</br>会、司法部</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                         </a>
@@ -337,7 +348,7 @@ function closeProcessIndex() {
 //页面加载后，去后台获取所有节点的状态，连接等信息
 $('#processIndexRootForm').on('shown.bs.modal', function(event) {	
 	<!--Ajax请求-->
-	$.post("../legislationPlan/draft_plan_info.do?method=openPlanAttachNum_ajax", function(data) {
+	$.post("../legislationClean/clean_plan_info.do?method=openCleanAttachNum_ajax", function(data) {
 		if (data.success) {
 			//alert(JSON.stringify(data));
 			$.each(data.nodeInfoArray, function(index, item) {

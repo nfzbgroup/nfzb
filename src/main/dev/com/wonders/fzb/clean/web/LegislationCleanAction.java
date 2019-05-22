@@ -1,5 +1,6 @@
 package com.wonders.fzb.clean.web;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,12 +18,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.assess.beans.LegislationAssess;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.clean.beans.*;
 import com.wonders.fzb.clean.services.*;
+import com.wonders.fzb.legislation.services.LegislationExampleService;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
 /**
  * LegislationClean action接口
@@ -39,6 +45,15 @@ public class LegislationCleanAction extends BaseAction {
 	@Qualifier("legislationCleanService")
 	private LegislationCleanService legislationCleanService;
 
+	@Autowired
+	@Qualifier("wegovSimpleNodeService")
+	private WegovSimpleNodeService wegovSimpleNodeService;
+	
+	@Autowired
+	@Qualifier("legislationExampleService")
+	private LegislationExampleService legislationExampleService;
+	
+	
 	private int pageNo = 1;
 	private int pageSize = 10;
 
@@ -93,5 +108,34 @@ public class LegislationCleanAction extends BaseAction {
 		request.setAttribute("requestUrl", request.getRequestURI());
 		return pageController();
 	}
+	//立法清理样本流程图材料样本查询
+	   private String openCleanAttachNum_ajax() throws IOException {
+		    JSONObject retJson = new JSONObject();
+			JSONArray nodeInfoArray = new JSONArray();
+						
+		    Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stFlowName", "立法清理");
+			sortMap.put("dtExtendDate", "ASC");
+			// 立法清理节点信息
+			List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByList(condMap, sortMap);
+			for (WegovSimpleNode wegovSimpleNode : nodeList) {
+				JSONObject nodeChange = new JSONObject();
+				String stNodeId = wegovSimpleNode.getStNodeId();
+				nodeChange.put("node", stNodeId);	
+				String sql="SELECT COUNT(1) FROM LEGISLATION_EXAMPLE WHERE ST_NODE='"+stNodeId+"' AND ST_STATUS='USED'";
+				int queryExampleNum = legislationExampleService.queryExampleNum(sql);
+				nodeChange.put("num", queryExampleNum);
+				nodeInfoArray.add(nodeChange);
+			}
+			
+			retJson.put("success", true);
+			retJson.put("nodeInfoArray", nodeInfoArray);
+			response.setContentType("application/json; charset=UTF-8");
+			response.getWriter().print(retJson);
+		   return null;
+	   }
+	
+	
 
 }

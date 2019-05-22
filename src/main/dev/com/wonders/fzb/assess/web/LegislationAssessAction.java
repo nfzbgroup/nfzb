@@ -1,5 +1,22 @@
 package com.wonders.fzb.assess.web;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.assess.beans.LegislationAssess;
 import com.wonders.fzb.assess.beans.LegislationAssessItem;
@@ -12,22 +29,10 @@ import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.MOR;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
+import com.wonders.fzb.legislation.services.LegislationExampleService;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
 /**
  * LegislationAssess action接口
@@ -60,6 +65,14 @@ public class LegislationAssessAction extends BaseAction {
 	@Qualifier("teamInfoService")
 	private TeamInfoService teamInfoService;
 
+	@Autowired
+	@Qualifier("wegovSimpleNodeService")
+	private WegovSimpleNodeService wegovSimpleNodeService;
+	
+	@Autowired
+	@Qualifier("legislationExampleService")
+	private LegislationExampleService legislationExampleService;
+	
 	private int pageNo = 1;
 	private int pageSize = 10;
 
@@ -115,7 +128,33 @@ public class LegislationAssessAction extends BaseAction {
 		return pageController();
 	}
 	
-	
+	//立法评估样本查询节点样本信息
+	  private String openAssessAttachNum_ajax() throws IOException {
+		    JSONObject retJson = new JSONObject();
+			JSONArray nodeInfoArray = new JSONArray();
+						
+		    Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stFlowName", "立法评估");
+			sortMap.put("dtExtendDate", "ASC");
+			// 立法评估节点信息
+			List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByList(condMap, sortMap);
+			for (WegovSimpleNode wegovSimpleNode : nodeList) {
+				JSONObject nodeChange = new JSONObject();
+				String stNodeId = wegovSimpleNode.getStNodeId();
+				nodeChange.put("node", stNodeId);	
+				String sql="SELECT COUNT(1) FROM LEGISLATION_EXAMPLE WHERE ST_NODE='"+stNodeId+"' AND ST_STATUS='USED'";
+				int queryExampleNum = legislationExampleService.queryExampleNum(sql);
+				nodeChange.put("num", queryExampleNum);
+				nodeInfoArray.add(nodeChange);
+			}
+			
+			retJson.put("success", true);
+			retJson.put("nodeInfoArray", nodeInfoArray);
+			response.setContentType("application/json; charset=UTF-8");
+			response.getWriter().print(retJson);
+		   return null;
+	   }
 	
 	
 	/**

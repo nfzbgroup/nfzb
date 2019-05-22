@@ -143,7 +143,7 @@
 				   <div class="list-page" id="listPage"></div>
 			    </div> -->
 			    <div class="tab-pane fade" id="div2" >
-				<div id="t-title">立法计划管理</div>
+				<!-- <div id="t-title">立法计划管理</div> -->
 			   <table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 				<thead>
 					<tr class="text-center">

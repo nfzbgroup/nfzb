@@ -31,19 +31,52 @@
 	<div class="page-bar">
 		<ul class="page-breadcrumb">
 			<li>
-				<span>>法规规章草案</span>
+				<!--<span>>法规规章草案</span>-->
+				<c:choose>
+				    <c:when test="${nodeId=='NOD_0000000114'}">正式文本准备</c:when>
+				    <c:when test="${nodeId=='NOD_0000000117'}">立法归档
+				        <c:if test="${nodeStatus=='TODO'}">> 待处理</c:if>
+	                    <c:if test="${nodeStatus=='DONE'}">> 已处理</c:if>
+				    </c:when>
+				    <c:when test="${nodeId=='NOD_0000000116'}">规章文本报备
+				        <c:if test="${nodeStatus=='TODO'}">> 待报备</c:if>
+				        <c:if test="${nodeStatus=='DOING'}">> 意见处理</c:if>
+				        <c:if test="${nodeStatus=='DONE'}">> 已完成</c:if>
+				    </c:when>
+				    <c:when test="${nodeId=='NOD_0000000115'}">正式文本处理
+				        <c:if test="${nodeStatus=='TODO'}">> 复核</c:if>
+				        <c:if test="${nodeStatus=='PRINT'}">> 送印</c:if>
+				        <c:if test="${nodeStatus=='FINAL'}">> 正式文本</c:if>
+				        <c:if test="${nodeStatus=='ONLINE'}">> 上网发布</c:if>
+				        <c:if test="${nodeStatus=='DONE'}">> 已完成</c:if>
+				    </c:when>
+				</c:choose>
 			</li>
 		</ul>
-		<!--<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
+		<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
 			<span aria-hidden="true">&times;</span>
 			<span class="sr-only">Close</span>
-		</button>-->
+		</button>
 	</div>
 	<div class="modal-body">
-		<div class="ibox float-e-margins">
+	  <h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">
+	   <c:if test="${nodeId=='NOD_0000000114'}">正式文本准备</c:if>
+	   <c:if test="${nodeId=='NOD_0000000117'}">立法归档</c:if>
+	   <c:if test="${nodeId=='NOD_0000000115'}">
+	    <c:if test="${nodeStatus=='TODO'}">复核</c:if>
+	    <c:if test="${nodeStatus=='PRINT'}">送印</c:if>
+		<c:if test="${nodeStatus=='FINAL' or nodeStatus=='DONE'}">正式文本</c:if>
+		<c:if test="${nodeStatus=='ONLINE'}">上网发布</c:if>
+	   </c:if>
+	   <c:if test="${nodeId=='NOD_0000000116'}">
+	    <c:if test="${nodeStatus=='TODO' or nodeStatus=='DONE'}">规章文本报备</c:if>
+	    <c:if test="${nodeStatus=='DOING'}">意见处理</c:if>
+	   </c:if>
+	  </h2>
+		<!-- <div class="ibox float-e-margins">
 			<div class="ibox-title">
 				<div class="wrapper wrapper-content animated fadeInRight">
-					<div class="row">
+					<div class="row"> -->
 						<form name="form1" id="legislationProcessDocForm" class="form-horizontal" novalidate="novalidate">
 							<input type="hidden" name="stDocId" id="stDocId" value="${stDocId}">
 							<input type="hidden" name="stNodeId" id="stNodeId" value="${nodeId}">
@@ -51,45 +84,53 @@
 								<div class="form-group">
 										<div class="form-group text-center">
 											<label class="col-sm-3 control-label text-left">法规规章草案：</label>
-											<label class="col-sm-6 control-label" style="text-align: left;">
+											<label class="col-sm-7 control-label" style="text-align: left;">
 												<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 											</label>
 										</div>
 										<c:if test="${nodeId=='NOD_0000000114'}">
+										   <div class="form-group text-center">
 												<label class="col-sm-3 control-label text-left">正式文本说明：</label>
-									            <div class="col-sm-6">
-										           <textarea  name=stComment2 class="form-control form_control">${legislationProcessTask.stComment2}</textarea>
+									            <div class="col-sm-7">
+										           <textarea  name="stComment2" class="form-control form_control">${legislationProcessTask.stComment2}</textarea>
 									            </div>
+									       </div>
 										</c:if>
 										<c:if test="${nodeId=='NOD_0000000117'}">
+										   <div class="form-group text-center">
 												<label class="col-sm-3 control-label text-left">立法归档说明：</label>
-									            <div class="col-sm-6">
-										           <textarea  name=stComment1 class="form-control form_control">${legislationProcessTask.stComment1}</textarea>
+									            <div class="col-sm-7">
+										           <textarea  name="stComment1" class="form-control form_control">${legislationProcessTask.stComment1}</textarea>
 									            </div>
+									       </div>
 										</c:if>
 										<c:if test="${nodeId=='NOD_0000000116'}">
 										<c:if test="${nodeStatus=='TODO'}">
+										    <div class="form-group text-center">
 												<label class="col-sm-3 control-label text-left">待报备说明：</label>
-									            <div class="col-sm-6">
-										           <textarea  name=stComment1 class="form-control form_control">${legislationProcessTask.stComment1}</textarea>
+									            <div class="col-sm-7">
+										           <textarea  name="stComment1" class="form-control form_control">${legislationProcessTask.stComment1}</textarea>
 									            </div>
+									        </div>
 										</c:if>
 										<c:if test="${nodeStatus=='DOING'}">
+										    <div class="form-group text-center">
 												<label class="col-sm-3 control-label text-left">意见处理说明：</label>
-									            <div class="col-sm-6">
-										           <textarea name=stBakOne class="form-control form_control">${legislationProcessTask.stBakOne}</textarea>
+									            <div class="col-sm-7">
+										           <textarea name="stBakOne" class="form-control form_control">${legislationProcessTask.stBakOne}</textarea>
 									            </div>
+									        </div>
 										</c:if>
 										<c:if test="${nodeStatus=='DONE'}">
 										   <div class="form-group">
 												<label class="col-sm-3 control-label text-left">待报备说明：</label>
-												<div class="col-sm-6">
+												<div class="col-sm-7">
 													<textarea  name="stComment1" class="form-control">${legislationProcessTask.stComment1}</textarea>
 												</div>
 											</div>
 											<div class="form-group">
 												<label class="col-sm-3 control-label text-left">意见处理说明：</label>
-												<div class="col-sm-6">
+												<div class="col-sm-7">
 													<textarea  name="stBakOne" class="form-control">${legislationProcessTask.stBakOne}</textarea>
 												</div>
 											</div>
@@ -99,39 +140,59 @@
 							
 										<c:if test="${nodeId=='NOD_0000000115'}">
 										<c:if test="${nodeStatus=='TODO'}">
+										    <div class="form-group text-center">
 												<label class="col-sm-3 control-label text-left">复核说明：</label>
-									            <div class="col-sm-6">
-										           <textarea  name=stComment1 class="form-control form_control">${legislationProcessTask.stComment1}</textarea>
+									            <div class="col-sm-7">
+										           <textarea  name="stComment1" class="form-control form_control">${legislationProcessTask.stComment1}</textarea>
 									            </div>
+									        </div>
 										</c:if>
 										<c:if test="${nodeStatus=='PRINT'}">
+										    <div class="form-group text-center">
 												<label class="col-sm-3 control-label text-left">送印说明：</label>
-									            <div class="col-sm-6">
-										           <textarea name=stBakOne class="form-control form_control">${legislationProcessTask.stBakOne}</textarea>
+									            <div class="col-sm-7">
+										           <textarea name="stBakOne" class="form-control form_control">${legislationProcessTask.stBakOne}</textarea>
 									            </div>
+									        </div>
+										</c:if>
+										<c:if test="${nodeStatus=='FINAL'}">
+										    <div class="form-group text-center">
+												<label class="col-sm-3 control-label text-left">正式文本说明：</label>
+									            <div class="col-sm-7">
+										           <textarea name="stComment2" class="form-control form_control">${legislationProcessTask.stComment2}</textarea>
+									            </div>
+									        </div>
 										</c:if>
 										<c:if test="${nodeStatus=='ONLINE'}">
+										    <div class="form-group text-center">
 												<label class="col-sm-3 control-label text-left">上网发布说明：</label>
-									            <div class="col-sm-6">
+									            <div class="col-sm-7">
 										           <textarea  name="stBakTwo" class="form-control form_control">${legislationProcessTask.stBakTwo}</textarea>
 									            </div>
+									        </div>
 										</c:if>
 										<c:if test="${nodeStatus=='DONE'}">
 											<div class="form-group">
 												<label class="col-sm-3 control-label text-left">复核说明：</label>
-												<div class="col-sm-6">
+												<div class="col-sm-7">
 													<textarea  name="stComment1" class="form-control">${legislationProcessTask.stComment1}</textarea>
 												</div>
 											</div>
 											<div class="form-group">
 												<label class="col-sm-3 control-label text-left">送印说明：</label>
-												<div class="col-sm-6">
+												<div class="col-sm-7">
 													<textarea  name="stBakOne" class="form-control">${legislationProcessTask.stBakOne}</textarea>
 												</div>
 											</div>
 											<div class="form-group">
+												<label class="col-sm-3 control-label text-left">正式文本说明：</label>
+												<div class="col-sm-7">
+													<textarea  name="stComment2" class="form-control">${legislationProcessTask.stComment2}</textarea>
+												</div>
+											</div>
+											<div class="form-group">
 												<label class="col-sm-3 control-label text-left">上网发布说明：</label>
-												<div class="col-sm-6">
+												<div class="col-sm-7">
 													<textarea  name="stBakTwo" class="form-control">${legislationProcessTask.stBakTwo}</textarea>
 												</div>
 											</div>   
@@ -195,10 +256,10 @@
 								</div>
 							</div>
 						</form>
-					</div>
+					<!--</div>
 				</div>
 			</div>
-		</div>
+		</div>  -->
 	</div>
 </body>
 <script>

@@ -160,7 +160,7 @@
 										<label class="btn btn-w-m btn-success" onclick="openTaskPage('openUnitAddPage',null)">添加</label>
 									</c:if>
 								</div>
-								<div class="col-md-8 padding0 order-btn">
+								<div class="col-md-9 padding0 order-btn">
 									<c:choose>
 										<c:when test="${nodeId=='NOD_0000000103' && isZhc eq true}">
 											<label class="btn btn-w-m btn-success" id="DOING" onclick="changeType('DOING')">待处理</label>

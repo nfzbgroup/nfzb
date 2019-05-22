@@ -254,11 +254,8 @@
 
 								<div class="col-md-4">
 									<label class="btn btn-w-m btn-success" onclick="submitForm(1)"> 查询</label>
-									<c:if test="${nodeId=='NOD_0000000180'}">
-										<label class="btn btn-w-m btn-success" onclick="openCitymeetingPage('city_meeting__TODO','TODO')">添加常务会议</label>
-									</c:if>
 								</div>
-								<div class="col-md-8 padding0 order-btn">
+								<div class="col-md-9 padding0 order-btn">
 									<c:choose>
 										<c:when test="${nodeId=='NOD_0000000103' && isZhc eq true}">
 											<label class="btn btn-w-m btn-success" id="DOING" onclick="changeType('DOING')">待处理</label>
@@ -270,10 +267,13 @@
 											</s:iterator>
 										</c:otherwise>
 									</c:choose>
-
-
 								</div>
-
+								<c:if test="${nodeId=='NOD_0000000180'}">
+								<div class="pull-right">
+                                      <label class="btn btn-w-m btn-success" onclick="openCitymeetingPage('city_meeting__TODO','TODO')">添加常务会议</label>
+								</div>
+								</c:if>
+								
 								<c:choose>
 									<c:when test="${nodeId=='NOD_0000000140'}">
 										<div class="pull-right">

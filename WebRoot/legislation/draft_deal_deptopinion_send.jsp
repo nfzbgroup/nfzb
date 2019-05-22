@@ -10,10 +10,7 @@
 				<c:if test="${nodeId=='NOD_0000000161'}">部门会签</c:if> > </span></li>
 		<li><span>发送部门 </span></li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close"
-		data-dismiss="modal">
-		<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
 <h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">征询意见发送部门</h2>

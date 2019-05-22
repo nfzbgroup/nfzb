@@ -182,7 +182,7 @@ public class LegislationPlanAction extends BaseAction {
 		   return null;
 	   }
 	
-	    // 流程图页面上，ajax加载当前草案的各节点的信息 lj
+	    // 流程图页面上，ajax加载当前计划的各节点的信息 lj
 		private String openPlanIndexPage_ajax() throws IOException {
 			String stPlanId = request.getParameter("stPlanId");
 			UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
@@ -191,11 +191,11 @@ public class LegislationPlanAction extends BaseAction {
 			JSONObject retJson = new JSONObject();
 			JSONArray nodeInfoArray = new JSONArray();
 			
-			// 找出当前草案下的所有任务，设置到节点的状态上
+			// 找出当前计划下的所有任务，设置到节点的状态上
 			Map<String, Object> condMap = new HashMap<>();
 			Map<String, String> sortMap = new HashMap<>();
 			condMap.put("stPlanId", stPlanId);
-			// 获得草案主流程task的信息
+			// 获得计划主流程task的信息
 			List<LegislationPlanTask> taskList = legislationPlanTaskService.findByList(condMap, sortMap);
 			String allNodeId = "";
 			for (LegislationPlanTask each : taskList) {

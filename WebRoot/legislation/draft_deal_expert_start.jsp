@@ -7,13 +7,13 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span>专家论证会发起</span>
+			<span>专家论证会 > </span>
+		</li>
+		<li>
+			<span>发起</span>
 		</li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
-		<span aria-hidden="true">&times;</span>
-		<span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 </div>
 <div class="modal-body">
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">专家论证会发起</h2>

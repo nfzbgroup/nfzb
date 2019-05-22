@@ -6,27 +6,21 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="page-bar">
 	<ul class="page-breadcrumb">
-		<li><span>部门会签> </span></li>
+		<li><span>部门会签 > </span></li>
 		<li><span>发送部门 </span></li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close"
-		data-dismiss="modal">
-		<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 </div>
 <div class="modal-body">
 <h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">部门会签发送部门</h2>
-	<form id="unitDemonstrationForm" class="form-horizontal"
-      novalidate="novalidate"> 
-	  <div class="form-group">
+	<form id="unitDemonstrationForm" class="form-horizontal" novalidate="novalidate"> 
+	 <div class="form-group">
 		<label class="col-sm-3 control-label">对应草案：</label>
 		<label class="col-sm-9 control-label" style="text-align:left"><span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span></label>
 		<c:if test="${legislationProcessTask.stTaskStatus=='DONE'}">
-			<label class="col-sm-3 control-label text-right">发送时间：</label> <label
-			class="col-sm-9 control-label"><fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss"
-            value="${legislationProcessTask.dtDealDate}" /></label>
+			<label class="col-sm-3 control-label text-right">发送时间：</label> <label class="col-sm-9 control-label"><fmt:formatDate type="time" pattern="yyyy-MM-dd HH:mm:ss" value="${legislationProcessTask.dtDealDate}" /></label>
 		</c:if>
-	  </div>
+	 </div>
 	 <div class="form-group">
 		<label class="col-sm-3 control-label">选择部门：</label>
 		 <div class="col-sm-9">

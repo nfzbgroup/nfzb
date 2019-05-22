@@ -732,19 +732,19 @@
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow3" alt="">
                                 <img src="${basePath}/legislation/assets/demo/arrow.png" class="arrow arrow4" alt="">
                                 <div nodeHref=""  class="cell row_items row_item1 bcg_gray border_width border_style border_radius border_color_t">
-                                 <a href="javaScript:void(0)" id="NOD_0000000114" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">								
+                                 <a href="javaScript:void(0)" id="NOD_0000000115__TODO" class="removeHand" onclick="openDemonstrationPage1(this.id,'','${request.docInfo.stDocId}')">								
                                         <p class="font_color_black">校对/复核</p>
                                         <span class="img_style img_style2 font_color_blue border_blue border_radius_circle two_work">立<b>/调</b></span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item2 bcg_gray border_width border_style border_radius border_color_t">
-                                     <a href="javaScript:void(0)" id="NOD_0000000115__TODO" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
+                                     <a href="javaScript:void(0)" id="NOD_0000000115__PRINT" class="removeHand" onclick="openDemonstrationPage1(this.id,'','${request.docInfo.stDocId}')">
                                         <p class="font_color_black">送印</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>
                                     </a>
                                 </div>
                                 <div class="cell row_items row_item3 bcg_gray border_width border_style border_radius border_color_t">
-                                    <a href="javaScript:void(0)" id="NOD_0000000115__PRINT" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
+                                    <a href="javaScript:void(0)" id="NOD_0000000115__FINAL" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.docInfo.stDocId}')">
                                       
                                         <p class="font_color_black">正式文本</p>
                                         <span class="img_style img_style2 font_color_red border_yellow border_radius_circle">调</span>

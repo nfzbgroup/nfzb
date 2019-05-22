@@ -8,33 +8,31 @@
 	<ul class="page-breadcrumb">
 		<li><c:choose>
 				<c:when test="${infoPage==true}">
-					<span>审核会议待审草案->查看</span>
+					<span>审核会议待审草案 > 查看</span>
+				</c:when>
+				<c:when test="${legislationProcessTask.stTaskStatus==statusCodeArray[0]}">
+				    <span>审核会议征询意见 > OA征询意见 </span>
+				</c:when>
+				<c:when test="${legislationProcessTask.stTaskStatus==statusCodeArray[1]}">
+				    <span>审核会议征询意见 > 录入意见</span>
 				</c:when>
 				<c:otherwise>
-					<span>OA审核 </span>
+					<span>审核会议征询意见</span>
 				</c:otherwise>
 			</c:choose></li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close"
-		data-dismiss="modal">
-		<span aria-hidden="true">&times;</span> <span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 </div>
 <div class="modal-body">
 	<c:choose>
-		<c:when
-			test="${legislationProcessTask.stTaskStatus==statusCodeArray[0]}">
-			<h2
-				style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会前征询意见</h2>
+		<c:when test="${legislationProcessTask.stTaskStatus==statusCodeArray[0]}">
+			<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议OA征询意见</h2>
 		</c:when>
-		<c:when
-			test="${legislationProcessTask.stTaskStatus==statusCodeArray[1]}">
-			<h2
-				style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会征询</h2>
+		<c:when test="${legislationProcessTask.stTaskStatus==statusCodeArray[1]}">
+			<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议OA审核结果</h2>
 		</c:when>
 		<c:otherwise>
-			<h2
-				style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会前征询意见</h2>
+			<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议征询意见</h2>
 		</c:otherwise>
 	</c:choose>
 	<form id="legislationProcessDocForm" class="form-horizontal"
@@ -45,14 +43,14 @@
 			<c:when test="${legislationProcessTask.stTaskStatus=='TODO' or isbanli=='banli'}">
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">说明：</label>
-					<div class="col-sm-9">
+					<div class="col-sm-7">
 						<textarea id="stComent" name="stComent" class="form-control"><c:if
 								test="${legislationProcessTask.stBakOne !=null}">${legislationProcessTask.stBakOne}</c:if></textarea>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">送审领导：</label>
-					<div class="col-sm-9">
+					<div class="col-sm-7">
 						<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导','N')">${legislationProcessTaskdetail.stPersonName}</textarea>
 					</div>
 					<input type="hidden" name="stPersonsId" id="stPersonsId"
@@ -69,7 +67,7 @@
 				</div>  -->
 				<div class="form-group">
 				<label class="col-sm-3 control-label text-left">领导审核意见:</label>
-				<div class="col-sm-9">
+				<div class="col-sm-7">
 				   <table class="table table-border table-bordered">
 						<thead>
 							<tr>
@@ -111,14 +109,14 @@
 			<c:otherwise>
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">说明：</label>
-					<div class="col-sm-9">
+					<div class="col-sm-7">
 						<textarea id="stComent" name="stComent" class="form-control"><c:if
 								test="${legislationProcessTask.stBakOne !=null}">${legislationProcessTask.stBakOne}</c:if></textarea>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">送审领导：</label>
-					<div class="col-sm-9">
+					<div class="col-sm-7">
 						<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导','N')">${legislationProcessTaskdetail.stPersonName}</textarea>
 					</div>
 					<input type="hidden" name="stPersonsId" id="stPersonsId"
@@ -126,7 +124,10 @@
 				</div>
 			</c:otherwise>
 		</c:choose>
-
+ 		<div class="form-group">
+				<label class="control-label">上传材料接收</label>
+		</div>	
+		<%@include file="/legislation/file/attachUpload.jsp" %>
 		<div class="form-group text-center">
 			<c:if test="${(infoPage==false and legislationProcessTask.stTaskId==null) or (legislationProcessTask.stTaskStatus!=null and legislationProcessTask.stTaskStatus!='DONE') and isbanli!='banli'}">
 				<input ${strDisplay} type="button" class="btn btn-w-m btn-success"	id="btnSave" name="btnSave"	onclick="saveLegislationProcessDoc('save')" value="保存">
@@ -136,16 +137,6 @@
 		  </c:if>
 			<input type="button" id="btnClose" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 		</div>
-
-		
-					
- 			<div class="form-group">
-				<label class="control-label">上传材料接收</label>
-			</div>	
-		<%@include file="/legislation/file/attachUpload.jsp" %>
-		
-		
-		
 	</form>
 </div>
 <script>

@@ -12,15 +12,12 @@
 		    <span>常务会议材料上传 </span>
 		   </c:when>
 		   <c:otherwise>
-		    <span>常务会议->议题确认 </span>
+		    <span>常务会议 > 议题确认 </span>
 		   </c:otherwise>
 		  </c:choose>
 		</li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
-		<span aria-hidden="true">&times;</span>
-		<span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 </div>
 <div class="modal-body">
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">选择草案对应的议题</h2>
@@ -30,9 +27,9 @@
 		<input hidden id="stTaskId" name="stTaskId" <c:if test="${legislationProcessTask.stTaskId !=null}">value="${legislationProcessTask.stTaskId}"</c:if>>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">草案名称：</label>
-				<div class="col-sm-9">
+				<label class="col-sm-9">
 					${legislationProcessDoc.stDocName}
-				</div>
+				</label>
 			</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label text-left">材料说明：</label>

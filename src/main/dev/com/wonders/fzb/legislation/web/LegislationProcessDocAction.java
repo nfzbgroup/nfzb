@@ -479,9 +479,6 @@ public class LegislationProcessDocAction extends BaseAction {
 		UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
 		String userRole = (String) session.getAttribute("userRole");
 		String teamId = currentPerson.getTeamInfos().get(0).getId();
-		// List<LegislationProcessTask>
-		// unitEditList=legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId,stNodeId);
-
 		JSONObject retJson = new JSONObject();
 		JSONArray nodeInfoArray = new JSONArray();
 		// 审核会议节点
@@ -534,12 +531,6 @@ public class LegislationProcessDocAction extends BaseAction {
 						System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_blue");
 						nodeChange1.put("node", stNodeId1 + "__" + nodeStatusArr[i]);
 						nodeChange1.put("colorSet", "bcg_blue");
-						// nodeChange.put("nodeHref", node.getStInfoUrl() + "__"
-						// + nodeStatusArr[i]);
-						// 当前正在做的，用权限控制一下 这里注释一下 只有绿色的需要控制 蓝色的可以打开
-						// 2019年4月10日15:14:45 sy
-						// if (node.getStSubmitRole() != null &&
-						// (node.getStSubmitRole().indexOf(userRole) >= 0)) {
 						nodeChange1.put("nodeHref", node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
 						System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[URL]：" + node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
 						// }
@@ -599,18 +590,8 @@ public class LegislationProcessDocAction extends BaseAction {
 								nodeChange1.put("node", "NOD_0000000112" + "__" + nodeStatusArr[i]);
 							}
 							nodeChange1.put("colorSet", "bcg_green");
-							// nodeChange.put("otherSet", "sdfesfwec");
 							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_green");
-							// 当前正在做的，用权限控制一下 如果权限表里 处室单位不为空，并且处室单位 包含这个处室
-							// if (node1.getStSubmitRole() != null &&
-							// (node1.getStSubmitRole().indexOf(userRole) >= 0))
-							// {
-							// nodeChange1.put("nodeHref", node1.getStInfoUrl()
-							// + "__" + nodeStatusArr[i]);
-							// System.out.println(stNodeId1 + "__" +
-							// nodeStatusArr[i] + "[URL]：" +
-							// node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
-							// }
+						
 							nodeInfoArray.add(nodeChange1);
 							break;// 等于后，后面没出来的状态就不要了
 						} else {
@@ -664,18 +645,7 @@ public class LegislationProcessDocAction extends BaseAction {
 							// 如果当前task的状态与节点状态一致
 							nodeChange1.put("node", stNodeId1 + "__" + nodeStatusArr[i]);
 							nodeChange1.put("colorSet", "bcg_green");
-							// nodeChange.put("otherSet", "sdfesfwec");
-							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_green");
-							// 当前正在做的，用权限控制一下 如果权限表里 处室单位不为空，并且处室单位 包含这个处室
-							// if (node1.getStSubmitRole() != null &&
-							// (node1.getStSubmitRole().indexOf(userRole) >= 0))
-							// {
-							// nodeChange1.put("nodeHref", node1.getStInfoUrl()
-							// + "__" + nodeStatusArr[i]);
-							// System.out.println(stNodeId1 + "__" +
-							// nodeStatusArr[i] + "[URL]：" +
-							// node1.getStInfoUrl() + "__" + nodeStatusArr[i]);
-							// }
+							System.out.println(stNodeId1 + "__" + nodeStatusArr[i] + "[color]：" + "bcg_green");						
 							nodeInfoArray.add(nodeChange1);
 							break;// 等于后，后面没出来的状态就不要了
 						} else {
@@ -5266,6 +5236,44 @@ public class LegislationProcessDocAction extends BaseAction {
 
 	private String draft_formal__PRINT() {
 		String method = "draft_formal__PRINT";
+		String stDocId = request.getParameter("stDocId");
+		String stNodeId = request.getParameter("stNodeId");// 图中的节点，再状态
+		String nodeIdStatus[] = stNodeId.split("__");
+		stNodeId = nodeIdStatus[0];
+		String nodeStatus = nodeIdStatus[1];
+		LegislationProcessDoc legislationProcessDoc = legislationProcessDocService.findById(stDocId);
+		List<LegislationProcessTask> legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(stDocId, stNodeId);
+		if (legislationProcessTaskList.size() > 0) {
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stParentId", stDocId);
+			condMap.put("stNodeId", stNodeId);
+			sortMap.put("dtPubDate", "ASC");
+			List<LegislationFiles> legislationFilesList = legislationFilesService.findByList(condMap, sortMap);
+			// 如果当前节点正好SEND，就是操作页。否则是只读页面
+			if (nodeStatus.equals(legislationProcessTaskList.get(0).getStTaskStatus())) {
+				List<Map> legislationExampleFilesList = legislationExampleService.queryLegislationExampleFilesList(stNodeId, legislationFilesList);
+				request.setAttribute("LegislationExampleList", legislationExampleFilesList);
+				method = "openDraftTextPage";
+			} else {
+				String stStyle = "style ='display: none;'";
+				request.setAttribute("strDisplay", stStyle);
+				method = "openDraftTextPage";
+			}
+			request.setAttribute("legislationFilesList", legislationFilesList);
+			request.setAttribute("legislationProcessTask", legislationProcessTaskList.get(0));
+		}
+		// 页面元素是legislation_process_taskdetail 表数据 ed
+		request.setAttribute("nodeId", stNodeId);
+		request.setAttribute("stDocId", stDocId);
+		request.setAttribute("nodeStatus", nodeStatus);
+		request.setAttribute("requestUrl", request.getRequestURI());
+		request.setAttribute("legislationProcessDoc", legislationProcessDoc);
+		return method;
+	}
+	
+	private String draft_formal__FINAL() {
+		String method = "draft_formal__FINAL";
 		String stDocId = request.getParameter("stDocId");
 		String stNodeId = request.getParameter("stNodeId");// 图中的节点，再状态
 		String nodeIdStatus[] = stNodeId.split("__");

@@ -35,19 +35,17 @@
 				<span><%if("NOD_0000000106".equals(request.getAttribute("stNodeId"))){ %>报审审签(签报)<%}else{ %>报市长审签<%}%></span>
 			</li>
 			<li>
-				<span>>法规规章草案报审材料准备</span>
+				<span>> <%if("NOD_0000000106".equals(request.getAttribute("stNodeId"))){ %>报审审签材料准备<%}else{ %>报市长审签材料准备<%}%></span>
 			</li>
 		</ul>
-		<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
-			<span aria-hidden="true">&times;</span>
-			<span class="sr-only">Close</span>
-		</button>
+		<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 	</div>
 	<div class="modal-body" id="draftReport">
-		<div class="ibox float-e-margins">
+	  <h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">法规规章草案报审材料准备</h2>
+		<!--<div class="ibox float-e-margins">
 			<div class="ibox-title">
 				<div class="wrapper wrapper-content animated fadeInRight">
-					<div class="row">
+					<div class="row">  -->
 						<form name="form1" id="legislationProcessDocForm" class="form-horizontal" novalidate="novalidate">
 							<input type="hidden" name="stDocId" id="stDocId" value="${stDocId}">
 							<input type="hidden" name="stNodeId" id="stNodeId" value="${stNodeId}">
@@ -56,13 +54,13 @@
 							<div class="form-body">
 									<div class="form-group text-center">
 										 <label class="col-sm-3 control-label text-left">法规规章草案：</label>
-											<label class="col-sm-6 control-label" style="text-align: left;">
+											<label class="col-sm-7 control-label" style="text-align: left;">
 												<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 											</label>
 									</div>
 									<div class="form-group text-center">
-									     <label class="col-sm-3 control-label text-left">法律规章草案报审材料说明：</label>
-									     <div class="col-sm-6">
+									     <label class="col-sm-3 control-label text-left">报审材料说明：</label>
+									     <div class="col-sm-7">
 										    <textarea id="stComment2" name=stComment2 class="form-control form_control">${legislationProcessTask.stComment2}</textarea>
 									     </div>
 									</div>
@@ -81,10 +79,10 @@
 								</div>
 							</div>
 						</form>
-					</div>
+					<!--</div>
 				</div>
 			</div>
-		</div>
+		</div>  -->
 	</div>
 </body>
 <script>

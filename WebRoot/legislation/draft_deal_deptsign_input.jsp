@@ -7,20 +7,23 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span ><c:if test="${nodeId=='NOD_0000000122'}">部门会签征求</c:if><c:if test="${nodeId=='NOD_0000000161'}">部门会签</c:if>  > </span>
+			<span>部门会签 > </span>
 		</li>
 		<li>
-			<span >接收反馈</span>
+			<span>接收反馈</span>
 		</li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 </div>
 <div class="modal-body">
 <h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">意见反馈</h2>
-        <div class="form-group text-center" >
+    <div class="form-group text-center" >
             <label class="col-sm-2 control-label text-left">对应草案：</label>
-            <label class="col-sm-3 control-label text-left">${legislationProcessDoc.stDocName}</label>
-        </div>
+            <label class="col-sm-4 control-label text-left">${legislationProcessDoc.stDocName}</label>
+    </div>
+    <br><br>
+    <div class="form-group text-center" >
+    <div class="col-sm-12">
 	<table class="table table-border table-bordered">
 		<thead>
 			<tr>
@@ -66,7 +69,8 @@
 		</c:if>
 		</tbody>
 	</table>
-	
+	</div>
+	</div>
 	
 	<div class="form-group text-center">
 		<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">

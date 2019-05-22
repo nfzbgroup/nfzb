@@ -7,13 +7,13 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span>公开征求意见接收</span>
+			<span>公开征求意见 > </span>
+		</li>
+		<li>
+			<span>接收</span>
 		</li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
-		<span aria-hidden="true">&times;</span>
-		<span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">公开征求意见接收</h2>
@@ -23,21 +23,21 @@
 		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body">
 			<br>
-			<div class="form-group text-center">
+			<div class="form-group">
 				<label class="col-sm-3 control-label text-left">法规规章草案：</label>
-				<label class="col-sm-9 control-label" style="text-align: left;">
+				<label class="col-sm-9">
 					<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 				</label>
 			</div>
 			<div class="form-group">
-			    <label class="col-sm-3 control-label text-left">送审领导:</label>
+			    <label class="col-sm-3 control-label text-left">送审领导：</label>
 				<div class="col-sm-9">
 					<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导')">${legislationProcessTaskdetail.stPersonName}</textarea>
 				</div>
 				<input type="hidden" name="stPersonsId" id="stPersonsId" <c:if test="${legislationProcessTaskdetail.stPersonId!=null}">value="${legislationProcessTaskdetail.stPersonId}" </c:if> />
 			</div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label text-left">送审说明:</label>
+				<label class="col-sm-3 control-label text-left">送审说明：</label>
 				<div class="col-sm-9">
 					<textarea id="stComment2" name="stComment2" class="form-control">${legislationProcessTaskdetail.stBak1}</textarea>
 				</div>

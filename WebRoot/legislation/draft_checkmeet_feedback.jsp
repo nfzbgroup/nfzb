@@ -10,15 +10,13 @@
             <span >审核会议意见反馈 </span>
         </li>
     </ul>
-    <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 </div>
 <div class="modal-body">
     <h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">审核会议意见反馈</h2>
-	<form id="legislationProcessDocForm" class="form-horizontal"
-		  novalidate="novalidate">
+	<form id="legislationProcessDocForm" class="form-horizontal" novalidate="novalidate">
         		<input hidden id="stDocId" name="stDocId" value="${stDocId}">
         		<input type="hidden" id="nodeStatus" value="${nodeStatus}">
-        
                 <div class="form-group">
 					<label class="col-sm-3 control-label text-left">会议名称：</label>
 					<label class="col-sm-5 control-label" style="text-align:left">${legislationCheckmeeting.stMeetingName}</label>
@@ -46,11 +44,7 @@
 			    </c:if>
 			    <input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
-			
-          
-		</div>
 	</form>
-
 </div>
 <script>
     function saveLegislationProcessDoc(type) {

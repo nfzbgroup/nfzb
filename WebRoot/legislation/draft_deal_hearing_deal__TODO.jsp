@@ -7,13 +7,13 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span>立法听证会接收</span>
+			<span>立法听证会 > </span>
+		</li>
+		<li>
+			<span>接收 </span>
 		</li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
-		<span aria-hidden="true">&times;</span>
-		<span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 </div>
 <div class="modal-body">
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">立法听证会接收</h2>
@@ -29,32 +29,36 @@
 					<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 				</label>
 			</div>
-			<br>
 			<div class="form-group">
-			    <label class="col-md-3 control-label">发起时间:</label>
-				     <div class="col-md-9">
+			    <label class="col-md-3 control-label">发起时间：</label>
+				<div class="col-md-9">
 						<div class="input-group input-large">
 							<input type="text" class="form-control"  readonly value="<fmt:formatDate value="${legislationProcessTask.dtBakDate}"/>"/>
-		
 						</div>
-					</div>
+				</div>
+			</div>
+			<div class="form-group">
 			    <label class="col-sm-3 control-label">地点：</label>
 				<div class="col-sm-9">
 					<input class="form-control" readonly value="${legislationProcessTask.stBakOne}"/>
 				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-sm-3 control-label">参与人员：</label>
 				<div class="col-sm-9">
 					<input class="form-control" readonly value="${legislationProcessTask.stBakTwo}"/>
 				</div>
-				<label class="col-sm-3 control-label text-left">送审领导:</label>
-				    <div class="col-sm-9">
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label text-left">送审领导：</label>
+				<div class="col-sm-9">
 						<textarea class="form-control" id="stPersons" name="stPersons" readonly ondblclick="openEditParticipants('局领导')">${legislationProcessTaskdetail.stPersonName}</textarea>
-				    </div>
-				    <input type="hidden" name="stPersonsId" id="stPersonsId" <c:if test="${legislationProcessTaskdetail.stPersonId!=null}">value="${legislationProcessTaskdetail.stPersonId}" </c:if> />
+				</div>
+				<input type="hidden" name="stPersonsId" id="stPersonsId" <c:if test="${legislationProcessTaskdetail.stPersonId!=null}">value="${legislationProcessTaskdetail.stPersonId}" </c:if> />
 			</div>
 		 <div class="form-group">
 				<label class="control-label">立法听证会接收材料 </label>
-			</div>	
+		 </div>	
 		<%@include file="/legislation/file/attachUpload.jsp" %>
 		<div class="form-group text-center">
 		 <c:if test="${legislationProcessTask.stTaskStatus=='TODO'}">
@@ -65,6 +69,7 @@
 			 </c:if>
 			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 		</div>
+	  </div>
 	</form>
 </div>
 <script>

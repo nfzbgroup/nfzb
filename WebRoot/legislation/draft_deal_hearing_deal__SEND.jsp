@@ -7,13 +7,13 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span>立法听证会送审</span>
+			<span>立法听证会 > </span>
+		</li>
+		<li>
+			<span>送审</span>
 		</li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
-		<span aria-hidden="true">&times;</span>
-		<span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></div>
 </div>
 <div class="modal-body">
 	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">立法听证会送审</h2>
@@ -29,9 +29,8 @@
 					<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 				</label>
 			</div>
-			<br>
 			<div class="form-group">
-			    <label class="col-md-3 control-label">发起时间:</label>
+			    <label class="col-md-3 control-label">发起时间：</label>
 				     <div class="col-md-9">
 						<div class="input-group input-large">
 							<input type="text" class="form-control"  readonly value="<fmt:formatDate value="${legislationProcessTask.dtBakDate}"/>"/>
@@ -52,7 +51,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label text-left">领导审核意见:</label>
+				<label class="col-sm-3 control-label text-left">领导审核意见：</label>
 				<div class="col-sm-9">
 				   <table class="table table-border table-bordered">
 						<thead>
@@ -104,6 +103,7 @@
 				 </c:if>
 			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 		</div>
+	  </div>
 	</form>
 </div>
 <script>

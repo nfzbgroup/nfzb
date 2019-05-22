@@ -13,27 +13,23 @@
     <button style="padding-right: 5px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
+   <h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">规章草案起草</h2>
 	<form id="legislationProcessDocForm" class="form-horizontal"
 		  novalidate="novalidate">
         <input hidden name="docId" value="${stDocId}">
 		<div class="form-body">
 			<div class="form-group">
 				<label class="col-sm-3 control-label text-left">法规规章草案：</label>
-				<div class="col-sm-9">
+				<div class="col-sm-7">
                     <input type="text" id="docName" name="docName" class="form-control" <c:if test="${legislationProcessDoc.stDocName !=null}">value="${legislationProcessDoc.stDocName}" </c:if>>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label text-left">备注：</label>
-				<div class="col-sm-9">
+				<div class="col-sm-7">
 					<textarea id="stComent" name="stComent" class="form-control"
 					><c:if test="${legislationProcessDoc.stComent !=null}">${legislationProcessDoc.stComent}</c:if></textarea>
 				</div>
-			</div>
-			<div class="form-group text-center">
-					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
-						   name="btnSave" onclick="saveLegislationProcessDoc()" value="保存"> &nbsp;&nbsp;
-					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
 			</div>
 			<div class="form-group">
 				<label class="control-label">起草材料
@@ -133,6 +129,11 @@
                     </tbody>
                 </table>
             </div>
+            <div class="form-group text-center">
+					<input type="button" class="btn btn-w-m btn-success" id="btnSave"
+						   name="btnSave" onclick="saveLegislationProcessDoc()" value="保存"> &nbsp;&nbsp;
+					<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="关闭">
+			</div>
 		</div>
 	</form>
 

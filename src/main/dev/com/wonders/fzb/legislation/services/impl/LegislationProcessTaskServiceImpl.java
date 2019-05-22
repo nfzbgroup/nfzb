@@ -244,7 +244,7 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 						nextLegislationProcessTask.setStTeamId("U_3_7");
 						nextLegislationProcessTask.setStTeamName("立法一处");
 					}
-					if (!(stNodeId.equals("NOD_0000000120") || stNodeId.equals("NOD_0000000121") || stNodeId.equals("NOD_0000000123") || stNodeId.equals("NOD_0000000115"))) {
+					if (!(stNodeId.equals("NOD_0000000120") || stNodeId.equals("NOD_0000000121") || stNodeId.equals("NOD_0000000123") || stNodeId.equals("NOD_0000000115")||stNodeId.equals("NOD_0000000114"))) {
 						nextLegislationProcessTask.setStBakOne(legislationProcessTask.getStBakOne());
 						nextLegislationProcessTask.setStBakTwo(legislationProcessTask.getStBakTwo());
 						nextLegislationProcessTask.setDtBakDate(legislationProcessTask.getDtBakDate());

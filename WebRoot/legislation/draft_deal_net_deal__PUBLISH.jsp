@@ -7,16 +7,16 @@
 <div class="page-bar">
 	<ul class="page-breadcrumb">
 		<li>
-			<span>网上征求意见上网发布</span>
+			<span>公开征求意见 > </span>
+		</li>
+		<li>
+			<span>上网发布</span>
 		</li>
 	</ul>
-	<button style="padding-right: 5px" type="button" class="close" data-dismiss="modal">
-		<span aria-hidden="true">&times;</span>
-		<span class="sr-only">Close</span>
-	</button>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 </div>
 <div class="modal-body">
-	<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">网上征求意见上网发布</h2>
+	<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">公开征求意见上网发布</h2>
 	<form id="onlineDemonstrationForm" class="form-horizontal" novalidate="novalidate">
 		<input hidden="hidden" name="stTaskId" id="stTaskId" value="${legislationProcessTask.stTaskId}">
 		<input type="hidden" name="stDocId" value="${legislationProcessDoc.stDocId}">
@@ -29,9 +29,8 @@
 					<span style="font-size: 18px;">${legislationProcessDoc.stDocName}</span>
 				</label>
 			</div>
-			<br>
 			<div class="form-group">
-				<label class="col-sm-3 control-label text-left">发布内容说明:</label>
+				<label class="col-sm-3 control-label text-left">发布内容说明：</label>
 				<div class="col-sm-9">
 					<textarea id="stComment2" name="stComment2" class="form-control">${legislationProcessTaskdetail.stBak1}</textarea>
 				</div>

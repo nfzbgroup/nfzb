@@ -3,6 +3,14 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<span>草案分办</span>
+		</li>
+	</ul>
+	<button style="padding-right: 10px;padding-top: 8px" type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+</div>
 <div class="modal-body">
 	<h2 style="color: #E4243D;text-align: center;font-weight: bold;margin-bottom: 20px">草案分办</h2>
 	<form id="user_form" class="form-horizontal"
@@ -20,7 +28,7 @@
 				<label class="control-label col-md-3">收文日期：
 				</label>
 				<div class="col-md-4">
-					<span id="receiveYear" class="underline">${request.legislationProcessTask.dtOpenDate}</span>
+					<span id="receiveYear" class="underline"><fmt:formatDate pattern="yyyy-MM-dd HH:ss" value="${request.legislationProcessTask.dtOpenDate}"/></span>
 				</div>
 			</div>
 			<div class="form-group">
