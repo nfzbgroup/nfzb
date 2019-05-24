@@ -5,6 +5,7 @@
 <%@ page import="com.wonders.fzb.framework.beans.*"%>
 <%@ page import="com.wonders.fzb.legislation.beans.*"%>
 <%@ page import="com.wonders.fzb.plan.beans.*"%>
+<%@ page import="com.wonders.fzb.assess.beans.*"%>
 <%@ page import="java.util.ArrayList"%>
 <%@page import="java.util.*"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -24,6 +25,7 @@
    <%
    List legislationProcessDocList = (List)request.getAttribute("legislationProcessDocList"); 
    List legislationPlanList = (List)request.getAttribute("legislationPlanList");
+   List legislationAssessList = (List)request.getAttribute("legislationAssessList");
    %>              
 	<style type="text/css">
 		#echartsPie,
@@ -91,7 +93,13 @@
   <li>
   <a href="#div2" data-toggle="tab" class="account_discount_div1_tab_2">&nbsp;&nbsp;&nbsp;立法计划管理</a>
   </li>
-</ul>       <div id="myTabContent" class="tab-content">
+  <li>
+  <a href="#assess" data-toggle="tab" class="account_discount_div1_tab_2">&nbsp;&nbsp;&nbsp;立法评估管理</a>
+  </li>
+</ul>      
+		 <div id="myTabContent" class="tab-content">
+
+<!-- 立法办理数据  // 首页显示-->
             <div class="tab-pane fade in active" id="home" >
 			<!-- <div id="t-title">立法办理中的草案</div> -->
 			<table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
@@ -138,12 +146,11 @@
              <%}%>  
 				</tbody>
 				</table>
-				</div>
-				<!-- <div class="clearfix">
-				   <div class="list-page" id="listPage"></div>
-			    </div> -->
+				</div><!-- 立法办理数据  // 首页显示-->
+				
+				<!-- 立法计划数据  -->
 			    <div class="tab-pane fade" id="div2" >
-				<!-- <div id="t-title">立法计划管理</div> -->
+				<div id="t-title">立法计划管理</div>
 			   <table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
 				<thead>
 					<tr class="text-center">
@@ -172,7 +179,45 @@
              <%}%> 
 				</tbody>
 				</table>
-				</div></div>
+				</div><!-- 立法计划数据  // 首页显示-->
+				
+			<!-- 立法评估数据 // 首页显示 -->
+				 <div class="tab-pane fade" id="assess" >
+				<table class="table table-border table-bordered table-bg table-hover" id="showtable" data-toggle="table" data-mobile-responsive="true" data-card-view="true" data-pagination="true">
+				<thead>
+					<tr class="text-center">
+						<th class="text-center" data-field="id" hidden="hidden">草案编号</th>
+						<th class="text-center" data-field="district_name">评估名称</th>
+						<th class="text-center" data-field="district_name">处理环节</th>
+						<th class="text-center" data-field="district_name">发起人</th>
+						<th class="text-center" data-field="created_at">发起时间</th>
+						<th class="text-center" data-field="set">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+              <%  
+                  for(int i=0;i<legislationAssessList.size();i++){
+                	  LegislationAssess legislationAssess=(LegislationAssess)legislationAssessList.get(i);
+               %>
+                <tr class="text-center">
+                <td nowrap="" width="20%" hidden="hidden"><%=legislationAssess.getStAssessId()%></td>
+                <td nowrap="" width="20%"><%=legislationAssess.getStAssessName()%></td>
+                <td nowrap="" width="20%"><%=legislationAssess.getStNodeName()%></td>
+                <td nowrap="" width="20%"><%=legislationAssess.getStCreatorName()%></td>
+                <td nowrap="" width="20%"><fmt:formatDate value="<%=legislationAssess.getDtCreateDate()%>"  pattern="yyyy-MM-dd"/></td>
+                <td><input type="button" onclick="openLegislationAssessList('<%=legislationAssess.getStAssessId()%>','<%=legislationAssess.getStAssessName()%>')"  class="btn btn-w-m btn-success" value='查看'></td>
+               </tr>
+             
+             <%}%>  
+				</tbody>
+				</table>
+				</div><!-- 立法评估数据  -->
+				
+				
+				
+				
+				
+		</div>
 				
 			<div class="ibox-content">
 				<div class="row" id="legislationProcessTaskTable">
@@ -185,7 +230,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="modal inmodal fade" id="processIndexRootForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+			<div class="modal inmodal fade" id="processIndexRootForm" style="background-color:white" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog" style="margin-top: 0px">
 					<div class="modal-content">
 					</div>
@@ -272,16 +317,20 @@
 		       
 		}  
 		 function openProcessIndex(stDocId,stDocName) {
-			 //alert(1);
 				$("#processIndexRootForm").modal({
 					remote:  '${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=${nodeId}&method=openProcessIndexPage&stDocId='+stDocId+'&stDocName='+stDocName
 				});
 		    }
 		 
 		 function openLegislationPlanList(stPlanId,stPlanName) {
-			 //alert(2);
 				$("#processIndexRootForm").modal({
 					remote:  '${basePath}/legislationPlan/draft_plan_info.do?stNodeId=${nodeId}&method=flowDealPage&stPlanId='+stPlanId+'&stPlanName='+stPlanName
+				});
+		    }
+		 
+		 function openLegislationAssessList(stAssessId,stAssessName) {
+				$("#processIndexRootForm").modal({
+					remote:  '${basePath}/legislationAssess/assess_plan_info.do?stNodeId=${nodeId}&method=legislation_assess_flow_deal&stAssessId='+stAssessId+'&stAssessName='+stAssessName
 				});
 		    }
 			

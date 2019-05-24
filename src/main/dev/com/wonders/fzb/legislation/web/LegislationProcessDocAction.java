@@ -1,7 +1,32 @@
 package com.wonders.fzb.legislation.web;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.wonders.fzb.assess.beans.LegislationAssess;
+import com.wonders.fzb.assess.beans.LegislationAssessTask;
+import com.wonders.fzb.assess.services.LegislationAssessService;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
@@ -19,8 +44,20 @@ import com.wonders.fzb.framework.beans.TeamInfo;
 import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.framework.services.UserInfoService;
-import com.wonders.fzb.legislation.beans.*;
-import com.wonders.fzb.legislation.services.*;
+import com.wonders.fzb.legislation.beans.LegislationExample;
+import com.wonders.fzb.legislation.beans.LegislationFiles;
+import com.wonders.fzb.legislation.beans.LegislationProcessDeal;
+import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
+import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.beans.LegislationProcessTaskdetail;
+import com.wonders.fzb.legislation.beans.LegislationSendNotice;
+import com.wonders.fzb.legislation.services.LegislationExampleService;
+import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.legislation.services.LegislationProcessDealService;
+import com.wonders.fzb.legislation.services.LegislationProcessDocService;
+import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
+import com.wonders.fzb.legislation.services.LegislationProcessTaskdetailService;
+import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
 import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.plan.beans.LegislationPlanTask;
 import com.wonders.fzb.plan.services.LegislationPlanService;
@@ -32,24 +69,7 @@ import com.wonders.fzb.report.services.LegislationReportTaskService;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
-import antlr.Utils;
 import dm.jdbc.util.StringUtil;
-import org.apache.commons.lang3.time.DateUtils;
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.Result;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * LegislationProcessDoc action接口
@@ -122,6 +142,10 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationPlanService")
 	private LegislationPlanService legislationPlanService;
+	
+	@Autowired
+	@Qualifier("legislationAssessService")
+	private LegislationAssessService legislationAssessService;
 
 	@Autowired
 	@Qualifier("legislationPlanTaskService")
@@ -5696,14 +5720,20 @@ public class LegislationProcessDocAction extends BaseAction {
 	@Action(value = "query_doc_info", results = { @Result(name = "queryDocInfo", location = "/legislation/indexPage.jsp") })
 	public String queryDocInfo() throws IOException, NumberFormatException, FzbDaoException, ParseException {
 		List<LegislationProcessDoc> docList = legislationProcessDocService.findByHQL("select d \r\n" + "  from LegislationProcessDoc d inner join LegislationProcessTask t\r\n"
-				+ "  on d.stDocId=t.stDocId where t.stNodeId='NOD_0000000103' and\r\n" + "  t.stTaskStatus='DOING'");
+				+ "  on d.stDocId=t.stDocId where t.stNodeId='NOD_0000000103' and\r\n" + "  t.stTaskStatus='DOING' order by d.dtCreateDate desc");
 
 		List<LegislationPlan> planList = legislationPlanService
-				.findByHQL("select t \r\n" + "  from LegislationPlanTask d left join LegislationPlan t\r\n" + "  on d.stPlanId=t.stPlanId where " + "  d.stTaskStatus='TODO'");
+				.findByHQL("select t \r\n" + "  from LegislationPlanTask d left join LegislationPlan t\r\n" + "  on d.stPlanId=t.stPlanId where " + "  d.stTaskStatus='TODO' order by t.dtCreateDate desc");
+		
+		List<LegislationAssess> assessList = legislationAssessService.findByHQL("select t \r\n" + "  from LegislationAssessTask d right join LegislationAssess t\r\n" + "  on d.stParentId=t.stAssessId where " + "  d.stTaskStatus='TODO' order by t.dtCreateDate desc");
+		//List<LegislationAssess> assessList = legislationAssessService.findByHQL("select * from LegislationAssess");
 
 		request.setAttribute("legislationProcessDocList", docList);
 		request.setAttribute("legislationPlanList", planList);
-
+		if(assessList.size()>0){
+			request.setAttribute("legislationAssessList",assessList);
+	
+		}
 		String pageSize = request.getParameter("pageSize");
 		String pageNo = request.getParameter("pageNo");
 		if (null == pageSize || "".equals(pageSize)) {

@@ -164,12 +164,11 @@
         .arrow_down.arrow_down_03 {top: 393px;}
         .row1.four_row_1 .arrow_1{position:absolute;left: -16px;top: -52px;height: 78px;}
         .row1.four_row_2 .arrow_1{position:absolute;left: 126px;top: -55px;height: 83px;}
-        .divright { position:absolute; color:#fff;z-index: 99; font-size: 1.2em; background-color: #aa0007;width: 1.5em !important;height: 1.5em !important;left : 85%;top : -12px;text-align: center;-webkit-border-radius: 2.75em;border-radius: 2.75em;}
 
     </style>
 </head>
 <body class="white-bg1">
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight" style="background-color:white">
     <div class="row">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
@@ -180,7 +179,7 @@
                 <div class="row">
                     <div class="row_title">业务流程-法规规章草案后评估</div>
                     <div>
-                        <div class="flowPic">
+                        <div class="flowPic" style="background-color:gray">
                             <!--图例-->
                             <div class="legend_box">
                                 <p><span class="color_red">红框</span>流程涉及非秘单向导出</p>
@@ -211,7 +210,6 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item2 bcg_gray border_width border_style border_color_blue">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000251" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">立法后评估规</br>划启动</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -223,7 +221,6 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item3 bcg_gray border_width border_style border_color_red">
-                                          <div class="divright"></div>
 											<a href="javaScript:void(0)" id="NOD_0000000252" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">立法后评估项</br>目申请</p>
                                         </a>
@@ -249,7 +246,6 @@
                                     </div>
                                     <!--草案第二行-->
                                     <div class="cell row_items row_item2 row_item_top1 bcg_gray border_width border_style border_color_blue">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000253" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">立法后评估项</br>目汇总</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -263,7 +259,6 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item4 row_item_top1 bcg_gray border_width border_style border_color_blue">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000254" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">立法处初审</p>
                                             <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
@@ -271,7 +266,6 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item5 row_item_top1 bcg_gray border_width border_style border_color_blue">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000255" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">初审意见汇总</p>
                                             <span class="img_style img_style2 font_color_blue border_blue border_radius_circle">立</span>
@@ -304,7 +298,6 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item2 bcg_gray border_width border_style border_color_red">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000256" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">制定评估方案</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -316,14 +309,12 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item3 bcg_gray border_width border_style border_color_blue">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000257" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">汇同立法处提</br>出完善建议</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item4 bcg_gray border_width border_style border_color_red">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000258" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">定期发聩评估</br>进度</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -335,7 +326,6 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item5 bcg_gray border_width border_style border_color_red">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000259" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">提交评估报告</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -377,7 +367,6 @@
                                     <img src="/assess/img/arrow_right.png" class="arrow arrow2" alt="">
                                     <img src="/assess/img/arrow_right.png" class="arrow arrow3" alt="">
                                     <div class="cell row_items row_item1 bcg_gray border_width border_style border_color_blue">
-                                         <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000260" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">分送立法处</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -391,14 +380,12 @@
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item3 bcg_gray border_width border_style border_color_blue">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000262" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">年度评估计划</br>完成情况报告</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
                                         </a>
                                     </div>
                                     <div class="cell row_items row_item4 bcg_j border_width border_style border_color_j">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000263" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">报市政府</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -410,7 +397,6 @@
                                 <img src="/assess/img/arrow_right_2.png" class="arrow_1" alt="">
                                 <div class="row_child">
                                     <div class="cell row_items row_item1 bcg_gray border_width border_style border_color_blue">
-                                        <div class="divright"></div>
 										<a href="javaScript:void(0)" id="NOD_0000000261" class="removeHand" onclick="openDemonstrationPage(this.id)">
                                             <p class="font_color_black">评估报告接收</p>
                                             <span class="img_style img_style1 font_color_red border_yellow border_radius_circle">调</span>
@@ -425,35 +411,48 @@
         </div>
     </div>
 </div>
-<script src="assets/js/bootstrap.min.js"></script>
-</body>
 <script>
-function openDemonstrationPage(buttonId) {
+function openDemonstrationPage(buttonId, method, stPlanId) {
+	var nodeHref = $('#' + buttonId).parent().attr('nodeHref');
+	//alert(buttonId);
+	//alert(nodeHref);
+	var index = method.indexOf("__");
+	if (method == '' || index == 0)
+		method = nodeHref;
+	if (method == '' || typeof (method) == "undefined") {
+		alert('当前节点不可以操作！');
+		return false;
+	}
+	//alert("method=" + method);
+	console.log("method=" + method);
 	$("#processIndexForm").modal({
-		remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?method=sampleList&stNodeId="+buttonId
+		remote : "${basePath}/legislationPlan/draft_plan_info.do?stNodeId=" + buttonId + "&method=" + method + "&stPlanId=" + stPlanId
 	});
 };
 
-function openDemonstrationChildPage(method,stExampleId,stNodeId) {
-    $("#processIndexChildForm").modal({
-        remote : "${basePath}/legislationProcessDoc/draft_doc_info.do?method="+method+"&stExampleId="+stExampleId+"&stNodeId="+stNodeId
-    });
-};
+
 function closeProcessIndex() {
-	$('#processIndexRootForm').modal('hide');
+	 $('#processIndexRootForm').modal('hide');
 }
 
 
 //页面加载后，去后台获取所有节点的状态，连接等信息
 $('#processIndexRootForm').on('shown.bs.modal', function(event) {	
 	<!--Ajax请求-->
-	$.post("../legislationAssess/assess_plan_info.do?method=openAssessAttachNum_ajax", function(data) {
+	$.post("../legislationPlan/draft_plan_info.do?stPlanId=${request.planInfo.stPlanId}&method=openPlanIndexPage_ajax", function(data) {
+		//alert(11);
 		if (data.success) {
 			//alert(JSON.stringify(data));
 			$.each(data.nodeInfoArray, function(index, item) {
-					$('#' + item.node).parent().addClass("bcg_green");
-					$('#' + item.node).parent().children(":first").html(item.num);
-				    //$('#' + item.node).addClass('addHand');
+				//改变当前按钮的背景颜色
+				$('#' + item.node).parent().removeClass('bcg_blue');
+				//如果不是绿的，可以覆盖。部门多个接收任务，可以绿盖蓝。
+				 if (!$('#' + item.node).parent().hasClass("bcg_green")) {
+					$('#' + item.node).parent().addClass(item.colorSet);
+				} 
+				//$('#' + item.node).parent().addClass("bcg_green");
+				$('#' + item.node).parent().attr('nodeHref', item.nodeHref);
+				$('#' + item.node).addClass('addHand');
 			});
 		}
 	});

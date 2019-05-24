@@ -31,6 +31,7 @@ import com.wonders.fzb.framework.services.TeamInfoService;
 import com.wonders.fzb.legislation.beans.LegislationFiles;
 import com.wonders.fzb.legislation.services.LegislationExampleService;
 import com.wonders.fzb.legislation.services.LegislationFilesService;
+import com.wonders.fzb.plan.beans.LegislationPlan;
 import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 import com.wonders.fzb.simpleflow.services.WegovSimpleNodeService;
 
@@ -95,6 +96,7 @@ public class LegislationAssessAction extends BaseAction {
 			@Result(name = "openAssessDistributePage", location = "/assess/legislationAssess_distribute.jsp"),
 			@Result(name = "openAssessFeedbackPage", location = "/assess/legislationAssess_feedback.jsp"),
 			@Result(name = "legislation_assess_flow", location = "/assess/legislation_assess_flow.jsp"),
+			@Result(name = "legislation_assess_flow_deal", location = "/assess/legislation_assess_flow_deal.jsp"),
 			@Result(name = "openAssessReportPage", location = "/assess/legislationAssess_report.jsp")
 	})
 	public String legislationAssess() throws Exception {
@@ -156,6 +158,16 @@ public class LegislationAssessAction extends BaseAction {
 		   return null;
 	   }
 	
+	  
+	    //流程图展示
+		private String legislation_assess_flow_deal(){
+			String stAssessId = request.getParameter("stAssessId");
+			LegislationAssess assessInfo = legislationAssessService.findById(stAssessId);
+			request.setAttribute("assessInfo", assessInfo);
+			request.setAttribute("requestUrl", request.getRequestURI());
+			return pageController();
+		}
+		
 	
 	/**
 	 * 跳转评估规划发起页面
