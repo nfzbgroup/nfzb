@@ -19,10 +19,14 @@ import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeeting;
 import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
 import com.wonders.fzb.checkmeeting.dao.LegislationCheckmeetingTaskDao;
+import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingTaskService;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.legislation.beans.LegislationSendNotice;
 import com.wonders.fzb.legislation.dao.LegislationProcessDocDao;
 import com.wonders.fzb.legislation.services.LegislationProcessDocService;
+import com.wonders.fzb.legislation.services.LegislationProcessTaskService;
+import com.wonders.fzb.legislation.services.LegislationSendNoticeService;
 import com.wonders.fzb.legislation.services.impl.LegislationProcessDocServiceImpl;
 
 /**
@@ -36,6 +40,12 @@ public class LegislationCheckmeetingTaskDaoImpl extends BaseSupportDao implement
 
 	@Autowired
 	private LegislationProcessDocService legislationProcessDocService;
+	
+	@Autowired
+	private LegislationSendNoticeService legislationSendNoticeService;
+	
+	@Autowired
+	private LegislationProcessTaskService legislationProcessTaskService;
 
 	@Override
 	public void save(Object object) {
@@ -104,6 +114,7 @@ public class LegislationCheckmeetingTaskDaoImpl extends BaseSupportDao implement
 		String totalView = "SELECT COUNT(1) ";
 
 		List<LegislationCheckmeeting> users = packageDocInfoBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));
+		
 		int totalSize = ((BigDecimal) (Object) executeSqlQueryWithoutPage(totalView + baseSql).get(0)).intValue();
 		if (pageSize == 0)
 			pageSize = totalSize;
@@ -196,6 +207,35 @@ public class LegislationCheckmeetingTaskDaoImpl extends BaseSupportDao implement
 		String totalView = "SELECT COUNT(1) ";
 
 		List<LegislationCheckmeeting> users = packageCheckMeetingBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));
+		
+		int totalSize = ((BigDecimal) (Object) executeSqlQueryWithoutPage(totalView + baseSql).get(0)).intValue();
+		if (pageSize == 0)
+			pageSize = totalSize;
+		return new Page<LegislationCheckmeeting>(Page.getStartOfAnyPage(pageNo, pageSize), users.size(), totalSize, pageSize, users);
+	}
+	
+	@Override
+	public Page<LegislationCheckmeeting> findCheckMeetingByNodeId(String wheresql, int pageNo, int pageSize,String taskStatus) throws ParseException {
+		String baseSql = " FROM LEGISLATION_CHECKMEETING c ";
+		baseSql += " INNER JOIN LEGISLATION_CHECKMEETING_TASK t ";
+		baseSql += " ON c.st_meeting_id = t.st_meeting_id ";
+		baseSql += wheresql;
+		String propView = "SELECT c.st_meeting_id,c.st_meeting_name,c.st_node_name,c.st_node_id,c.DT_CREATE_DATE,c.ST_TOPIC,c.DT_BEGIN_DATE,c.DT_END_DATE,c.ST_ADDRESS,c.ST_PERSONS,c.ST_STATUS,c.ST_TYPE,c.st_doc_source";
+		String totalView = "SELECT COUNT(1) ";
+
+		List<LegislationCheckmeeting> users = packageCheckMeetingBean(executeSqlQuery(propView + baseSql, pageNo, pageSize));
+		
+		if("FEEDBACK".equals(taskStatus)) {
+			//查询审核会议通知反馈数并显示
+			for(LegislationCheckmeeting legislationCheckmeeting:users) {
+				String sql=totalView+"FROM LEGISLATION_SEND_NOTICE WHERE 1=1 and st_doc_id='"+legislationCheckmeeting.getStMeetingId()+"' and st_model_name='审核会议' and st_node_name='审核会议发送通知'";
+				String allNotice = legislationProcessTaskService.queryTaskNum(sql)+"";
+				sql=sql+"and st_notice_status='已反馈'";
+				String feedbackNotice = legislationProcessTaskService.queryTaskNum(sql)+"";
+				legislationCheckmeeting.setStMeetingName(legislationCheckmeeting.getStMeetingName()+"（反馈："+feedbackNotice+"/"+allNotice+"）");
+			}
+		}
+		
 		int totalSize = ((BigDecimal) (Object) executeSqlQueryWithoutPage(totalView + baseSql).get(0)).intValue();
 		if (pageSize == 0)
 			pageSize = totalSize;
@@ -241,5 +281,6 @@ public class LegislationCheckmeetingTaskDaoImpl extends BaseSupportDao implement
 		}
 		return docInfos;
 	}
+
 
 }

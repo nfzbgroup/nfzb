@@ -180,7 +180,7 @@ public class LegislationCheckmeetingTaskAction extends BaseAction {
 		String orderSql = " order by c.dt_create_date DESC";
 		//orderSql = "";
 		//System.out.println("baseSql + orderSql------------" + baseSql + orderSql);
-		infoPage = legislationCheckmeetingTaskService.findCheckMeetingByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize));
+		infoPage = legislationCheckmeetingTaskService.findCheckMeetingByNodeId(baseSql + orderSql, Integer.parseInt(pageNo), Integer.parseInt(pageSize),taskStatus);
  
  
 		

@@ -147,7 +147,7 @@
 			<input ${strDisplay} type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="提交">
 			&nbsp;&nbsp;
 		  </c:if>
-			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
+			<input id="btnCloseFeedBack" type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 		</div>
 	</form>
 </div>

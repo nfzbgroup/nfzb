@@ -209,6 +209,19 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 	public Page<LegislationCheckmeeting> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) throws ParseException {
 		return legislationCheckmeetingTaskDao.findCheckMeetingByNodeId(sql, pageNo, pageSize);
 	}
+	
+	/**
+	 * 查询审核会议-通知反馈
+	 *
+	 * @param sql
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	@Override
+	public Page<LegislationCheckmeeting> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize,String taskStatus) throws ParseException {
+		return legislationCheckmeetingTaskDao.findCheckMeetingByNodeId(sql, pageNo, pageSize,taskStatus);
+	}
 
 	@Override
 	public Page<LegislationCheckmeetingTask> findTaskByNodeId(String sql, int pageNo, int pageSize) throws ParseException {
@@ -811,4 +824,5 @@ public class LegislationCheckmeetingTaskServiceImpl implements LegislationCheckm
 			legislationSendNoticeService.add(legislationSendNotice);
 		}
 	}
+
 }

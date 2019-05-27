@@ -106,10 +106,14 @@ $(function () {
 		var day=$('#day').val();
 		var transactDate=year+"年"+month+"月"+day+"日";
 		var options=$("#distDealName option:selected");  //获取选中的项
-
-		$.post("${basePath}/legislationProcessDoc/draft_dist_info.do?stDocId=${request.legislationProcessDoc.stDocId}&stComment1="+distComment+"&transactDate="+transactDate+"&action="+action+"&stDealId="+options.val()+"&stDealName="+options.text(),param,function(data){
-            $('#legislationProcessForm').modal('hide');
-            submitForm(1);
-        });
+        if(options.val()!=""&&options.val()!=null){
+        	$.post("${basePath}/legislationProcessDoc/draft_dist_info.do?stDocId=${request.legislationProcessDoc.stDocId}&stComment1="+distComment+"&transactDate="+transactDate+"&action="+action+"&stDealId="+options.val()+"&stDealName="+options.text(),param,function(data){
+                $('#legislationProcessForm').modal('hide');
+                submitForm(1);
+            });
+        }else{
+        	Duang.error("提示","请选择分办处室");
+        }
+		
 	}
 </script>

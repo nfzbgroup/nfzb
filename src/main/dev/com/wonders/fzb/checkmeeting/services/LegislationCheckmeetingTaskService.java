@@ -89,9 +89,21 @@ public interface LegislationCheckmeetingTaskService {
 	 * @param sql
 	 * @param pageNo
 	 * @param pageSize
+	 * @param taskStatus 
 	 * @return
 	 */
 	Page<LegislationCheckmeeting> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize) throws ParseException;
+	
+	/**
+	 * 查询审核会议
+	 * 
+	 * @param sql
+	 * @param pageNo
+	 * @param pageSize
+	 * @param taskStatus 
+	 * @return
+	 */
+	Page<LegislationCheckmeeting> findCheckMeetingByNodeId(String sql, int pageNo, int pageSize, String taskStatus) throws ParseException;
 
 	/**
 	 * TASK表分页

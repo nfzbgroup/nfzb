@@ -164,14 +164,14 @@
 <script>
 
 $(function () {
-		querySampleTable('${mainId}','${nodeName}');
+		queryNoticeTable('${mainId}','${nodeName}');
 		$("#btnClose").hide();
 				
 				     
     });
-	function querySampleTable(mainId,nodeName) {
+	function queryNoticeTable(mainId,nodeName) {
 	     //alert(mainId);
-	     //alert(nodeName);
+	    //alert(nodeName);
 	     if(nodeName=="公开征求意见处理"){
             $.post("${basePath}/legislationProcessDoc/draft_doc_info.do?stNodeId=NOD_0000000130&method=draft_deal_net_start&stDocId="+mainId,function(data){
             $('#sampleTable').html(data);

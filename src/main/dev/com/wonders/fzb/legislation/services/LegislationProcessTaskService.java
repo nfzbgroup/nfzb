@@ -1,5 +1,6 @@
 package com.wonders.fzb.legislation.services;
 
+import com.alibaba.fastjson.JSONArray;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.UserInfo;
@@ -226,4 +227,20 @@ public interface LegislationProcessTaskService {
      * @param userRole
      */
 	LegislationProcessTask confirm(HttpServletRequest request, UserInfo currentPerson, String userRoleId, String userRole);
+
+	/**
+	 * 查询任务数
+	 * @param sql
+	 * @return
+	 */
+	public int queryTaskNum(String sql);
+	
+	/**
+	 * 查询模块节点任务
+	 * @param nodeList
+	 * @param nodeInfoArray
+	 * @param module
+	 * @param userRole
+	 */
+	public void menuTask(List<WegovSimpleNode> nodeList, JSONArray nodeInfoArray, String module, String userRole); 
 }

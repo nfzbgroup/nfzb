@@ -18,7 +18,10 @@
 	<link href="${basePath}/legislation/assets/css/style.min.css?v=4.0.1" rel="stylesheet">
 	<link href="${basePath}/legislation/assets/css/main.css?v=1.0.0" rel="stylesheet">
 </head>
-
+<style type="text/css">
+.hasTask { position:absolute; color:#fff;z-index: 99; background-color: #aa0007;width: 0.5em !important;height: 0.5em !important;left : 16%;top : 10px;text-align: center;-webkit-border-radius: 0.5em;border-radius: 0.5em;}
+.hasTask1 { position:absolute; color:#fff;z-index: 99; background-color: #aa0007;width: 0.5em !important;height: 0.5em !important;left : 16%;top : 14px;text-align: center;-webkit-border-radius: 0.5em;border-radius: 0.5em;}
+</style>
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
 <div id="wrapper">
 	<!--右侧部分开始-->
@@ -40,7 +43,7 @@
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 								<li><a href="${basePath}/legislation/login.do" style="border-radius:0;">安全退出</a></li>
-							</ul>
+							</ul> 
 						</div>
 					</li>
 				</ul>
@@ -61,7 +64,7 @@
 					<ul class="nav" id="side-menu">
 						<!--示例导航开始-->
 						<!-- li标签里添加class="active" 会打开菜单 -->
-				          <li  cat="default" class="">
+				          <li name="module" cat="default" class="">
 							<a href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">立法计划管理</span>
@@ -69,7 +72,7 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<s:iterator value="#request.planNodeList" var="task">
-									<li><a class="J_menuItem" href="../legislationPlanTask/plan_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+									<li id="${task.stNodeId}_menu"><a class="J_menuItem" href="../legislationPlanTask/plan_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
 								</s:iterator>
 								<c:if test="${userRole=='局领导'}">
 								<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=计划外立项">计划外立项审核</a></li>
@@ -77,7 +80,7 @@
 							</ul>
 						</li> 
 						
-				          <li  cat="default" class="active">
+				          <li name="module" cat="default" class="active">
 							<a href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">立法过程处理</span>
@@ -85,15 +88,15 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<c:if test="${isZhc}">
-									<li><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=NOD_0000000103">立法办理</a></li>
+									<li id="NOD_0000000103_menu"><a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=NOD_0000000103">立法办理</a></li>
 								</c:if>
 								<c:if test="${userRole=='局领导'}">
-									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=公开征求意见处理">公开征求意见审核</a></li>
-									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=立法听证会处理">立法听证会审核</a></li>
-									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=审核会议征询意见">审核会前征询意见接收</a></li>
+									<li id="${task.stNodeId}_menu"><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=公开征求意见处理">公开征求意见审核</a></li>
+									<li id="${task.stNodeId}_menu"><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=立法听证会处理">立法听证会审核</a></li>
+									<li id="${task.stNodeId}_menu"><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=审核会议征询意见">审核会前征询意见接收</a></li>
 								</c:if>					
 								<s:iterator value="#request.draftNodeList" var="task">
-									<li>
+									<li id="${task.stNodeId}_menu">
 									<c:choose>
 											<c:when test="${task.stNodeId=='NOD_0000000122' || task.stNodeId=='NOD_0000000162'}"><!-- 部门接收因为用公共的接收表，所以单独处理 -->
 												<a class="J_menuItem" href="../legislationSendNotice/process_depart_notice_list.do?method=list&stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
@@ -107,7 +110,7 @@
 							</ul>
 						</li> 
 						
-				          <li  cat="default" class="">
+				          <li name="module" cat="default" class="">
 							<a href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">立法后评估</span>
@@ -115,21 +118,21 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<s:iterator value="#request.assessNodeList" var="task">
-									<li><a class="J_menuItem" href="../legislationAssessTask/assess_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
+									<li id="${task.stNodeId}_menu"><a class="J_menuItem" href="../legislationAssessTask/assess_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a></li>
 								</s:iterator>
 							</ul>
 						</li> 
 						
 						<%if(!"部门工作人员".equals(session.getAttribute("userRole"))){%>
-				          <li  cat="default" class="">
-							<a href="/">
+				          <li name="module" cat="default" class="">
+							<a name="" href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">审核会议</span>
 								<span class="fa arrow"></span>
 							</a>
 							<ul class="nav nav-second-level">
 								<s:iterator value="#request.checkMeetingNodeList" var="task">
-									<li>
+									<li id="${task.stNodeId}_menu">
 										<c:choose>
 											<c:when test="${task.stNodeId=='NOD_0000000170'}">
 												<a class="J_menuItem" href="../legislationCheckmeetingTask/checkmeeting_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
@@ -146,11 +149,11 @@
 									</c:choose>
 									</li>
 								</s:iterator>
-								<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=审核会议发送通知">审核会议通知</a></li>
+								<li id="${task.stNodeId}_menu"><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=审核会议发送通知">审核会议通知</a></li>
 							</ul>
 						</li> 
 						
-				          <li  cat="default" class="">
+				          <li name="module" cat="default" class="">
 							<a href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">常务会议</span>
@@ -158,7 +161,7 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<s:iterator value="#request.cityMeetingNodeList" var="task">
-									<li>
+									<li id="${task.stNodeId}_menu">
 									<c:choose>
 											<c:when test="${task.stNodeId=='NOD_0000000180'}">
 												<a class="J_menuItem" href="../legislationCitymeetingTask/citymeeting_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
@@ -173,7 +176,7 @@
 							</ul>
 						</li> 
 						
-				          <li  cat="default" class="">
+				          <li name="module" cat="default" class="">
 							<a href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">报签(签报)</span>
@@ -181,7 +184,7 @@
 							</a>
 							<ul class="nav nav-second-level">
 								<s:iterator value="#request.reportNodeList" var="task">
-									<li>
+									<li id="${task.stNodeId}_menu">
 									<c:choose>
 											<c:when test="${task.stNodeId=='NOD_0000000106' or task.stNodeId=='NOD_0000000112'}">
 									            <a class="J_menuItem" href="../legislationProcessTask/draft_task_list.do?stNodeId=${task.stNodeId}"><s:property value="#task.stNodeName"/></a>
@@ -194,13 +197,13 @@
 								</s:iterator>
 								
 								<c:if test="${userRole=='局领导'}">
-									<li><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=签报件报OA审核">报签审核</a></li>
+									<li id="${task.stNodeId}_menu"><a class="J_menuItem" href="../legislationSendNotice/process_person_notice_list.do?method=list&stNodeId=签报件报OA审核">报签审核</a></li>
 								</c:if>
 							</ul>
 						</li> 
 						
 						
-						<li  cat="default" >
+						<li name="module" cat="default" >
 							<a href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">范本库</span>
@@ -214,7 +217,7 @@
 						</li> 
 						<%}%>
 						
-				          <li  cat="default" class="active">
+				          <li name="module" cat="default" class="active">
 							<a href="/">
 								<i class="fa fa-database"></i>
 								<span class="nav-label">专项清理</span>
@@ -276,6 +279,32 @@
 			$('.content-new,#left-menu').height($('body').height() - 67);
 		});
 		$('.content-new,#left-menu').height($('body').height() - 67);
+		
+		//页面加载后，去后台获取所有节点的状态，连接等信息
+		//$('#processIndexRootForm').on('shown.bs.modal', function(event) {	
+			<!--Ajax请求-->
+			$.post("../legislationProcessDoc/draft_doc_info.do?method=loadMenu_ajax", function(data) {
+				if (data.success) {
+					//alert(JSON.stringify(data));
+					$.each(data.nodeInfoArray, function(index, item) {
+						if(item.taskNum>0){//获得节点待做任务数，显示任务提示图标和任务数
+							$('#' + item.node + '_menu').append('<div class="hasTask"></div>');
+							$('#' + item.node + '_menu').children(":first").append("  ["+item.taskNum+"条]");
+						}
+					});
+					<!--遍历模块标签，查询模块内节点是否有待做任务-->
+					$("[name='module']").each(function() {
+						var hasMsg=$(this).find(".hasTask").length;
+						//alert(hasMsg);
+						if(hasMsg>0){
+							$(this).append('<div class="hasTask1"></div>');
+						}
+					});
+				}
+			});
+			
+			
+		//});
 	});
 </script>
 </body>

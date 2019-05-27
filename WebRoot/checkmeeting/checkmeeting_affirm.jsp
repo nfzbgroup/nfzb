@@ -19,12 +19,12 @@
 	</button>
 </div>
 <div class="modal-body">
-	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">反馈情况s</h2>
+	<h2 style="color: #E4243D; text-align: center; font-weight: bold; margin-bottom: 20px">反馈情况（仅立法过程）</h2>
 	<form id="auditMeetingForm" class="form-horizontal" novalidate="novalidate">
 		<input type="hidden" name="stMeetingId" value="${legislationCheckmeeting.stMeetingId}">
 			<input type="hidden" id="nodeStatus" value="${nodeStatus}">
 		<div class="form-body" align="center">
-			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 				<tr class="text-center">
 					<td class="text-right" width="20%">
 						<label>会议名称：</label>
@@ -62,7 +62,7 @@
 		</div>
 
 		<div class="form-body" align="center" hidden="hidden">
-			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 				<tbody class="text-center" align="center">
 					<tr class="text-right" align="center">
 						<th class="text-right" width="20%">
@@ -99,23 +99,23 @@
 		</div>
 
 		<div class="form-body" align="center">
-			<table class="table table-border table-bordered table-bg table-hover" style="width: 60%;">
+			<table class="table table-border table-bordered table-bg table-hover" style="width: 80%;">
 				<tbody class="text-center" align="center">
 					<tr class="text-center">
-						<th class="text-right" width="20%">事项名称</th>
+						<th class="text-center" >事项名称</th>
 						<th class="text-center">事项类型</th>
 						<th class="text-center">事项反馈</th>
 					</tr>
 					<c:forEach items="${checkmeetingItem}" var="doc">
 						<tr class="text-center">
-							<th class="text-right" width="20%">${doc.stItemName}</th>
+							<td class="text-center" width="20%">${doc.stItemName}</td>
 							<td class="text-center">${doc.stTypeName}</td>
 							<c:choose>
 								<c:when test="${doc.stSource!=null && doc.stTypeName=='草案'}">
 									<td class="text-center">${doc.stSource.stComment1} </td>
 								</c:when>
 								<c:when test="${doc.stSource!=null && doc.stTypeName=='立法计划'}">
-									<td class="text-center">${doc.stSource.stRemark} </td>
+									<td class="text-center">/</td>
 								</c:when>
 								<c:otherwise>
 									<td></td>
@@ -183,7 +183,7 @@
 			&nbsp;&nbsp;
 			<input type="button" class="btn btn-w-m btn-success" id="btnSubmit" name="btnSubmit" onclick="saveAuditMeeting1('submit')" value="会议关闭完成">
 			&nbsp;&nbsp;
-			<input type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
+			<input id="btnCloseAffirm" type="button" class="btn btn-w-m btn-success" data-dismiss="modal" value="返回">
 		</div>
 		<!-- <div class="form-group">
 				<label class="control-label">反馈材料 </label>

@@ -1,11 +1,14 @@
 package com.wonders.fzb.legislation.dao;
 
+import com.alibaba.fastjson.JSONArray;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.dao.BaseDao;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -41,4 +44,7 @@ public abstract interface LegislationProcessTaskDao extends BaseDao {
     public Page<LegislationProcessDoc> findDocByPage(String wheresql, int pageNo, int pageSize) throws ParseException;
     
     public LegislationProcessTask findById(String id);
+    
+	public int queryTaskNum(String sql);
+	
 }

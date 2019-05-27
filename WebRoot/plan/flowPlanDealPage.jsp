@@ -286,9 +286,9 @@
                                         <p class="font_color_white">审核会议审核</p>
                                     </a>
                                 </div>
-                                <div nodeHref=""  class="cell row_items row_item_notes1">
-                                    <a href="javaScript:void(0)" id="NOD_0000000210" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.planInfo.stPlanId}')">
-									    <i class="notes1">立法过程-审核会议</br>（审核会议题汇总）</i>
+                                 <div nodeHref="" class="cell row_items row_item_notes1 " >
+                                    <a href="javaScript:void(0)" id="NOD_0000000170" class="removeHand" onclick="openDemonstrationPage(this.id,'','${request.planInfo.stPlanId}')">
+									    <i class="notes1 "  id="note" >立法过程-审核会议</br>（审核会议题汇总）</i>
                                     </a>
                                 </div>
                                 <div nodeHref=""  class="cell row_items row_item_3 bcg_gray border_width border_style border_color_blue">
@@ -377,6 +377,7 @@
         </div>
     </div>
 </div>
+
 <script>
 function openDemonstrationPage(buttonId, method, stPlanId) {
 	var nodeHref = $('#' + buttonId).parent().attr('nodeHref');
@@ -391,9 +392,13 @@ function openDemonstrationPage(buttonId, method, stPlanId) {
 	}
 	//alert("method=" + method);
 	console.log("method=" + method);
+	if(method == 'check_meeting'){
+	$("#processIndexForm_checkmeeting").modal({
+		remote : "${basePath}/legislationPlan/draft_plan_info.do?stNodeId=" + buttonId + "&method=" + method + "&stPlanId=" + stPlanId
+	});}else{
 	$("#processIndexForm").modal({
 		remote : "${basePath}/legislationPlan/draft_plan_info.do?stNodeId=" + buttonId + "&method=" + method + "&stPlanId=" + stPlanId
-	});
+	});}
 };
 
 
@@ -416,7 +421,9 @@ $('#processIndexRootForm').on('shown.bs.modal', function(event) {
 				 if (!$('#' + item.node).parent().hasClass("bcg_green")) {
 					$('#' + item.node).parent().addClass(item.colorSet);
 				} 
-				//$('#' + item.node).parent().addClass("bcg_green");
+				if(item.node=="NOD_0000000170"){
+					$("#note").addClass(item.colorSet);
+				}
 				$('#' + item.node).parent().attr('nodeHref', item.nodeHref);
 				$('#' + item.node).addClass('addHand');
 			});

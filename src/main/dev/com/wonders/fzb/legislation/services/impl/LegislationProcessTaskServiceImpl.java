@@ -1,5 +1,7 @@
 package com.wonders.fzb.legislation.services.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
 import com.wonders.fzb.framework.beans.TeamInfo;
@@ -826,6 +828,79 @@ public class LegislationProcessTaskServiceImpl implements LegislationProcessTask
 		legislationProcessTask.setDtDealDate(date);
 		update(legislationProcessTask);
 		return legislationProcessTask;
+	}
+
+	@Override
+	public int queryTaskNum(String sql) {
+	    return legislationProcessTaskDao.queryTaskNum(sql);
+	}
+	
+	@Override
+	public void menuTask(List<WegovSimpleNode> nodeList, JSONArray nodeInfoArray, String module, String userRole) {
+		//UserInfo currentPerson = (UserInfo) session.getAttribute("currentPerson");
+		//List<TeamInfo> teamInfos = currentPerson.getTeamInfos();
+		//String teamId =teamInfos.size()>0?teamInfos.get(0).getId():null;
+		String sql="";
+		String table="LEGISLATION_PROCESS_TASK";
+		for (WegovSimpleNode wegovSimpleNode : nodeList) {
+			String stNodeId = wegovSimpleNode.getStNodeId();
+			JSONObject nodeChange = new JSONObject();
+			if("审核会议".equals(module)) {
+				if("NOD_0000000170".equals(stNodeId)) {
+					//审核会议-调研处
+					table="LEGISLATION_CHECKMEETING_TASK";
+				}else if("NOD_0000000105".equals(stNodeId)){
+					//审核会议待审事项
+					table="LEGISLATION_CHECKMEETING_ITEM";
+					sql="SELECT COUNT(1)  FROM LEGISLATION_CHECKMEETING_ITEM WHERE 1=1 and st_status != 'DONE' " ; 
+					int queryTaskNum = queryTaskNum(sql);
+					nodeChange.put("node", stNodeId);
+					nodeChange.put("taskNum", queryTaskNum);
+					nodeInfoArray.add(nodeChange);
+					continue;
+				}
+			}else if("常务会议".equals(module)&&"NOD_0000000180".equals(stNodeId)){
+				//常务会议-调研处
+				table="LEGISLATION_CITYMEETING_TASK";	
+			}else if("签报".equals(module)&&"NOD_0000000190".equals(stNodeId)){
+				//报签-调研处
+				table="LEGISLATION_REPORT_TASK";	
+			}else if("立法评估".equals(module)){
+				table="LEGISLATION_ASSESS_TASK";	
+			}else if("立法计划".equals(module)){
+				table="LEGISLATION_PLAN_TASK";
+			}else{
+				//sql="SELECT COUNT(1)  FROM LEGISLATION_PROCESS_DOC d  INNER JOIN LEGISLATION_PROCESS_TASK t  ON d.st_doc_id = t.st_doc_id WHERE 1=1 and t.st_node_Id = '" + stNodeId + "' and t.st_task_status != 'DONE' and t.st_enable is null " ; 
+				table="LEGISLATION_PROCESS_TASK";
+			}
+			sql="SELECT COUNT(1)  FROM "+ table +" WHERE 1=1 and st_node_Id = '" + stNodeId + "' and st_task_status != 'DONE' and st_enable is null " ; 
+            if("NOD_0000000103".equals(stNodeId)) {
+            	String ee="";
+            }
+            
+			//String sql="SELECT COUNT(1) FROM LEGISLATION_PROCESS_TASK WHERE ST_NODE_ID='" + stNodeId + "' AND ST_TASK_STATUS !='DONE' AND ST_TEAM_ID ='"+teamId+"' AND ST_ENABLE IS NULL";
+			int queryTaskNum = queryTaskNum(sql);
+			nodeChange.put("node", stNodeId);
+			nodeChange.put("taskNum", queryTaskNum);
+			nodeInfoArray.add(nodeChange);
+		}
+		if("法治调研处工作人员".equals(userRole)&&"立法过程".equals(module)){
+			//立法办理-调研处
+			JSONObject nodeChange = new JSONObject();
+			sql="SELECT COUNT(1)  FROM LEGISLATION_PROCESS_TASK WHERE 1=1 and st_node_Id = 'NOD_0000000103' and st_task_status != 'DONE' and st_enable is null " ; 
+			int queryTaskNum = queryTaskNum(sql);
+			nodeChange.put("node", "NOD_0000000103");
+			nodeChange.put("taskNum", queryTaskNum);
+			nodeInfoArray.add(nodeChange);
+		}
+//        if(!"立法评估".equals(module)&&"局领导".equals(userRole)) {
+//        	JSONObject nodeChange = new JSONObject();
+//        	sql="SELECT COUNT(1)  FROM LEGISLATION_SEND_NOTICE WHERE 1=1 and st_model_name = '"+module+"' and st_task_status != 'DONE' and st_enable is null ";
+//        	int queryTaskNum = legislationProcessTaskService.queryTaskNum(sql);
+//			nodeChange.put("node", "NOD_0000000103");
+//			nodeChange.put("taskNum", queryTaskNum);
+//			nodeInfoArray.add(nodeChange);
+//        }
 	}
 
 }

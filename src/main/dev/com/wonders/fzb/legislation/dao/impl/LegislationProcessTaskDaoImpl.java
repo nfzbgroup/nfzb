@@ -1,12 +1,18 @@
 package com.wonders.fzb.legislation.dao.impl;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.dao.impl.BaseSupportDao;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.framework.beans.TeamInfo;
+import com.wonders.fzb.framework.beans.UserInfo;
 import com.wonders.fzb.legislation.beans.LegislationProcessDoc;
 import com.wonders.fzb.legislation.beans.LegislationProcessTask;
 import com.wonders.fzb.legislation.dao.LegislationProcessTaskDao;
+import com.wonders.fzb.simpleflow.beans.WegovSimpleNode;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
@@ -257,6 +263,12 @@ public class LegislationProcessTaskDaoImpl extends BaseSupportDao implements Leg
 	@Override
 	public LegislationProcessTask findById(String id) {
 		return (LegislationProcessTask) super.load(id);
+	}
+
+	@Override
+	public int queryTaskNum(String sql) {
+		int totalSize = ((BigDecimal) (Object) executeSqlQueryWithoutPage(sql).get(0)).intValue();
+		return totalSize;
 	}
 
 }

@@ -497,6 +497,82 @@ public class LegislationProcessDocAction extends BaseAction {
 
 	}
 
+	private String loadMenu_ajax() throws IOException {
+		String userRole = session.getAttribute("userRole").toString();
+		JSONObject retJson = new JSONObject();
+		JSONArray nodeInfoArray = new JSONArray();
+
+		Map<String, Object> condMap = new HashMap<>();
+		Map<String, String> sortMap = new HashMap<>();
+		condMap.put("stFlowName", "立法过程");
+		condMap.put("stSubmitRole"+"Like", userRole);
+		sortMap.put("dtExtendDate", "ASC");
+		// 立法过程模块
+		List<WegovSimpleNode> nodeList = wegovSimpleNodeService.findByList(condMap, sortMap);
+		legislationProcessTaskService.menuTask(nodeList, nodeInfoArray,"立法过程",userRole);
+		
+		condMap.clear();
+		sortMap.clear();
+		condMap.put("stFlowName", "审核会议");
+		condMap.put("stSubmitRole"+"Like", userRole);
+		sortMap.put("dtExtendDate", "ASC");
+		// 审核会议模块
+		List<WegovSimpleNode> nodeList1 = wegovSimpleNodeService.findByList(condMap, sortMap);
+		legislationProcessTaskService.menuTask(nodeList1, nodeInfoArray,"审核会议",userRole);
+		
+		condMap.clear();
+		sortMap.clear();
+		condMap.put("stFlowName", "常务会议");
+		condMap.put("stSubmitRole"+"Like", userRole);
+		sortMap.put("dtExtendDate", "ASC");
+		// 常务会议模块
+		List<WegovSimpleNode> nodeList2 = wegovSimpleNodeService.findByList(condMap, sortMap);
+		legislationProcessTaskService.menuTask(nodeList2, nodeInfoArray,"常务会议",userRole);
+		
+		condMap.clear();
+		sortMap.clear();
+		condMap.put("stFlowName", "报签(签报)");
+		condMap.put("stSubmitRole"+"Like", userRole);
+		sortMap.put("dtExtendDate", "ASC");
+		// 报签(签报)模块
+		List<WegovSimpleNode> nodeList3 = wegovSimpleNodeService.findByList(condMap, sortMap);
+		legislationProcessTaskService.menuTask(nodeList3, nodeInfoArray,"签报",userRole);
+		
+		condMap.clear();
+		sortMap.clear();
+		condMap.put("stFlowName", "立法评估");
+		condMap.put("stSubmitRole"+"Like", userRole);
+		sortMap.put("dtExtendDate", "ASC");
+		// 立法评估模块
+		List<WegovSimpleNode> nodeList4 = wegovSimpleNodeService.findByList(condMap, sortMap);
+		legislationProcessTaskService.menuTask(nodeList4, nodeInfoArray,"立法评估",userRole);
+		
+		condMap.clear();
+		sortMap.clear();
+		condMap.put("stFlowName", "立法计划");
+		condMap.put("stSubmitRole"+"Like", userRole);
+		sortMap.put("dtExtendDate", "ASC");
+		// 立法计划模块
+		List<WegovSimpleNode> nodeList5 = wegovSimpleNodeService.findByList(condMap, sortMap);
+		legislationProcessTaskService.menuTask(nodeList5, nodeInfoArray,"立法计划",userRole);
+
+//		//领导审核
+//		if("局领导".equals(userRole)) {
+//			JSONObject nodeChange = new JSONObject();
+//	    	String sql="SELECT COUNT(1)  FROM LEGISLATION_SEND_NOTICE WHERE 1=1 and st_model_name = '"+module+"' and st_task_status != 'DONE' and st_enable is null ";
+//	    	int queryTaskNum = legislationProcessTaskService.queryTaskNum(sql);
+//			nodeChange.put("node", "NOD_0000000103");
+//			nodeChange.put("taskNum", queryTaskNum);
+//			nodeInfoArray.add(nodeChange);
+//		}
+		
+		retJson.put("success", true);
+		retJson.put("nodeInfoArray", nodeInfoArray);
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().print(retJson);
+		return null;
+	}
+	
 	// 流程图页面上，ajax加载当前草案的各节点的信息 lj
 	private String openProcessIndexPage_ajax() throws IOException {
 		String stDocId = request.getParameter("stDocId");
@@ -2592,7 +2668,8 @@ public class LegislationProcessDocAction extends BaseAction {
 		List<LegislationProcessTask> legislationProcessTaskList = new ArrayList<>();
 		List<LegislationCheckmeetingTask> legislationCheckMeetingTaskList = new ArrayList<>();
 		List<LegislationReportTask> legislationReportTaskList = new ArrayList<>();
-		List<LegislationPlanTask> legislationPlanTaskList = new ArrayList<>();
+		request.setAttribute("mainId", mainId);
+		request.setAttribute("nodeName", legislationSendNotice.getStNodeName());
 		if (mainId.startsWith("DFT_")) {
 			legislationProcessTaskList = legislationProcessTaskService.findTaskByDocIdAndNodeId(mainId, preNodeId);
 			if (legislationProcessTaskList.size() > 0) {
@@ -2616,20 +2693,6 @@ public class LegislationProcessDocAction extends BaseAction {
 
 			return "checkmeeting_notice_feedback";
 		}
-
-		request.setAttribute("mainId", mainId);
-		request.setAttribute("nodeName", legislationSendNotice.getStNodeName());
-
-		/*
-		 * if(mainId.startsWith("PLA_")){ legislationPlanTaskList =
-		 * legislationPlanTaskService.findTaskByPlanIdAndNodeId(mainId,
-		 * preNodeId); if(legislationPlanTaskList.size()>0) {
-		 * request.setAttribute("legislationPlanTask",
-		 * legislationPlanTaskList.get(0)); }
-		 * 
-		 * return "plan_notice_feedback"; }
-		 */
-
 		return method;
 	}
 

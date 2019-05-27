@@ -5,6 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.wonders.fzb.base.actions.BaseAction;
 import com.wonders.fzb.base.beans.Page;
 import com.wonders.fzb.base.exception.FzbDaoException;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingItem;
+import com.wonders.fzb.checkmeeting.beans.LegislationCheckmeetingTask;
+import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingItemService;
+import com.wonders.fzb.checkmeeting.services.LegislationCheckmeetingTaskService;
 import com.wonders.fzb.citymeeting.beans.LegislationCitymeeting;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingService;
 import com.wonders.fzb.citymeeting.services.LegislationCitymeetingTaskService;
@@ -77,6 +81,10 @@ public class LegislationPlanAction extends BaseAction {
 	private LegislationCitymeetingTaskService legislationCitymeetingTaskService;
 	
 	@Autowired
+	@Qualifier("legislationCheckmeetingItemService")
+	private LegislationCheckmeetingItemService legislationCheckmeetingItemService;
+	
+	@Autowired
 	@Qualifier("wegovSimpleNodeService")
 	private WegovSimpleNodeService wegovSimpleNodeService;
 	@Autowired
@@ -88,6 +96,10 @@ public class LegislationPlanAction extends BaseAction {
 	@Autowired
 	@Qualifier("legislationPlanTaskdetailService")
 	private LegislationPlanTaskdetailService legislationPlanTaskdetailService;
+	
+	@Autowired
+	@Qualifier("legislationCheckmeetingTaskService")
+	private LegislationCheckmeetingTaskService legislationCheckmeetingTaskService;
 	
 	@Autowired
 	@Qualifier("legislationExampleService")
@@ -125,7 +137,8 @@ public class LegislationPlanAction extends BaseAction {
 			@Result(name = "plan_item_recv", location = "/plan/legislationPlan_form.jsp"),
 			@Result(name = "QueryTable", location = "/plan/legislationPlan_item.jsp"),
 			@Result(name = "openPlanItemInfoPage", location = "/plan/legislationPlan_form.jsp"),
-			//plan_item_upload
+			@Result(name = "check_meeting", location = "/plan/legislationPlan_checkMeeting.jsp"),
+			//check_meeting
 			@Result(name = "openPlanSeparatePage", location = "/plan/legislationPlan_separate.jsp"),
             @Result(name = "openPlanAuditPage", location = "/plan/legislationPlan_audit.jsp"),
 			@Result(name = "openNoticeProjectInfoPage", location = "/plan/legislationNotice_projectInfo.jsp"),
@@ -226,9 +239,43 @@ public class LegislationPlanAction extends BaseAction {
 						nodeInfoArray.add(nodeChange);
 					}
 			}
-
 			
-			System.out.println("当前草案下的任务数：" + taskList.size());
+			condMap.clear();
+			sortMap.clear();
+			condMap.put("stSourceId", stPlanId);
+			List<LegislationCheckmeetingItem> itemList = legislationCheckmeetingItemService.findByList(condMap, sortMap);
+			String checkMeetingId="";
+			if(itemList.size()>0) {
+				LegislationCheckmeetingItem legislationCheckmeetingItem = itemList.get(0);
+				checkMeetingId=legislationCheckmeetingItem.getStMeetingId();
+			}
+			condMap.clear();
+			sortMap.clear();
+			condMap.put("stMeetingId", checkMeetingId);
+			List<LegislationCheckmeetingTask> checkMeetingTaskList = legislationCheckmeetingTaskService.findByList(condMap, sortMap);
+			
+			if(checkMeetingTaskList.size()>0) {
+				LegislationCheckmeetingTask legislationCheckmeetingTask = checkMeetingTaskList.get(0);
+				JSONObject nodeChange = new JSONObject();
+				nodeChange.put("node", legislationCheckmeetingTask.getStNodeId());
+				WegovSimpleNode node = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId='" + legislationCheckmeetingTask.getStNodeId() + "'").get(0);
+				
+				nodeChange.put("nodeHref", node.getStInfoUrl());
+				if (!"DONE".equals(legislationCheckmeetingTask.getStTaskStatus())) {
+					nodeChange.put("colorSet", "bcg_green");
+				}else {
+					nodeChange.put("colorSet", "bcg_blue");
+				}
+				nodeInfoArray.add(nodeChange);
+				
+			}
+			JSONObject nodeChange = new JSONObject();
+			nodeChange.put("node", "NOD_0000000170");
+			nodeChange.put("nodeHref", "check_meeting");
+			nodeChange.put("colorSet", "bcg_green");
+			nodeInfoArray.add(nodeChange);
+			
+			System.out.println("当前计划下的任务数：" + taskList.size());
 			System.out.println("这些任务的NodeIds：" + allNodeId);
 			retJson.put("success", true);
 			retJson.put("nodeInfoArray", nodeInfoArray);// 当前草案下的任务节点信息
@@ -236,6 +283,64 @@ public class LegislationPlanAction extends BaseAction {
 			response.getWriter().print(retJson);
 			return null;
 		}
+		
+		 private String openPlanCheckMeeting_ajax() throws IOException {
+			    JSONObject retJson = new JSONObject();
+				JSONArray nodeInfoArray = new JSONArray();
+							
+				String stMeetingId=request.getParameter("stMeetingId");
+				Map<String, Object> condMap = new HashMap<>();
+				Map<String, String> sortMap = new HashMap<>();
+				condMap.put("stMeetingId", stMeetingId);
+				List<LegislationCheckmeetingTask> checkMeetingTaskList = legislationCheckmeetingTaskService.findByList(condMap, sortMap);
+				String stTaskStatus ="";
+				if(checkMeetingTaskList.size()>0) {
+					LegislationCheckmeetingTask legislationCheckmeetingTask = checkMeetingTaskList.get(0);
+					 stTaskStatus = legislationCheckmeetingTask.getStTaskStatus();
+				}
+				
+				//stTaskStatus="INPUT";
+				WegovSimpleNode node = wegovSimpleNodeService.findByHQL("from WegovSimpleNode t where 1=1 and t.stNodeId='NOD_0000000170'").get(0);
+				String nodeStatusArr[] = node.getStDoneName().split("#");
+				for (int i = 0; i < nodeStatusArr.length; i++) {
+					JSONObject nodeChange = new JSONObject();
+					if ("DONE".equals(nodeStatusArr[i])) {
+						break;
+					}
+					nodeChange.put("nodeStatus", nodeStatusArr[i]);
+					nodeInfoArray.add(nodeChange);
+					if (stTaskStatus.equals(nodeStatusArr[i])) {
+						break;
+					}
+				}
+				
+				retJson.put("success", true);
+				retJson.put("nodeInfoArray", nodeInfoArray);
+				response.setContentType("application/json; charset=UTF-8");
+				response.getWriter().print(retJson);
+			   return null;
+		   }
+		
+		@SuppressWarnings("unchecked")
+		private String check_meeting(){
+			//String stNodeId=request.getParameter("stNodeId");
+			String stPlanId=request.getParameter("stPlanId");
+			Map<String, Object> condMap = new HashMap<>();
+			Map<String, String> sortMap = new HashMap<>();
+			condMap.put("stSourceId", stPlanId);
+			List<LegislationCheckmeetingItem> itemList = legislationCheckmeetingItemService.findByList(condMap, sortMap);
+			String checkMeetingId="";
+			if(itemList.size()>0) {
+				LegislationCheckmeetingItem legislationCheckmeetingItem = itemList.get(0);
+				checkMeetingId=legislationCheckmeetingItem.getStMeetingId();
+			}
+			request.setAttribute("stMeetingId", "CKM_0000000000000426");
+			request.setAttribute("stPlanId", stPlanId);
+			return pageController();
+		}
+		
+		
+		
 		private String plan_item_upload() throws ParseException, FzbDaoException {
 			queryItemList();
 			return "QueryTable";

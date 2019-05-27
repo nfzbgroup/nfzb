@@ -242,6 +242,12 @@
 					</div>
 				</div>
 			</div>
+			<div class="modal inmodal fade" id="processIndexForm_checkmeeting" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					</div>
+				</div>
+			</div>
 			<div class="modal inmodal fade" id="processIndexChildForm" data-backdrop keyboard tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -273,6 +279,9 @@
 					</li>
 				</ul>
 			</div> -->
+			<div class="clearfix">
+				<div class="list-page" id="listPage"></div>
+			</div>
 		</div>
 </form>
 		<script src="${basePath}/legislation/assets/js/jquery.min.js?v=2.1.4"></script>
@@ -287,7 +296,8 @@
 	<script src="${basePath}/legislation/assets/page/common.js" type="text/javascript"></script>
 		<script type="text/javascript">
 		 
-		window.onload=function(){  
+		window.onload=function(){
+			
 			 $('body').on('hidden.bs.modal', '.modal', function () {
 		            $(this).removeData('bs.modal');
 		        });
@@ -313,6 +323,12 @@
 		            $('#processIndexForm .modal-body').css('overflow', 'auto');
 		            $('#processIndexForm .modal-body').css('height', $(window).height());
 		            $('#processIndexForm .modal-dialog').css('width', $(window).width()*0.9);
+		        }); 
+		        $('#processIndexForm_checkmeeting').on('shown.bs.modal', function () {	
+		        	$('#processIndexForm_checkmeeting .modal-body').css('overflow', 'auto');
+		            $('#processIndexForm_checkmeeting .modal-body').css('height', $(window).height());
+		            $('#processIndexForm_checkmeeting .modal-dialog').css('width', $(window).width()*0.9);
+		            queryCheckTable();
 		        }); 
 		       
 		}  
